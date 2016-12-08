@@ -1,13 +1,6 @@
 <?php
 namespace OAuth2;
 
-require_once("AccessTokenResponse.php");
-require_once("ClientException.php");
-require_once("ClientInformation.php");
-require_once("RequestExecutor.php");
-require_once("ResponseWrapper.php");
-require_once("ServerException.php");
-
 /**
  * Encapsulates an access token request according to RFC6749
  */
