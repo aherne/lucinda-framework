@@ -6,11 +6,20 @@ namespace OAuth2;
  */
 class WrappedExecutor implements RequestExecutor {
 	protected $responseWrapper;
+	protected $httpMethod = HttpMethod::POST;
 	protected $headers = array('Content-Type: application/x-www-form-urlencoded');
 	
 	public function __construct(ResponseWrapper $responseWrapper) {
 		$this->responseWrapper = $responseWrapper;
-		$this->headers[]='Content-Type: application/x-www-form-urlencoded';
+	}
+	
+	/**
+	 * Sets request http method
+	 * 
+	 * @param integer $httpMethod
+	 */
+	public function setHttpMethod($httpMethod = HttpMethod::POST) {
+		$this->httpMethod = $httpMethod;
 	}
 		
 	/**
@@ -29,9 +38,27 @@ class WrappedExecutor implements RequestExecutor {
 	 */
 	public function execute($endpointURL, $parameters) {
 		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL,$endpointURL);
-		curl_setopt($ch, CURLOPT_POST, 1);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($parameters));
+		switch($this->httpMethod) {
+			case HttpMethod::POST:
+				curl_setopt($ch, CURLOPT_URL,$endpointURL);
+				curl_setopt($ch, CURLOPT_POST, 1);
+				curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($parameters));
+				break;
+			case HttpMethod::GET:
+				curl_setopt($ch, CURLOPT_URL,$endpointURL."?".http_build_query($parameters));
+				break;
+			case HttpMethod::PUT:
+				curl_setopt($ch, CURLOPT_PUT, true);
+				curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($parameters));
+				break;
+			case HttpMethod::DELETE:
+				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+				curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($parameters));
+				break;
+			default:
+				throw new ClientException("Unrecognized http method!");
+				break;
+		}
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $this->headers);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		try {
