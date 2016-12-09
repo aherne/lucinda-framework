@@ -1,5 +1,5 @@
 <?php
-namespace Facebook;
+namespace Google;
 
 use OAuth2\ResponseWrapper as OAuth2_ResponseWrapper;
 use OAuth2\ServerException as OAuth2_ServerException;
