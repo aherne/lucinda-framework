@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+
+<xml>
+	<application>
+		<default_character_encoding>UTF-8</default_character_encoding>
+		<default_page>index</default_page>
+		<default_extension>html</default_extension>
+		<auto_routing>1</auto_routing>
+		<paths>
+			<controllers>application/controllers</controllers>
+			<wrappers>application/wrappers</wrappers>
+			<views>application/views</views>
+			<listeners>application/listeners</listeners>
+			<compilations>
+				<local>{COMPILATIONS_PATH}</local>
+				<dev>{COMPILATIONS_PATH}</dev>
+				<live>{COMPILATIONS_PATH}</live>
+			</compilations>
+			<htaccess>
+				<live>{SITE_HTACCESS_PATH}</live>
+				<dev>{SITE_HTACCESS_PATH}</dev>
+				<local>{SITE_HTACCESS_PATH}</local>
+			</htaccess>
+		</paths>
+		<web_servers>
+			<dev>{SERVER_NAME}</dev>
+			<live>{SERVER_NAME}</live>
+		</web_servers>
+		<secrets>
+			<remember_me>{REMEMBER_ME_CODE}</remember_me>	
+			<authorization_code>{AUTHORIZATION_CODE}</authorization_code>
+		</secrets>
+	</application>
+	<listeners>
+		<listener class="DefaultApplicationListener"/>
+		<listener class="Authorization"/>
+		<listener class="DefaultResponseListener"/>
+	</listeners>
+	<formats>
+		<format extension="html" content_type="text/html"/>
+		<format extension="json" content_type="application/json" class="JsonWrapper"/>
+	</formats>
+	<database>
+		<local>
+			<driver>mysql</driver>
+			<host>localhost</host>
+			<port>3306</port>
+			<username>{USERNAME}</username>
+			<password>{PASSWORD}</password>
+			<schema>{SCHEMA}</schema>
+			<parent_schema>{PARENT_SCHEMA}</parent_schema>
+		</local>
+		<dev>
+			<driver>mysql</driver>
+			<host>localhost</host>
+			<port>3306</port>
+			<username>{USERNAME}</username>
+			<password>{PASSWORD}</password>
+			<schema>{SCHEMA}</schema>
+			<parent_schema>{PARENT_SCHEMA}</parent_schema>
+		</dev>
+		<live>
+			<driver>mysql</driver>
+			<host>localhost</host>
+			<port>3306</port>
+			<username>{USERNAME}</username>
+			<password>{PASSWORD}</password>
+			<schema>{SCHEMA}</schema>
+			<parent_schema>{PARENT_SCHEMA}</parent_schema>
+		</live>
+	</database>
+</xml>
