@@ -1,5 +1,5 @@
 <?php
-require_once("application/php-sql-data-access-api/loader.php");
+require_once("libraries/php-sql-data-access-api/loader.php");
 
 /**
  * Reads xml for sql database servers credentials based on detected environment, creates datasource objects on these then injects datasource 

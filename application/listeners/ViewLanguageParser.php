@@ -1,4 +1,6 @@
 <?php
+require_once("libraries/php-view-language-api/loader.php");
+
 /**
  * Response listener for PHP Servlets API that implements View Language logic.
  */
