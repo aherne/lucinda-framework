@@ -1,20 +1,13 @@
 <?php
-require_once("application/models/BasicAuthorization.php");
-require_once("application/models/Encryption.php");
+require_once("libraries/php-security-api/src/Encryption.php");
 
+/**
+ * Implements a basic authorization using sessions & cookies to keep state between requests and database as provider
+ */
 class Authorization extends RequestListener {
-	public function run() {
-		// do not answer to favicon.ico requests
-		if(!empty($_SERVER["REDIRECT_URL"]) && strpos($_SERVER["REDIRECT_URL"], "favicon.ico")!==false) {
-			header("HTTP/1.0 404 Not Found");
-			die();
-		}
-			
-		// starts sessions
+	public function run() {			
+		// starts session
 		$this->request->getSession()->start();
-
-		// determine user id
-		$encryption = new Encryption($this->application->getAttribute("remember_me_secret"));
 
 		// authenticate
 		$authorization = new BasicAuthorization($this->getUserId(),$this->request->getAttribute("page_url"));
@@ -40,9 +33,9 @@ class Authorization extends RequestListener {
 
 		// return from cookie if not found @ session
 		if($this->request->getCookie()->contains("user_id")) {
-			$encryption = new Encryption($this->application->getAttribute("remember_me_secret"));
+			$encryption = new Encryption($this->application->getAttribute("secret_key"));
 			$user_id = $encryption->decrypt($this->request->getCookie()->get("user_id"));
-			$_SESSION["user_id"] = $user_id; // restore user id session
+			$this->request->getSession()->set("user_id", $user_id); // restores session user id
 			return $user_id;
 		}
 
