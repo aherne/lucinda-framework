@@ -2,9 +2,9 @@
 /**
  * Response listener for PHP Servlets API that implements View Language logic.
  */
-class DefaultResponseListener extends ResponseListener {
+class ViewLanguageParser extends ResponseListener {
 	public function run() {
-	    if($this->response->getContentType()=="application/json") return;
+	    if($this->response->getContentType()!="text/html") return;
 	    
 		// compile
 		$vlp = new ViewLanguageParser($this->application->getViewsPath(), $this->request->getAttribute("page_url"), "php", "application/taglib");
