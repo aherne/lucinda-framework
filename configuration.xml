@@ -14,60 +14,35 @@
 			<listeners>application/listeners</listeners>
 			<compilations>
 				<local>{COMPILATIONS_PATH}</local>
-				<dev>{COMPILATIONS_PATH}</dev>
-				<live>{COMPILATIONS_PATH}</live>
 			</compilations>
-			<htaccess>
-				<live>{SITE_HTACCESS_PATH}</live>
-				<dev>{SITE_HTACCESS_PATH}</dev>
-				<local>{SITE_HTACCESS_PATH}</local>
-			</htaccess>
 		</paths>
-		<web_servers>
-			<dev>{SERVER_NAME}</dev>
-			<live>{SERVER_NAME}</live>
-		</web_servers>
-		<secrets>
-			<remember_me>{REMEMBER_ME_CODE}</remember_me>	
-			<authorization_code>{AUTHORIZATION_CODE}</authorization_code>
-		</secrets>
+		<secret_key>{SECRET_KEY}</secret_key>
+		<environments>
+			<local>{SERVER_NAME}</local>
+		</environments>
 	</application>
 	<listeners>
+		<listener class="EnvironmentDetector"/>
+		<listener class="SQLDatasourceInjector"/>
+		<listener class="NoSQLDatasourceInjector"/>
 		<listener class="DefaultApplicationListener"/>
 		<listener class="Authorization"/>
-		<listener class="DefaultResponseListener"/>
+		<listener class="ViewLanguageParser"/>
 	</listeners>
 	<formats>
-		<format extension="html" content_type="text/html"/>
+		<format extension="html" content_type="text/html" class="BypassWrapper"/>
 		<format extension="json" content_type="application/json" class="JsonWrapper"/>
 	</formats>
 	<database>
-		<local>
-			<driver>mysql</driver>
-			<host>localhost</host>
-			<port>3306</port>
-			<username>{USERNAME}</username>
-			<password>{PASSWORD}</password>
-			<schema>{SCHEMA}</schema>
-			<parent_schema>{PARENT_SCHEMA}</parent_schema>
-		</local>
-		<dev>
-			<driver>mysql</driver>
-			<host>localhost</host>
-			<port>3306</port>
-			<username>{USERNAME}</username>
-			<password>{PASSWORD}</password>
-			<schema>{SCHEMA}</schema>
-			<parent_schema>{PARENT_SCHEMA}</parent_schema>
-		</dev>
-		<live>
-			<driver>mysql</driver>
-			<host>localhost</host>
-			<port>3306</port>
-			<username>{USERNAME}</username>
-			<password>{PASSWORD}</password>
-			<schema>{SCHEMA}</schema>
-			<parent_schema>{PARENT_SCHEMA}</parent_schema>
-		</live>
+		<sql>
+			<local>
+				<driver>{SQL_VENDOR}</driver>
+				<host>{HOST_NAME}</host>
+				<port>{HOST_PORT}</port>
+				<username>{USERNAME}</username>
+				<password>{PASSWORD}</password>
+				<schema>{SCHEMA}</schema>
+			</local>
+		</sql>
 	</database>
 </xml>
