@@ -56,8 +56,8 @@ class NoSQLDataSourceInjector extends ApplicationListener {
 	 * @throws ServletException If tags syntax is invalid.
 	 */
 	private function injectDataSources(SimpleXMLElement $xml) {
-		$xml = (array) $xml;
-		if(isset($xml["server"])) {
+		if($xml->server) {
+			$xml = (array) $xml;
 			$entries = is_array($xml["server"])?$xml["server"]:array($xml["server"]);
 			// inject them into factory
 			foreach($entries as $element) {
@@ -82,7 +82,7 @@ class NoSQLDataSourceInjector extends ApplicationListener {
 		if(!$driver) throw new ServletException("Child tag <driver> is mandatory for <server> tags!");
 		switch($driver) {
 			case "couchbase":
-				require_once("application/php-nosql-data-access-api/src/CouchbaseConnection.php");
+				require_once("libraries/php-nosql-data-access-api/src/CouchbaseConnection.php");
 				
 				$dataSource = new CouchbaseDataSource();
 				$dataSource->setHost((string) $databaseInfo->host);
@@ -97,21 +97,21 @@ class NoSQLDataSourceInjector extends ApplicationListener {
 				return $dataSource;
 				break;
 			case "memcache":
-				require_once("application/php-nosql-data-access-api/src/MemcacheConnection.php");
+				require_once("libraries/php-nosql-data-access-api/src/MemcacheConnection.php");
 				
 				$dataSource = new MemcacheDataSource();
 				$dataSource->setHost((string) $databaseInfo->host);
 				$dataSource->setPort((string) $databaseInfo->port);
 				return $dataSource;
 			case "memcached":
-				require_once("application/php-nosql-data-access-api/src/MemcachedConnection.php");
+				require_once("libraries/php-nosql-data-access-api/src/MemcachedConnection.php");
 				
 				$dataSource = new MemcachedDataSource();
 				$dataSource->setHost((string) $databaseInfo->host);
 				$dataSource->setPort((string) $databaseInfo->port);
 				return $dataSource;
 			case "redis":
-				require_once("application/php-nosql-data-access-api/src/RedisConnection.php");
+				require_once("libraries/php-nosql-data-access-api/src/RedisConnection.php");
 				
 				$dataSource = new RedisDataSource();
 				$dataSource->setHost((string) $databaseInfo->host);

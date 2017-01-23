@@ -56,8 +56,8 @@ class SQLDataSourceInjector extends ApplicationListener {
 	 * @throws ServletException If tags syntax is invalid.
 	 */
 	private function injectDataSources(SimpleXMLElement $xml) {
-		$xml = (array) $xml;
-		if(isset($xml["server"])) {
+		if($xml->server) {
+			$xml = (array) $xml;
 			$entries = is_array($xml["server"])?$xml["server"]:array($xml["server"]);
 			// inject them into factory
 			foreach($entries as $element) {
@@ -69,28 +69,7 @@ class SQLDataSourceInjector extends ApplicationListener {
 			SQLConnectionSingleton::setDataSource($this->createDataSource($xml));
 		}
 	}
-	
-	/**
-	 * Creates NoSQLDataSource entries based on XML info and injects them into NoSQLConnectionFactory/NoSQLConnectionSingleton
-	 * 
-	 * @param SimpleXMLElement $xml Content of database.{ENVIRONMENT_NAME}.sql XML tag.
-	 * @throws ServletException If tags syntax is invalid.
-	 */
-	private function injectNoSQLDataSources(SimpleXMLElement $xml) {
-		$xml = (array) $xml;
-		if(isset($xml["server"])) {
-			$entries = is_array($xml["server"])?$xml["server"]:array($xml["server"]);
-			// inject them into factory
-			foreach($entries as $element) {
-				if(!isset($element["name"])) throw new ServletException("Attribute 'name' not set for <server> tag!");
-				NoSQLConnectionFactory::setDataSource((string) $element["name"], $this->createNoSQLDataSource($element));
-			}
-		} else {
-			// inject them into singleton
-			NoSQLConnectionSingleton::setDataSource($this->createNoSQLDataSource($xml));
-		}
-	}
-	
+		
 	/**
 	 * Creates and returns a SQLDataSource object based on XML info.
 	 * 
@@ -100,7 +79,7 @@ class SQLDataSourceInjector extends ApplicationListener {
 	private function createDataSource(SimpleXMLElement $databaseInfo) {
 		$dataSource = new SQLDataSource();
 		$dataSource->setDriverName((string) $databaseInfo->driver);
-		$dataSource->setDriverOptions((string) $databaseInfo->options);
+		$dataSource->setDriverOptions((array) $databaseInfo->options);
 		$dataSource->setHost((string) $databaseInfo->host);
 		$dataSource->setPort((string) $databaseInfo->port);
 		$dataSource->setUserName((string) $databaseInfo->username);
