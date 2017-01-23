@@ -23,11 +23,11 @@
 	</application>
 	<listeners>
 		<listener class="EnvironmentDetector"/>
-		<listener class="SQLDatasourceInjector"/>
-		<listener class="NoSQLDatasourceInjector"/>
+		<listener class="SQLDataSourceInjector"/>
+		<listener class="NoSQLDataSourceInjector"/>
 		<listener class="DefaultApplicationListener"/>
 		<listener class="Authorization"/>
-		<listener class="ViewLanguageParser"/>
+		<listener class="ViewLanguageResolver"/>
 	</listeners>
 	<formats>
 		<format extension="html" content_type="text/html" class="BypassWrapper"/>
