@@ -43,7 +43,7 @@ class NoSQLDataSourceInjector extends ApplicationListener {
 		$environment = $this->application->getAttribute("environment");
 		
 		// detect & inject nosql data sources
-		$xml = $this->application->getXML()->database->nosql->$environment;
+		$xml = $this->application->getXML()->servers->nosql->$environment;
 		if(!empty($xml)) {
 			$this->injectDataSources($xml);
 		}
@@ -56,17 +56,15 @@ class NoSQLDataSourceInjector extends ApplicationListener {
 	 * @throws ServletException If tags syntax is invalid.
 	 */
 	private function injectDataSources(SimpleXMLElement $xml) {
-		if($xml->server) {
-			$xml = (array) $xml;
-			$entries = is_array($xml["server"])?$xml["server"]:array($xml["server"]);
-			// inject them into factory
-			foreach($entries as $element) {
+		if(!$xml->server) throw new ServletException("Server not set for environment!");
+		$xml = (array) $xml;
+		if(is_array($xml["server"])) {
+			foreach($xml["server"] as $element) {
 				if(!isset($element["name"])) throw new ServletException("Attribute 'name' not set for <server> tag!");
 				NoSQLConnectionFactory::setDataSource((string) $element["name"], $this->createDataSource($element));
 			}
 		} else {
-			// inject them into singleton
-			NoSQLConnectionSingleton::setDataSource($this->createDataSource($xml));
+			NoSQLConnectionSingleton::setDataSource($this->createDataSource($xml["server"]));
 		}
 	}
 

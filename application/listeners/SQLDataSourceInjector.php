@@ -43,7 +43,7 @@ class SQLDataSourceInjector extends ApplicationListener {
 		$environment = $this->application->getAttribute("environment");
 		
 		// detect & inject sql data sources
-		$xml = $this->application->getXML()->database->sql->$environment;
+		$xml = $this->application->getXML()->servers->sql->$environment;
 		if(!empty($xml)) {
 			$this->injectDataSources($xml);
 		}
@@ -56,17 +56,15 @@ class SQLDataSourceInjector extends ApplicationListener {
 	 * @throws ServletException If tags syntax is invalid.
 	 */
 	private function injectDataSources(SimpleXMLElement $xml) {
-		if($xml->server) {
-			$xml = (array) $xml;
-			$entries = is_array($xml["server"])?$xml["server"]:array($xml["server"]);
-			// inject them into factory
-			foreach($entries as $element) {
+		if(!$xml->server) throw new ServletException("Server not set for environment!");
+		$xml = (array) $xml;
+		if(is_array($xml["server"])) {
+			foreach($xml["server"] as $element) {
 				if(!isset($element["name"])) throw new ServletException("Attribute 'name' not set for <server> tag!");
 				SQLConnectionFactory::setDataSource((string) $element["name"], $this->createDataSource($element));
 			}
 		} else {
-			// inject them into singleton
-			SQLConnectionSingleton::setDataSource($this->createDataSource($xml));
+			SQLConnectionSingleton::setDataSource($this->createDataSource($xml["server"]));
 		}
 	}
 		

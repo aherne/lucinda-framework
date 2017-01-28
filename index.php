@@ -7,8 +7,6 @@ PHPException::setErrorHandler(GeneralErrorReporting::class);
 
 // starts MVC api and loads other libraries
 require_once("libraries/servlets-api/loader.php");
-require_once("libraries/sql-data-access-api/loader.php");
-require_once("libraries/view-language-api/loader.php");
 try {
     new FrontController();
 } catch(Exception $e) {
