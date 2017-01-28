@@ -25,7 +25,6 @@
 		<listener class="EnvironmentDetector"/>
 		<listener class="SQLDataSourceInjector"/>
 		<listener class="NoSQLDataSourceInjector"/>
-		<listener class="DefaultApplicationListener"/>
 		<listener class="Authorization"/>
 		<listener class="ViewLanguageResolver"/>
 	</listeners>
@@ -33,16 +32,18 @@
 		<format extension="html" content_type="text/html" class="BypassWrapper"/>
 		<format extension="json" content_type="application/json" class="JsonWrapper"/>
 	</formats>
-	<database>
+	<servers>
 		<sql>
 			<local>
-				<driver>{SQL_VENDOR}</driver>
-				<host>{HOST_NAME}</host>
-				<port>{HOST_PORT}</port>
-				<username>{USERNAME}</username>
-				<password>{PASSWORD}</password>
-				<schema>{SCHEMA}</schema>
+				<server>
+					<driver>{SQL_VENDOR}</driver>
+					<host>{HOST_NAME}</host>
+					<port>{HOST_PORT}</port>
+					<username>{USERNAME}</username>
+					<password>{PASSWORD}</password>
+					<schema>{SCHEMA}</schema>
+				</server>
 			</local>
 		</sql>
-	</database>
+	</servers>
 </xml>
