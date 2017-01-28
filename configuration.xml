@@ -46,4 +46,18 @@
 			</local>
 		</sql>
 	</servers>
+	<security>
+		<authentication method="form">
+			<login page="{LOGIN_URL}" target="{PAGE_AFTER_LOGIN}"/>
+			<logout page="{LOGOUT_URL}" target="{PAGE_AFTER_LOGOUT}"/>
+		</authentication>
+		<authentication method="oauth2">
+			<driver>{facebook/google}</driver>
+			<app_id>{APPLICATION_ID}</app_id>
+			<app_secret>{APPLICATION_SECRET}</app_secret>
+			<callback_url></callback_url>
+			<scopes>{OPTIONAL}</scopes>
+		</authentication>
+	
+	</security>
 </xml>
