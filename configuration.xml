@@ -47,17 +47,50 @@
 		</sql>
 	</servers>
 	<security>
-		<authentication method="form">
-			<login page="{LOGIN_URL}" target="{PAGE_AFTER_LOGIN}"/>
-			<logout page="{LOGOUT_URL}" target="{PAGE_AFTER_LOGOUT}"/>
+		<authentication>
+			<form dao="{CLASS_PATH}">
+				<login page="{LOGIN_URL}" target="{PAGE_AFTER_LOGIN}" rememberMe="true|false"/>
+				<logout page="{LOGOUT_URL}" target="{PAGE_AFTER_LOGOUT}"/>
+			</form>
+			<oauth2 dao="{CLASS_PATH}">
+				<provider>{facebook/google}</provider>
+				<app_id>{APPLICATION_ID}</app_id>
+				<app_secret>{APPLICATION_SECRET}</app_secret>
+				<callback_url>{URL_OF_PAGE_TO_RECEIVE_AUTHORIZATION_CODE}</callback_url>
+				<scopes>{OPTIONAL|DEFAULTS_TO_USERINFO_SCOPE}</scopes>
+			</oauth2>
 		</authentication>
-		<authentication method="oauth2">
-			<driver>{facebook/google}</driver>
-			<app_id>{APPLICATION_ID}</app_id>
-			<app_secret>{APPLICATION_SECRET}</app_secret>
-			<callback_url></callback_url>
-			<scopes>{OPTIONAL}</scopes>
-		</authentication>
-	
+		<persistence>
+			<session handler="" savePath="" (class="")/>
+			<token expirationTime="" regenerationTime=""/>
+		</persistence>
+		<authorization callbackLoggedIn="{PAGE_URL}" callbackLoggedOut="{PAGE_URL}">
+			<by_route/>
+				<---
+				1. auto-routing must be off (this check should be performed by framework)
+				2. each route requires a property called "access" with value ROLE_USER | ROLE_GUEST
+				3. authorization simply matches route to user state 
+				--->/
+			<by_dao pagesClass="" usersClass="" />
+				<--
+				pages & users must be defined in (sql) database. 
+				Users DAO requires:
+				- boolean isAllowed(Page $page)
+				Pages DAO requires:
+				- boolean isPublic()
+				- boolean isFound() 
+				-->/
+		</authorization>
+		<---
+		1. whether or not stateless or state to be transmitted by sessions or tokens
+		2. whether authorization method will be:
+			xml: we define <intercept> tags that define paths available to guests or logged in users (users table only) 
+			sql: the entire authorization is performed in database (users, roles, rights tables required)
+			 
+		--->
+		<---
+		Always generate a csrf token that can be sent and verified. LOGIN page requires it!
+		Check validity of uploaded file (if their content type matches the one inserted) >> UploadedFilesChecker @ RequestListener
+		--->
 	</security>
 </xml>
