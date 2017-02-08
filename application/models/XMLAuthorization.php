@@ -37,6 +37,12 @@ class XMLAuthorization {
         $status = 0;
         $callbackURI = "";
         
+        // check autorouting
+        $autoRouting = (int) $xml->application->auto_routing;
+        if($autoRouting) {
+        	throw new SecurityException("XML authorization does not support auto-routing!");
+        }
+        
     	// check rights 
     	$tmp = (array) $xml->routes;
     	$tmp = $tmp["route"];

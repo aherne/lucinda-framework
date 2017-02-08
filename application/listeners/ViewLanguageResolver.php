@@ -11,7 +11,7 @@ class ViewLanguageResolver extends ResponseListener {
 	    // get compilations folder
 	    $environment = $this->application->getAttribute("environment");
 	    $compilationsFolder = (string) $this->application->getXML()->application->paths->compilations->$environment;
-	    if(!$compilationsFolder) throw new ServletApplicationException("Compilations folder not defined!");
+	    if(!$compilationsFolder) throw new ServletException("Compilations folder not defined!");
 	    
 		// compile
 		$vlp = new ViewLanguageParser(
