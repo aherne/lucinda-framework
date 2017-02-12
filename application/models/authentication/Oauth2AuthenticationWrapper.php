@@ -1,6 +1,6 @@
 <?php
 require_once("libraries/oauth2client/loader.php");
-require_once("application/models/authentication/oauth2/Oauth2Authentication.php");
+require_once("oauth2/Oauth2Authentication.php");
 /**
  * 
 			<oauth2 dao="{CLASS_PATH}" auto_create="1" logout="{LOGOUT_URL}" target="{PAGE_AFTER_LOGIN}" login="{PAGE_AFTER_LOGIN}">
