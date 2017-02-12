@@ -16,72 +16,58 @@ class FormAuthenticationWrapper {
 	const DEFAULT_TARGET_PAGE = "index";
 	const DEFAULT_LOGIN_PAGE = "login";
 	const DEFAULT_LOGOUT_PAGE = "logout";
-	
+
+	private $xml;
+	private $currentPage;
 	private $authentication;
 	
-	public function __construct($xml, $currentPage, $persistenceDrivers) {		
-		$this->authentication = new FormAuthentication($this->getDAO($xml), $persistenceDrivers);
+	public function __construct($xml, $currentPage, $persistenceDrivers, DAOLocator $daoLocator) {		
+		$this->xml = $xml;
+		$this->currentPage = $currentPage;
+		$this->authentication = new FormAuthentication($daoLocator->locate($xml, "dao", "UserAuthenticationDAO"), $persistenceDrivers);
 			
-		// login page
-		$sourcePage = (string) $xml->login["page"];
+		$this->login();
+		$this->logout();
+	}
+	
+	private function login() {
+		$sourcePage = (string) $this->xml->login["page"];
 		if(!$sourcePage) $sourcePage = self::DEFAULT_LOGIN_PAGE;
-		if($sourcePage == $currentPage && !empty($_POST)) {
-			$this->login($xml->login, $sourcePage);
+		if($sourcePage == $this->currentPage && !empty($_POST)) {
+			$targetPage = (string) $this->xml->login["target"];
+			if(!$targetPage) $targetPage = self::DEFAULT_TARGET_PAGE;
+			$parameterUsername = (string) $this->xml->login["parameter_username"];
+			$parameterPassword = (string) $this->xml->login["parameter_password"];
+			$parameterRememberMe = (string) $this->xml->login["parameter_rememberMe"];
+			try {
+				$this->authentication->login(
+						($parameterUsername?$parameterUsername:self::DEFAULT_PARAMETER_USERNAME),
+						($parameterPassword?$parameterPassword:self::DEFAULT_PARAMETER_PASSWORD),
+						($parameterRememberMe?$parameterRememberMe:self::DEFAULT_PARAMETER_REMEMBER_ME)
+						);
+				header("Location: ".$targetPage."?status=LOGIN_SUCCESS");
+				exit();
+			} catch (AuthenticationException $e) {
+				header("Location: ".$sourcePage."?status=LOGIN_FAILED&message=".$e->getMessage());
+				exit();
+			}
 		}
-			
-		// logout page
-		$sourcePage = (string) $xml->logout["page"];
+	}
+	
+	private function logout() {
+		$sourcePage = (string) $this->xml->logout["page"];
 		if(!$sourcePage) $sourcePage = self::DEFAULT_LOGOUT_PAGE;
-		if($sourcePage == $currentPage) {
-			$this->logout($xml->logout, $sourcePage);
+		if($sourcePage == $this->currentPage) {
+			$targetPage = (string) $this->xml->logout["target"];
+			if(!$targetPage) $targetPage = self::DEFAULT_LOGIN_PAGE;
+			try {
+				$this->authentication->logout();
+				header("Location: ".$targetPage."?status=LOGOUT_SUCCESS");
+				exit();
+			} catch (AuthenticationException $e) {
+				header("Location: ".$targetPage."?status=LOGOUT_FAILED&message=".$e->getMessage());
+				exit();
+			}
 		}
-	}
-	
-	private function login(SimpleXMLElement $xml, $sourcePage) {
-		$targetPage = (string) $xml["target"];
-		if(!$targetPage) throw new ServletApplicationException("'target' attribute of 'login' tag is missing/empty!");
-		$parameterUsername = (string) $xml["parameter_username"];
-		$parameterPassword = (string) $xml["parameter_password"];
-		$parameterRememberMe = (string) $xml["parameter_rememberMe"];
-		try {
-			$this->authentication->login(
-					($parameterUsername?$parameterUsername:self::DEFAULT_PARAMETER_USERNAME),
-					($parameterPassword?$parameterPassword:self::DEFAULT_PARAMETER_PASSWORD),
-					($parameterRememberMe?$parameterRememberMe:self::DEFAULT_PARAMETER_REMEMBER_ME)
-					);
-			header("Location: ".$targetPage."?status=LOGIN_SUCCESS");
-			exit();
-		} catch (AuthenticationException $e) {
-			header("Location: ".$sourcePage."?status=LOGIN_FAILED&message=".$e->getMessage());
-			exit();
-		}
-	}
-	
-	private function logout(SimpleXMLElement $xml, $sourcePage) {
-		$targetPage = (string) $xml["target"];
-		if(!$targetPage) $targetPage = self::DEFAULT_TARGET_PAGE;
-		try {
-			$this->authentication->logout();
-			header("Location: ".$targetPage."?status=LOGOUT_SUCCESS");
-			exit();
-		} catch (AuthenticationException $e) {
-			header("Location: ".$targetPage."?status=LOGOUT_FAILED&message=".$e->getMessage());
-			exit();
-		}
-	}
-	
-	private function getDAO(SimpleXMLElement $xml) {
-		$dao = (string) $xml["dao"];
-		if(!$dao) throw new ServletApplicationException("'dao' attribute of 'form' tag is missing!");
-		
-		// load file
-		$daoFile = $dao.".php";
-		if(!file_exists($daoFile)) throw new ServletApplicationException("DAO file not found: ".$daoFile."!");
-		require_once($daoFile);
-		
-		// locate class
-		$daoClass = substr($dao,strrpos($dao,"/")+1);
-		if(!($daoClass instanceof UserAuthenticationDAO)) throw new ServletApplicationException("DAO class must be instance of UserAuthenticationDAO!");
-		return new $daoClass();
 	}
 }

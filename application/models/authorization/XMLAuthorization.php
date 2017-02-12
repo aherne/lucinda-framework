@@ -1,4 +1,6 @@
 <?php
+require_once("libraries/php-security-api/src/authorization/AuthorizationResult.php");
+require_once("libraries/php-security-api/src/authorization/AuthorizationException.php");
 /**
  * Encapsulates request authorization via XML that must have routes configured as:
  * <routes>

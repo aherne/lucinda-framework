@@ -6,8 +6,9 @@ require_once("application/models/authorization/XMLAuthorization.php");
 class XMLAuthorizationWrapper {
 	const DEFAULT_LOGGED_IN_PAGE = "index";
 	const DEFAULT_LOGGED_OUT_PAGE = "login";
+	const REFRESH_TIME = 0;
 	
-	public function __construct(SimpleXMLElement $xml, $currentPage, $persistenceDrivers) {
+	public function __construct(SimpleXMLElement $xml, $currentPage, $userID) {
 		$xmlLocal = $xml->security->authorization->by_route;
 		$loggedInCallback = (string) $xmlLocal->logged_in_callback;
 		if(!$loggedInCallback) $loggedInCallback = self::DEFAULT_LOGGED_IN_PAGE;
@@ -15,20 +16,14 @@ class XMLAuthorizationWrapper {
 		if(!$loggedOutCallback) $loggedOutCallback = self::DEFAULT_LOGGED_OUT_PAGE;
 		
 		$authorization = new XMLAuthorization($loggedInCallback, $loggedOutCallback);
-		$result = $authorization->authorize($xml, $currentPage, $this->isAuthenticated($persistenceDrivers));
-		if($result->getStatus()!=AuthorizationResult::STATUS_OK) {
+		$result = $authorization->authorize($xml, $currentPage, ($userID?true:false));
+		if($result->getStatus()==AuthorizationResult::STATUS_OK) {
+			
+		} else {
 			header("HTTP/1.1 ".$this->getStatusText($result->getStatus()));
-			header("Refresh:0; url=".$result->getCallbackURI()."?status=".$this->getStatusCode($result->getStatus()));
+			header("Refresh:".self::REFRESH_TIME."; url=".$result->getCallbackURI()."?status=".$this->getStatusCode($result->getStatus()));
 			exit();			
 		}
-	}
-	
-	private function isAuthenticated($persistenceDrivers) {
-		foreach($persistenceDrivers as $persistenceDriver) {
-			$userID = $persistenceDriver->load();
-			if($userID) return true;
-		}
-		return false;
 	}
 	
 	private function getStatusCode($status) {

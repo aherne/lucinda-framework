@@ -22,11 +22,11 @@ class Oauth2AuthenticationWrapper {
 	private $persistenceDrivers;
 	private $authentication;
 	
-	public function __construct($xml, $currentPage, $persistenceDrivers) {
+	public function __construct($xml, $currentPage, $persistenceDrivers, DAOLocator $locator) {
 		$this->xml = $xml;
 		$this->currentPage = $currentPage;
 		$this->persistenceDrivers = $persistenceDrivers;
-		$this->authentication = new Oauth2Authentication($this->getDAO(), $persistenceDrivers);
+		$this->authentication = new Oauth2Authentication($locator->locate($xml, "dao", "UserOauth2AuthenticationDAO"), $persistenceDrivers);
 		
 		$this->login();
 		$this->logout();
@@ -94,20 +94,5 @@ class Oauth2AuthenticationWrapper {
 		$callbackPage = (isset($_SERVER['HTTPS'])?"https":"http")."://".$_SERVER['HTTP_HOST'].str_replace("?".$_SERVER["QUERY_STRING"],"",$_SERVER['REQUEST_URI']);
 		
 		return new OAuth2\ClientInformation($clientID, $clientSecret, $callbackPage);
-	}
-	
-	private function getDAO() {
-		$dao = (string) $this->xml["dao"];
-		if(!$dao) throw new ServletApplicationException("'dao' attribute of 'oauth2' tag is missing!");
-		
-		// load file
-		$daoFile = $dao.".php";
-		if(!file_exists($daoFile)) throw new ServletApplicationException("DAO file not found: ".$daoFile."!");
-		require_once($daoFile);
-		
-		// locate class
-		$daoClass = substr($dao,strrpos($dao,"/")+1);
-		if(!($daoClass instanceof UserOauth2AuthenticationDAO)) throw new ServletApplicationException("DAO class must be instance of UserAuthenticationDAO!");
-		return new $daoClass();
 	}
 }

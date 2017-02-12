@@ -1,66 +1,77 @@
 <?php
-// require_once("application/libraries/php-security-api/loader.php");
+require_once("application/models/DAOLocator.php");
 /**
  * 
-		<authentication>
-			<form dao="{CLASS_PATH}">
-				<login parameter_username="" parameter_password="" page="{LOGIN_URL}" target="{PAGE_AFTER_LOGIN}" parameter_rememberMe=""/>
-				<logout page="{LOGOUT_URL}" target="{PAGE_AFTER_LOGOUT}"/>
-			</form>
-			<oauth2 dao="{CLASS_PATH}">
-				<facebook page="{LOGIN_URL}" target="{PAGE_AFTER_LOGIN}">
-					<app_id>{APPLICATION_ID}</app_id>
-					<app_secret>{APPLICATION_SECRET}</app_secret>
-					<callback_url>{URL_OF_PAGE_TO_RECEIVE_AUTHORIZATION_CODE}</callback_url>
-					<scopes>{OPTIONAL|DEFAULTS_TO_USERINFO_SCOPE}</scopes>
-				</facebook>
-				
-			</oauth2>
-		</authentication>
+
+		<persistence>
+			<session parameter_name="..." expiration_time="0" http_only="0" https_only="0" handler="{CLASS_PATH}" save_path="{SAVE_PATH}"/>
+			<token expirationTime="0" regenerationTime="0"/>
+			<remember_me parameter_name="..."  expiration_time="0" http_only="0" https_only="0"/>
+		</persistence>
  * @author aherne
  *
  */
 class SecurityListener extends RequestListener {
+	private $daoLocator;
 	private $persistenceDrivers = array();
 	
 	public function run() {
+		$this->setDAOLocator();
 		$this->setPersistenceDrivers();
 		$this->authenticate();
 		$this->authorize();
+		// TODO: generate/check csrf key
+	}
+	
+	private function setDAOLocator() {
+		$this->daoLocator = new DAOLocator($this->application->getXML());
 	}
 	
 	private function setPersistenceDrivers() {
+		$xml = $this->application->getXML()->security->persistence;
+		if(empty($xml)) return; // it is allowed for elements to not persist
 		
+		if($xml->session) {
+			
+		}
+		
+		if($xml->remember_me) {
+			
+		}
+		
+		// TODO: add later support for tokens (who do not support redirection)
 	}
 	
 	private function authenticate() {
 		$xml = $this->application->getXML()->security->authentication;
 		if(empty($xml)) throw new ServletApplicationException("Entry missing in configuration.xml: security.authentication");
-		$currentPage = $this->request->getAttribute("page_url");
 		
 		if($xml->form) {
 			require_once("application/models/FormAuthenticationWrapper.php");
-			new FormAuthenticationWrapper($xml->form, $currentPage, $this->persistenceDrivers);
+			new FormAuthenticationWrapper($xml->form, $this->request->getAttribute("page_url"), $this->persistenceDrivers, $this->daoLocator);
 		}
 		if($xml->oauth2) {
 			require_once("application/models/Oauth2AuthenticationWrapper.php");
-			new Oauth2AuthenticationWrapper($xml->oauth2, $currentPage, $this->persistenceDrivers);
+			new Oauth2AuthenticationWrapper($xml->oauth2, $this->request->getAttribute("page_url"), $this->persistenceDrivers, $this->daoLocator);
 		}
 	}
 	
 	private function authorize() {
 		$xml = $this->application->getXML()->security->authorization;
 		if(empty($xml)) throw new ServletApplicationException("Entry missing in configuration.xml: security.authentication");
-		$currentPage = $this->request->getAttribute("page_url");
+		
+		$userID = null;
+		foreach($this->persistenceDrivers as $persistenceDriver) {
+			$userID = $persistenceDriver->load();
+		}
 
 		if($xml->by_route) {
-			//$loggedInFailureCallback = "index", $loggedOutFailureCallback = "login"
 			require_once("application/models/XMLAuthorizationWrapper.php");
-			new XMLAuthorizationWrapper($this->application->getXML(), $currentPage, $this->persistenceDrivers);
+			new XMLAuthorizationWrapper($this->application->getXML(), $this->request->getAttribute("page_url"), $userID);
 		}
 		if($xml->by_dao) {
-			require_once("application/models/authentication/Oauth2AuthenticationWrapper.php");
-			new Oauth2AuthenticationWrapper($xml->oauth2, $currentPage, $this->persistenceDrivers);
+			require_once("application/models/DAOAuthorizationWrapper.php");
+			new DAOAuthorizationWrapper($xml->oauth2, $this->request->getAttribute("page_url"), $userID, $this->daoLocator);
 		}
 	}
 }
