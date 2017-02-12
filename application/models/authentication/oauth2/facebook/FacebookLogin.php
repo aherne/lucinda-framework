@@ -1,7 +1,6 @@
 <?php
 require_once("FacebookDriver.php");
 require_once("FacebookUserInformation.php");
-require_once("../OAuth2Login.php");
 
 class FacebookLogin implements OAuth2Login {
 	const SCOPES = array("public_profile","email");

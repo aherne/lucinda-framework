@@ -1,7 +1,6 @@
 <?php
 require_once("GoogleDriver.php");
 require_once("GoogleUserInformation.php");
-require_once("../OAuth2Login.php");
 
 class GoogleLogin implements OAuth2Login {
 	const SCOPES = array("https://www.googleapis.com/auth/plus.login","https://www.googleapis.com/auth/plus.profile.emails.read");

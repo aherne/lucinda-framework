@@ -25,7 +25,7 @@
 		<listener class="EnvironmentDetector"/>
 		<listener class="SQLDataSourceInjector"/>
 		<listener class="NoSQLDataSourceInjector"/>
-		<listener class="Authorization"/>
+		<listener class="SecurityListener"/>
 		<listener class="ViewLanguageResolver"/>
 	</listeners>
 	<formats>
@@ -53,13 +53,18 @@
 				<logout page="{LOGOUT_URL}" target="{PAGE_AFTER_LOGOUT}"/>
 			</form>
 			<oauth2 dao="{CLASS_PATH}">
-				<facebook page="{LOGIN_URL}" target="{PAGE_AFTER_LOGIN}">
+				<driver name="facebook" page="{LOGIN_URL}" target="{PAGE_AFTER_LOGIN}">
 					<app_id>{APPLICATION_ID}</app_id>
 					<app_secret>{APPLICATION_SECRET}</app_secret>
 					<callback_url>{URL_OF_PAGE_TO_RECEIVE_AUTHORIZATION_CODE}</callback_url>
 					<scopes>{OPTIONAL|DEFAULTS_TO_USERINFO_SCOPE}</scopes>
-				</facebook>
-				
+				</driver>
+				<driver name="google" page="{LOGIN_URL}" target="{PAGE_AFTER_LOGIN}">
+					<app_id>{APPLICATION_ID}</app_id>
+					<app_secret>{APPLICATION_SECRET}</app_secret>
+					<callback_url>{URL_OF_PAGE_TO_RECEIVE_AUTHORIZATION_CODE}</callback_url>
+					<scopes>{OPTIONAL|DEFAULTS_TO_USERINFO_SCOPE}</scopes>
+				</driver>
 			</oauth2>
 		</authentication>
 		<persistence>

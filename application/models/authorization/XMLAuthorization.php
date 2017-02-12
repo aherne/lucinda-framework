@@ -19,7 +19,7 @@ class XMLAuthorization {
 	 * @param string $loggedInFailureCallback
 	 * @param string $loggedOutFailureCallback
 	 */
-	public function __construct($loggedInFailureCallback = "index", $loggedOutFailureCallback = "login") {
+	public function __construct($loggedInFailureCallback, $loggedOutFailureCallback) {
 		$this->loggedInFailureCallback = $loggedInFailureCallback;
 		$this->loggedOutFailureCallback = $loggedOutFailureCallback;
 	}
@@ -59,7 +59,7 @@ class XMLAuthorization {
     		// now perform rights check
     		if($principal == self::ROLE_USER && !$isAuthenticated) {
     			// not allowed
-                $status = AuthorizationResult::STATUS_NOT_ALLOWED;
+                $status = AuthorizationResult::STATUS_UNAUTHORIZED;
                 $callbackURI = $this->loggedOutFailureCallback;
     		} else {
     			// allowed
