@@ -1,5 +1,5 @@
 <?php
-require_once("application/models/authorization/XMLAuthorization.php");
+require_once("XMLAuthorization.php");
 /**
  * <by_route logged_in_callback="" logged_out_callback=""/>
  */

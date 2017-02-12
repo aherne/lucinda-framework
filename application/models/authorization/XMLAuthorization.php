@@ -32,7 +32,7 @@ class XMLAuthorization {
      * @param SimpleXMLElement $xml
      * @param string $routeToAuthorize
      * @param boolean $isAuthenticated
-     * @throws AuthorizationException If route is misconfigured.
+     * @throws ServletApplicationException If route is misconfigured.
      * @return AuthorizationResult
      */
     public function authorize(SimpleXMLElement $xml, $routeToAuthorize, $isAuthenticated) {
@@ -42,7 +42,7 @@ class XMLAuthorization {
         // check autorouting
         $autoRouting = (int) $xml->application->auto_routing;
         if($autoRouting) {
-        	throw new SecurityException("XML authorization does not support auto-routing!");
+        	throw new ServletApplicationException("XML authorization does not support auto-routing!");
         }
         
     	// check rights 
@@ -54,7 +54,7 @@ class XMLAuthorization {
     		if($path != $routeToAuthorize) continue;
     		
     		// check for misconfiguration
-    		if(empty($info['access'])) throw new AuthorizationException("Access not set for route!");
+    		if(empty($info['access'])) throw new ServletApplicationException("Access not set for route!");
     		$principal = (string) $info["access"];
     		if(!in_array($principal,array(self::ROLE_GUEST,self::ROLE_USER))) throw new AuthorizationException("Unrecognized role: ".$principal);
     		
