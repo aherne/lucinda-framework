@@ -7,10 +7,10 @@ class DAOAuthorizationWrapper {
 	const REFRESH_TIME = 0;
 
 	public function __construct(SimpleXMLElement $xml, $currentPage, $userID, DAOLocator $locator) {
-		$loggedInCallback = (string) $xml->logged_in_callback;
+		$loggedInCallback = (string) $xml["logged_in_callback"];
 		if(!$loggedInCallback) $loggedInCallback = self::DEFAULT_LOGGED_IN_PAGE;
 
-		$loggedOutCallback = (string) $xml->logged_out_callback;
+		$loggedOutCallback = (string) $xml["logged_out_callback"];
 		if(!$loggedOutCallback) $loggedOutCallback = self::DEFAULT_LOGGED_OUT_PAGE;
 
 		$pageDAO = $locator->locate($xml, "page_dao", "PageAuthorizationDAO");

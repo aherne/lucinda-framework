@@ -10,9 +10,11 @@ class XMLAuthorizationWrapper {
 	
 	public function __construct(SimpleXMLElement $xml, $currentPage, $userID) {
 		$xmlLocal = $xml->security->authorization->by_route;
-		$loggedInCallback = (string) $xmlLocal->logged_in_callback;
+		
+		$loggedInCallback = (string) $xmlLocal["logged_in_callback"];
 		if(!$loggedInCallback) $loggedInCallback = self::DEFAULT_LOGGED_IN_PAGE;
-		$loggedOutCallback = (string) $xmlLocal->logged_out_callback;
+
+		$loggedOutCallback = (string) $xmlLocal["logged_out_callback"];
 		if(!$loggedOutCallback) $loggedOutCallback = self::DEFAULT_LOGGED_OUT_PAGE;
 		
 		$authorization = new XMLAuthorization($loggedInCallback, $loggedOutCallback);
