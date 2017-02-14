@@ -1,11 +1,11 @@
 <?php
 require_once("libraries/php-security-api/src/authentication/FormAuthentication.php");
 /**
- * 
+ *
  * <form dao="{CLASS_PATH}">
-				<login parameter_username="" parameter_password="" page="{LOGIN_URL}" target="{PAGE_AFTER_LOGIN}" parameter_rememberMe=""/>
-				<logout page="{LOGOUT_URL}" target="{PAGE_AFTER_LOGOUT}"/>
-			</form>
+ <login parameter_username="" parameter_password="" page="{LOGIN_URL}" target="{PAGE_AFTER_LOGIN}" parameter_rememberMe=""/>
+ <logout page="{LOGOUT_URL}" target="{PAGE_AFTER_LOGOUT}"/>
+ </form>
  * @author aherne
  *
  */
@@ -20,8 +20,8 @@ class FormAuthenticationWrapper {
 	private $xml;
 	private $currentPage;
 	private $authentication;
-	
-	public function __construct($xml, $currentPage, $persistenceDrivers, DAOLocator $daoLocator) {		
+
+	public function __construct($xml, $currentPage, $persistenceDrivers, DAOLocator $daoLocator) {
 		$this->xml = $xml;
 		$this->currentPage = $currentPage;
 		$this->authentication = new FormAuthentication($daoLocator->locate($xml, "dao", "UserAuthenticationDAO"), $persistenceDrivers);
@@ -29,7 +29,7 @@ class FormAuthenticationWrapper {
 		$this->login();
 		$this->logout();
 	}
-	
+
 	private function login() {
 		$sourcePage = (string) $this->xml->login["page"];
 		if(!$sourcePage) $sourcePage = self::DEFAULT_LOGIN_PAGE;
@@ -53,7 +53,7 @@ class FormAuthenticationWrapper {
 			}
 		}
 	}
-	
+
 	private function logout() {
 		$sourcePage = (string) $this->xml->logout["page"];
 		if(!$sourcePage) $sourcePage = self::DEFAULT_LOGOUT_PAGE;
