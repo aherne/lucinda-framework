@@ -74,11 +74,8 @@
 		</persistence>
 		<authorization callbackLoggedIn="{PAGE_URL}" callbackLoggedOut="{PAGE_URL}">
 			<by_route/>
-			<!-- future: we define "intercept" tags that define paths available to guests or logged in users (users table only) --->
 			<by_dao pages_dao="{CLASS_PATH}" users_dao="{CLASS_PATH}" />
 		</authorization>
-		<!-- Always generate a csrf token that can be sent and verified. LOGIN page requires it! -->
-		<!-- Check validity of uploaded file (if their content type matches the one inserted) >> UploadedFilesChecker @ RequestListener -->
 		
 	</security>
 </xml>
