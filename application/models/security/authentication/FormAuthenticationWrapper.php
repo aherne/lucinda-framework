@@ -21,19 +21,25 @@ class FormAuthenticationWrapper {
 	private $currentPage;
 	private $authentication;
 
-	public function __construct($xml, $currentPage, $persistenceDrivers, DAOLocator $daoLocator) {
+	public function __construct($xml, $currentPage, $persistenceDrivers, DAOLocator $daoLocator, CsrfTokenWrapper $csrf) {
 		$this->xml = $xml;
 		$this->currentPage = $currentPage;
 		$this->authentication = new FormAuthentication($daoLocator->locate($xml, "dao", "UserAuthenticationDAO"), $persistenceDrivers);
 			
-		$this->login();
+		$this->login($csrf);
 		$this->logout();
 	}
 
-	private function login() {
+	private function login(CsrfTokenWrapper $csrf) {
 		$sourcePage = (string) $this->xml->login["page"];
 		if(!$sourcePage) $sourcePage = self::DEFAULT_LOGIN_PAGE;
-		if($sourcePage == $this->currentPage && !empty($_POST)) {
+		if($sourcePage == $this->currentPage) {
+			// check csrf token
+			if(!$csrf->isValid($_POST['csrf'], 0)) {
+				throw new SecurityException("Invalid attempt");
+			}
+			
+			// login
 			$targetPage = (string) $this->xml->login["target"];
 			if(!$targetPage) $targetPage = self::DEFAULT_TARGET_PAGE;
 			$parameterUsername = (string) $this->xml->login["parameter_username"];
