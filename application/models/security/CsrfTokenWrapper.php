@@ -11,7 +11,7 @@ class CsrfTokenWrapper {
 	public function __construct(SimpleXMLElement $xml) {
 		// sets secret
 		$secret = (string) $xml["secret"];
-		if(!$secret) throw new ServletApplicationException("'secret' attribute not set in security.csrf tag");
+		if(!$secret) throw new ApplicationException("'secret' attribute not set in security.csrf tag");
 		
 		// sets token
 		$this->token = new SynchronizerToken($_SERVER["REMOTE_ADDR"], $secret);

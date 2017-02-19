@@ -7,7 +7,7 @@ class TokenPersistenceDriverWrapper extends PersistenceDriverWrapper {
 
 	protected function setDriver(SimpleXMLElement $xml) {
 		$secret = (string) $xml["secret"];
-		if(!$secret) throw new ServletApplicationException("'secret' key of security.persistence.token tag is mandatory!");
+		if(!$secret) throw new ApplicationException("'secret' key of security.persistence.token tag is mandatory!");
 
 		$expirationTime = (integer) $xml["expiration"];
 		if(!$expirationTime) $expirationTime = self::DEFAULT_EXPIRATION_TIME;

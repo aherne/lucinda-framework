@@ -3,6 +3,7 @@ require_once("application/models/security/DAOLocator.php");
 require_once("libraries/php-security-api/loader.php");
 
 /**
+ * Connects PHP-SECURITY-API and OAUTH2-CLIENT with CONFIGURATION.XML @ SERVLETS API.
  * Reads XML "security" tag for sub-tags that define web security related settings then forwards latter to wrappers that link XML tags/properties with 
  * Security and OAuth2 API constructs. Above mentioned sub-tags are:
  * - csrf: (MANDATORY) this tag holds settings necessary to generate a CSRF token
@@ -15,6 +16,7 @@ require_once("libraries/php-security-api/loader.php");
  * 		<authentication>...</authentication>
  * 		<persistence>...</persistence>
  * 		<authorization ...>...</authorization>
+ * 		<csrf />
  * </security>
  * NOTE: this listener is not needed if your application serves only public content!
  */
@@ -50,7 +52,7 @@ class SecurityListener extends RequestListener {
 	 * 		<token .../>
 	 * 		<remember-me .../>
 	 * </persistence>
-	 * @throws ServletApplicationException When settings were improperly written.
+	 * @throws ApplicationException When settings were improperly written.
 	 */
 	private function setPersistenceDrivers() {
 		$xml = $this->application->getXML()->security->persistence;
@@ -92,18 +94,14 @@ class SecurityListener extends RequestListener {
 	/**
 	 * Sets CSRF token to use in re-authenticating while performing critical operations (such as login) based on contents of security.csrf tag.
 	 * 
-	 * Syntax for XML "persistence" tag is:
-	 * <persistence>
-	 * 		<session .../>
-	 * 		<token .../>
-	 * 		<remember-me .../>
-	 * </persistence>
+	 * Syntax for XML "csrf" tag is:
+	 * <csrf .../>
 	 * 
-	 * @throws ServletApplicationException
+	 * @throws ApplicationException
 	 */
 	private function setCsrfToken() {
 		$xml = $this->application->getXML()->security->csrf;
-		if(empty($xml)) throw new ServletApplicationException("Entry missing in configuration.xml: security.csrf");
+		if(empty($xml)) return; // for non-form authentication, it is allowed to have no csrf protection
 		
 		require_once("application/models/security/CsrfTokenWrapper.php");
 		$this->request->setAttribute("csrf", new CsrfTokenWrapper($xml));
@@ -120,15 +118,20 @@ class SecurityListener extends RequestListener {
 	 * 		<oauth2 ...> ... </oauth2>
 	 * </authentication>
 	 * 
-	 * @throws ServletApplicationException If XML settings are incorrect
+	 * @throws ApplicationException If XML settings are incorrect
 	 */
 	private function authenticate() {
 		$xml = $this->application->getXML()->security->authentication;
-		if(empty($xml)) throw new ServletApplicationException("Entry missing in configuration.xml: security.authentication");
+		if(empty($xml)) throw new ApplicationException("Entry missing in configuration.xml: security.authentication");
 
 		if($xml->form) {
 			require_once("application/models/security/authentication/FormAuthenticationWrapper.php");
-			new FormAuthenticationWrapper($xml->form, $this->request->getAttribute("page_url"), $this->persistenceDrivers, $this->daoLocator);
+			new FormAuthenticationWrapper(
+					$xml->form, 
+					$this->request->getAttribute("page_url"), 
+					$this->persistenceDrivers, 
+					$this->daoLocator, 
+					$this->request->getAttribute("csrf"));
 		}
 		if($xml->oauth2) {
 			require_once("application/models/security/authentication/Oauth2AuthenticationWrapper.php");
@@ -147,11 +150,11 @@ class SecurityListener extends RequestListener {
 	 * 		<by_dao .../>
 	 * </authorization>
 	 * 
-	 * @throws ServletApplicationException If XML settings are incorrect
+	 * @throws ApplicationException If XML settings are incorrect
 	 */
 	private function authorize() {
 		$xml = $this->application->getXML()->security->authorization;
-		if(empty($xml)) throw new ServletApplicationException("Entry missing in configuration.xml: security.authentication");
+		if(empty($xml)) throw new ApplicationException("Entry missing in configuration.xml: security.authentication");
 
 		if($xml->by_route) {
 			require_once("application/models/security/authorization/XMLAuthorizationWrapper.php");

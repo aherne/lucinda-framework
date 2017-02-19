@@ -36,7 +36,7 @@ class Oauth2AuthenticationWrapper {
 		$this->xmlLocal = $this->xml->driver;
 		foreach($this->xmlLocal as $element) {
 			$driverName = (string) $element["name"];
-			if(!$driverName) throw new ServletApplicationException("Property 'name' of oauth2.driver tag is mandatory!");
+			if(!$driverName) throw new ApplicationException("Property 'name' of oauth2.driver tag is mandatory!");
 				
 			$callbackPage = (string) $element["callback"];
 			if(!$callbackPage) $callbackPage = str_replace("{DRIVER}", $driverName, self::DEFAULT_CALLBACK_PAGE);
@@ -44,7 +44,7 @@ class Oauth2AuthenticationWrapper {
 				// detect class and load fileload file
 				$driverClass = ucwords($driverName)."Login";
 				$driverFilePath = "application/models/authentication/oauth2/".strtolower($driverName)."/".$driverClass.".php";
-				if(!file_exists($driverFilePath)) throw new ServletApplicationException("Driver class not found: ".$driverFilePath);
+				if(!file_exists($driverFilePath)) throw new ApplicationException("Driver class not found: ".$driverFilePath);
 				require_once($driverFilePath);
 		
 				// create object and login
@@ -88,7 +88,7 @@ class Oauth2AuthenticationWrapper {
 		// get client id and secret from xml
 		$clientID = (string) $xml->client_id;
 		$clientSecret = (string) $xml->client_secret;
-		if(!$clientID || !$clientSecret) throw new ServletApplicationException("Tags 'client_id' and 'client_secret' are mandatory!");
+		if(!$clientID || !$clientSecret) throw new ApplicationException("Tags 'client_id' and 'client_secret' are mandatory!");
 		
 		// callback page is same as driver login page
 		$callbackPage = (isset($_SERVER['HTTPS'])?"https":"http")."://".$_SERVER['HTTP_HOST'].str_replace("?".$_SERVER["QUERY_STRING"],"",$_SERVER['REQUEST_URI']);
