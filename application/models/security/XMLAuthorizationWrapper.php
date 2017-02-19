@@ -19,7 +19,7 @@ class XMLAuthorizationWrapper {
 		
 		$authorization = new XMLAuthorization($loggedInCallback, $loggedOutCallback);
 		$result = $authorization->authorize($xml, $currentPage, ($userID?true:false));
-		if($result->getStatus()==AuthorizationResult::STATUS_OK) {
+		if($result->getStatus()==AuthorizationResultStatus::OK) {
 			
 		} else {
 			header("HTTP/1.1 ".$this->getStatusText($result->getStatus()));
@@ -29,7 +29,7 @@ class XMLAuthorizationWrapper {
 	}
 	
 	private function getStatusCode($status) {
-		if($status == AuthorizationResult::STATUS_UNAUTHORIZED) {
+		if($status == AuthorizationResultStatus::UNAUTHORIZED) {
 			return "UNAUTHORIZED";
 		} else {
 			return "NOT_FOUND";
@@ -37,7 +37,7 @@ class XMLAuthorizationWrapper {
 	}
 	
 	private function getStatusText($status) {
-		if($status == AuthorizationResult::STATUS_UNAUTHORIZED) {
+		if($status == AuthorizationResultStatus::UNAUTHORIZED) {
 			return "401 Unauthorized";
 		} else {
 			return "404 Not Found";

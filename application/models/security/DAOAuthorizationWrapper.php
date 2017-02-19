@@ -21,7 +21,7 @@ class DAOAuthorizationWrapper {
 
 		$authorization = new DAOAuthorization($loggedInCallback, $loggedOutCallback);
 		$result = $authorization->authorize($pageDAO, $userDAO);
-		if($result->getStatus()!=AuthorizationResult::STATUS_OK) {
+		if($result->getStatus()!=AuthorizationResultStatus::OK) {
 			header("HTTP/1.1 ".$this->getStatusText($result->getStatus()));
 			header("Refresh:".self::REFRESH_TIME."; url=".$result->getCallbackURI()."?status=".$this->getStatusCode($result->getStatus()));
 			exit();
@@ -30,13 +30,13 @@ class DAOAuthorizationWrapper {
 
 	private function getStatusText($statusID) {
 		switch($statusID) {
-			case AuthorizationResult::STATUS_UNAUTHORIZED:
+			case AuthorizationResultStatus::UNAUTHORIZED:
 				return "401 Unauthorized";
 				break;
-			case AuthorizationResult::STATUS_FORBIDDEN:
+			case AuthorizationResultStatus::FORBIDDEN:
 				return "403 Forbidden";
 				break;
-			case AuthorizationResult::STATUS_NOT_FOUND:
+			case AuthorizationResultStatus::NOT_FOUND:
 				return "404 Not Found";
 				break;
 		}
@@ -44,13 +44,13 @@ class DAOAuthorizationWrapper {
 
 	private function getStatusCode($statusID) {
 		switch($statusID) {
-			case AuthorizationResult::STATUS_UNAUTHORIZED:
+			case AuthorizationResultStatus::UNAUTHORIZED:
 				return "MUST_LOGIN";
 				break;
-			case AuthorizationResult::STATUS_FORBIDDEN:
+			case AuthorizationResultStatus::FORBIDDEN:
 				return "NOT_ALLOWED";
 				break;
-			case AuthorizationResult::STATUS_NOT_FOUND:
+			case AuthorizationResultStatus::NOT_FOUND:
 				return "NOT_FOUND";
 				break;
 		}

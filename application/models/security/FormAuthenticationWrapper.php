@@ -22,6 +22,7 @@ class FormAuthenticationWrapper {
 	private $authentication;
 
 	public function __construct($xml, $currentPage, $persistenceDrivers, DAOLocator $daoLocator, CsrfTokenWrapper $csrf) {
+		if(!$csrf) throw new ApplicationException("secury.csrf tag is missing!");
 		$this->xml = $xml;
 		$this->currentPage = $currentPage;
 		$this->authentication = new FormAuthentication($daoLocator->locate($xml, "dao", "UserAuthenticationDAO"), $persistenceDrivers);
@@ -33,10 +34,10 @@ class FormAuthenticationWrapper {
 	private function login(CsrfTokenWrapper $csrf) {
 		$sourcePage = (string) $this->xml->login["page"];
 		if(!$sourcePage) $sourcePage = self::DEFAULT_LOGIN_PAGE;
-		if($sourcePage == $this->currentPage) {
+		if($sourcePage == $this->currentPage && !empty($_POST)) {
 			// check csrf token
-			if(!$csrf->isValid($_POST['csrf'], 0)) {
-				throw new SecurityException("Invalid attempt");
+			if(empty($_POST['csrf']) || !$csrf->isValid($_POST['csrf'], 0)) {
+				throw new TokenException("CSRF token is invalid or missing!");
 			}
 			
 			// login

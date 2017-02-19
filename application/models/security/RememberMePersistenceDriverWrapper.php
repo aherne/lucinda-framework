@@ -7,7 +7,7 @@ class RememberMePersistenceDriverWrapper extends PersistenceDriverWrapper {
 
 	protected function setDriver(SimpleXMLElement $xml) {
 		$secret = (string) $xml["secret"];
-		if(!$secret) throw new ServletApplicationException("'secret' key of security.persistence.remember_me tag is mandatory!");
+		if(!$secret) throw new ApplicationException("'secret' key of security.persistence.remember_me tag is mandatory!");
 
 		$parameterName = (string) $xml["parameter_name"];
 		if(!$parameterName) $parameterName = self::DEFAULT_PARAMETER_NAME;
