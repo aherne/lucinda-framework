@@ -1,32 +1,24 @@
 <?php
+require_once("AuthorizationWrapper.php");
 /**
- * Binds DAOAuthorization @ SECURITY-API to settings from configuration.xml @ SERVLETS-API then performs request authorization.
+ * Binds DAOAuthorization @ SECURITY-API to settings from configuration.xml @ SERVLETS-API then performs request authorization via database.
  */
-class DAOAuthorizationWrapper {
+class DAOAuthorizationWrapper extends AuthorizationWrapper {
 	const DEFAULT_LOGGED_IN_PAGE = "index";
 	const DEFAULT_LOGGED_OUT_PAGE = "login";
 	const REFRESH_TIME = 0;
 	
-	private $result;
-
-	public function __construct(SimpleXMLElement $xml, $currentPage, $userID, DAOLocator $locator) {
-		$this->setResult($xml, $currentPage, $userID, $locator);
-// 		if($result->getStatus()!=AuthorizationResultStatus::OK) {
-// 			header("HTTP/1.1 ".$this->getStatusText($result->getStatus()));
-// 			header("Refresh:".self::REFRESH_TIME."; url=".$result->getCallbackURI()."?status=".$this->getStatusCode($result->getStatus()));
-// 			exit();
-// 		}
-	}
-	
 	/**
-	 * Extracts relevant info from XML and delegates it to DAOAuthorization, saving authorization result.
+	 * Creates an object
 	 * 
-	 * @param SimpleXMLElement $xml XML tag that sets up by_dao authorization.
-	 * @param string $currentPage Requested page path.
-	 * @param mixed $userID Unique user identifier (usually an integer)
-	 * @param DAOLocator $locator Service that locates data-access-objects in XML and on disk, then validates and instantiates them.
+	 * @param SimpleXMLElement $xml Contents of security.authorization.by_dao tag @ configuration.xml
+	 * @param string $currentPage Current page requested.
+	 * @param mixed $userID Unique user identifier (usually an integer) 
+	 * @param DAOLocator $locator Service to locate DAOs authorization checks will be forwarded to.
+	 * @throws SQLConnectionException If connection to database server fails.
+	 * @throws SQLStatementException If query to database server fails.
 	 */
-	private function setResult(SimpleXMLElement $xml, $currentPage, $userID, DAOLocator $locator) {
+	public function __construct(SimpleXMLElement $xml, $currentPage, $userID, DAOLocator $locator) {
 		$loggedInCallback = (string) $xml["logged_in_callback"];
 		if(!$loggedInCallback) $loggedInCallback = self::DEFAULT_LOGGED_IN_PAGE;
 		
@@ -40,43 +32,6 @@ class DAOAuthorizationWrapper {
 		$userDAO->setID($userID);
 		
 		$authorization = new DAOAuthorization($loggedInCallback, $loggedOutCallback);
-		$this->result = $authorization->authorize($pageDAO, $userDAO);
+		$this->setResult($authorization->authorize($pageDAO, $userDAO));
 	}
-	
-	/**
-	 * Gets result of authorization attempt
-	 * 
-	 * @return AuthorizationResult
-	 */
-	public function getResult() {
-		return $this->result;
-	}
-
-// 	private function getStatusText($statusID) {
-// 		switch($statusID) {
-// 			case AuthorizationResultStatus::UNAUTHORIZED:
-// 				return "401 Unauthorized";
-// 				break;
-// 			case AuthorizationResultStatus::FORBIDDEN:
-// 				return "403 Forbidden";
-// 				break;
-// 			case AuthorizationResultStatus::NOT_FOUND:
-// 				return "404 Not Found";
-// 				break;
-// 		}
-// 	}
-
-// 	private function getStatusCode($statusID) {
-// 		switch($statusID) {
-// 			case AuthorizationResultStatus::UNAUTHORIZED:
-// 				return "MUST_LOGIN";
-// 				break;
-// 			case AuthorizationResultStatus::FORBIDDEN:
-// 				return "NOT_ALLOWED";
-// 				break;
-// 			case AuthorizationResultStatus::NOT_FOUND:
-// 				return "NOT_FOUND";
-// 				break;
-// 		}
-// 	}
 }

@@ -1,4 +1,7 @@
 <?php
+/**
+ * Implements parsing of FACEBOOK OAUTH2 API response
+ */
 class GoogleResponseWrapper extends OAuth2\ResponseWrapper {
 	public function wrap($response) {
 		$result = json_decode($response,true);
