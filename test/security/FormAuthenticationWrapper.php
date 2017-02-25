@@ -11,7 +11,7 @@ $xmlString = '
 				<authentication>
 					<form dao="MockUserAuthenticationDAO">
 						<login parameter_username="x" parameter_password="y"  parameter_rememberMe="z" page="loginz" target="indexz"/>
-						<logout page="logoutz" target="indexz"/>
+						<logout page="logoutz" target="loginz"/>
 					</form>
 				</authentication>
 				<csrf secret="98K[3z66JJiIqV31h-9(" expiration="2"/>
@@ -56,7 +56,7 @@ echo __LINE__.":".($result->getUserID()==$pd1->load() && $result->getUserID()==$
 // test logout
 $wrapper = new FormAuthenticationWrapper($xml->security->authentication->form,"logoutz", array($pd1,$pd2), $locator, $csrf);
 $result = $wrapper->getResult();
-echo __LINE__.":".($result->getStatus()==AuthenticationResultStatus::OK?"OK":"FAILED")."\n";
+echo __LINE__.":".($result->getStatus()==AuthenticationResultStatus::OK && $result->getCallbackURI()=="loginz"?"OK":"FAILED")."\n";
 // test values have been persisted
 echo __LINE__.":".($pd1->load()===null && $pd2->load()===null?"OK":"FAILED")."\n";
 

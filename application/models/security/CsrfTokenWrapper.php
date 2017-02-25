@@ -1,7 +1,7 @@
 <?php
 /**
- * Binds SynchronizerToken @ SECURITY-API to settings from configuration.xml @ SERVLETS-API then sets up an object based on which
- * one can perform CSRF checks later on in application's lifecycle.
+ * Binds SynchronizerToken @ SECURITY-API with settings from configuration.xml @ SERVLETS-API  then sets up an object based on which one can perform 
+ * CSRF checks later on in application's lifecycle.
  */
 class CsrfTokenWrapper {
 	const DEFAULT_EXPIRATION = 10*60;
@@ -14,8 +14,8 @@ class CsrfTokenWrapper {
 	/**
 	 * Creates an object
 	 * 
-	 * @param SimpleXMLElement $xml Contents of security.csrf XML tag.
-	 * @throws ApplicationException If 'secret' key is not defined
+	 * @param SimpleXMLElement $xml Contents of security.csrf @ configuration.xml
+	 * @throws ApplicationException If 'secret' key is not defined in XML
 	 */
 	public function __construct(SimpleXMLElement $xml) {
 		// sets secret
@@ -35,6 +35,7 @@ class CsrfTokenWrapper {
 	 * Encodes a token based on unique user identifier
 	 * @param mixed $userID Unique user identifier (usually an integer)
 	 * @return string Value of synchronizer token.
+     * @throws EncryptionException If encryption of token fails.
 	 */
 	public function generate($userID) {
 		return $this->token->encode($userID, $this->expiration);
@@ -46,6 +47,7 @@ class CsrfTokenWrapper {
 	 * @param string $token Value of synchronizer token
 	 * @param mixed $userID Unique user identifier (usually an integer)
 	 * @return boolean
+     * @throws EncryptionException If decryption of token fails.
      * @throws TokenException If token fails validations.
      * @throws TokenRegenerationException If token needs to be refreshed
 	 */

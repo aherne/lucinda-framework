@@ -165,4 +165,37 @@ class SecurityListener extends RequestListener {
 			new DAOAuthorizationWrapper($xml->by_dao, $this->request->getAttribute("page_url"), $this->request->getAttribute("user_id"), $this->daoLocator);
 		}
 	}
+// 		if($result->getStatus()!=AuthorizationResultStatus::OK) {
+// 			header("HTTP/1.1 ".$this->getStatusText($result->getStatus()));
+// 			header("Refresh:".self::REFRESH_TIME."; url=".$result->getCallbackURI()."?status=".$this->getStatusCode($result->getStatus()));
+// 			exit();
+// 		}
+
+// 	private function getStatusText($statusID) {
+// 		switch($statusID) {
+// 			case AuthorizationResultStatus::UNAUTHORIZED:
+// 				return "401 Unauthorized";
+// 				break;
+// 			case AuthorizationResultStatus::FORBIDDEN:
+// 				return "403 Forbidden";
+// 				break;
+// 			case AuthorizationResultStatus::NOT_FOUND:
+// 				return "404 Not Found";
+// 				break;
+// 		}
+// 	}
+
+// 	private function getStatusCode($statusID) {
+// 		switch($statusID) {
+// 			case AuthorizationResultStatus::UNAUTHORIZED:
+// 				return "MUST_LOGIN";
+// 				break;
+// 			case AuthorizationResultStatus::FORBIDDEN:
+// 				return "NOT_ALLOWED";
+// 				break;
+// 			case AuthorizationResultStatus::NOT_FOUND:
+// 				return "NOT_FOUND";
+// 				break;
+// 		}
+// 	}
 }
