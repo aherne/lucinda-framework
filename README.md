@@ -3,9 +3,11 @@
 This is the api that's going to be used by lucinda framework.
 
 TODOS:
-- @ ServletsAPI: getSecurityContext() @ Request object; 
-- @ ServletsAPI: getValidPage(); getPathParameters() @ Request uri object 
+- @ ServletsAPI: getSecurityContext() @ Request object (which contains: UserDetails & csrf token)
+- @ ServletsAPI: getValidPage(); getPathParameters() @ Request uri object
+	- allow named path parameters (this makes application SLOW!)
+- @ ServletsAPI: replace "extension" with format 
 - @ Framework: use UserDetails instead of userID (?)
-+ @ Framework: error handler (add support for storing errors in db, logging, etc) 
-+ @ Framework: make oauth2 scope mandatory
-+ @ Framework: add oauth2 support for "state" parameter
++ @ Framework: error handler (add support for storing errors in db, logging, etc)
+1. refresh should take into consideration response content type
+2. refresh should include full path starting with / (!!!)

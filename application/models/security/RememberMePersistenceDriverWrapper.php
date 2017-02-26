@@ -1,10 +1,18 @@
 <?php
 require_once("PersistenceDriverWrapper.php");
 
+/**
+ * Binds RememberMePersistenceDriver @ SECURITY API with settings from configuration.xml @ SERVLETS-API and sets up an object on which one can
+ * forward remember-me cookie operations.
+ */
 class RememberMePersistenceDriverWrapper extends PersistenceDriverWrapper {
 	const DEFAULT_PARAMETER_NAME = "uid";
 	const DEFAULT_EXPIRATION_TIME = 24*3600;
 
+	/**
+	 * {@inheritDoc}
+	 * @see PersistenceDriverWrapper::setDriver()
+	 */
 	protected function setDriver(SimpleXMLElement $xml) {
 		$secret = (string) $xml["secret"];
 		if(!$secret) throw new ApplicationException("'secret' key of security.persistence.remember_me tag is mandatory!");

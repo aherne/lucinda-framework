@@ -1,6 +1,11 @@
 <?php
 // generic code
-$xmlString = '<xml><security><csrf secret="98K[3z66JJiIqV31h-9(" expiration="2"/></security></xml>';
+$xmlString = '
+		<xml>
+			<security>
+				<csrf secret="98K[3z66JJiIqV31h-9(" expiration="2"/>
+			</security>
+		</xml>';
 $xml = simplexml_load_string($xmlString);
 require_once(str_replace("test/security","application/models/security", __FILE__));
 require_once(dirname(dirname(__DIR__))."/libraries/php-servlets-api/src/exceptions/ApplicationException.php");
