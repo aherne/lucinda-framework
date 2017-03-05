@@ -19,34 +19,33 @@ require_once(dirname(dirname(__DIR__))."/libraries/php-servlets-api/src/exceptio
 require_once(dirname(dirname(__DIR__))."/libraries/php-security-api/src/authorization/DAOAuthorization.php");
 require_once(dirname(dirname(__DIR__))."/src/security/DAOLocator.php");
 
-$locator = new DAOLocator($xml);
 
 // test non-existent page for guest
-$wrapper = new DAOAuthorizationWrapper($xml->security->authorization->by_dao, "qwe", null, $locator);
+$wrapper = new DAOAuthorizationWrapper($xml, "qwe", null);
 $result = $wrapper->getResult();
 echo __LINE__.":".($result->getStatus()==AuthorizationResultStatus::NOT_FOUND && $result->getCallbackURI()=="loginz"?"OK":"FAILED")."\n";
 
 // test non-existent page for logged in user
-$wrapper = new DAOAuthorizationWrapper($xml->security->authorization->by_dao, "qwe", 1, $locator);
+$wrapper = new DAOAuthorizationWrapper($xml, "qwe", 1);
 $result = $wrapper->getResult();
 echo __LINE__.":".($result->getStatus()==AuthorizationResultStatus::NOT_FOUND && $result->getCallbackURI()=="indexz"?"OK":"FAILED")."\n";
 
 // test existent page allowed for guest
-$wrapper = new DAOAuthorizationWrapper($xml->security->authorization->by_dao, "asd", null, $locator);
+$wrapper = new DAOAuthorizationWrapper($xml, "asd", null);
 $result = $wrapper->getResult();
 echo __LINE__.":".($result->getStatus()==AuthorizationResultStatus::OK?"OK":"FAILED")."\n";
 
 // test existent page not allowed for guest
-$wrapper = new DAOAuthorizationWrapper($xml->security->authorization->by_dao, "fgh", null, $locator);
+$wrapper = new DAOAuthorizationWrapper($xml, "fgh", null);
 $result = $wrapper->getResult();
 echo __LINE__.":".($result->getStatus()==AuthorizationResultStatus::UNAUTHORIZED && $result->getCallbackURI()=="loginz"?"OK":"FAILED")."\n";
 
 // test existent page allowed for user
-$wrapper = new DAOAuthorizationWrapper($xml->security->authorization->by_dao, "fgh", 1, $locator);
+$wrapper = new DAOAuthorizationWrapper($xml, "fgh", 1);
 $result = $wrapper->getResult();
 echo __LINE__.":".($result->getStatus()==AuthorizationResultStatus::OK?"OK":"FAILED")."\n";
 
 // test existent page not allowed for user
-$wrapper = new DAOAuthorizationWrapper($xml->security->authorization->by_dao, "jkl", 1, $locator);
+$wrapper = new DAOAuthorizationWrapper($xml, "jkl", 1);
 $result = $wrapper->getResult();
 echo __LINE__.":".($result->getStatus()==AuthorizationResultStatus::FORBIDDEN && $result->getCallbackURI()=="indexz"?"OK":"FAILED")."\n";

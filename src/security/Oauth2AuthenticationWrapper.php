@@ -12,8 +12,6 @@ class Oauth2AuthenticationWrapper extends AuthenticationWrapper {
 	const DEFAULT_TARGET_PAGE = "index";
 	
 	private $xml;
-	private $currentPage;
-	private $persistenceDrivers;
 	private $authentication;
 	
 	/**
@@ -22,7 +20,6 @@ class Oauth2AuthenticationWrapper extends AuthenticationWrapper {
 	 * @param SimpleXMLElement $xml Contents of security.authentication.oauth2 tag @ configuration.xml.
 	 * @param string $currentPage Current page requested.
 	 * @param PersistenceDriver[] $persistenceDrivers List of drivers to persist information across requests.
-	 * @param DAOLocator $locator Utility that locates DAO classes referenced in XML.
 	 * @param CsrfTokenWrapper $csrf Object that performs CSRF token checks.
 	 * @throws ApplicationException If XML is malformed.
 	 * @throws AuthenticationException If one or more persistence drivers are not instanceof PersistenceDriver
@@ -32,11 +29,14 @@ class Oauth2AuthenticationWrapper extends AuthenticationWrapper {
 	 * @throws OAuth2\ClientException When oauth2 local client sends malformed requests to oauth2 server.
 	 * @throws OAuth2\ServerException When oauth2 remote server answers with an error.
 	 */
-	public function __construct(SimpleXMLElement $xml, $currentPage, $persistenceDrivers, DAOLocator $locator, CsrfTokenWrapper $csrf) {
-		$this->xml = $xml;
-		$this->currentPage = $currentPage;
-		$this->persistenceDrivers = $persistenceDrivers;
-		$this->authentication = new Oauth2Authentication($locator->locate($xml, "dao", "Oauth2AuthenticationDAO"), $persistenceDrivers);
+	public function __construct(SimpleXMLElement $xml, $currentPage, $persistenceDrivers, CsrfTokenWrapper $csrf) {
+		// create dao object
+		$locator = new DAOLocator($xml);
+		$daoObject = $locator->locate($xml->security->authentication->oauth2, "dao", "Oauth2AuthenticationDAO");
+		
+		// setup class properties
+		$this->xml = $xml->security->authentication->oauth2;
+		$this->authentication = new Oauth2Authentication($daoObject, $persistenceDrivers);
 
 		// checks if a login action was requested, in which case it forwards
 		$xmlLocal = $this->xml->driver;
@@ -46,7 +46,7 @@ class Oauth2AuthenticationWrapper extends AuthenticationWrapper {
 		
 			$callbackPage = (string) $element["callback"];
 			if(!$callbackPage) $callbackPage = str_replace("{DRIVER}", $driverName, self::DEFAULT_CALLBACK_PAGE);
-			if($callbackPage == $this->currentPage) {
+			if($callbackPage == $currentPage) {
 				$this->login($driverName, $element, $csrf);
 			}
 		}
@@ -54,7 +54,7 @@ class Oauth2AuthenticationWrapper extends AuthenticationWrapper {
 		// checks if a logout action was requested, in which case it forwards
 		$logoutPage = (string) $this->xml["logout"];
 		if(!$logoutPage) $logoutPage = self::DEFAULT_LOGOUT_PAGE;
-		if($logoutPage == $this->currentPage) {
+		if($logoutPage == $currentPage) {
 			$this->logout();
 		}
 	}
@@ -110,7 +110,7 @@ class Oauth2AuthenticationWrapper extends AuthenticationWrapper {
 			else $targetScopes = $driver->getDefaultScopes();
 		
 			// set result
-			$result = new AuthenticationResult(AuthenticationResultStatus::OK);
+			$result = new AuthenticationResult(AuthenticationResultStatus::DEFERRED);
 			$result->setCallbackURI($driver->getAuthorizationCodeEndpoint($targetScopes, $csrf->generate(0)));
 			$this->result = $result;
 		}

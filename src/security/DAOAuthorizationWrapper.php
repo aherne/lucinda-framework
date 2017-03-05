@@ -14,11 +14,14 @@ class DAOAuthorizationWrapper extends AuthorizationWrapper {
 	 * @param SimpleXMLElement $xml Contents of security.authorization.by_dao tag @ configuration.xml
 	 * @param string $currentPage Current page requested.
 	 * @param mixed $userID Unique user identifier (usually an integer) 
-	 * @param DAOLocator $locator Service to locate DAOs authorization checks will be forwarded to.
 	 * @throws SQLConnectionException If connection to database server fails.
 	 * @throws SQLStatementException If query to database server fails.
 	 */
-	public function __construct(SimpleXMLElement $xml, $currentPage, $userID, DAOLocator $locator) {
+	public function __construct(SimpleXMLElement $xml, $currentPage, $userID) {
+		// create dao object
+		$locator = new DAOLocator($xml);
+		$xml = $xml->security->authorization->by_dao;
+		
 		$loggedInCallback = (string) $xml["logged_in_callback"];
 		if(!$loggedInCallback) $loggedInCallback = self::DEFAULT_LOGGED_IN_PAGE;
 		
