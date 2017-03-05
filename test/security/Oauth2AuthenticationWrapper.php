@@ -31,9 +31,6 @@ require_once(dirname(dirname(__DIR__))."/libraries/php-security-api/src/authenti
 require_once(dirname(dirname(__DIR__))."/libraries/oauth2client/loader.php");
 require_once("mocks/MockPersistenceDriver.php");
 
-// instance dao locator
-$locator = new DAOLocator($xml);
-
 // instance persistence drivers
 $pd1 = new MockPersistenceDriver();
 $pd2 = new MockPersistenceDriver();
@@ -44,19 +41,19 @@ $csrf = new CsrfTokenWrapper($xml->security->csrf);
 $token = $csrf->generate(0);
 
 // test page other than login / logout
-$wrapper = new Oauth2AuthenticationWrapper($xml->security->authentication->oauth2, "aaa", array($pd1, $pd2), $locator, $csrf);
+$wrapper = new Oauth2AuthenticationWrapper($xml, "aaa", array($pd1, $pd2), $csrf);
 $result = $wrapper->getResult();
 echo __LINE__.":".($result===null?"OK":"FAILED")."\n";
 
 // test authorization code retrieval
 $_SERVER=array("HTTPS"=>"https","HTTP_HOST"=>"www.test.com","QUERY_STRING"=>"","REQUEST_URI"=>"/mock/login");
-$wrapper = new Oauth2AuthenticationWrapper($xml->security->authentication->oauth2, "callbackz", array($pd1, $pd2), $locator, $csrf);
+$wrapper = new Oauth2AuthenticationWrapper($xml, "callbackz", array($pd1, $pd2), $csrf);
 $result = $wrapper->getResult();
-echo __LINE__.":".($result->getStatus()==AuthenticationResultStatus::OK && strpos($result->getCallbackURI(),"https://www.test.com?response_type=code&client_id=a&redirect_uri=https%3A%2F%2Fwww.test.com%2Fmock%2Flogin&scope=m+u&state=")!==false?"OK":"FAILED")."\n";
+echo __LINE__.":".($result->getStatus()==AuthenticationResultStatus::DEFERRED && strpos($result->getCallbackURI(),"https://www.test.com?response_type=code&client_id=a&redirect_uri=https%3A%2F%2Fwww.test.com%2Fmock%2Flogin&scope=m+u&state=")!==false?"OK":"FAILED")."\n";
 
 // test login
 $_GET=array("code"=>"qwerty","state"=>$token);
-$wrapper = new Oauth2AuthenticationWrapper($xml->security->authentication->oauth2, "callbackz", array($pd1, $pd2), $locator, $csrf);
+$wrapper = new Oauth2AuthenticationWrapper($xml, "callbackz", array($pd1, $pd2), $csrf);
 $result = $wrapper->getResult();
 echo __LINE__.":".($result->getStatus()==AuthenticationResultStatus::OK && $result->getUserID()==11 && $result->getAccessToken()=="xyz" && $result->getCallbackURI()=="indexz"?"OK":"FAILED")."\n";
 // test values have been persisted
@@ -66,7 +63,7 @@ echo __LINE__.":".($result->getUserID()==$pd1->load() && $result->getUserID()==$
 $_GET=array("code"=>"qwertyz","state"=>$token);
 $ok = false;
 try {
-	$wrapper = new Oauth2AuthenticationWrapper($xml->security->authentication->oauth2, "callbackz", array($pd1, $pd2), $locator, $csrf);
+	$wrapper = new Oauth2AuthenticationWrapper($xml, "callbackz", array($pd1, $pd2), $csrf);
 } catch(OAuth2\ServerException $se) {
 	$ok = true;
 }
@@ -76,20 +73,20 @@ echo __LINE__.":".($ok?"OK":"FAILED")."\n";
 $_GET=array("code"=>"qwertyt","state"=>$token);
 $ok = false;
 try {
-	$wrapper = new Oauth2AuthenticationWrapper($xml->security->authentication->oauth2, "callbackz", array($pd1, $pd2), $locator, $csrf);
+	$wrapper = new Oauth2AuthenticationWrapper($xml, "callbackz", array($pd1, $pd2), $csrf);
 } catch(OAuth2\ServerException $se) {
 	$ok = true;
 }
 echo __LINE__.":".($ok?"OK":"FAILED")."\n";
 
 // test logout
-$wrapper = new Oauth2AuthenticationWrapper($xml->security->authentication->oauth2, "logoutz", array($pd1, $pd2), $locator, $csrf);
+$wrapper = new Oauth2AuthenticationWrapper($xml, "logoutz", array($pd1, $pd2), $csrf);
 $result = $wrapper->getResult();
 echo __LINE__.":".($result->getStatus()==AuthenticationResultStatus::OK && $result->getCallbackURI()=="loginz"?"OK":"FAILED")."\n";
 // test values have been persisted
 echo __LINE__.":".($pd1->load()===null && $pd2->load()===null?"OK":"FAILED")."\n";
 
 // test logout
-$wrapper = new Oauth2AuthenticationWrapper($xml->security->authentication->oauth2, "logoutz", array($pd1, $pd2), $locator, $csrf);
+$wrapper = new Oauth2AuthenticationWrapper($xml, "logoutz", array($pd1, $pd2), $csrf);
 $result = $wrapper->getResult();
 echo __LINE__.":".($result->getStatus()==AuthenticationResultStatus::LOGOUT_FAILED && $result->getCallbackURI()=="loginz"?"OK":"FAILED")."\n";

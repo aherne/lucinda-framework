@@ -12,7 +12,6 @@ class FormAuthenticationWrapper extends AuthenticationWrapper {
 	const DEFAULT_LOGOUT_PAGE = "logout";
 
 	private $xml;
-	private $currentPage;
 	private $authentication;
 
 	/**
@@ -21,7 +20,6 @@ class FormAuthenticationWrapper extends AuthenticationWrapper {
 	 * @param SimpleXMLElement $xml Contents of security.authentication.form tag @ configuration.xml.
 	 * @param string $currentPage Current page requested.
 	 * @param PersistenceDriver[] $persistenceDrivers List of drivers to persist information across requests.
-	 * @param DAOLocator $daoLocator Utility that locates DAO classes referenced in XML.
 	 * @param CsrfTokenWrapper $csrf Object that performs CSRF token checks.
 	 * @throws ApplicationException If XML is malformed.
 	 * @throws AuthenticationException If one or more persistence drivers are not instanceof PersistenceDriver
@@ -29,23 +27,26 @@ class FormAuthenticationWrapper extends AuthenticationWrapper {
 	 * @throws SQLConnectionException If connection to database server fails.
 	 * @throws SQLStatementException If query to database server fails.
 	 */
-	public function __construct(SimpleXMLElement $xml, $currentPage, $persistenceDrivers, DAOLocator $daoLocator, CsrfTokenWrapper $csrf) {
-		if(!$csrf) throw new ApplicationException("security.csrf tag is missing!");
-		$this->xml = $xml;
-		$this->currentPage = $currentPage;
-		$this->authentication = new FormAuthentication($daoLocator->locate($xml, "dao", "UserAuthenticationDAO"), $persistenceDrivers);
+	public function __construct(SimpleXMLElement $xml, $currentPage, $persistenceDrivers, CsrfTokenWrapper $csrf) {
+		// create dao object
+		$locator = new DAOLocator($xml);
+		$daoObject = $locator->locate($xml->security->authentication->form, "dao", "UserAuthenticationDAO");
+
+		// setup class properties
+		$this->xml = $xml->security->authentication->form;
+		$this->authentication = new FormAuthentication($daoObject, $persistenceDrivers);
 
 		// checks if a login action was requested, in which case it forwards 
 		$sourcePage = (string) $this->xml->login["page"];
 		if(!$sourcePage) $sourcePage = self::DEFAULT_LOGIN_PAGE;
-		if($sourcePage == $this->currentPage && !empty($_POST)) {
+		if($sourcePage == $currentPage && !empty($_POST)) {
 			$this->login($sourcePage, $csrf);
 		}
 		
 		// checks if a logout action was requested, in which case it forwards
 		$sourcePage = (string) $this->xml->logout["page"];
 		if(!$sourcePage) $sourcePage = self::DEFAULT_LOGOUT_PAGE;
-		if($sourcePage == $this->currentPage) {
+		if($sourcePage == $currentPage) {
 			$this->logout();
 		}
 	}

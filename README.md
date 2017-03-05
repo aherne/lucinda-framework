@@ -11,3 +11,5 @@ TODOS:
 + @ Framework: error handler (add support for storing errors in db, logging, etc)
 1. refresh should take into consideration response content type
 2. refresh should include full path starting with / (!!!)
++ @ Framework: add errors api @ APPLICATION LISTENER after environment is detected
+@ServletsAPI: response content type should be settable in route (<route ... content_type="..."/>
