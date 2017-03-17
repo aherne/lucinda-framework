@@ -35,6 +35,6 @@ class DAOAuthorizationWrapper extends AuthorizationWrapper {
 		$userDAO->setID($userID);
 		
 		$authorization = new DAOAuthorization($loggedInCallback, $loggedOutCallback);
-		$this->setResult($authorization->authorize($pageDAO, $userDAO));
+		$this->setResult($authorization->authorize($pageDAO, $userDAO, $_SERVER["REQUEST_METHOD"]));
 	}
 }
