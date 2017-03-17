@@ -7,7 +7,7 @@ class MockUserAuthorizationDAO implements UserAuthorizationDAO {
 			2=>array(3)
 	);
 	
-    public function isAllowed(PageAuthorizationDAO $page) {
+    public function isAllowed(PageAuthorizationDAO $page, $httpRequestMethod) {
     	$pageID = $page->getID();
     	foreach($this->allowed_pages[$this->id] as $tempPageID) {
     		if($pageID == $tempPageID) return true;
