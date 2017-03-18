@@ -76,6 +76,14 @@
 			<by_route/>
 			<by_dao pages_dao="{CLASS_PATH}" users_dao="{CLASS_PATH}" />
 		</authorization>
-		
 	</security>
+	<errors>
+		<local>
+			<reporters>
+				<reporter class=""/>
+				<reporter class=""/>
+			</reporters>
+			<renderer class=""/>
+		</local>
+	</errors>
 </xml>

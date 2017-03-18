@@ -253,6 +253,7 @@ class SecurityListener extends RequestListener {
 	 * If content type is HTML, it performs a header with status redirection to callback URI associated to result. Otherwise it defaults to a static JSON response.
 	 *
 	 * @param AuthorizationResult $result
+	 * @throws PathNotFoundException If authorization deemed path to be invalid (eg: path not set in db)
 	 */
 	protected function parseAuthorizationResult(AuthorizationResult $result) {
 		if($result->getStatus() == AuthorizationResultStatus::OK) {
@@ -264,18 +265,16 @@ class SecurityListener extends RequestListener {
 			switch($result->getStatus()) {
 				case AuthorizationResultStatus::UNAUTHORIZED:
 					header("HTTP/1.1 401 Unauthorized");
-					header("Refresh: 0; url=".$this->request->getURI()->getContextPath()."/".$result->getCallbackURI()."?status=UNAUTHORIZED");
+					header("Refresh: 1; url=".$this->request->getURI()->getContextPath()."/".$result->getCallbackURI()."?status=UNAUTHORIZED");
 					exit();
 					break;
 				case AuthorizationResultStatus::FORBIDDEN:
 					header("HTTP/1.1 403 Forbidden");
-					header("Refresh: 0; url=".$this->request->getURI()->getContextPath()."/".$result->getCallbackURI()."?status=FORBIDDEN");
+					header("Refresh: 1; url=".$this->request->getURI()->getContextPath()."/".$result->getCallbackURI()."?status=FORBIDDEN");
 					exit();
 					break;
 				case AuthorizationResultStatus::NOT_FOUND:
-					header("HTTP/1.1 404 Not Found");
-					header("Refresh: 0; url=".$this->request->getURI()->getContextPath()."/".$result->getCallbackURI()."?status=NOT_FOUND");
-					exit();
+					throw new PathNotFoundException();
 					break;
 			}
 		} else {
@@ -289,7 +288,7 @@ class SecurityListener extends RequestListener {
 					$payload = array("status"=>"error","body"=>"FORBIDDEN");
 					break;
 				case AuthorizationResultStatus::NOT_FOUND:
-					$payload = array("status"=>"error","body"=>"NOT_FOUND");
+					throw new PathNotFoundException();
 					break;
 			}
 				
