@@ -10,3 +10,8 @@ TODOS:
 - @Framework: redirect should take into consideration response content type
 - @ Framework: handling errors by SecurityListener
 ??? Investigate setting $_ENV attributes
+
+- @ServletsAPI: test on NGINX
+- @NoSQLAPI: add support for redis clusters
+- @Oauth2Client: add refresh token support @ Driver
+- @Framework: determine error severity by type of exception 
