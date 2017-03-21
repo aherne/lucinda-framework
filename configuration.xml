@@ -80,10 +80,14 @@
 	<errors>
 		<local>
 			<reporters>
-				<reporter class=""/>
-				<reporter class=""/>
+				<file path="{FILE_PATH}" rotation="{ROTATION_PATTERN}"/>
+				<syslog application="{APPLICATION_NAME}"/>
+				<sql table="{TABLE_NAME}" server="{SERVER_NAME}" rotation="{ROTATION_PATTERN}"/>
+				<nosql parameter="{PARAMETER_NAME}" server="{SERVER_NAME}" rotation="{ROTATION_PATTERN}"/>
 			</reporters>
-			<renderer class=""/>
+			<renderer>
+				<{extension} class="" file=""/>
+			</renderer>
 		</local>
 	</errors>
 </xml>
