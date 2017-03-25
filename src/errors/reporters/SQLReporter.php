@@ -1,11 +1,10 @@
 <?php
 require_once("BugEnvironment.php");
-require_once("DataSourceLogger.php");
 
 /**
- * Logs errors into sql databases.
+ * Reports errors into sql databases.
  */
-class SQLLogger extends DataSourceLogger {
+class SQLReporter implements ErrorReporter {
 	private $connection;
 	private $tableName;
 	private $rotationPattern;
@@ -24,11 +23,21 @@ class SQLLogger extends DataSourceLogger {
 	
 	/**
 	 * {@inheritDoc}
-	 * @see DataSourceLogger::save()
+	 * @see ErrorReporter::report()
 	 */
-	protected function save(BugEnvironment $environment, Exception $exception) {
-		$tableName = $this->tableName.($this->rotationPattern?"__".date($this->rotationPattern):"");
+	protected function report(Exception $exception) {
+		// collect environment information
+		$environment = new BugEnvironment();
+		$environment->get = $_GET;
+		$environment->post = $_POST;
+		$environment->server = $_SERVER;
+		$environment->files = $_FILES;
+		$environment->cookies = $_COOKIE;
+		$environment->session = $_SESSION;
+		
+		// write to table
 		try {
+			$tableName = $this->tableName.($this->rotationPattern?"__".date($this->rotationPattern):"");
 			$preparedStatement = $this->connection->createPreparedStatement();
 			$preparedStatement->prepare("
             INSERT INTO ".$tableName." 

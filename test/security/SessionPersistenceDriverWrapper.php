@@ -39,7 +39,7 @@ $wrapper = new SessionPersistenceDriverWrapper($xml->security->persistence->sess
 $ok = false;
 try {
 	$wrapper->getDriver()->load();
-} catch(SecurityException $e) {
+} catch(SessionHijackException $e) {
 	$ok = true;
 }
 echo __LINE__.":".($ok?"OK":"FAILED")."\n";

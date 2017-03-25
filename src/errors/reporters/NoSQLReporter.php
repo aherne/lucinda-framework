@@ -1,10 +1,11 @@
 <?php
+require_once("DataSourceReporter.php");
 require_once("BugInformation.php");
 
 /**
- * Logs errors into nosql databases.
+ * Reports errors into nosql databases.
  */
-class NoSQLLogger extends DataSourceLogger {
+class NoSQLReporter extends DataSourceReporter {
 	private $connection;
 	private $parameterName;
 	private $rotationPattern;
@@ -23,15 +24,18 @@ class NoSQLLogger extends DataSourceLogger {
 	
 	/**
 	 * {@inheritDoc}
-	 * @see DataSourceLogger::save()
+	 * @see ErrorReporter::report()
 	 */
-	protected function save(BugEnvironment $environment, Exception $exception) {
+	public function report(Exception $exception) {
+		// collect environment information
+		$bugInformation = new BugInformation();
+		$bugInformation->environment = $this->getEnvironment();
+		$bugInformation->exception = $exception;
+		$bugInformation->time = microtime(true);
+		
+		// save
 		try {
 			$parameterName = $this->parameterName.($this->rotationPattern?"__".date($this->rotationPattern):"");
-			$bugInformation = new BugInformation();
-			$bugInformation->environment = $environment;
-			$bugInformation->exception = $exception;
-			$bugInformation->time = microtime(true);
 			if($this->connection->contains($parameterName)) {
 				$bugs = unserialize($this->connection->get($parameterName));
 				$bugs[]=$bugInformation;
