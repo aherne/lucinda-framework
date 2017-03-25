@@ -84,9 +84,10 @@
 				<syslog application="{APPLICATION_NAME}"/>
 				<sql table="{TABLE_NAME}" server="{SERVER_NAME}" rotation="{ROTATION_PATTERN}"/>
 				<nosql parameter="{PARAMETER_NAME}" server="{SERVER_NAME}" rotation="{ROTATION_PATTERN}"/>
+				<reporter class="{CLASS}"/>
 			</reporters>
 			<renderer>
-				<{extension} class="" file=""/>
+				<{extension} class="{CLASS}"/>
 			</renderer>
 		</local>
 	</errors>
