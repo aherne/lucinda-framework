@@ -12,6 +12,7 @@
 			<wrappers>application/wrappers</wrappers>
 			<views>application/views</views>
 			<listeners>application/listeners</listeners>
+			<models>application/listeners</models>
 			<compilations>
 				<local>{COMPILATIONS_PATH}</local>
 			</compilations>
@@ -84,10 +85,10 @@
 				<syslog application="{APPLICATION_NAME}"/>
 				<sql table="{TABLE_NAME}" server="{SERVER_NAME}" rotation="{ROTATION_PATTERN}"/>
 				<nosql parameter="{PARAMETER_NAME}" server="{SERVER_NAME}" rotation="{ROTATION_PATTERN}"/>
-				<reporter class="{CLASS}"/>
+				<reporter class="{CLASS}" folder="{FOLDER}"/>
 			</reporters>
 			<renderer>
-				<{extension} class="{CLASS}"/>
+				<{extension} class="{CLASS}" folder="{FOLDER}"/>
 			</renderer>
 		</local>
 	</errors>
