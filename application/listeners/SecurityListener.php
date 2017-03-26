@@ -1,6 +1,8 @@
 <?php
 require_once("src/security/DAOLocator.php");
 require_once("libraries/php-security-api/loader.php");
+require_once("application/models/AuthenticationRenderer.php");
+require_once("application/models/AuthorizationRenderer.php");
 
 /**
  * Connects PHP-SECURITY-API and OAUTH2-CLIENT with CONFIGURATION.XML @ SERVLETS API.
@@ -93,7 +95,9 @@ class SecurityListener extends RequestListener {
 	 */
 	private function setCsrfToken() {
 		$xml = $this->application->getXML()->security->csrf;
-		if(empty($xml)) throw new ApplicationException("Entry missing in configuration.xml: security.csrf");
+		if(empty($xml)) {
+			throw new ApplicationException("Entry missing in configuration.xml: security.csrf");
+		}
 		
 		require_once("src/security/CsrfTokenWrapper.php");
 		$this->request->setAttribute("csrf", new CsrfTokenWrapper($xml));
@@ -114,7 +118,9 @@ class SecurityListener extends RequestListener {
 	 */
 	private function authenticate() {
 		$xml = $this->application->getXML()->security->authentication;
-		if(empty($xml)) throw new ApplicationException("Entry missing in configuration.xml: security.authentication");
+		if(empty($xml)) {
+			throw new ApplicationException("Entry missing in configuration.xml: security.authentication");
+		}
 
 		$wrapper = null;
 		if($xml->form) {
@@ -134,7 +140,13 @@ class SecurityListener extends RequestListener {
 					$this->request->getAttribute("csrf"));
 		}
 		if($wrapper) {
-			$this->parseAuthenticationResult($wrapper->getResult());
+			if(!$wrapper->getResult()) {
+				// no authentication was requested
+				return;
+			} else {
+				// authentication was requested
+				new AuthenticationRenderer($wrapper->getResult(), $this->request->getAttribute("page_content_type"), $this->request->getURI()->getContextPath(), $this->persistenceDrivers);
+			}
 		} else {
 			throw new ApplicationException("No authentication driver found in configuration.xml: security.authentication");
 		}
@@ -155,7 +167,9 @@ class SecurityListener extends RequestListener {
 	 */
 	private function authorize() {
 		$xml = $this->application->getXML()->security->authorization;
-		if(empty($xml)) throw new ApplicationException("Entry missing in configuration.xml: security.authentication");
+		if(empty($xml)) {
+			throw new ApplicationException("Entry missing in configuration.xml: security.authentication");
+		}
 
 		$wrapper = null;
 		if($xml->by_route) {
@@ -174,128 +188,15 @@ class SecurityListener extends RequestListener {
 					$this->request->getAttribute("user_id"));
 		}
 		if($wrapper) {
-			$this->parseAuthorizationResult($wrapper->getResult());
+			if($wrapper->getResult()->getStatus() == AuthorizationResultStatus::OK) {
+				// authorization was successful
+				return; 
+			} else {
+				// authorization failed
+				new AuthorizationRenderer($wrapper->getResult(), $this->request->getAttribute("page_content_type"));
+			}			
 		} else {
 			throw new ApplicationException("No authorization driver found in configuration.xml: security.authentication");
-		}
-	}
-	
-	/**
-	 * Acts on authentication result depending on requested content type. If result came empty, it means no authentication was performed (so nothing happens).
-	 * If content type is HTML, it performs a header redirection to callback URI associated to result. Otherwise it defaults to a static JSON response.  
-	 *  
-	 * @param AuthenticationResult $result
-	 */
-	protected function parseAuthenticationResult(AuthenticationResult $result) {
-		if(!$result) {
-			return; // page requested is not related to authentication
-		}
-		
-		$contentType = $this->request->getAttribute("page_content_type");
-		if($contentType == "text/html") {
-			// construct redirection path
-			$redirectionPath = "";
-			switch($result->getStatus()) {
-				case AuthenticationResultStatus::OK:
-					$redirectionPath = $this->request->getURI()->getContextPath()."/".$result->getCallbackURI()."?status=LOGIN_OK";
-					break;
-				case AuthenticationResultStatus::DEFERRED:
-					$redirectionPath = $result->getCallbackURI();
-					break;
-				case AuthenticationResultStatus::LOGIN_FAILED:
-					$redirectionPath = $this->request->getURI()->getContextPath()."/".$result->getCallbackURI()."?status=LOGIN_FAILED";
-					break;
-				case AuthenticationResultStatus::LOGOUT_FAILED:
-					$redirectionPath = $this->request->getURI()->getContextPath()."/".$result->getCallbackURI()."?status=LOGOUT_FAILED";
-					break;
-			}
-			
-			// redirect
-			header("Location: ".$redirectionPath);
-			exit();
-		} else {
-			// construct json payload
-			$payload = array();
-			switch($result->getStatus()) {
-				case AuthenticationResultStatus::OK:
-					// retrieve token from persistence driver
-					$token = "";
-					if($result->getUserID()) {
-						foreach($this->persistenceDrivers as $persistenceDriver) {
-							if($persistenceDriver instanceof TokenPersistenceDriverWrapper) {
-								$token = $persistenceDriver->getDriver()->getAccessToken();
-							}
-						}
-					}
-					// display result
-					$payload = array("status"=>"ok","body"=>$token);
-					break;
-				case AuthenticationResultStatus::DEFERRED:
-					$payload = array("status"=>"redirect","body"=>$result->getCallbackURI());
-					break;
-				case AuthenticationResultStatus::LOGIN_FAILED:
-					$payload = array("status"=>"error","body"=>"LOGIN_FAILED");
-					break;
-				case AuthenticationResultStatus::LOGOUT_FAILED:
-					$payload = array("status"=>"error","body"=>"LOGOUT_FAILED");
-					break;
-			}
-			
-			// display payload
-			header("Content-Type: application/json");
-			echo json_encode($payload);
-			exit();
-		}
-	}
-
-	/**
-	 * Acts on authorization result depending on requested content type. If result came with status ok, it means authorization passed (so nothing happens).
-	 * If content type is HTML, it performs a header with status redirection to callback URI associated to result. Otherwise it defaults to a static JSON response.
-	 *
-	 * @param AuthorizationResult $result
-	 * @throws PathNotFoundException If authorization deemed path to be invalid (eg: path not set in db)
-	 */
-	protected function parseAuthorizationResult(AuthorizationResult $result) {
-		if($result->getStatus() == AuthorizationResultStatus::OK) {
-			return; // no action required
-		}
-		
-		$contentType = $this->request->getAttribute("page_content_type");
-		if($contentType == "text/html") {
-			switch($result->getStatus()) {
-				case AuthorizationResultStatus::UNAUTHORIZED:
-					header("HTTP/1.1 401 Unauthorized");
-					header("Refresh: 1; url=".$this->request->getURI()->getContextPath()."/".$result->getCallbackURI()."?status=UNAUTHORIZED");
-					exit();
-					break;
-				case AuthorizationResultStatus::FORBIDDEN:
-					header("HTTP/1.1 403 Forbidden");
-					header("Refresh: 1; url=".$this->request->getURI()->getContextPath()."/".$result->getCallbackURI()."?status=FORBIDDEN");
-					exit();
-					break;
-				case AuthorizationResultStatus::NOT_FOUND:
-					throw new PathNotFoundException();
-					break;
-			}
-		} else {
-			// construct json payload
-			$payload = array();
-			switch($result->getStatus()) {
-				case AuthorizationResultStatus::UNAUTHORIZED:
-					$payload = array("status"=>"error","body"=>"UNAUTHORIZED");
-					break;
-				case AuthorizationResultStatus::FORBIDDEN:
-					$payload = array("status"=>"error","body"=>"FORBIDDEN");
-					break;
-				case AuthorizationResultStatus::NOT_FOUND:
-					throw new PathNotFoundException();
-					break;
-			}
-				
-			// display payload
-			header("Content-Type: application/json");
-			echo json_encode($payload);
-			exit();
 		}
 	}
 }

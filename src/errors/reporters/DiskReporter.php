@@ -1,17 +1,22 @@
 <?php
+require_once("SeverityFinder.php");
+
 /**
  * Reports errors on disk using loggers.
  */
 class DiskReporter implements ErrorReporter {
 	private $logger;
+	private $severityFinder;
 	
 	/**
 	 * Uses logger to save errors to.
 	 * 
 	 * @param Logger $logger Logging provider instance
+	 * @param SeverityFinder $severityFinder Checks severity of exception thrown
 	 */
-	public function __construct(Logger $logger) {
+	public function __construct(Logger $logger, SeverityFinder $severityFinder) {
 		$this->logger = $logger;
+		$this->severityFinder = $severityFinder;
 	}
 	
 	/**
@@ -19,38 +24,21 @@ class DiskReporter implements ErrorReporter {
 	 * @see ErrorReporter::report()
 	 */
 	public function report(Exception $exception) {
-		if($exception instanceof PHPException) {
-			$this->logger->critical($exception);
-		} else if($exception instanceof NoSQLConnectionException) {
-			$this->logger->emergency($exception); 	// server fault
-		} else if($exception instanceof NoSQLStatementException) {
-			$this->logger->critical($exception); 	// programmer fault
-		} else if($exception instanceof SQLConnectionException) {
-			$this->logger->emergency($exception);	// server fault
-		} else if($exception instanceof SQLStatementException) {
-			$this->logger->critical($exception); 	// programmer fault
-		} else if($exception instanceof AuthenticationException) {
-			$this->logger->critical($exception); 	// programmer fault
-		} else if($exception instanceof SessionHijackException) {
-			$this->logger->error($exception); 		// client fault (hacking attempt)
-		} else if($exception instanceof EncryptionException) {
-			$this->logger->error($exception); 		// client fault (hacking attempt)
-		} else if($exception instanceof TokenException) {
-			$this->logger->error($exception); 		// client fault (hacking attempt)
-		} else if($exception instanceof ApplicationException) {
-			$this->logger->critical($exception); 	// programmer fault
-		} else if($exception instanceof FileUploadException) {
-			$this->logger->error($exception); 		// client fault
-		} else if($exception instanceof FormatNotFoundException) {
-			$this->logger->critical($exception); 	// client fault
-		} else if($exception instanceof PathNotFoundException) {
-			$this->logger->critical($exception); 	// client fault
-		} else if($exception instanceof ServletException) {
-			$this->logger->critical($exception);	// programmer fault
-		} else if($exception instanceof ViewException) {
-			$this->logger->error($exception);		// programmer fault
-		} else {
-			$this->logger->error($exception);
+		$severity = $this->severityFinder->getSeverity($exception);
+		
+		switch($severity) {
+			case LOG_EMERG: // on server failures
+				$this->logger->emergency($exception);
+				break;
+			case LOG_ALERT: // on programming failures that cause a halt in session
+				$this->logger->alert($exception);
+				break;
+			case LOG_CRIT:	// on client failures
+				$this->logger->critical($exception);
+				break;
+			default:		// on checked failures
+				$this->logger->error($exception);
+				break;			
 		}
 	}
 }
