@@ -87,7 +87,7 @@
 				<nosql parameter="{PARAMETER_NAME}" server="{SERVER_NAME}" rotation="{ROTATION_PATTERN}"/>
 				<reporter class="{CLASS}" folder="{FOLDER}"/>
 			</reporters>
-			<renderer>
+			<renderer display_errors="1">
 				<{extension} class="{CLASS}" folder="{FOLDER}"/>
 			</renderer>
 		</local>

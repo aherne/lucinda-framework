@@ -1,5 +1,7 @@
 <?php
 class ExceptionWrapper implements SeverityFinder {
+	// TODO: public function getAuthor(Exception $exception) @ ErrorAuthor
+	// TODO: rename SeverityFInder to ErrorSeverity
 	public function getSeverity(Exception $exception) {
 		if($exception instanceof PHPException) {
 			return LOG_CRIT; 	// programmer fault
