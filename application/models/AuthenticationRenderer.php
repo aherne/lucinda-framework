@@ -13,7 +13,6 @@ class AuthenticationRenderer {
 	 * @throws ApplicationException If no renderer is defined for requested content type
 	 */
 	public function __construct(AuthenticationResult $result, $contentType, $contextPath, $persistenceDrivers) {
-		$contentType = $this->request->getAttribute("page_content_type");		
 		if($contentType == "text/html") {
 			$this->html($result, $contextPath);
 		} else if ($contentType == "application/json") {

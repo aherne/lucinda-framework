@@ -78,6 +78,12 @@
 			<by_dao pages_dao="{CLASS_PATH}" users_dao="{CLASS_PATH}" />
 		</authorization>
 	</security>
+	<loggers>
+		<local>
+			<file path="{FILE_PATH}" rotation="{ROTATION_PATTERN}"/>
+			<syslog application="{APPLICATION_NAME}"/>
+		</local>
+	</loggers>
 	<errors>
 		<local>
 			<reporters>
