@@ -139,7 +139,7 @@ class ErrorListener extends ApplicationListener {
 	 * your own renderer via {format} subtag.
 	 * 
 	 * Supported syntax for XML tag above is:
-	 * <rendering>
+	 * <rendering display_errors="{0 OR 1}">
 	 * 		<{format} class="{CLASS}" folder="{FOLDER}" .../>
 	 * </rendering>
 	 *
@@ -163,13 +163,26 @@ class ErrorListener extends ApplicationListener {
 		// render error
 		$environment = $this->application->getAttribute("environment");
 		$xml = $this->application->getXML()->errors->$environment;
+		$showErrors = (!empty($xml) && !empty($xml->renderer) && !empty($xml->renderer["display_errors"])?true:false);
 		if(empty($xml) || empty($xml->renderer) ||  empty($xml->renderer->$extension)) {
-			// TODO: use default renderer (per extension ?)
+			switch($extension) {
+				case "html":
+					require_once("application/models/HtmlRenderer.php");
+					return new HtmlRenderer($showErrors, $this->application->getDefaultCharacterEncoding());
+					break;
+				case "json":
+					require_once("application/models/JsonRenderer.php");
+					return new JsonRenderer($showErrors, $this->application->getDefaultCharacterEncoding());
+					break;
+				default:
+					throw new ApplicationException("No default renderer defined for: ".$extension);					
+					break;
+			}
 		} else {
 			// use custom renderer per extension
 			$xml = $xml->renderer->$extension;
 			require_once("src/errors/renderers/CustomRenderer.php");
-			$output[] = $this->getCustomComponent($xml, "CustomRenderer", "errors.{environment}.renderer.{extension}");	
+			return $this->getCustomComponent($xml, "CustomRenderer", "errors.{environment}.renderer.{extension}");	
 		}
 	}
 	
