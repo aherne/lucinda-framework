@@ -2,7 +2,22 @@
 require_once("BugEnvironment.php");
 
 /**
- * Reports errors into sql databases.
+ * Reports errors into an sql table with this structure:
+ * 
+ * @MySQL:
+ * 
+ * CREATE TABLE {TABLE_NAME}(__{Y_M_D}) 
+ * 	(
+ * 	id bigint unsigned not null auto_increment,
+ * 	file text not null,
+ *	line int unsigned not null,
+ * 	message text not null,
+ * 	environment text not null,
+ * 	exception text not null,
+ * 	date_added timestamp not null default current_timestamp,
+ * 	primary key(id),
+ * 	key(date)
+ * ) Engine=MyISAM CHARACTER SET utf8;
  */
 class SQLReporter implements ErrorReporter {
 	private $connection;
