@@ -1,6 +1,4 @@
 <?php
-require_once("libraries/php-logging-api/src/Logger.php");
-
 /**
  * Sets up customized error reporting by connecting PHP-ERRORS-API and PHP-LOGGING-API with CONFIGURATION.XML @ SERVLETS API,
  * after EnvironmentListener has ran.  * Reads XML "errors" tag for sub-tags that contain error policies, per detected environment:

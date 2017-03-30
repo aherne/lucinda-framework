@@ -10,7 +10,6 @@ class AuthorizationRenderer {
 	 * @param string $contentType Content type of page requested (default or client-specified)
 	 * @param string $contextPath Context path relative to page requested (eg: /my_application for http://localhost/my_application/my_page)
 	 * @throws ApplicationException If no renderer is defined for requested content type
-	 * @throws PathNotFoundException If page requested does not exist.
 	 */
 	public function __construct(AuthorizationResult $result, $contentType, $contextPath) {
 		if($contentType == "text/html") {
@@ -27,22 +26,24 @@ class AuthorizationRenderer {
 	 *
 	 * @param AuthorizationResult $result
 	 * @param string $contextPath
-	 * @throws PathNotFoundException
 	 */
 	private function html(AuthorizationResult $result, $contextPath) {
+		$callback = $contextPath."/".$result->getCallbackURI();
 		switch($result->getStatus()) {
 			case AuthorizationResultStatus::UNAUTHORIZED:
 				header("HTTP/1.1 401 Unauthorized");
-				header("Location: ".$contextPath."/".$result->getCallbackURI()."?status=UNAUTHORIZED");
+				require_once("application/views/401.php");
 				exit();
 				break;
 			case AuthorizationResultStatus::FORBIDDEN:
 				header("HTTP/1.1 403 Forbidden");
-				header("Location: ".$contextPath."/".$result->getCallbackURI()."?status=FORBIDDEN");
+				require_once("application/views/403.php");
 				exit();
 				break;
 			case AuthorizationResultStatus::NOT_FOUND:
-				throw new PathNotFoundException();
+				header("HTTP/1.1 404 Not Found");
+				require_once("application/views/404.php");
+				exit();
 				break;
 		}
 	}
