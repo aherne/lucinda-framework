@@ -1,7 +1,14 @@
 <?php
-class ExceptionWrapper implements SeverityFinder {
-	// TODO: public function getAuthor(Exception $exception) @ ErrorAuthor
-	// TODO: rename SeverityFInder to ErrorSeverity
+/**
+ * Defines a way to get logging severity based on gravity of error.
+*/
+class ErrorSeverityFinder {
+	/**
+	 * Gets syslog error level based on exception.
+	 *
+	 * @param Exception $exception
+	 * @return integer Value of syslog error level (see: http://php.net/manual/ro/function.syslog.php)
+	 */
 	public function getSeverity(Exception $exception) {
 		if($exception instanceof PHPException) {
 			return LOG_CRIT; 	// programmer fault

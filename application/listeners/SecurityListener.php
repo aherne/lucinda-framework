@@ -1,8 +1,6 @@
 <?php
-require_once("src/security/DAOLocator.php");
 require_once("libraries/php-security-api/loader.php");
-require_once("application/models/AuthenticationRenderer.php");
-require_once("application/models/AuthorizationRenderer.php");
+require_once("application/models/security/DAOLocator.php");
 
 /**
  * Connects PHP-SECURITY-API and OAUTH2-CLIENT with CONFIGURATION.XML @ SERVLETS API.
@@ -53,19 +51,19 @@ class SecurityListener extends RequestListener {
 		if(empty($xml)) return; // it is allowed for elements to not persist
 
 		if($xml->session) {
-			require_once("src/security/SessionPersistenceDriverWrapper.php");
+			require_once("application/models/security/SessionPersistenceDriverWrapper.php");
 			$wrapper = new SessionPersistenceDriverWrapper($xml->session);
 			$this->persistenceDrivers[] = $wrapper->getDriver();
 		}
 
 		if($xml->remember_me) {
-			require_once("src/security/RememberMePersistenceDriverWrapper.php");
+			require_once("application/models/security/RememberMePersistenceDriverWrapper.php");
 			$wrapper = new RememberMePersistenceDriverWrapper($xml->remember_me);
 			$this->persistenceDrivers[] = $wrapper->getDriver();
 		}
 
 		if($xml->token) {
-			require_once("src/security/TokenPersistenceDriverWrapper.php");
+			require_once("application/models/security/TokenPersistenceDriverWrapper.php");
 			$wrapper = new TokenPersistenceDriverWrapper($xml->token);
 			$this->persistenceDrivers[] = $wrapper->getDriver();
 		}
@@ -99,7 +97,7 @@ class SecurityListener extends RequestListener {
 			throw new ApplicationException("Entry missing in configuration.xml: security.csrf");
 		}
 		
-		require_once("src/security/CsrfTokenWrapper.php");
+		require_once("application/models/security/CsrfTokenWrapper.php");
 		$this->request->setAttribute("csrf", new CsrfTokenWrapper($xml));
 	}
 
@@ -124,7 +122,7 @@ class SecurityListener extends RequestListener {
 
 		$wrapper = null;
 		if($xml->form) {
-			require_once("src/security/FormAuthenticationWrapper.php");
+			require_once("application/models/security/FormAuthenticationWrapper.php");
 			$wrapper = new FormAuthenticationWrapper(
 					$this->application->getXML(), 
 					$this->request->getAttribute("page_url"), 
@@ -132,7 +130,7 @@ class SecurityListener extends RequestListener {
 					$this->request->getAttribute("csrf"));
 		}
 		if($xml->oauth2) {
-			require_once("src/security/authentication/Oauth2AuthenticationWrapper.php");
+			require_once("application/models/security/authentication/Oauth2AuthenticationWrapper.php");
 			$wrapper = new Oauth2AuthenticationWrapper(
 					$this->application->getXML(), 
 					$this->request->getAttribute("page_url"), 
@@ -145,6 +143,7 @@ class SecurityListener extends RequestListener {
 				return;
 			} else {
 				// authentication was requested
+				require_once("application/models/security/AuthenticationRenderer.php");
 				new AuthenticationRenderer($wrapper->getResult(), $this->request->getAttribute("page_content_type"), $this->request->getURI()->getContextPath(), $this->persistenceDrivers);
 			}
 		} else {
@@ -173,7 +172,7 @@ class SecurityListener extends RequestListener {
 
 		$wrapper = null;
 		if($xml->by_route) {
-			require_once("src/security/authorization/XMLAuthorizationWrapper.php");
+			require_once("application/models/security/authorization/XMLAuthorizationWrapper.php");
 			$wrapper = new XMLAuthorizationWrapper(
 					$this->application->getXML(), 
 					$this->request->getAttribute("page_url"), 
@@ -181,7 +180,7 @@ class SecurityListener extends RequestListener {
 			$wrapper->getResult();
 		}
 		if($xml->by_dao) {
-			require_once("src/security/authorization/DAOAuthorizationWrapper.php");
+			require_once("application/models/security/authorization/DAOAuthorizationWrapper.php");
 			$wrapper = new DAOAuthorizationWrapper(
 					$this->application->getXML(), 
 					$this->request->getAttribute("page_url"), 
@@ -193,6 +192,7 @@ class SecurityListener extends RequestListener {
 				return; 
 			} else {
 				// authorization failed
+				require_once("application/models/security/AuthorizationRenderer.php");
 				new AuthorizationRenderer($wrapper->getResult(), $this->request->getAttribute("page_content_type"));
 			}			
 		} else {
