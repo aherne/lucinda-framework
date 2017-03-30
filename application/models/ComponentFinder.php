@@ -27,18 +27,14 @@ class ComponentFinder {
 	 * @return ErrorReporter|ErrorRenderer
 	 */
 	private function setComponent(SimpleXMLElement $xml, $parentClassName, $tagName) {
-		$folder = (string) $xml["folder"];
-		if(!$folder) {
-			throw new ApplicationException("Property 'folder' missing in configuration.xml tag: ".$tagName."!");
-		}
 		$class = (string) $xml["class"];
 		if(!$class) {
 			throw new ApplicationException("Property 'class' missing in configuration.xml tag: ".$tagName."!");
 		}
-		if(!file_exists($folder."/".$class.".php")) {
-			throw new ApplicationException("File could not be located on disk: ".$folder."/".$class.".php"."!");
+		if(!file_exists(__DIR__."/".$class.".php")) {
+			throw new ApplicationException("File could not be located on disk: ".__DIR__."/".$class.".php"."!");
 		}
-		require_once($folder."/".$class.".php");
+		require_once(__DIR__."/".$class.".php");
 		if(!class_exists($class)) {
 			throw new ApplicationException("Class not found: ".$class);
 		}

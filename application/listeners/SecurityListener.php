@@ -130,7 +130,7 @@ class SecurityListener extends RequestListener {
 					$this->request->getAttribute("csrf"));
 		}
 		if($xml->oauth2) {
-			require_once("application/models/security/authentication/Oauth2AuthenticationWrapper.php");
+			require_once("application/models/security/Oauth2AuthenticationWrapper.php");
 			$wrapper = new Oauth2AuthenticationWrapper(
 					$this->application->getXML(), 
 					$this->request->getAttribute("page_url"), 
@@ -172,7 +172,7 @@ class SecurityListener extends RequestListener {
 
 		$wrapper = null;
 		if($xml->by_route) {
-			require_once("application/models/security/authorization/XMLAuthorizationWrapper.php");
+			require_once("application/models/security/XMLAuthorizationWrapper.php");
 			$wrapper = new XMLAuthorizationWrapper(
 					$this->application->getXML(), 
 					$this->request->getAttribute("page_url"), 
@@ -180,7 +180,7 @@ class SecurityListener extends RequestListener {
 			$wrapper->getResult();
 		}
 		if($xml->by_dao) {
-			require_once("application/models/security/authorization/DAOAuthorizationWrapper.php");
+			require_once("application/models/security/DAOAuthorizationWrapper.php");
 			$wrapper = new DAOAuthorizationWrapper(
 					$this->application->getXML(), 
 					$this->request->getAttribute("page_url"), 
