@@ -18,11 +18,11 @@ $xmlString = '
 			</security>
 		</xml>';
 $xml = simplexml_load_string($xmlString);
-require_once(str_replace("test/security","src/security", __FILE__));
+require_once(str_replace("test/security","application/models/security", __FILE__));
 require_once(dirname(dirname(__DIR__))."/libraries/php-servlets-api/src/exceptions/ApplicationException.php");
 require_once(dirname(dirname(__DIR__))."/libraries/php-security-api/src/authentication/FormAuthentication.php");
-require_once(dirname(dirname(__DIR__))."/src/security/DAOLocator.php");
-require_once(dirname(dirname(__DIR__))."/src/security/CsrfTokenWrapper.php");
+require_once(dirname(dirname(__DIR__))."/application/models/security/DAOLocator.php");
+require_once(dirname(dirname(__DIR__))."/application/models/security/CsrfTokenWrapper.php");
 require_once(dirname(dirname(__DIR__))."/libraries/php-servlets-api/src/exceptions/ApplicationException.php");
 require_once(dirname(dirname(__DIR__))."/libraries/php-security-api/src/token/SynchronizerToken.php");
 require_once(dirname(dirname(__DIR__))."/libraries/php-security-api/src/authentication/PersistenceDriver.php");

@@ -1,10 +1,10 @@
 <?php
-require_once("SeverityFinder.php");
+require_once("ErrorSeverityFinder.php");
 
 /**
  * Reports errors on disk using loggers.
  */
-class DiskReporter implements ErrorReporter {
+class LogReporter implements ErrorReporter {
 	private $logger;
 	private $severityFinder;
 	
@@ -14,9 +14,9 @@ class DiskReporter implements ErrorReporter {
 	 * @param Logger $logger Logging provider instance
 	 * @param SeverityFinder $severityFinder Checks severity of exception thrown
 	 */
-	public function __construct(Logger $logger, SeverityFinder $severityFinder) {
+	public function __construct(Logger $logger) {
 		$this->logger = $logger;
-		$this->severityFinder = $severityFinder;
+		$this->severityFinder = new ErrorSeverityFinder();
 	}
 	
 	/**
