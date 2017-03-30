@@ -4,13 +4,13 @@ require_once("application/models/security/DAOLocator.php");
 
 /**
  * Connects PHP-SECURITY-API and OAUTH2-CLIENT with CONFIGURATION.XML @ SERVLETS API.
- * Reads XML "security" tag for sub-tags that define web security related settings then forwards latter to wrappers that link XML tags/properties with 
+ * Reads XML "security" tag for sub-tags that define web security related settings then forwards latter to wrappers that link XML tags/properties with
  * Security and OAuth2 API constructs. Above mentioned sub-tags are:
  * - csrf: (MANDATORY) this tag holds settings necessary to generate a CSRF token
  * - authentication: (MANDATORY) this tag holds sub-tags that set up your authentication solution chosen
  * - authorization; (MANDATORY) this tag holds sub-tags that set up your authorization solution chosen
  * - persistence: (OPTIONAL) this tag holds sub-tags that set up your state persistence driver chosen
- * 
+ *
  * Syntax for XML "security" tag is:
  * <security>
  * 		<authentication>...</authentication>
@@ -22,7 +22,7 @@ require_once("application/models/security/DAOLocator.php");
  */
 class SecurityListener extends RequestListener {
 	private $persistenceDrivers = array();
-	
+
 	public function run() {
 		$this->setPersistenceDrivers();
 		$this->setUserID();
@@ -34,10 +34,10 @@ class SecurityListener extends RequestListener {
 
 	/**
 	 * Detects drivers where user unique identifier will be persisted to across requests based on contents of security.persistence tag. Supported drivers:
-	 * 1. session: user id will persist as a session parameter 
+	 * 1. session: user id will persist as a session parameter
 	 * 2. remember_me: user id will persist as a crypted cookie
-	 * 3. token: user id will become available 
-	 * 
+	 * 3. token: user id will become available
+	 *
 	 * Syntax for XML "persistence" tag is:
 	 * <persistence>
 	 * 		<session .../>
@@ -82,13 +82,13 @@ class SecurityListener extends RequestListener {
 		}
 		$this->request->setAttribute("user_id", $userID);
 	}
-	
+
 	/**
 	 * Sets CSRF token to use in re-authenticating while performing critical operations (such as login) based on contents of security.csrf tag.
-	 * 
+	 *
 	 * Syntax for XML "csrf" tag is:
 	 * <csrf .../>
-	 * 
+	 *
 	 * @throws ApplicationException If XML settings are incorrect
 	 */
 	private function setCsrfToken() {
@@ -96,7 +96,7 @@ class SecurityListener extends RequestListener {
 		if(empty($xml)) {
 			throw new ApplicationException("Entry missing in configuration.xml: security.csrf");
 		}
-		
+
 		require_once("application/models/security/CsrfTokenWrapper.php");
 		$this->request->setAttribute("csrf", new CsrfTokenWrapper($xml));
 	}
@@ -105,13 +105,13 @@ class SecurityListener extends RequestListener {
 	 * Performs authentication based on drivers defined in security.authentication tag. Supported drivers:
 	 * - form: user will be authenticated based on a login form
 	 * - oauth2: user will be authenticated based on an oauth2 driver (supported: google, facebook)
-	 * 
+	 *
 	 * Syntax for XML "authentication" tag is:
 	 * <authentication>
 	 * 		<form ...> ... </form>
 	 * 		<oauth2 ...> ... </oauth2>
 	 * </authentication>
-	 * 
+	 *
 	 * @throws ApplicationException If XML settings are incorrect
 	 */
 	private function authenticate() {
@@ -124,17 +124,17 @@ class SecurityListener extends RequestListener {
 		if($xml->form) {
 			require_once("application/models/security/FormAuthenticationWrapper.php");
 			$wrapper = new FormAuthenticationWrapper(
-					$this->application->getXML(), 
-					$this->request->getAttribute("page_url"), 
-					$this->persistenceDrivers, 
+					$this->application->getXML(),
+					$this->request->getAttribute("page_url"),
+					$this->persistenceDrivers,
 					$this->request->getAttribute("csrf"));
 		}
 		if($xml->oauth2) {
 			require_once("application/models/security/Oauth2AuthenticationWrapper.php");
 			$wrapper = new Oauth2AuthenticationWrapper(
-					$this->application->getXML(), 
-					$this->request->getAttribute("page_url"), 
-					$this->persistenceDrivers, 
+					$this->application->getXML(),
+					$this->request->getAttribute("page_url"),
+					$this->persistenceDrivers,
 					$this->request->getAttribute("csrf"));
 		}
 		if($wrapper) {
@@ -153,15 +153,15 @@ class SecurityListener extends RequestListener {
 
 	/**
 	 * Performs authorization of user to resource based on drivers defined in security.authorization tag. Supported drivers:
-	 * - by_route: user will be authorized based on logged in status and "access" property of routes.route tags set in XML (can be ROLE_USER / ROLE_GUEST) 
+	 * - by_route: user will be authorized based on logged in status and "access" property of routes.route tags set in XML (can be ROLE_USER / ROLE_GUEST)
 	 * - by_dao: user will be authorized based on logged in user and page accessed via mandatory user-defined DAOs (UserAuthorizationDAO, PageAuthorizationDAO)
-	 * 
+	 *
 	 * Syntax for XML "authorization" tag is:
 	 * <authorization ...>
 	 * 		<by_route/>
 	 * 		<by_dao .../>
 	 * </authorization>
-	 * 
+	 *
 	 * @throws ApplicationException If XML settings are incorrect
 	 */
 	private function authorize() {
@@ -174,27 +174,27 @@ class SecurityListener extends RequestListener {
 		if($xml->by_route) {
 			require_once("application/models/security/XMLAuthorizationWrapper.php");
 			$wrapper = new XMLAuthorizationWrapper(
-					$this->application->getXML(), 
-					$this->request->getAttribute("page_url"), 
+					$this->application->getXML(),
+					$this->request->getAttribute("page_url"),
 					$this->request->getAttribute("user_id"));
 			$wrapper->getResult();
 		}
 		if($xml->by_dao) {
 			require_once("application/models/security/DAOAuthorizationWrapper.php");
 			$wrapper = new DAOAuthorizationWrapper(
-					$this->application->getXML(), 
-					$this->request->getAttribute("page_url"), 
+					$this->application->getXML(),
+					$this->request->getAttribute("page_url"),
 					$this->request->getAttribute("user_id"));
 		}
 		if($wrapper) {
 			if($wrapper->getResult()->getStatus() == AuthorizationResultStatus::OK) {
 				// authorization was successful
-				return; 
+				return;
 			} else {
 				// authorization failed
 				require_once("application/models/security/AuthorizationRenderer.php");
-				new AuthorizationRenderer($wrapper->getResult(), $this->request->getAttribute("page_content_type"));
-			}			
+				new AuthorizationRenderer($wrapper->getResult(), $this->request->getAttribute("page_content_type"), $this->request->getURI()->getContextPath());
+			}
 		} else {
 			throw new ApplicationException("No authorization driver found in configuration.xml: security.authentication");
 		}
