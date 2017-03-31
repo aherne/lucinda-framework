@@ -6,11 +6,13 @@ class ErrorSeverityFinder {
 	/**
 	 * Gets syslog error level based on exception.
 	 *
-	 * @param Exception $exception
+	 * @param Exception|Throwable $exception
 	 * @return integer Value of syslog error level (see: http://php.net/manual/ro/function.syslog.php)
 	 */
-	public function getSeverity(Exception $exception) {
-		if($exception instanceof PHPException) {
+	public function getSeverity($exception) {
+		if($exception instanceof Error) {
+			return LOG_CRIT; 	// programmer fault
+		} else if($exception instanceof PHPException) {
 			return LOG_CRIT; 	// programmer fault
 		} else if($exception instanceof NoSQLConnectionException) {
 			return LOG_EMERG; 	// server fault

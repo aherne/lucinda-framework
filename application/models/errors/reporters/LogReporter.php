@@ -23,7 +23,7 @@ class LogReporter implements ErrorReporter {
 	 * {@inheritDoc}
 	 * @see ErrorReporter::report()
 	 */
-	public function report(Exception $exception) {
+	public function report($exception) {
 		$severity = $this->severityFinder->getSeverity($exception);
 		
 		switch($severity) {
