@@ -6,22 +6,28 @@ require_once("libraries/php-view-language-api/loader.php");
  */
 class ViewLanguageResolver extends ResponseListener {
 	public function run() {
-	    if($this->response->getContentType()!="text/html") return;
-	    
-	    // get compilations folder
-	    $environment = $this->application->getAttribute("environment");
-	    $compilationsFolder = (string) $this->application->getXML()->application->paths->compilations->$environment;
-	    if(!$compilationsFolder) throw new ServletException("Compilations folder not defined!");
-	    
-		// compile
+		if($this->response->getContentType()!="text/html") return;
+	  
+		// get compilations folder
+		$environment = $this->application->getAttribute("environment");
+		$compilationsFolder = (string) $this->application->getXML()->application->paths->compilations->$environment;
+		if(!$compilationsFolder) throw new ServletException("Compilations folder not defined!");
+	  
+		// compiles
 		$vlp = new ViewLanguageParser(
-				$this->application->getViewsPath(), 
-				$this->response->getView(), 
-				"html", 
+				$this->application->getViewsPath(),
+				$this->response->getView(),
+				"php",
 				"application/taglib");
 		$strCompilationPath = $vlp->compile($compilationsFolder);
+		 
+		// disables error rendering
+		$errorHandler = $this->application->getAttribute("error_handler");
+		if($errorHandler) {
+			$errorHandler->setRenderer(null);
+		}
 
-		// commit to output stream
+		// commits to output stream
 		ob_start();
 		$data = json_decode(json_encode($this->response->toArray()), true);
 		require_once($strCompilationPath);

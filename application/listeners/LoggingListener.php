@@ -1,19 +1,14 @@
 <?php
 /**
- * Sets up customized error reporting by connecting PHP-ERRORS-API and PHP-LOGGING-API with CONFIGURATION.XML @ SERVLETS API,
- * after EnvironmentListener has ran.  * Reads XML "errors" tag for sub-tags that contain error policies, per detected environment:
- * - reporting: (OPTIONAL) this tag holds one or more components to delegate saving errors to. If none supplied, default reporter is used.
- * - rendering: (OPTIONAL) this tag holds component to delegate display when an error was encountered. If none supplied, default renderer is used.
- *
- * Syntax for XML "security" tag is:
- * <errors>
+ * Sets up customized logging by connecting PHP-LOGGING-API with CONFIGURATION.XML @ SERVLETS API, after EnvironmentListener has ran. 
+ * Sets a "logger" application attribute that hides loggers complexity. Reads XML "loggers" tag for sub-tags, per detected environment:
+ * 
+ * Syntax of 
+ * <loggers>
  * 		<{ENVIRONMENT_NAME}>
- * 			<reporting>...</reporting>
- * 			<rendering>...</rendering>
+ * 			...
  * 		</{ENVIRONMENT_NAME}>
- * </errors>
- *
- * NOTE: this listener is not needed if your expect application to work with default reporting & rendering.
+ * </loggers>
  */
 class LoggingListener extends ApplicationListener {
 	const DEFAULT_LOG_FILE = "logs";
@@ -26,6 +21,11 @@ class LoggingListener extends ApplicationListener {
 		$this->application->setAttribute("logger", $this->getLogger());
 	}
 	
+	/**
+	 * 
+	 * @throws ApplicationException
+	 * @return Logger|null
+	 */
 	private function getLogger() {
 		// look for reporters tag
 		$environment = $this->application->getAttribute("environment");

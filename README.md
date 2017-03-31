@@ -12,6 +12,8 @@ TODOS:
 ? @Framework: use UserDetails instead of userID (?)  getSecurityContext() @ Request object (which contains: UserDetails & csrf token)
 - @Framework: log hacking exceptions
 - @Framework: add error author & mail error reporting
+- @Framework: in documentation, make it clear that 401,403,404 pages have a $context variable available to use in redirection (if they were called from SecurityListener)
+- @Framework: document LoggingListener and ViewLanguageResolver
 - @NoSQLAPI: add support for redis clusters
 - @Oauth2Client: add refresh token support @ Driver
 - @ViewLanguageAPI: update documentation to specify that <import> tag does not allow expressions
