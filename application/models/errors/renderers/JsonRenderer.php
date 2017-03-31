@@ -21,7 +21,7 @@ class JsonRenderer implements ErrorRenderer {
 	 * {@inheritDoc}
 	 * @see ErrorRenderer::render()
 	 */
-	public function render(Exception $exception) {
+	public function render($exception) {
 		header_remove();
 		header("Content-Type: application/json; charset=".$this->charset);
 		if($exception instanceof PathNotFoundException) {
