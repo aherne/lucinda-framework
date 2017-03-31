@@ -3,22 +3,52 @@ require_once("libraries/php-security-api/loader.php");
 require_once("application/models/security/DAOLocator.php");
 
 /**
- * Connects PHP-SECURITY-API and OAUTH2-CLIENT with CONFIGURATION.XML @ SERVLETS API.
- * Reads XML "security" tag for sub-tags that define web security related settings then forwards latter to wrappers that link XML tags/properties with
- * Security and OAuth2 API constructs. Above mentioned sub-tags are:
+ * Sets up and performs web security in your application by binding PHP-SECURITY-API & OAUTH2-CLIENT with contents of "security" tag @ CONFIGURATION.XML, 
+ * itself handled by SERVLETS API. Syntax for XML "security" tag is:
+ * <security>
+ * 		<csrf />
+ * 		<persistence>...</persistence>
+ * 		<authentication>...</authentication>
+ * 		<authorization ...>...</authorization>
+ * </security>
+ * 
+ * Where:
  * - csrf: (MANDATORY) this tag holds settings necessary to generate a CSRF token
+ * - persistence: (OPTIONAL) this tag holds sub-tags that set up your state persistence driver chosen
  * - authentication: (MANDATORY) this tag holds sub-tags that set up your authentication solution chosen
  * - authorization; (MANDATORY) this tag holds sub-tags that set up your authorization solution chosen
- * - persistence: (OPTIONAL) this tag holds sub-tags that set up your state persistence driver chosen
- *
- * Syntax for XML "security" tag is:
- * <security>
- * 		<authentication>...</authentication>
- * 		<persistence>...</persistence>
- * 		<authorization ...>...</authorization>
- * 		<csrf />
- * </security>
- * NOTE: this listener is not needed if your application serves only public content!
+ * 
+ * For security reasons, all authentication attempts require a CSRF token. Contents of "csrf" tag are used to setup an instance of CsrfTokenWrapper 
+ * that is saved as "csrf" request attribute, to be used later on in generating or verifying csrf tokens.
+ * 
+ * The next stage is to find the state persistence method chosen (eg: session, cookie), based on contents of "persistence" tag. For each found stance, 
+ * unique user id is searched for. If found, value is saved as "user_id" request attribute, to be used later on in the flow of application. For REST-ful or
+ * many other web service applications where there should be no persistence, "persistence" tag is not required and authorization is done via a synchronizer token.
+ * 
+ * The next stage is investigating "authentication" tag. If authentication (login/logout) is requested and outcome is successful, "user_id" attribute is updated and:
+ * - if page format is "html": client is redirected to logged in / logged out users' homepage with a status
+ * - if page format is "json": client receives a json that contains a status and a synchronizer token (time and ip bound) to use in later authorization.
+ * If authentication was unsuccessful:
+ * - if page format is "html": client is redirected back to logged in / logged out page with error status
+ * - if page format is "json": client receives a json that informs of failure via status
+ * Otherwise, if no authentication was requested, request passes through.
+ * 
+ * The final stage is to investigating "authorization" tag. Client's right to requested resource is investigated depending on state (logged in or not) or 
+ * discrete rights per resource (on many applications, not all logged in users have same rights to all protected resources).  
+ * - if resource requested is not found, a HTTP 404 status code is invoked, then:
+ * 		- if page format is "html": application/views/404.php is displayed
+ * 		- if page format is "json": a json is returned with status = "not_found"
+ * - otherwise
+ * 		- if page is protected by login, but user is unauthenticated, a HTTP 401 Unauthorized status code is invoked then:
+ * 			- if page format is "html": application/views/401.php is displayed
+ * 			- if page format is "json": a json is returned with status = "unauthorized"
+ * 		- if page is protected by login, but logged in user doesn't have rights to access it, a HTTP 403 Forbidden status code is invoked then:
+ * 			- if page format is "html": application/views/403.php is displayed
+ * 			- if page format is "json": a json is returned with status = "forbidden"
+ * Otherwise, if resource is found and client has rights to access it, request passes through. 
+ * 
+ * @attribute csrf Stores an instance of CsrfTokenWrapper to use in generating tokens.
+ * @attribute user_id Stores unique user identifier (for logged in users).
  */
 class SecurityListener extends RequestListener {
 	private $persistenceDrivers = array();
@@ -30,6 +60,24 @@ class SecurityListener extends RequestListener {
 		$this->setCsrfToken();
 		$this->authenticate();
 		$this->authorize();
+	}
+
+	/**
+	 * Sets CSRF token to use in re-authenticating while performing critical operations (such as login) based on contents of security.csrf tag.
+	 *
+	 * Syntax for XML "csrf" tag is:
+	 * <csrf .../>
+	 *
+	 * @throws ApplicationException If XML settings are incorrect
+	 */
+	private function setCsrfToken() {
+		$xml = $this->application->getXML()->security->csrf;
+		if(empty($xml)) {
+			throw new ApplicationException("Entry missing in configuration.xml: security.csrf");
+		}
+
+		require_once("application/models/security/CsrfTokenWrapper.php");
+		$this->request->setAttribute("csrf", new CsrfTokenWrapper($xml));
 	}
 
 	/**
@@ -81,24 +129,6 @@ class SecurityListener extends RequestListener {
 			}
 		}
 		$this->request->setAttribute("user_id", $userID);
-	}
-
-	/**
-	 * Sets CSRF token to use in re-authenticating while performing critical operations (such as login) based on contents of security.csrf tag.
-	 *
-	 * Syntax for XML "csrf" tag is:
-	 * <csrf .../>
-	 *
-	 * @throws ApplicationException If XML settings are incorrect
-	 */
-	private function setCsrfToken() {
-		$xml = $this->application->getXML()->security->csrf;
-		if(empty($xml)) {
-			throw new ApplicationException("Entry missing in configuration.xml: security.csrf");
-		}
-
-		require_once("application/models/security/CsrfTokenWrapper.php");
-		$this->request->setAttribute("csrf", new CsrfTokenWrapper($xml));
 	}
 
 	/**

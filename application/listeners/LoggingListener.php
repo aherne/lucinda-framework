@@ -1,14 +1,18 @@
 <?php
 /**
- * Sets up customized logging by connecting PHP-LOGGING-API with CONFIGURATION.XML @ SERVLETS API, after EnvironmentListener has ran. 
- * Sets a "logger" application attribute that hides loggers complexity. Reads XML "loggers" tag for sub-tags, per detected environment:
+ * Sets up logging in your application by binding  PHP-LOGGING-API with contents of "loggers" tag @ CONFIGURATION.XML, itself handled by SERVLETS API.  
  * 
- * Syntax of 
+ * Syntax for "logging" XML tag is:
  * <loggers>
  * 		<{ENVIRONMENT_NAME}>
  * 			...
  * 		</{ENVIRONMENT_NAME}>
  * </loggers>
+ * 
+ * Because behavior depends on environment, this listener requires EnvironmentDetector to be ran beforehand. First logger identified in loggers.{ENVIRONMENT} tag  
+ * will be the one made available across application as "logger" application attribute.
+ * 
+ * @attribute logger
  */
 class LoggingListener extends ApplicationListener {
 	const DEFAULT_LOG_FILE = "logs";
@@ -22,8 +26,21 @@ class LoggingListener extends ApplicationListener {
 	}
 	
 	/**
+	 * Finds logger among children of loggers.{ENVIRONMENT} tag. Following children are recognized:
+	 * 		<file path="{FILE_PATH}" rotation="{ROTATION_PATTERN}"/>
+	 * 		<syslog application="{APPLICATION_NAME}"/>
+	 * 		<sql table="{TABLE_NAME}" server="{SERVER_NAME}" rotation="{ROTATION_PATTERN}"/>
+	 * 		<logger class="{CLASS}" .../>
 	 * 
-	 * @throws ApplicationException
+	 * Where:
+	 * - "file": logging is done in a file on your server's disk
+	 * - "syslog": logging is done via syslog service running on your server
+	 * - "sql": logging is done into an sql table
+	 * - "logger": if you want to add a custom reporter (class must extend CustomLogger class)
+	 * 
+	 * If no logger is defined, no logging will be made
+	 * 
+	 * @throws ApplicationException On invalid XML content.
 	 * @return Logger|null
 	 */
 	private function getLogger() {
