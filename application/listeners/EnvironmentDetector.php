@@ -1,13 +1,17 @@
 <?php
 /**
- * Detects environment name by matching value of $_SERVER['SERVER_NAME'] with {SERVER_NAME} @ XML:
-<application>
-	...
-	<environments>
-		<{ENVIRONMENT_NAME}>{SERVER_NAME}</{ENVIRONMENT_NAME}>
-		...
-	</environments>
-</application>
+ * Detects environment application is running into by matching value of $_SERVER['SERVER_NAME'] with {SERVER_NAME} @ XML found here:
+ * <application>
+ * 		...
+ * 		<environments>
+ *			<{ENVIRONMENT_NAME}>{SERVER_NAME}</{ENVIRONMENT_NAME}>
+ * 			...
+ * 		</environments>
+ * </application>
+ * 
+ * Results of detection will be made available across application as "environment" application attribute.
+ * 
+ * @attribute environment 
  */
 class EnvironmentDetector  extends ApplicationListener {
 	public function run() {
