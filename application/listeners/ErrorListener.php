@@ -34,14 +34,19 @@ class ErrorListener extends ApplicationListener {
 	 * @see Runnable::run()
 	 */
 	public function run() {
-		$errorHandler = new ErrorHandler();
-		$reporters = $this->getReporters();
-		foreach($reporters as $reporter) {
-			$errorHandler->addReporter($reporter);
-		}
-		$renderer = $this->getRenderer();
-		if($renderer) {
-			$errorHandler->setRenderer($this->getRenderer());
+		$errorHandler = null;
+		try {
+			$errorHandler = new ErrorHandler();
+			$reporters = $this->getReporters();
+			foreach($reporters as $reporter) {
+				$errorHandler->addReporter($reporter);
+			}
+			$renderer = $this->getRenderer();
+			if($renderer) {
+				$errorHandler->setRenderer($this->getRenderer());
+			}
+		} catch(Exception $e) {
+			die($e->getMessage());
 		}
 		PHPException::setErrorHandler($errorHandler);
 		set_exception_handler(array($errorHandler,"handle"));

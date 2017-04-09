@@ -3,16 +3,15 @@
 This is the api that's going to be used by lucinda framework.
 
 TODOS:
-? @ServletsAPI: getValidPage(); getPathParameters() @ Request uri object
 ? @ServletsAPI: allow named path parameters (this makes application SLOW!)
 F @ServletsAPI: response content type should be configurable in route (<route ... content_type="..."/>
 ! @ServletsAPI: test on NGINX
 D @ServletsAPI: update documentation that controlers are now (again) mandatory
-D @ServletsAPI: update documentation that sendRedirect now uses 301 permanent redirect
 F @Framework: use UserDetails instead of userID (?)  getSecurityContext() @ Request object (which contains: UserDetails & csrf token)
 F @Framework: log hacking exceptions
 F @Framework: add error author & mail error reporting
 D @Framework: in documentation, make it clear that 401,403,404 pages have a $context variable available to use in redirection (if they were called from SecurityListener)
+F @Framework: make ViewLanguageResolver work with customizable view extension (today it's .php always)
 F @NoSQLAPI: add support for redis clusters
 F @Oauth2Client: add refresh token support @ Driver
 F @ViewLanguageAPI: make tagName @ <tagLibrary:tagName> resolve into classes using ucwords (eg: <form:simple-select> points to FormSimpleSelectTag

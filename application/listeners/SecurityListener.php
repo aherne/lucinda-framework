@@ -175,6 +175,7 @@ class SecurityListener extends RequestListener {
 				// authentication was requested
 				require_once("application/models/security/AuthenticationRenderer.php");
 				new AuthenticationRenderer($wrapper->getResult(), $this->request->getAttribute("page_content_type"), $this->request->getURI()->getContextPath(), $this->persistenceDrivers);
+				// TODO: stop rendering here, use RedirectionException
 			}
 		} else {
 			throw new ApplicationException("No authentication driver found in configuration.xml: security.authentication");
