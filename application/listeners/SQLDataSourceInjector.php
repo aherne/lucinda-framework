@@ -11,21 +11,24 @@ require_once("libraries/php-sql-data-access-api/loader.php");
  *  
  *  The XML to define the single sql database server used by application:
  *  <database>
- *  	<{ENVIRONMENT_NAME}>
- *  		<sql>
- *  			<driver>...</driver>
- *  			<host>...</host>
- *  			<port>...</port>
- *  			...{MORE CREDENTIALS}...
- *  		</sql>
- *  	</{ENVIRONMENT_NAME}>
- *  	...{MORE ENVIRONMENTS}...
+ *  	<sql>
+ *  		<{ENVIRONMENT_NAME}>
+ *  			<server>
+ *  				<driver>...</driver>
+ *  				<host>...</host>
+ *  				<port>...</port>
+ *  				...{MORE CREDENTIALS}...
+ *  			</server>
+ *  		</{ENVIRONMENT_NAME}>
+ *  		...{MORE ENVIRONMENTS}...
+ *  	</sql>
+ *  	...
  *  </database>
  *  
  *  The XML to define multiple sql database servers used by application:
  *  <database>
- *  	<{ENVIRONMENT_NAME}>
- *  		<sql>
+ *  	<sql>
+ *  		<{ENVIRONMENT_NAME}>
  *  			<server name="server1">
  *  				<driver>...</driver>
  *  				<host>...</host>
@@ -33,9 +36,9 @@ require_once("libraries/php-sql-data-access-api/loader.php");
  *  				...{MORE CREDENTIALS}...
  *  			</server>
  *  			...{MORE <server> TAGS}...
- *  		</sql>
- *  	</{ENVIRONMENT_NAME}>
- *  	...{MORE ENVIRONMENTS}...
+ *  		</{ENVIRONMENT_NAME}>
+ *  		...{MORE ENVIRONMENTS}...
+ *  	</sql>
  *  </database>
  */
 class SQLDataSourceInjector extends ApplicationListener {

@@ -34,6 +34,6 @@ class EnvironmentDetector  extends ApplicationListener {
 				}
 			}
 		}
-		throw new ServletException("Environment not recognized for: ".$_SERVER["SERVER_NAME"]);
+		die("Environment not recognized for: ".$_SERVER["SERVER_NAME"]);
 	}
 }

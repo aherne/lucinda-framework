@@ -11,21 +11,24 @@ require_once("libraries/php-nosql-data-access-api/loader.php");
  *  
  *  The XML to define the single nosql database server used by application:
  *  <database>
- *  	<{ENVIRONMENT_NAME}>
- *  		<nosql>
- *  			<driver>...</driver>
- *  			<host>...</host>
- *  			<port>...</port>
- *  			...{MORE CREDENTIALS}...
- *  		</nosql>
- *  	</{ENVIRONMENT_NAME}>
- *  	...{MORE ENVIRONMENTS}...
+ *  	<nosql>
+ *  		<{ENVIRONMENT_NAME}>
+ *  			<server>
+ *  				<driver>...</driver>
+ *  				<host>...</host>
+ *  				<port>...</port>
+ *  				...{MORE CREDENTIALS}...
+ *  			</server>
+ *  		</{ENVIRONMENT_NAME}>
+ *  		...{MORE ENVIRONMENTS}...
+ *  	</nosql>
+ *  	...
  *  </database>
  *  
- *  The XML to define multiple nosql database servers used by application:
+ *  The XML to define multiple sql database servers used by application:
  *  <database>
- *  	<{ENVIRONMENT_NAME}>
- *  		<nosql>
+ *  	<nosql>
+ *  		<{ENVIRONMENT_NAME}>
  *  			<server name="server1">
  *  				<driver>...</driver>
  *  				<host>...</host>
@@ -33,9 +36,9 @@ require_once("libraries/php-nosql-data-access-api/loader.php");
  *  				...{MORE CREDENTIALS}...
  *  			</server>
  *  			...{MORE <server> TAGS}...
- *  		</nosql>
- *  	</{ENVIRONMENT_NAME}>
- *  	...{MORE ENVIRONMENTS}...
+ *  		</{ENVIRONMENT_NAME}>
+ *  		...{MORE ENVIRONMENTS}...
+ *  	</nosql>
  *  </database>
  */
 class NoSQLDataSourceInjector extends ApplicationListener {

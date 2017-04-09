@@ -33,16 +33,16 @@ class AuthenticationRenderer {
 		$redirectionPath = "";
 		switch($result->getStatus()) {
 			case AuthenticationResultStatus::OK:
-				$redirectionPath = $contextPath."/".$result->getCallbackURI()."?status=LOGIN_OK";
+				$redirectionPath = $contextPath."/".$result->getCallbackURI()."?status=OK";
 				break;
 			case AuthenticationResultStatus::DEFERRED:
 				$redirectionPath = $result->getCallbackURI();
 				break;
 			case AuthenticationResultStatus::LOGIN_FAILED:
-				$redirectionPath = $contextPath."/".$result->getCallbackURI()."?status=LOGIN_FAILED";
+				$redirectionPath = $contextPath."/".$result->getCallbackURI()."?status=login_failed";
 				break;
 			case AuthenticationResultStatus::LOGOUT_FAILED:
-				$redirectionPath = $$contextPath."/".$result->getCallbackURI()."?status=LOGOUT_FAILED";
+				$redirectionPath = $$contextPath."/".$result->getCallbackURI()."?status=logout_failed";
 				break;
 		}
 		

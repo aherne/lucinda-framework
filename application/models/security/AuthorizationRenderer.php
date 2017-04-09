@@ -1,7 +1,7 @@
 <?php
 /**
  * Renders view on authorization failures depending on requested content type.
-*/
+ */
 class AuthorizationRenderer {
 	/**
 	 * Performs rendering.
@@ -20,7 +20,7 @@ class AuthorizationRenderer {
 			throw new ApplicationException("Renderer not defined for: ".$contentType);
 		}
 	}
-
+	
 	/**
 	 * Renders a HTML response.
 	 *
@@ -47,7 +47,7 @@ class AuthorizationRenderer {
 				break;
 		}
 	}
-
+	
 	/**
 	 * Renders a JSON response.
 	 *
@@ -67,7 +67,7 @@ class AuthorizationRenderer {
 				$payload = array("status"=>"not_found","body"=>"");
 				break;
 		}
-
+		
 		// display payload
 		header("Content-Type: application/json");
 		echo json_encode($payload);
