@@ -1,4 +1,4 @@
 RewriteEngine on
 Options -Indexes
 RewriteRule ^favicon\.ico$ public/favicon.ico
-RewriteRule !public(.*) index.php
+RewriteRule !public/(.*) index.php
