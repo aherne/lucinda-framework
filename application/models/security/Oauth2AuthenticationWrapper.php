@@ -105,7 +105,7 @@ class Oauth2AuthenticationWrapper extends AuthenticationWrapper {
 			$this->setResult($result, $targetFailurePage, $targetSuccessPage);
 		} else {
 			// get scopes
-			$scopes = (string) $element->scopes;
+			$scopes = (string) $element["scopes"];
 			if($scopes) $targetScopes = explode(",",$scopes);
 			else $targetScopes = $driver->getDefaultScopes();
 		
@@ -139,8 +139,8 @@ class Oauth2AuthenticationWrapper extends AuthenticationWrapper {
 	 */
 	private function getClientInformation(SimpleXMLElement $xml) {
 		// get client id and secret from xml
-		$clientID = (string) $xml->client_id;
-		$clientSecret = (string) $xml->client_secret;
+		$clientID = (string) $xml["client_id"];
+		$clientSecret = (string) $xml["client_secret"];
 		if(!$clientID || !$clientSecret) throw new ApplicationException("Tags 'client_id' and 'client_secret' are mandatory!");
 		
 		// callback page is same as driver login page

@@ -18,6 +18,5 @@ F @ViewLanguageAPI: make tagName @ <tagLibrary:tagName> resolve into classes usi
 D @ViewLanguageAPI: update documentation to specify that tag names cannot contain expressions
 D @ViewLanguageAPI: update documentation about support for nesting native php functions into expressions.
 D @ViewLanguageAPI: update documentation that "condition" property @ if/elseif tags does not allow this syntax: <standard:if condition="${count(${asd})}"/>
-! @Framework: update listeners to latest changes (parameters instead of tags used in server and security.oauth2.driver tags)
 ! @Framework: checks will fail if <login/> tag comes with no parameters (all defaults). if($xml->login) must be changed to...
 @Framework: convert header("location everywhere to Response::sendRedirect(...);

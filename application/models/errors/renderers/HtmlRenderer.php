@@ -27,6 +27,9 @@ class HtmlRenderer implements ErrorRenderer {
 		if($exception instanceof PathNotFoundException) {
 			header("HTTP/1.1 404 Not found");
 			require_once("application/views/404.php");
+		} else if($exception instanceof HackingException) {
+			header("HTTP/1.1 400 Bad Request");
+			require_once("application/views/400.php");
 		} else {
 			header("HTTP/1.1 500 Internal server error");
 			if($this->displayErrors) {
