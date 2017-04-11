@@ -1,6 +1,4 @@
 <?php
-require_once("ErrorSeverityFinder.php");
-
 /**
  * Reports errors on disk using loggers.
  */
@@ -24,7 +22,7 @@ class LogReporter implements ErrorReporter {
 	 * @see ErrorReporter::report()
 	 */
 	public function report($exception) {
-		$severity = $this->severityFinder->getSeverity($exception);
+		$severity = $this->getSeverity($exception);
 		
 		switch($severity) {
 			case LOG_EMERG: // on server failures
@@ -39,6 +37,38 @@ class LogReporter implements ErrorReporter {
 			default:		// on checked failures
 				$this->logger->error($exception);
 				break;			
+		}
+	}
+	
+	/**
+	 * Gets error syslog severity.
+	 * 
+	 * @param Error|Exception $exception
+	 * @return string
+	 */
+	private  function getSeverity($exception) {
+		if($exception instanceof Error) {
+			return LOG_CRIT; 	// programmer fault
+		} else if($exception instanceof PHPException) {
+			return LOG_CRIT; 	// programmer fault
+		} else if($exception instanceof NoSQLConnectionException) {
+			return LOG_EMERG; 	// server fault
+		} else if($exception instanceof NoSQLStatementException) {
+			return LOG_CRIT; 	// programmer fault
+		} else if($exception instanceof SQLConnectionException) {
+			return LOG_EMERG;	// server fault
+		} else if($exception instanceof SQLStatementException) {
+			return LOG_CRIT; 	// programmer fault
+		} else if($exception instanceof ServletException) {
+			return LOG_ALERT;	// programmer fault
+		} else if($exception instanceof ApplicationException) {
+			return LOG_ALERT; 	// programmer fault
+		} else if($exception instanceof AuthenticationException) {
+			return LOG_ALERT; 	// programmer fault
+		} else if($exception instanceof ViewException) {
+			return LOG_CRIT;	// programmer fault
+		} else {
+			return LOG_ERR;		// client fault (in principle)
 		}
 	}
 }
