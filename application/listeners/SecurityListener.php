@@ -1,6 +1,7 @@
 <?php
 require_once("libraries/php-security-api/loader.php");
 require_once("application/models/security/DAOLocator.php");
+require_once("application/models/security/HackerRenderer.php");
 
 /**
  * Sets up and performs web security in your application by binding PHP-SECURITY-API & OAUTH2-CLIENT with contents of "security" tag @ CONFIGURATION.XML, 
@@ -155,7 +156,7 @@ class SecurityListener extends RequestListener {
 			require_once("application/models/security/FormAuthenticationWrapper.php");
 			$wrapper = new FormAuthenticationWrapper(
 					$this->application->getXML(),
-					$this->request->getAttribute("page_url"),
+					$this->request->getUri()->getValid()->getPage(),
 					$this->persistenceDrivers,
 					$this->request->getAttribute("csrf"));
 		}
@@ -163,7 +164,7 @@ class SecurityListener extends RequestListener {
 			require_once("application/models/security/Oauth2AuthenticationWrapper.php");
 			$wrapper = new Oauth2AuthenticationWrapper(
 					$this->application->getXML(),
-					$this->request->getAttribute("page_url"),
+					$this->request->getUri()->getValid()->getPage(),
 					$this->persistenceDrivers,
 					$this->request->getAttribute("csrf"));
 		}
@@ -174,8 +175,7 @@ class SecurityListener extends RequestListener {
 			} else {
 				// authentication was requested
 				require_once("application/models/security/AuthenticationRenderer.php");
-				new AuthenticationRenderer($wrapper->getResult(), $this->request->getAttribute("page_content_type"), $this->request->getURI()->getContextPath(), $this->persistenceDrivers);
-				// TODO: stop rendering here, use RedirectionException
+				new AuthenticationRenderer($wrapper->getResult(), $this->request->getUri()->getValid()->getContentType(), $this->request->getURI()->getContextPath(), $this->persistenceDrivers);
 			}
 		} else {
 			throw new ApplicationException("No authentication driver found in configuration.xml: security.authentication");
@@ -206,7 +206,7 @@ class SecurityListener extends RequestListener {
 			require_once("application/models/security/XMLAuthorizationWrapper.php");
 			$wrapper = new XMLAuthorizationWrapper(
 					$this->application->getXML(),
-					$this->request->getAttribute("page_url"),
+					$this->request->getUri()->getValid()->getPage(),
 					$this->request->getAttribute("user_id"));
 			$wrapper->getResult();
 		}
@@ -214,7 +214,7 @@ class SecurityListener extends RequestListener {
 			require_once("application/models/security/DAOAuthorizationWrapper.php");
 			$wrapper = new DAOAuthorizationWrapper(
 					$this->application->getXML(),
-					$this->request->getAttribute("page_url"),
+					$this->request->getUri()->getValid()->getPage(),
 					$this->request->getAttribute("user_id"));
 		}
 		if($wrapper) {
@@ -224,7 +224,7 @@ class SecurityListener extends RequestListener {
 			} else {
 				// authorization failed
 				require_once("application/models/security/AuthorizationRenderer.php");
-				new AuthorizationRenderer($wrapper->getResult(), $this->request->getAttribute("page_content_type"), $this->request->getURI()->getContextPath());
+				new AuthorizationRenderer($wrapper->getResult(), $this->request->getUri()->getValid()->getContentType(), $this->request->getURI()->getContextPath());
 			}
 		} else {
 			throw new ApplicationException("No authorization driver found in configuration.xml: security.authentication");

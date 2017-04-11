@@ -13,12 +13,7 @@ require_once("libraries/php-nosql-data-access-api/loader.php");
  *  <database>
  *  	<nosql>
  *  		<{ENVIRONMENT_NAME}>
- *  			<server>
- *  				<driver>...</driver>
- *  				<host>...</host>
- *  				<port>...</port>
- *  				...{MORE CREDENTIALS}...
- *  			</server>
+ *  			<server driver="..." host="..." port="..." .../>
  *  		</{ENVIRONMENT_NAME}>
  *  		...{MORE ENVIRONMENTS}...
  *  	</nosql>
@@ -29,12 +24,7 @@ require_once("libraries/php-nosql-data-access-api/loader.php");
  *  <database>
  *  	<nosql>
  *  		<{ENVIRONMENT_NAME}>
- *  			<server name="server1">
- *  				<driver>...</driver>
- *  				<host>...</host>
- *  				<port>...</port>
- *  				...{MORE CREDENTIALS}...
- *  			</server>
+ *  			<server name="..." driver="..." host="..." port="..." .../>
  *  			...{MORE <server> TAGS}...
  *  		</{ENVIRONMENT_NAME}>
  *  		...{MORE ENVIRONMENTS}...
@@ -79,21 +69,21 @@ class NoSQLDataSourceInjector extends ApplicationListener {
 	 * @throws ServletException If tags syntax is invalid or driver is not supported
 	 */
 	private function createDataSource(SimpleXMLElement $databaseInfo) {
-		$driver = (string) $databaseInfo->driver;
+		$driver = (string) $databaseInfo["driver"];
 		if(!$driver) throw new ServletException("Child tag <driver> is mandatory for <server> tags!");
 		switch($driver) {
 			case "couchbase":
 				require_once("libraries/php-nosql-data-access-api/src/CouchbaseConnection.php");
 				
 				$dataSource = new CouchbaseDataSource();
-				$dataSource->setHost((string) $databaseInfo->host);
-				$dataSource->setPort((string) $databaseInfo->port);
-				$dataSource->setUserName((string) $databaseInfo->username);
-				$dataSource->setPassword((string) $databaseInfo->password);
+				$dataSource->setHost((string) $databaseInfo["host"]);
+				$dataSource->setPort((string) $databaseInfo["port"]);
+				$dataSource->setUserName((string) $databaseInfo["username"]);
+				$dataSource->setPassword((string) $databaseInfo["password"]);
 				
-				$bucket = (string) $databaseInfo->bucket;
+				$bucket = (string) $databaseInfo["bucket"];
 				if($bucket) {
-					$dataSource->setBucketInfo($bucket, (string) $databaseInfo->bucket_password);
+					$dataSource->setBucketInfo($bucket, (string) $databaseInfo["bucket_password"]);
 				}
 				return $dataSource;
 				break;
@@ -101,22 +91,22 @@ class NoSQLDataSourceInjector extends ApplicationListener {
 				require_once("libraries/php-nosql-data-access-api/src/MemcacheConnection.php");
 				
 				$dataSource = new MemcacheDataSource();
-				$dataSource->setHost((string) $databaseInfo->host);
-				$dataSource->setPort((string) $databaseInfo->port);
+				$dataSource->setHost((string) $databaseInfo["host"]);
+				$dataSource->setPort((string) $databaseInfo["port"]);
 				return $dataSource;
 			case "memcached":
 				require_once("libraries/php-nosql-data-access-api/src/MemcachedConnection.php");
 				
 				$dataSource = new MemcachedDataSource();
-				$dataSource->setHost((string) $databaseInfo->host);
-				$dataSource->setPort((string) $databaseInfo->port);
+				$dataSource->setHost((string) $databaseInfo["host"]);
+				$dataSource->setPort((string) $databaseInfo["port"]);
 				return $dataSource;
 			case "redis":
 				require_once("libraries/php-nosql-data-access-api/src/RedisConnection.php");
 				
 				$dataSource = new RedisDataSource();
-				$dataSource->setHost((string) $databaseInfo->host);
-				$dataSource->setPort((string) $databaseInfo->port);
+				$dataSource->setHost((string) $databaseInfo["host"]);
+				$dataSource->setPort((string) $databaseInfo["port"]);
 				return $dataSource;
 			default:
 				throw new ServletException("Nosql driver not supported: ".$driver);

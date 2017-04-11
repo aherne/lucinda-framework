@@ -10,8 +10,12 @@ class AuthorizationRenderer {
 	 * @param string $contentType Content type of page requested (default or client-specified)
 	 * @param string $contextPath Context path relative to page requested (eg: /my_application for http://localhost/my_application/my_page)
 	 * @throws ApplicationException If no renderer is defined for requested content type
+	 * @throws PathNotFoundException
 	 */
 	public function __construct(AuthorizationResult $result, $contentType, $contextPath) {
+		if($result->getStatus() == AuthorizationResultStatus::NOT_FOUND) {
+			throw new PathNotFoundException();
+		}
 		if($contentType == "text/html") {
 			$this->html($result, $contextPath);
 		} else if ($contentType == "application/json") {
@@ -40,11 +44,6 @@ class AuthorizationRenderer {
 				require_once("application/views/403.php");
 				exit();
 				break;
-			case AuthorizationResultStatus::NOT_FOUND:
-				header("HTTP/1.1 404 Not Found");
-				require_once("application/views/404.php");
-				exit();
-				break;
 		}
 	}
 	
@@ -62,9 +61,6 @@ class AuthorizationRenderer {
 				break;
 			case AuthorizationResultStatus::FORBIDDEN:
 				$payload = array("status"=>"forbidden","body"=>"");
-				break;
-			case AuthorizationResultStatus::NOT_FOUND:
-				$payload = array("status"=>"not_found","body"=>"");
 				break;
 		}
 		
