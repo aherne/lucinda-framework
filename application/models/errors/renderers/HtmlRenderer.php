@@ -24,7 +24,23 @@ class HtmlRenderer implements ErrorRenderer {
 	public function render($exception) {
 		header_remove();
 		header("Content-Type: text/html; charset=".$this->charset);
-		if($exception instanceof PathNotFoundException) {
+		if($exception instanceof SecurityPacket) {
+			switch($exception->getStatus()) {
+				case "unauthorized":
+					header("HTTP/1.1 401 Unauthorized");
+					require_once("application/views/401.php");
+				case "forbidden":
+					header("HTTP/1.1 403 Forbidden");
+					require_once("application/views/403.php");
+				case "not_found":
+					header("HTTP/1.1 404 Not found");
+					require_once("application/views/404.php");
+				default:
+					header("Location: ".$exception->getCallback().($exception->getStatus()?"?status=".$exception->getStatus():""));
+					exit();
+					break;
+			}
+		} else if($exception instanceof PathNotFoundException) {
 			header("HTTP/1.1 404 Not found");
 			require_once("application/views/404.php");
 		} else if($exception instanceof HackingException) {

@@ -22,6 +22,10 @@ class LogReporter implements ErrorReporter {
 	 * @see ErrorReporter::report()
 	 */
 	public function report($exception) {
+		// do not report redirection transports or client errors
+		if($exception instanceof SecurityPacket || $exception instanceof PathNotFoundException || $exception instanceof HackingException) {
+			return;
+		}
 		$severity = $this->getSeverity($exception);
 		
 		switch($severity) {

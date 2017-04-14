@@ -1,7 +1,7 @@
 <?php
 require_once("libraries/php-security-api/loader.php");
 require_once("application/models/security/DAOLocator.php");
-require_once("application/models/security/HackerRenderer.php");
+require_once("application/models/security/SecurityPacket.php");
 
 /**
  * Sets up and performs web security in your application by binding PHP-SECURITY-API & OAUTH2-CLIENT with contents of "security" tag @ CONFIGURATION.XML, 
@@ -26,27 +26,12 @@ require_once("application/models/security/HackerRenderer.php");
  * unique user id is searched for. If found, value is saved as "user_id" request attribute, to be used later on in the flow of application. For REST-ful or
  * many other web service applications where there should be no persistence, "persistence" tag is not required and authorization is done via a synchronizer token.
  * 
- * The next stage is investigating "authentication" tag. If authentication (login/logout) is requested and outcome is successful, "user_id" attribute is updated and:
- * - if page format is "html": client is redirected to logged in / logged out users' homepage with a status
- * - if page format is "json": client receives a json that contains a status and a synchronizer token (time and ip bound) to use in later authorization.
- * If authentication was unsuccessful:
- * - if page format is "html": client is redirected back to logged in / logged out page with error status
- * - if page format is "json": client receives a json that informs of failure via status
- * Otherwise, if no authentication was requested, request passes through.
+ * The next stage is investigating "authentication" tag. If authentication (login/logout) is requested, a SecurityPacket is thrown encapsulating details of 
+ * possible redirection. If outcome is successful, "user_id" attribute is updated. If no authentication is requested, request passes through. 
  * 
  * The final stage is to investigating "authorization" tag. Client's right to requested resource is investigated depending on state (logged in or not) or 
- * discrete rights per resource (on many applications, not all logged in users have same rights to all protected resources).  
- * - if resource requested is not found, a HTTP 404 status code is invoked, then:
- * 		- if page format is "html": application/views/404.php is displayed
- * 		- if page format is "json": a json is returned with status = "not_found"
- * - otherwise
- * 		- if page is protected by login, but user is unauthenticated, a HTTP 401 Unauthorized status code is invoked then:
- * 			- if page format is "html": application/views/401.php is displayed
- * 			- if page format is "json": a json is returned with status = "unauthorized"
- * 		- if page is protected by login, but logged in user doesn't have rights to access it, a HTTP 403 Forbidden status code is invoked then:
- * 			- if page format is "html": application/views/403.php is displayed
- * 			- if page format is "json": a json is returned with status = "forbidden"
- * Otherwise, if resource is found and client has rights to access it, request passes through. 
+ * discrete rights per resource (on many applications, not all logged in users have same rights to all protected resources). If authorization fails, a SecurityPacket
+ * is thrown, encapsulating details of possible redirection. If authorization is successful, request passes through. 
  * 
  * @attribute csrf Stores an instance of CsrfTokenWrapper to use in generating tokens.
  * @attribute user_id Stores unique user identifier (for logged in users).
@@ -144,6 +129,7 @@ class SecurityListener extends RequestListener {
 	 * </authentication>
 	 *
 	 * @throws ApplicationException If XML settings are incorrect
+	 * @throws SecurityPacket For any authentication results.
 	 */
 	private function authenticate() {
 		$xml = $this->application->getXML()->security->authentication;
@@ -174,8 +160,11 @@ class SecurityListener extends RequestListener {
 				return;
 			} else {
 				// authentication was requested
-				require_once("application/models/security/AuthenticationRenderer.php");
-				new AuthenticationRenderer($wrapper->getResult(), $this->request->getUri()->getValid()->getContentType(), $this->request->getURI()->getContextPath(), $this->persistenceDrivers);
+				$transport = new SecurityPacket();
+				$transport->setCallback($wrapper->getResult()->getStatus()==AuthenticationResultStatus::DEFERRED?$wrapper->getResult()->getCallbackURI():$this->request->getURI()->getContextPath()."/".$wrapper->getResult()->getCallbackURI());
+				$transport->setStatus($wrapper->getResult()->getStatus());
+				$transport->setAccessToken($wrapper->getResult()->getUserID(), $this->persistenceDrivers);
+				throw $transport;
 			}
 		} else {
 			throw new ApplicationException("No authentication driver found in configuration.xml: security.authentication");
@@ -194,6 +183,7 @@ class SecurityListener extends RequestListener {
 	 * </authorization>
 	 *
 	 * @throws ApplicationException If XML settings are incorrect
+	 * @throws SecurityPacket For failed authorization.
 	 */
 	private function authorize() {
 		$xml = $this->application->getXML()->security->authorization;
@@ -223,8 +213,10 @@ class SecurityListener extends RequestListener {
 				return;
 			} else {
 				// authorization failed
-				require_once("application/models/security/AuthorizationRenderer.php");
-				new AuthorizationRenderer($wrapper->getResult(), $this->request->getUri()->getValid()->getContentType(), $this->request->getURI()->getContextPath());
+				$transport = new SecurityPacket();
+				$transport->setCallback($this->request->getURI()->getContextPath()."/".$wrapper->getResult()->getCallbackURI());
+				$transport->setStatus($wrapper->getResult()->getStatus());
+				throw $transport;
 			}
 		} else {
 			throw new ApplicationException("No authorization driver found in configuration.xml: security.authentication");
