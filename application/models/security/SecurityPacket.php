@@ -37,7 +37,7 @@ class SecurityPacket extends Exception {
 				$status= "login_ok";
 				break;
 			case AuthenticationResultStatus::DEFERRED:
-				$status= "";
+				$status= "redirect";
 				break;
 			case AuthenticationResultStatus::LOGIN_FAILED:
 				$status= "login_failed";
