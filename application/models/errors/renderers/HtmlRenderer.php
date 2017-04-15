@@ -36,7 +36,7 @@ class HtmlRenderer implements ErrorRenderer {
 					header("HTTP/1.1 404 Not found");
 					require_once("application/views/404.php");
 				default:
-					header("Location: ".$exception->getCallback().($exception->getStatus()?"?status=".$exception->getStatus():""));
+					header("Location: ".$exception->getCallback().($exception->getStatus()!="redirect"?"?status=".$exception->getStatus():""));
 					exit();
 					break;
 			}
