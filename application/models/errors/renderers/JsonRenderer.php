@@ -38,7 +38,7 @@ class JsonRenderer implements ErrorRenderer {
 				case "login_ok":
 					echo json_encode(array("status"=>"login_ok","body"=>"", "callback"=>$exception->getCallback(), "token"=>$exception->getAccessToken()));
 				default:
-					echo json_encode(array("status"=>($exception->getStatus()?$exception->getStatus():"redirect"),"body"=>"", "callback"=>$exception->getCallback()));
+					echo json_encode(array("status"=>$exception->getStatus(), "body"=>"", "callback"=>$exception->getCallback()));
 					break;
 			}
 		} else if($exception instanceof PathNotFoundException) {
