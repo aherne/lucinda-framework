@@ -5,7 +5,6 @@ This is the api that's going to be used by lucinda framework.
 TODOS:
 ? @ServletsAPI: allow named path parameters (this makes application SLOW!)
 F @ServletsAPI: response content type should be configurable in route (<route ... content_type="..."/>
-! @ServletsAPI: test on NGINX
 D @ServletsAPI: update documentation that controlers are now (again) mandatory
 F @Framework: use UserDetails instead of userID (?)  getSecurityContext() @ Request object (which contains: UserDetails & csrf token)
 F @Framework: add error author & mail error reporting
