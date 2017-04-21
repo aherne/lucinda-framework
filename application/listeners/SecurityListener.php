@@ -142,7 +142,7 @@ class SecurityListener extends RequestListener {
 			require_once("application/models/security/FormAuthenticationWrapper.php");
 			$wrapper = new FormAuthenticationWrapper(
 					$this->application->getXML(),
-					$this->request->getUri()->getValid()->getPage(),
+					$this->request->getValidator()->getPage(),
 					$this->persistenceDrivers,
 					$this->request->getAttribute("csrf"));
 		}
@@ -150,7 +150,7 @@ class SecurityListener extends RequestListener {
 			require_once("application/models/security/Oauth2AuthenticationWrapper.php");
 			$wrapper = new Oauth2AuthenticationWrapper(
 					$this->application->getXML(),
-					$this->request->getUri()->getValid()->getPage(),
+					$this->request->getValidator()->getPage(),
 					$this->persistenceDrivers,
 					$this->request->getAttribute("csrf"));
 		}
@@ -196,7 +196,7 @@ class SecurityListener extends RequestListener {
 			require_once("application/models/security/XMLAuthorizationWrapper.php");
 			$wrapper = new XMLAuthorizationWrapper(
 					$this->application->getXML(),
-					$this->request->getUri()->getValid()->getPage(),
+					$this->request->getValidator()->getPage(),
 					$this->request->getAttribute("user_id"));
 			$wrapper->getResult();
 		}
@@ -204,7 +204,7 @@ class SecurityListener extends RequestListener {
 			require_once("application/models/security/DAOAuthorizationWrapper.php");
 			$wrapper = new DAOAuthorizationWrapper(
 					$this->application->getXML(),
-					$this->request->getUri()->getValid()->getPage(),
+					$this->request->getValidator()->getPage(),
 					$this->request->getAttribute("user_id"));
 		}
 		if($wrapper) {
