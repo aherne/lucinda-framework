@@ -5,6 +5,6 @@
 	<body>
 		<h1>Bad Request</h1>
 		
-		You have performed an illegal operation who made server reject your request.
+		You have performed an illegal operation that made server reject your request.
 	</body>
 </html>
