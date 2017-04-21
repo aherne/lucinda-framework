@@ -4,10 +4,8 @@
  */
 class GoogleResponseWrapper extends OAuth2\ResponseWrapper {
 	public function wrap($response) {
-		$result = json_decode($response,true);
-		if(json_last_error()!=JSON_ERROR_NONE) {
-			throw new Oauth2\ServerException("Response is not JSON: ".$response);
-		}
+		$json = new Json();
+		$result = $json->decode($response,true);
 		if(!empty($result["error"])) {
 			$message = "";
 			if(isset($result["error"]["message"])) {
