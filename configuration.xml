@@ -13,11 +13,13 @@
 			<views>application/views</views>
 			<listeners>application/listeners</listeners>
 			<models>application/listeners</models>
+			<tags>application/taglib</tags>
 			<compilations>
 				<local>{COMPILATIONS_PATH}</local>
 			</compilations>
 		</paths>
 		<secret_key>{SECRET_KEY}</secret_key>
+		<templates_extension>php</templates_extension>
 		<environments>
 			<local>{SERVER_NAME}</local>
 		</environments>

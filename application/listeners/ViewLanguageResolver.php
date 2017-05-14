@@ -1,5 +1,6 @@
 <?php
 require_once("libraries/php-view-language-api/loader.php");
+require_once("application/models/Json.php");
 
 /**
  * Performs view templating in your application by binding PHP-VIEW-LANGUAGE-API with SERVLETS-API. View language constructs found in views:
@@ -27,14 +28,16 @@ class ViewLanguageResolver extends ResponseListener {
 		$environment = $this->application->getAttribute("environment");
 		$compilationsFolder = (string) $this->application->getXML()->application->paths->compilations->$environment;
 		if(!$compilationsFolder) throw new ServletException("Compilations folder not defined!");
-	  
-		// compiles
-		$vlp = new ViewLanguageParser(
-				$this->application->getViewsPath(),
-				$this->response->getView(),
-				"php",
-				"application/taglib");
-		$strCompilationPath = $vlp->compile($compilationsFolder);
+		$tagsFolder = (string) $this->application->getXML()->application->paths->tags;
+		$extension = (string) $this->application->getXML()->application->templates_extension;
+		
+		// compiles templates recursively into a single compilation file
+		$vlp = new ViewLanguageParser($this->application->getViewsPath(), $extension, $compilationsFolder, $tagsFolder);
+		$compilationFile = $vlp->compile($this->response->getView());
+		
+		// converts objects sent to response into array (throws JsonException if object is non-convertible)
+		$json = new Json();
+		$data = $json->decode($json->encode($this->response->toArray()));
 		 
 		// disables error rendering
 		$errorHandler = $this->application->getAttribute("error_handler");
@@ -42,10 +45,9 @@ class ViewLanguageResolver extends ResponseListener {
 			$errorHandler->setRenderer(null);
 		}
 
-		// commits to output stream
+		// commits response to output stream
 		ob_start();
-		$data = json_decode(json_encode($this->response->toArray()), true);
-		require_once($strCompilationPath);
+		require_once($compilationFile);
 		$this->response->getOutputStream()->set(ob_get_contents());
 		ob_end_clean();
 	}
