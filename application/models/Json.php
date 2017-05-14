@@ -29,7 +29,7 @@ class Json {
 	 * @return mixed
 	 * @throws JsonException
 	 */
-	public function decode($json, $assoc=false) {
+	public function decode($json, $assoc=true) {
 		$result = json_decode($json, $assoc);
 		$this->checkError();
 		return $result;
