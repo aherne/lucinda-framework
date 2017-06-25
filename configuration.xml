@@ -82,15 +82,15 @@
 	</security>
 	<loggers>
 		<local>
-			<file path="{FILE_PATH}" rotation="{ROTATION_PATTERN}"/>
-			<syslog application="{APPLICATION_NAME}"/>
+			<file path="{FILE_PATH}" rotation="{ROTATION_PATTERN}" format="%d %v %u %f %l %m"/>
+			<syslog application="{APPLICATION_NAME}" format="%u %f %l %m"/>
 		</local>
 	</loggers>
-	<errors>
+	<errors inspector="{CLASS}">
 		<local>
 			<reporters>
-				<file path="{FILE_PATH}" rotation="{ROTATION_PATTERN}"/>
-				<syslog application="{APPLICATION_NAME}"/>
+				<file path="{FILE_PATH}" rotation="{ROTATION_PATTERN}" format="%d %v %u %e %f %l %m"/>
+				<syslog application="{APPLICATION_NAME}" format="%u %e %f %l %m"/>
 				<sql table="{TABLE_NAME}" server="{SERVER_NAME}" rotation="{ROTATION_PATTERN}"/>
 				<reporter class="{CLASS}"/>
 			</reporters>
