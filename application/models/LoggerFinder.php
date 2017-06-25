@@ -3,15 +3,36 @@
  * Locates and instances loggers based on XML content.
  */
 class LoggerFinder {
-	private $xml;
+	private $loggers = array();
 	
 	/**
-	 * Saves XML tag that contains loggers.
+	 * Reads XML tag loggers.{environment}, finds and saves loggers found.
 	 * 
-	 * @param SimpleXMLElement $parent
+	 * @param SimpleXMLElement $xml XML tag reference object.
 	 */
-	public function __construct(SimpleXMLElement $parent) {
-		$this->xml = $parent;
+	public function __construct(SimpleXMLElement $xml) {
+		$this->setLoggers($xml);
+	}
+	
+	/**
+	 * Reads XML tag 
+	 * @param SimpleXMLElement $xml
+	 */
+	private function setLoggers(SimpleXMLElement $xml) {
+		// check file reporting
+		if($this->xml->file) {
+			$this->loggers[] = $this->getFileLogger($this->xml->file);
+		}
+		
+		// check syslog
+		if($this->xml->syslog) {
+			$this->loggers[] = $this->getSysLogger($this->xml->syslog);
+		}
+		
+		// check sql logger
+		if($this->xml->sql) {
+			$this->loggers[] = $this->getSQLLogger($this->xml->sql);
+		}
 	}
 	
 	/**
@@ -20,26 +41,9 @@ class LoggerFinder {
 	 * @return Logger[] List of loggers found.
 	 */
 	public function getLoggers() {
-		$output = array();
-		// check file reporting
-		if($this->xml->file) {
-			$output[] = $this->getFileLogger($this->xml->file);
-		}
-		
-		// check syslog
-		if($this->xml->syslog) {
-			$output[] = $this->getSysLogger($this->xml->syslog);
-		}
-		
-		// check sql logger
-		if($this->xml->sql) {
-			$output[] = $this->getSQLLogger($this->xml->sql);
-		}
-		
-		return $output;
+		return $this->loggers;
 	}
-	
-	
+		
 	/**
 	 * Constructs and returns instance of FileLogger based on XML content.
 	 *
@@ -105,6 +109,6 @@ class LoggerFinder {
 		if(!$tableName) {
 			throw new ApplicationException("Property 'table' missing in configuration.xml tag: errors.handlers.{environment}.reporters.sql!");
 		}
-		$output[] = new SQLLogger($tableName, (string) $xml["rotation"], ($serverName?SQLConnectionFactory::getInstance($serverName):SQLConnectionSingleton::getInstance()));
+		return new SQLLogger($tableName, (string) $xml["rotation"], ($serverName?SQLConnectionFactory::getInstance($serverName):SQLConnectionSingleton::getInstance()));
 	}
 }

@@ -1,9 +1,8 @@
 <?php
 require_once("libraries/php-errors-api/loader.php");
 require_once("libraries/php-logging-api/loader.php");
-require_once("application/models/errors/reporters/LogReporter.php");
-require_once("application/models/LoggerFinder.php");
-require_once("application/models/ErrorInspector.php");
+require_once("application/models/ErrorRendererFinder.php");
+require_once("application/models/ErrorReportersFinder.php");
 
 /**
  * Sets up error handling in your application by binding PHP-ERRORS-API & PHP-LOGGING-API with content of "errors" tag @ CONFIGURATION.XML, 
@@ -75,23 +74,8 @@ class ErrorListener extends ApplicationListener {
 	 * @return LogReporter[] List of ErrorReporter to delegate error reporting to.
 	 */
 	private function getReporters() {
-		// look for tag that contains loggers to report errors to
-		$environment = $this->application->getAttribute("environment");
-		$xml = $this->application->getXML()->errors;
-		if(empty($xml) || empty($xml->handlers) || empty($xml->handlers->$environment) || empty($xml->handlers->$environment->reporters)) {
-			return array();
-		}
-		$reporters = $xml->handlers->$environment->reporters;
-		
-		// finds loggers where error will be reported to then forwards them to LogReporter
-		$output = array();
-		$esf = new ErrorInspector();
-		$finder = new LoggerFinder($reporters);
-		$loggers  = $finder->getLoggers();
-		foreach($loggers as $logger) {
-			$output[] = new LogReporter($logger, $esf);
-		}
-		return $output;
+		$erf = new ErrorReportersFinder($this->application->getXML()->errors, $this->application->getAttribute("environment"));
+		return $erf->getReporters();
 	}
 
 
@@ -115,34 +99,7 @@ class ErrorListener extends ApplicationListener {
 	 * @return ErrorRenderer|null Object to delegate error rendering to.
 	 */
 	private function getRenderer() {
-		// get extension
-		$extension = $this->application->getDefaultExtension();
-		$pathRequested = str_replace("?".$_SERVER["QUERY_STRING"],"",$_SERVER["REQUEST_URI"]);
-		$dotPosition = strrpos($pathRequested,".");
-		if($dotPosition!==false) {
-			$temp = strtolower(substr($pathRequested,$dotPosition+1));
-			if($this->application->hasFormat($temp)) {
-				$extension = $temp;
-			}
-		}
-
-		// navigate in XML tree to branch that holds error rendering per current environment and extension
-		$environment = $this->application->getAttribute("environment");
-		$xml = $this->application->getXML()->errors;
-		$renderer = (!empty($xml) && !empty($xml->handlers) && !empty($xml->handlers->$environment)?$xml->handlers->$environment->renderer:null);
-		$showErrors = ($renderer!=NULL && ((string) $renderer["display_errors"])?true:false);
-		if(!$renderer || !isset($renderer->$extension)) {
-			return null; // it is allowed to render nothing
-		}
-		$renderer = $renderer->$extension;
-
-		// perform rendering based on extension
-		$rendererClassName = ucwords($extension)."Renderer";
-		if(file_exists("application/models/errors/renderers/".$rendererClassName.".php")) {
-			require_once("application/models/errors/renderers/".$rendererClassName.".php");
-			return new $rendererClassName($showErrors, $this->application->getDefaultCharacterEncoding());
-		} else {
-			return; // by default, no renderer		
-		}
+		$erf = new ErrorRendererFinder($this->application->getXML()->errors, $this->application);
+		return $erf->getRenderer();
 	}
 }
