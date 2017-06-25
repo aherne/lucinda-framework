@@ -1,20 +1,21 @@
 <?php
+require_once("ErrorSeverityFinder.php");
 /**
  * Reports errors on disk using loggers.
  */
 class LogReporter implements ErrorReporter {
 	private $logger;
-	private $severityFinder;
+	private $inspector;
 	
 	/**
 	 * Uses logger to save errors to.
 	 * 
 	 * @param Logger $logger Logging provider instance
-	 * @param SeverityFinder $severityFinder Checks severity of exception thrown
+	 * @param ErrorSeverityFinder $inspector Class that inspects errors for their logging severity.
 	 */
-	public function __construct(Logger $logger) {
+	public function __construct(Logger $logger, ErrorSeverityFinder $inspector) {
 		$this->logger = $logger;
-		$this->severityFinder = new ErrorSeverityFinder();
+		$this->inspector= $inspector;
 	}
 	
 	/**
@@ -22,13 +23,10 @@ class LogReporter implements ErrorReporter {
 	 * @see ErrorReporter::report()
 	 */
 	public function report($exception) {
-		// do not report redirection transports or client errors
-		if($exception instanceof SecurityPacket || $exception instanceof PathNotFoundException || $exception instanceof HackingException) {
-			return;
-		}
-		$severity = $this->getSeverity($exception);
-		
+		$severity = $this->inspector->getSeverity($exception);
 		switch($severity) {
+			case LOG_NONE: 	// on errors that need not be reported
+				break;
 			case LOG_EMERG: // on server failures
 				$this->logger->emergency($exception);
 				break;
@@ -41,38 +39,6 @@ class LogReporter implements ErrorReporter {
 			default:		// on checked failures
 				$this->logger->error($exception);
 				break;			
-		}
-	}
-	
-	/**
-	 * Gets error syslog severity.
-	 * 
-	 * @param Error|Exception $exception
-	 * @return string
-	 */
-	private  function getSeverity($exception) {
-		if($exception instanceof Error) {
-			return LOG_CRIT; 	// programmer fault
-		} else if($exception instanceof PHPException) {
-			return LOG_CRIT; 	// programmer fault
-		} else if($exception instanceof NoSQLConnectionException) {
-			return LOG_EMERG; 	// server fault
-		} else if($exception instanceof NoSQLStatementException) {
-			return LOG_CRIT; 	// programmer fault
-		} else if($exception instanceof SQLConnectionException) {
-			return LOG_EMERG;	// server fault
-		} else if($exception instanceof SQLStatementException) {
-			return LOG_CRIT; 	// programmer fault
-		} else if($exception instanceof ServletException) {
-			return LOG_ALERT;	// programmer fault
-		} else if($exception instanceof ApplicationException) {
-			return LOG_ALERT; 	// programmer fault
-		} else if($exception instanceof AuthenticationException) {
-			return LOG_ALERT; 	// programmer fault
-		} else if($exception instanceof ViewException) {
-			return LOG_CRIT;	// programmer fault
-		} else {
-			return LOG_ERR;		// client fault (in principle)
 		}
 	}
 }

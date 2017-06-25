@@ -1,7 +1,9 @@
 <?php
 require_once("libraries/php-errors-api/loader.php");
+require_once("libraries/php-logging-api/loader.php");
 require_once("application/models/errors/reporters/LogReporter.php");
-require_once("application/models/ComponentFinder.php");
+require_once("application/models/LoggerFinder.php");
+require_once("application/models/ErrorInspector.php");
 
 /**
  * Sets up error handling in your application by binding PHP-ERRORS-API & PHP-LOGGING-API with content of "errors" tag @ CONFIGURATION.XML, 
@@ -59,74 +61,36 @@ class ErrorListener extends ApplicationListener {
 	 * 		<file path="{FILE_PATH}" rotation="{ROTATION_PATTERN}"/>
 	 * 		<syslog application="{APPLICATION_NAME}"/>
 	 * 		<sql table="{TABLE_NAME}" server="{SERVER_NAME}" rotation="{ROTATION_PATTERN}"/>
-	 * 		<reporter class="{CLASS}" .../>
+	 * 		<logger class="{CLASS}" .../>
 	 *
 	 * Of which:
 	 * - "file": reporting is done in a file on your server's disk
 	 * - "syslog": reporting is done via syslog service running on your server
 	 * - "sql": reporting is done into an sql table
-	 * - "reporter": if you want to add a custom reporter (class must extend CustomReporter class)
+	 * - "logger": if you want to add a custom reporter (class must extend CustomLogger)
 	 *
 	 * It is allowed to have multiple reporters at the same time! If no reporter is defined, error will not be reported at all.
 	 *
 	 * @throws ApplicationException
-	 * @return ErrorReporter[] List of ErrorReporter to delegate error reporting to.
+	 * @return LogReporter[] List of ErrorReporter to delegate error reporting to.
 	 */
 	private function getReporters() {
-		$output = array();
-
-		// look for reporters tag
+		// look for tag that contains loggers to report errors to
 		$environment = $this->application->getAttribute("environment");
 		$xml = $this->application->getXML()->errors;
 		if(empty($xml) || empty($xml->handlers) || empty($xml->handlers->$environment) || empty($xml->handlers->$environment->reporters)) {
 			return array();
 		}
 		$reporters = $xml->handlers->$environment->reporters;
-
-		// append file reporting
-		if($reporters->file) {
-			require_once("libraries/php-logging-api/src/FileLogger.php");
-				
-			$filePath = (string) $reporters->file["path"];
-			if(!$filePath) {
-				throw new ApplicationException("Property 'path' missing in configuration.xml tag: errors.handlers.{environment}.reporters.file!");
-			}
-			$output[] = new LogReporter(new FileLogger($filePath, (string) $reporters->file["rotation"]));
+		
+		// finds loggers where error will be reported to then forwards them to LogReporter
+		$output = array();
+		$esf = new ErrorInspector();
+		$finder = new LoggerFinder($reporters);
+		$loggers  = $finder->getLoggers();
+		foreach($loggers as $logger) {
+			$output[] = new LogReporter($logger, $esf);
 		}
-
-		// append syslog reporting
-		if($reporters->syslog) {
-			require_once("libraries/php-logging-api/src/SysLogger.php");
-				
-			$applicationName = (string) $reporters->syslog["application"];
-			if(!$applicationName) {
-				throw new ApplicationException("Property 'application' missing in configuration.xml tag: errors.handlers.{environment}.reporters.syslog!");
-			}
-			$output[] = new LogReporter(new SysLogger($applicationName));
-		}
-
-		// append sql reporting
-		if($reporters->sql) {
-			require_once("libraries/php-logging-api/src/SQLLogger.php");
-				
-			$serverName = (string) $reporters->sql["server"];
-			if(!class_exists("SQLConnectionFactory")) {
-				throw new ApplicationException("SQLDataSourceInjector listener has not ran!");
-			}
-			$tableName = (string) $reporters->sql["table"];
-			if(!$tableName) {
-				throw new ApplicationException("Property 'table' missing in configuration.xml tag: errors.handlers.{environment}.reporters.sql!");
-			}
-			$output[] = new LogReporter(new SQLLogger($tableName, ($serverName?SQLConnectionFactory::getInstance($serverName):SQLConnectionSingleton::getInstance()), (string) $reporters->sql["rotation"]));
-		}
-
-		// append custom reporter
-		if($reporters->reporter) {
-			require_once("application/models/errors/reporters/CustomReporter.php");
-			$componentFinder = new ComponentFinder($reporters->reporter, "CustomReporter", "errors.handlers.{environment}.reporters.reporter");
-			$output[] =$componentFinder->getComponent();
-		}
-
 		return $output;
 	}
 
@@ -151,18 +115,18 @@ class ErrorListener extends ApplicationListener {
 	 * @return ErrorRenderer|null Object to delegate error rendering to.
 	 */
 	private function getRenderer() {
-		// clears all headers already sent (if any), to guarantee a fresh rendering
-		header_remove();
-
 		// get extension
 		$extension = $this->application->getDefaultExtension();
 		$pathRequested = str_replace("?".$_SERVER["QUERY_STRING"],"",$_SERVER["REQUEST_URI"]);
 		$dotPosition = strrpos($pathRequested,".");
 		if($dotPosition!==false) {
-			$extension = strtolower(substr($pathRequested,$dotPosition+1));
+			$temp = strtolower(substr($pathRequested,$dotPosition+1));
+			if($this->application->hasFormat($temp)) {
+				$extension = $temp;
+			}
 		}
 
-		// render error
+		// navigate in XML tree to branch that holds error rendering per current environment and extension
 		$environment = $this->application->getAttribute("environment");
 		$xml = $this->application->getXML()->errors;
 		$renderer = (!empty($xml) && !empty($xml->handlers) && !empty($xml->handlers->$environment)?$xml->handlers->$environment->renderer:null);
@@ -170,28 +134,15 @@ class ErrorListener extends ApplicationListener {
 		if(!$renderer || !isset($renderer->$extension)) {
 			return null; // it is allowed to render nothing
 		}
-
-		// perform rendering
 		$renderer = $renderer->$extension;
-		if(!isset($renderer["class"])) {
-			// use default
-			switch($extension) {
-				case "html":
-					require_once("application/models/errors/renderers/HtmlRenderer.php");
-					return new HtmlRenderer($showErrors, $this->application->getDefaultCharacterEncoding());
-					break;
-				case "json":
-					require_once("application/models/errors/renderers/JsonRenderer.php");
-					return new JsonRenderer($showErrors, $this->application->getDefaultCharacterEncoding());
-				default:
-					return; // by default, no renderer
-			}
-		} else {
-			// use custom renderer
-			require_once("application/models/errors/renderers/CustomRenderer.php");
-			$componentFinder = new ComponentFinder($renderer, "CustomRenderer", "errors.handlers.{environment}.renderer.{extension}");
-			return $componentFinder->getComponent();
-		}
 
+		// perform rendering based on extension
+		$rendererClassName = ucwords($extension)."Renderer";
+		if(file_exists("application/models/errors/renderers/".$rendererClassName.".php")) {
+			require_once("application/models/errors/renderers/".$rendererClassName.".php");
+			return new $rendererClassName($showErrors, $this->application->getDefaultCharacterEncoding());
+		} else {
+			return; // by default, no renderer		
+		}
 	}
 }
