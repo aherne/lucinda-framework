@@ -7,7 +7,7 @@ class LoggerFinder {
 	
 	/**
 	 * Reads XML tag loggers.{environment}, finds and saves loggers found.
-	 * 
+	 *
 	 * @param SimpleXMLElement $xml XML tag reference object.
 	 */
 	public function __construct(SimpleXMLElement $xml) {
@@ -15,35 +15,35 @@ class LoggerFinder {
 	}
 	
 	/**
-	 * Reads XML tag 
+	 * Reads XML tag
 	 * @param SimpleXMLElement $xml
 	 */
 	private function setLoggers(SimpleXMLElement $xml) {
 		// check file reporting
-		if($this->xml->file) {
-			$this->loggers[] = $this->getFileLogger($this->xml->file);
+		if($xml->file) {
+			$this->loggers[] = $this->getFileLogger($xml->file);
 		}
 		
 		// check syslog
-		if($this->xml->syslog) {
-			$this->loggers[] = $this->getSysLogger($this->xml->syslog);
+		if($xml->syslog) {
+			$this->loggers[] = $this->getSysLogger($xml->syslog);
 		}
 		
 		// check sql logger
-		if($this->xml->sql) {
-			$this->loggers[] = $this->getSQLLogger($this->xml->sql);
+		if($xml->sql) {
+			$this->loggers[] = $this->getSQLLogger($xml->sql);
 		}
 	}
 	
 	/**
 	 * Finds and instances loggers in container XML tag.
-	 * 
+	 *
 	 * @return Logger[] List of loggers found.
 	 */
 	public function getLoggers() {
 		return $this->loggers;
 	}
-		
+	
 	/**
 	 * Constructs and returns instance of FileLogger based on XML content.
 	 *
@@ -98,7 +98,7 @@ class LoggerFinder {
 	 * @return Logger
 	 */
 	private function getSQLLogger(SimpleXMLElement $xml) {
-		require_once("libraries/php-logging-api/src/SQLLogger.php");
+		require_once("application/models/loggers/SQLLogger.php");
 		
 		if(!class_exists("SQLConnectionFactory")) {
 			throw new ApplicationException("SQLDataSourceInjector listener has not ran!");
