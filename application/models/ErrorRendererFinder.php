@@ -6,7 +6,7 @@ class ErrorRendererFinder {
 	protected $renderer;
 	
 	/**
-	 * Reads XML tag errors.handlers.{environment}.renderer, then finds and saves renderer found.
+	 * Reads XML tag errors.{environment}.renderer, then finds and saves renderer found.
 	 *
 	 * @param SimpleXMLElement $xml XML tag reference object.
 	 * @param Application $application ServletsAPI object that encapsulates relevant information from configuration.xml
@@ -14,7 +14,7 @@ class ErrorRendererFinder {
 	public function __construct(SimpleXMLElement $xml, Application $application) {
 		$extension = $this->detectExtension($application);
 		$environment = $application->getAttribute("environment");
-		$renderer = (!empty($xml) && !empty($xml->handlers) && !empty($xml->handlers->$environment)?$xml->handlers->$environment->renderer:null);
+		$renderer = (!empty($xml) && !empty($xml->$environment)?$xml->$environment->renderer:null);
 		if(!$renderer || !isset($renderer->$extension)) {
 			return; // it is allowed to render nothing
 		}
@@ -45,7 +45,7 @@ class ErrorRendererFinder {
 	/**
 	 * Finds renderer in container XML tag based on display format(extension), instances then saves it for latter reference.
 	 * 
-	 * @param SimpleXMLElement $xml Contents of errors.handlers.{environment}.renderer tag.
+	 * @param SimpleXMLElement $xml Contents of errors.{environment}.renderer tag.
 	 * @param string $extension Page display format (extension).
 	 * @param boolean $displayErrors Whether or not error details should be shown on screen.
 	 * @param string $characterEncoding Character encoding to be used in display (relevant for formats such as html, xml or json. 
