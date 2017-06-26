@@ -1,5 +1,9 @@
 <?php
 define("LOG_NONE", -1);
+
+/**
+ *  Inspects errors for severity & other criteria (TBD)
+ */
 class ErrorInspector implements ErrorSeverityFinder {
 	/**
 	 * {@inheritDoc}
@@ -9,9 +13,7 @@ class ErrorInspector implements ErrorSeverityFinder {
 		// do not report redirection transports or client errors
 		if($exception instanceof SecurityPacket || $exception instanceof PathNotFoundException || $exception instanceof HackingException) {
 			return LOG_NONE;
-		}
-		$severity = $this->getSeverity($exception);
-		if($exception instanceof Error) {
+		} else if($exception instanceof Error) {
 			return LOG_CRIT; 	// programmer fault
 		} else if($exception instanceof PHPException) {
 			return LOG_CRIT; 	// programmer fault
