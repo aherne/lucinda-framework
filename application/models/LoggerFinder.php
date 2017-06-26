@@ -107,7 +107,7 @@ class LoggerFinder {
 		$serverName = (string) $xml["server"];
 		$tableName = (string) $xml["table"];
 		if(!$tableName) {
-			throw new ApplicationException("Property 'table' missing in configuration.xml tag: errors.handlers.{environment}.reporters.sql!");
+			throw new ApplicationException("Property 'table' missing in configuration.xml tag: errors.{environment}.reporters.sql!");
 		}
 		return new SQLLogger($tableName, (string) $xml["rotation"], ($serverName?SQLConnectionFactory::getInstance($serverName):SQLConnectionSingleton::getInstance()));
 	}

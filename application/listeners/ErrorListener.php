@@ -10,12 +10,10 @@ require_once("application/models/ErrorReportersFinder.php");
  * 
  * Syntax for "errors" XML  tag is:
  * <errors>
- * 		<handlers>
  * 			<{ENVIRONMENT_NAME}>
  * 				<reporters>...</reporters>
  * 				<renderer>...</renderer>
  * 			</{ENVIRONMENT_NAME}>
- * 		<handlers>
  * </errors>
  * 
  * Where:
@@ -56,7 +54,7 @@ class ErrorListener extends ApplicationListener {
 	}
 
 	/**
-	 * Finds error reporter among children of errors.handlers.{ENVIRONMENT}.reporters tag. Following children are recognized:
+	 * Finds error reporter among children of errors.{ENVIRONMENT}.reporters tag. Following children are recognized:
 	 * 		<file path="{FILE_PATH}" rotation="{ROTATION_PATTERN}"/>
 	 * 		<syslog application="{APPLICATION_NAME}"/>
 	 * 		<sql table="{TABLE_NAME}" server="{SERVER_NAME}" rotation="{ROTATION_PATTERN}"/>
@@ -80,7 +78,7 @@ class ErrorListener extends ApplicationListener {
 
 
 	/**
-	 * Finds child of  errors.handlers.{ENVIRONMENT}.renderer XML tag that matches page format (extension). Tag syntax:
+	 * Finds child of  errors.{ENVIRONMENT}.renderer XML tag that matches page format (extension). Tag syntax:
 	 *
 	 * <renderer display_errors="{0 OR 1}">
 	 * 		<{extension} ?(class="{CLASS}" ...)/>

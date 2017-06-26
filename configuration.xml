@@ -26,6 +26,8 @@
 	</application>
 	<listeners>
 		<listener class="EnvironmentDetector"/>
+		<listener class="ErrorListener"/>
+		<listener class="LoggingListener"/>
 		<listener class="SQLDataSourceInjector"/>
 		<listener class="NoSQLDataSourceInjector"/>
 		<listener class="SecurityListener"/>
