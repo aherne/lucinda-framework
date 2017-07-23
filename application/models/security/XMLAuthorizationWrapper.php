@@ -13,10 +13,10 @@ class XMLAuthorizationWrapper extends AuthorizationWrapper {
 	 * 
 	 * @param SimpleXMLElement $xml Contents of root @ configuration.xml
 	 * @param string $currentPage Current page requested.
-	 * @param mixed $userID Unique user identifier (usually an integer) 
+	 * @param string[] $userRoles List of roles authenticated user has access to 
 	 * @throws ApplicationException If XML is malformed.
 	 */
-	public function __construct(SimpleXMLElement $xml, $currentPage, $userID) {
+	public function __construct(SimpleXMLElement $xml, $currentPage, $userRoles) {
 		// check autorouting
 		$autoRouting = (int) $xml->application->auto_routing;
 		if($autoRouting) {
@@ -24,7 +24,7 @@ class XMLAuthorizationWrapper extends AuthorizationWrapper {
 		}
 		
 		// move up in xml tree
-		$xmlLocal = $xml->security->authorization->by_route;
+		$xmlLocal = $xml->security->authorization->by_xml;
 		
 		$loggedInCallback = (string) $xmlLocal["logged_in_callback"];
 		if(!$loggedInCallback) $loggedInCallback = self::DEFAULT_LOGGED_IN_PAGE;
@@ -35,7 +35,7 @@ class XMLAuthorizationWrapper extends AuthorizationWrapper {
 		// authorize and save result
 		try {
 			$authorization = new XMLAuthorization($loggedInCallback, $loggedOutCallback);
-			$this->setResult($authorization->authorize($xml, $currentPage, ($userID?true:false)));
+			$this->setResult($authorization->authorize($xml, $currentPage, $userRoles));
 		} catch(XMLException $e) {
 			throw new ApplicationException($e->getMessage());
 		}

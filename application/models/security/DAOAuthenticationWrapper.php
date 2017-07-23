@@ -1,9 +1,9 @@
 <?php
 require_once("AuthenticationWrapper.php");
 /**
- * Binds FormAuthentication @ SECURITY-API to settings from configuration.xml @ SERVLETS-API then performs login/logout if it matches paths @ xml via database.
+ * Binds DAOAuthentication @ SECURITY-API to settings from configuration.xml @ SERVLETS-API then performs login/logout if it matches paths @ xml via database.
  */
-class FormAuthenticationWrapper extends AuthenticationWrapper {
+class DAOAuthenticationWrapper extends AuthenticationWrapper {
 	const DEFAULT_PARAMETER_USERNAME = "username";
 	const DEFAULT_PARAMETER_PASSWORD = "password";
 	const DEFAULT_PARAMETER_REMEMBER_ME = "remember_me";
@@ -34,7 +34,7 @@ class FormAuthenticationWrapper extends AuthenticationWrapper {
 
 		// setup class properties
 		$this->xml = $xml->security->authentication->form;
-		$this->authentication = new FormAuthentication($daoObject, $persistenceDrivers);
+		$this->authentication = new DAOAuthentication($daoObject, $persistenceDrivers);
 
 		// checks if a login action was requested, in which case it forwards 
 		$sourcePage = (string) $this->xml->login["page"];
@@ -66,18 +66,29 @@ class FormAuthenticationWrapper extends AuthenticationWrapper {
 			throw new TokenException("CSRF token is invalid or missing!");
 		}
 		
-		// login
+		// get target page
 		$targetPage = (string) $this->xml->login["target"];
 		if(!$targetPage) $targetPage = self::DEFAULT_TARGET_PAGE;
+		
+		// get parameter names
 		$parameterUsername = (string) $this->xml->login["parameter_username"];
+		if(!$parameterUsername) throw new AuthenticationException("XML parameter missing: parameter_username");
 		$parameterPassword = (string) $this->xml->login["parameter_password"];
+		if(!$parameterUsername) throw new AuthenticationException("XML parameter missing: parameter_password");
 		$parameterRememberMe = (string) $this->xml->login["parameter_rememberMe"];
+		
+		// get parameter values
+		$username = (!empty($_POST[$parameterUsername])?$_POST[$parameterUsername]:"");
+		if(!$username) throw new AuthenticationException("POST parameter missing: ".$parameterUsername);
+		$password = (!empty($_POST[$parameterPassword])?$_POST[$parameterPassword]:"");
+		if(!$password) throw new AuthenticationException("POST parameter missing: ".$parameterPassword);
+		$rememberMe = ($parameterRememberMe?(!empty($_POST[$parameterRememberMe])?(boolean) $_POST[$parameterRememberMe]:false):null);
 		
 		// set result
 		$result = $this->authentication->login(
-				($parameterUsername?$parameterUsername:self::DEFAULT_PARAMETER_USERNAME),
-				($parameterPassword?$parameterPassword:self::DEFAULT_PARAMETER_PASSWORD),
-				($parameterRememberMe?$parameterRememberMe:self::DEFAULT_PARAMETER_REMEMBER_ME)
+				$username,
+				$password,
+				$rememberMe
 				);
 		$this->setResult($result, $sourcePage, $targetPage);
 	}
