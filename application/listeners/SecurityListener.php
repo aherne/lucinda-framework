@@ -139,8 +139,8 @@ class SecurityListener extends RequestListener {
 
 		$wrapper = null;
 		if($xml->form) {
-			require_once("application/models/security/FormAuthenticationWrapper.php");
-			$wrapper = new FormAuthenticationWrapper(
+			require_once("application/models/security/DAOAuthenticationWrapper.php");
+			$wrapper = new DAOAuthenticationWrapper(
 					$this->application->getXML(),
 					$this->request->getValidator()->getPage(),
 					$this->persistenceDrivers,

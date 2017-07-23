@@ -11,24 +11,27 @@ $xmlString = '
 $xml = simplexml_load_string($xmlString);
 require_once(str_replace("test/security","application/models/security", __FILE__));
 require_once(dirname(dirname(__DIR__))."/libraries/php-servlets-api/src/exceptions/ApplicationException.php");
+require_once(dirname(dirname(__DIR__))."/libraries/php-security-api/src/HackingException.php");
+require_once(dirname(dirname(__DIR__))."/libraries/php-security-api/src/authentication/AuthenticationException.php");
 require_once(dirname(dirname(__DIR__))."/libraries/php-security-api/src/token/SynchronizerToken.php");
 require_once(dirname(dirname(__DIR__))."/libraries/php-security-api/src/authentication/RememberMePersistenceDriver.php");
 
+$echoes = array();
 // test empty cookie
 $_SERVER["REMOTE_ADDR"] = "72.229.28.185";
 $wrapper = new RememberMePersistenceDriverWrapper($xml->security->persistence->remember_me);
-echo __LINE__.":".($wrapper->getDriver()->load()===null?"OK":"FAILED")."\n";
+$echoes[]=__LINE__.":".($wrapper->getDriver()->load()===null?"OK":"FAILED")."\n";
 
 // test normal situation
 $_SERVER["REMOTE_ADDR"] = "72.229.28.185";
 $wrapper = new RememberMePersistenceDriverWrapper($xml->security->persistence->remember_me);
 $wrapper->getDriver()->save(11);
-echo __LINE__.":".($wrapper->getDriver()->load()==11?"OK":"FAILED")."\n";
+$echoes[]=__LINE__.":".($wrapper->getDriver()->load()==11?"OK":"FAILED")."\n";
 
 // test remember me expired
 sleep(2);
 $wrapper = new RememberMePersistenceDriverWrapper($xml->security->persistence->remember_me);
-echo __LINE__.":".($wrapper->getDriver()->load()===null?"OK":"FAILED")."\n";
+$echoes[]=__LINE__.":".($wrapper->getDriver()->load()===null?"OK":"FAILED")."\n";
 
 // test remember me from a different ip
 $_SERVER["REMOTE_ADDR"] = "72.229.28.185";
@@ -39,7 +42,12 @@ $wrapper = new RememberMePersistenceDriverWrapper($xml->security->persistence->r
 $ok = false;
 try {
 	$wrapper->getDriver()->load();
+	var_dump($wrapper->getDriver()->load());
 } catch(TokenException $e) {
 	$ok = true;
 }
-echo __LINE__.":".($ok?"OK":"FAILED")."\n";
+$echoes[]=__LINE__.":".($ok?"OK":"FAILED")."\n";
+
+foreach($echoes as $line) {
+	echo $line;
+}
