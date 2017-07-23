@@ -139,12 +139,22 @@ class SecurityListener extends RequestListener {
 
 		$wrapper = null;
 		if($xml->form) {
-			require_once("application/models/security/DAOAuthenticationWrapper.php");
-			$wrapper = new DAOAuthenticationWrapper(
-					$this->application->getXML(),
-					$this->request->getValidator()->getPage(),
-					$this->persistenceDrivers,
-					$this->request->getAttribute("csrf"));
+			if((string) $xml->form["dao"]) {
+				require_once("application/models/security/DAOAuthenticationWrapper.php");
+				$wrapper = new DAOAuthenticationWrapper(
+						$this->application->getXML(),
+						$this->request->getValidator()->getPage(),
+						$this->persistenceDrivers,
+						$this->request->getAttribute("csrf"));
+				
+			} else {
+				require_once("application/models/security/XMLAuthenticationWrapper.php");
+				$wrapper = new XMLAuthenticationWrapper(
+						$this->application->getXML(),
+						$this->request->getValidator()->getPage(),
+						$this->persistenceDrivers,
+						$this->request->getAttribute("csrf"));				
+			}
 		}
 		if($xml->oauth2) {
 			require_once("application/models/security/Oauth2AuthenticationWrapper.php");

@@ -3,14 +3,15 @@ require_once("AuthenticationWrapper.php");
 require_once("FormRequestValidator.php");
 
 /**
- * Binds DAOAuthentication @ SECURITY-API to settings from configuration.xml @ SERVLETS-API then performs login/logout if it matches paths @ xml via database.
+ * Binds XMLAuthentication @ SECURITY-API to settings from configuration.xml @ SERVLETS-API then performs login/logout if it matches paths @ xml via ACL @ XML.
  */
-class DAOAuthenticationWrapper extends AuthenticationWrapper {
+class XMLAuthenticationWrapper extends AuthenticationWrapper {
+	private $validator;
 	private $driver;
-
+	
 	/**
 	 * Creates an object.
-	 * 
+	 *
 	 * @param SimpleXMLElement $xml Contents of security.authentication.form tag @ configuration.xml.
 	 * @param string $currentPage Current page requested.
 	 * @param PersistenceDriver[] $persistenceDrivers List of drivers to persist information across requests.
@@ -23,10 +24,8 @@ class DAOAuthenticationWrapper extends AuthenticationWrapper {
 	 */
 	public function __construct(SimpleXMLElement $xml, $currentPage, $persistenceDrivers, CsrfTokenWrapper $csrf) {
 		// set driver
-		$locator = new DAOLocator($xml);
-		$daoObject = $locator->locate($xml->security->authentication->form, "dao", "UserAuthenticationDAO");
-		$this->driver = new DAOAuthentication($daoObject, $persistenceDrivers);
-
+		$this->driver = new XMLAuthentication($xml, $persistenceDrivers);
+		
 		// setup class properties
 		$validator = new FormRequestValidator($xml);
 		
@@ -44,27 +43,26 @@ class DAOAuthenticationWrapper extends AuthenticationWrapper {
 			$this->logout($request);
 		}
 	}
-
+	
 	/**
 	 * Logs user in authentication driver.
-	 * 
+	 *
 	 * @param LoginRequest $request Encapsulates login request data.
 	 * @throws SQLConnectionException If connection to database server fails.
 	 * @throws SQLStatementException If query to database server fails.
 	 */
-	private function login(LoginRequest $request) {		
+	private function login(LoginRequest $request) {
 		// set result
 		$result = $this->driver->login(
 				$request->getUsername(),
-				$request->getPassword(),
-				$request->getRememberMe()
+				$request->getPassword()
 				);
 		$this->setResult($result, $request->getSourcePage(), $request->getDestinationPage());
 	}
-
+	
 	/**
 	 * Logs user out authentication driver.
-	 * 
+	 *
 	 * @param LogoutRequest $request Encapsulates logout request data.
 	 * @throws SQLConnectionException If connection to database server fails.
 	 * @throws SQLStatementException If query to database server fails.
