@@ -4,9 +4,9 @@ class MockUserAuthenticationDAO implements UserAuthenticationDAO {
 			1=>array("username"=>"asd","password"=>"fgh")
 	);
 	
-	public function login(LoginCredentials $credentials) {
+	public function login($username, $password, $rememberMe=null) {
 		foreach($this->users as $id=>$info) {
-			if($info["username"]==$credentials->getUserName() && $info["password"]==$credentials->getPassword()) {
+			if($info["username"]==$username && $info["password"]==$password) {
 				return $id;
 			}
 		}
