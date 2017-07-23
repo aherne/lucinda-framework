@@ -2,6 +2,9 @@
 // generic code
 $xmlString = '
 		<xml>
+			<users>
+				<user id="1" roles="USER"/>
+			</users>
 			<routes>
 				<route url="asd" roles="GUEST"/>
 				<route url="fgh" roles="USER"/>
@@ -19,32 +22,32 @@ require_once(dirname(dirname(__DIR__))."/libraries/php-servlets-api/src/exceptio
 require_once(dirname(dirname(__DIR__))."/libraries/php-security-api/src/authorization/XMLAuthorization.php");
 
 // test non-existent page for guest
-$wrapper = new XMLAuthorizationWrapper($xml, "qwe", array("GUEST"));
+$wrapper = new XMLAuthorizationWrapper($xml, "qwe", 0);
 $result = $wrapper->getResult();
 echo __LINE__.":".($result->getStatus()==AuthorizationResultStatus::NOT_FOUND && $result->getCallbackURI()=="loginz"?"OK":"FAILED")."\n";
 
 // test non-existent page for logged in user
-$wrapper = new XMLAuthorizationWrapper($xml, "qwe", array("USER"));
+$wrapper = new XMLAuthorizationWrapper($xml, "qwe",1);
 $result = $wrapper->getResult();
 echo __LINE__.":".($result->getStatus()==AuthorizationResultStatus::NOT_FOUND && $result->getCallbackURI()=="indexz"?"OK":"FAILED")."\n";
 
 // test existent page allowed for guest
-$wrapper = new XMLAuthorizationWrapper($xml, "asd", array("GUEST"));
+$wrapper = new XMLAuthorizationWrapper($xml, "asd", 0);
 $result = $wrapper->getResult();
 echo __LINE__.":".($result->getStatus()==AuthorizationResultStatus::OK?"OK":"FAILED")."\n";
 
 // test existent page not allowed for guest
-$wrapper = new XMLAuthorizationWrapper($xml, "fgh", array("GUEST"));
+$wrapper = new XMLAuthorizationWrapper($xml, "fgh", 0);
 $result = $wrapper->getResult();
 echo __LINE__.":".($result->getStatus()==AuthorizationResultStatus::UNAUTHORIZED && $result->getCallbackURI()=="loginz"?"OK":"FAILED")."\n";
 
 // test existent page allowed for user
-$wrapper = new XMLAuthorizationWrapper($xml, "fgh", array("USER"));
+$wrapper = new XMLAuthorizationWrapper($xml, "fgh", 1);
 $result = $wrapper->getResult();
 echo __LINE__.":".($result->getStatus()==AuthorizationResultStatus::OK?"OK":"FAILED")."\n";
 
 
 // test existent page not allowed for user
-$wrapper = new XMLAuthorizationWrapper($xml, "jkl", array("USER"));
+$wrapper = new XMLAuthorizationWrapper($xml, "jkl", 1);
 $result = $wrapper->getResult();
 echo __LINE__.":".($result->getStatus()==AuthorizationResultStatus::FORBIDDEN?"OK":"FAILED")."\n";
