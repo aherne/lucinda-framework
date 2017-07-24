@@ -47,14 +47,14 @@ echo __LINE__.":".($result===null?"OK":"FAILED")."\n";
 $_POST = array("x"=>"asd","y"=>"fgh","csrf"=>$token);
 $wrapper = new DAOAuthenticationWrapper($xml,"loginz", array($pd1,$pd2), $csrf);
 $result = $wrapper->getResult();
-echo __LINE__.":".($result->getStatus()==AuthenticationResultStatus::OK && $result->getCallbackURI()=="indexz"?"OK":"FAILED")."\n";
+echo __LINE__.":".($result->getStatus()==AuthenticationResultStatus::LOGIN_OK && $result->getCallbackURI()=="indexz"?"OK":"FAILED")."\n";
 // test values have been persisted
 echo __LINE__.":".($result->getUserID()==$pd1->load() && $result->getUserID()==$pd2->load()?"OK":"FAILED")."\n";
 
 // test logout
 $wrapper = new DAOAuthenticationWrapper($xml,"logoutz", array($pd1,$pd2), $csrf);
 $result = $wrapper->getResult();
-echo __LINE__.":".($result->getStatus()==AuthenticationResultStatus::OK && $result->getCallbackURI()=="loginz"?"OK":"FAILED")."\n";
+echo __LINE__.":".($result->getStatus()==AuthenticationResultStatus::LOGOUT_OK && $result->getCallbackURI()=="loginz"?"OK":"FAILED")."\n";
 // test values have been persisted
 echo __LINE__.":".($pd1->load()===null && $pd2->load()===null?"OK":"FAILED")."\n";
 
