@@ -208,7 +208,6 @@ class SecurityListener extends RequestListener {
 					$this->application->getXML(),
 					$this->request->getValidator()->getPage(),
 					$this->request->getAttribute("user_id"));
-			$wrapper->getResult();
 		}
 		if($xml->by_dao) {
 			require_once("application/models/security/DAOAuthorizationWrapper.php");
