@@ -13,7 +13,7 @@ abstract class AuthenticationWrapper {
 	 * @param string $targetPage Callback path to redirect to on success.
 	 */
 	protected function setResult(AuthenticationResult $result, $sourcePage, $targetPage) {
-		if($result->getStatus()==AuthenticationResultStatus::OK) {
+		if($result->getStatus()==AuthenticationResultStatus::LOGIN_OK || $result->getStatus()==AuthenticationResultStatus::LOGOUT_OK) {
 			$result->setCallbackURI($targetPage);
 		} else {
 			$result->setCallbackURI($sourcePage);

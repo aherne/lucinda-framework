@@ -52,7 +52,7 @@ echo __LINE__.":".($result->getStatus()==AuthenticationResultStatus::DEFERRED &&
 $_GET=array("code"=>"qwerty","state"=>$token);
 $wrapper = new Oauth2AuthenticationWrapper($xml, "callbackz", array($pd1, $pd2), $csrf);
 $result = $wrapper->getResult();
-echo __LINE__.":".($result->getStatus()==AuthenticationResultStatus::OK && $result->getUserID()==11 && $result->getAccessToken()=="xyz" && $result->getCallbackURI()=="indexz"?"OK":"FAILED")."\n";
+echo __LINE__.":".($result->getStatus()==AuthenticationResultStatus::LOGIN_OK && $result->getUserID()==11 && $result->getAccessToken()=="xyz" && $result->getCallbackURI()=="indexz"?"OK":"FAILED")."\n";
 // test values have been persisted
 echo __LINE__.":".($result->getUserID()==$pd1->load() && $result->getUserID()==$pd2->load()?"OK":"FAILED")."\n";
 
@@ -79,7 +79,7 @@ echo __LINE__.":".($ok?"OK":"FAILED")."\n";
 // test logout
 $wrapper = new Oauth2AuthenticationWrapper($xml, "logoutz", array($pd1, $pd2), $csrf);
 $result = $wrapper->getResult();
-echo __LINE__.":".($result->getStatus()==AuthenticationResultStatus::OK && $result->getCallbackURI()=="loginz"?"OK":"FAILED")."\n";
+echo __LINE__.":".($result->getStatus()==AuthenticationResultStatus::LOGOUT_OK && $result->getCallbackURI()=="loginz"?"OK":"FAILED")."\n";
 // test values have been persisted
 echo __LINE__.":".($pd1->load()===null && $pd2->load()===null?"OK":"FAILED")."\n";
 

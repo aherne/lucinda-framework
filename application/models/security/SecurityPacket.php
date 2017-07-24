@@ -31,31 +31,36 @@ class SecurityPacket extends Exception {
 	 * @param integer $status
 	 */
 	public function setStatus($status) {
-		$status = "";
+		$result = "";
 		switch($status) {
-			case AuthenticationResultStatus::OK:
-				$status= "login_ok";
+			case AuthenticationResultStatus::LOGIN_OK:
+				$result= "login_ok";
+				break;
+			case AuthenticationResultStatus::LOGOUT_OK:
+				$result= "logout_ok";
 				break;
 			case AuthenticationResultStatus::DEFERRED:
-				$status= "redirect";
+				$result= "redirect";
 				break;
 			case AuthenticationResultStatus::LOGIN_FAILED:
-				$status= "login_failed";
+				$result= "login_failed";
 				break;
 			case AuthenticationResultStatus::LOGOUT_FAILED:
-				$status= "logout_failed";
+				$result= "logout_failed";
 				break;
 			case AuthorizationResultStatus::UNAUTHORIZED:
-				$status= "unauthorized";
+				$result= "unauthorized";
 				break;
 			case AuthorizationResultStatus::FORBIDDEN:
-				$status= "forbidden";
+				$result= "forbidden";
 				break;
 			case AuthorizationResultStatus::NOT_FOUND:
-				$status= "not_found";
+				$result= "not_found";
+				break;
+			default:
 				break;
 		}
-		$this->status = $status;
+		$this->status = $result;
 	}
 	
 	/**
