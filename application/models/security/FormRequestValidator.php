@@ -153,7 +153,6 @@ class LogoutRequest {
 class FormRequestValidator {
 	const DEFAULT_PARAMETER_USERNAME = "username";
 	const DEFAULT_PARAMETER_PASSWORD = "password";
-	const DEFAULT_PARAMETER_REMEMBER_ME = "remember_me";
 	const DEFAULT_TARGET_PAGE = "index";
 	const DEFAULT_LOGIN_PAGE = "login";
 	const DEFAULT_LOGOUT_PAGE = "logout";
@@ -195,9 +194,9 @@ class FormRequestValidator {
 		
 		// get parameter names
 		$parameterUsername = (string) $this->xml->login["parameter_username"];
-		if(!$parameterUsername) throw new AuthenticationException("XML parameter missing: parameter_username");
+		if(!$parameterUsername) $parameterUsername = self::DEFAULT_PARAMETER_USERNAME;
 		$parameterPassword = (string) $this->xml->login["parameter_password"];
-		if(!$parameterUsername) throw new AuthenticationException("XML parameter missing: parameter_password");
+		if(!$parameterUsername) $parameterUsername = self::DEFAULT_PARAMETER_PASSWORD;
 		$parameterRememberMe = (string) $this->xml->login["parameter_rememberMe"];
 		
 		// get parameter values
