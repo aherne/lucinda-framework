@@ -22,9 +22,9 @@ class HtmlRenderer implements ErrorRenderer {
 	 * @see ErrorRenderer::render()
 	 */
 	public function render($exception) {
-		header_remove();
 		header("Content-Type: text/html; charset=".$this->charset);
 		if($exception instanceof SecurityPacket) {
+			$callback = $exception->getCallback();
 			switch($exception->getStatus()) {
 				case "unauthorized":
 					header("HTTP/1.1 401 Unauthorized");
@@ -36,13 +36,9 @@ class HtmlRenderer implements ErrorRenderer {
 					header("HTTP/1.1 404 Not found");
 					require_once("application/views/404.php");
 				default:
-					header("Location: ".$exception->getCallback().($exception->getStatus()!="redirect"?"?status=".$exception->getStatus():""));
-					exit();
+					Response::sendRedirect($exception->getCallback().($exception->getStatus()!="redirect"?"?status=".$exception->getStatus():""),false,true);
 					break;
 			}
-		} else if($exception instanceof PathNotFoundException) {
-			header("HTTP/1.1 404 Not found");
-			require_once("application/views/404.php");
 		} else if($exception instanceof HackingException) {
 			header("HTTP/1.1 400 Bad Request");
 			require_once("application/views/400.php");
