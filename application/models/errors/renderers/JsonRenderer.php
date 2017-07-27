@@ -22,7 +22,6 @@ class JsonRenderer implements ErrorRenderer {
 	 * @see ErrorRenderer::render()
 	 */
 	public function render($exception) {
-		header_remove();
 		header("Content-Type: application/json; charset=".$this->charset);
 		if($exception instanceof SecurityPacket) {
 			switch($exception->getStatus()) {
