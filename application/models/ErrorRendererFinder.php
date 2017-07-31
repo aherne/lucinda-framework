@@ -19,7 +19,7 @@ class ErrorRendererFinder {
 			return; // it is allowed to render nothing
 		}
 		
-		$this->setRenderer($renderer->$extension, $extension, ((string) $renderer["display_errors"]?true:false), $application->getDefaultCharacterEncoding());
+		$this->setRenderer($renderer->$extension, $application->getFormatInfo($extension), ((string) $renderer["display_errors"]?true:false));
 	}
 	
 	/**
@@ -46,15 +46,15 @@ class ErrorRendererFinder {
 	 * Finds renderer in container XML tag based on display format(extension), instances then saves it for latter reference.
 	 * 
 	 * @param SimpleXMLElement $xml Contents of errors.{environment}.renderer tag.
-	 * @param string $extension Page display format (extension).
+	 * @param Format $format Encapsulates information about display format (extension & content type)
 	 * @param boolean $displayErrors Whether or not error details should be shown on screen.
 	 * @param string $characterEncoding Character encoding to be used in display (relevant for formats such as html, xml or json. 
 	 */
-	protected function setRenderer(SimpleXMLElement $xml, $extension, $displayErrors, $characterEncoding) {
-		$rendererClassName = ucwords($extension)."Renderer";
+	protected function setRenderer(SimpleXMLElement $xml, Format $format, $displayErrors) {
+		$rendererClassName = ucwords($format->getExtension())."Renderer";
 		if(file_exists("application/models/errors/renderers/".$rendererClassName.".php")) {
 			require_once("application/models/errors/renderers/".$rendererClassName.".php");
-			$this->renderer = new $rendererClassName($displayErrors, $characterEncoding);
+			$this->renderer = new $rendererClassName($displayErrors, $format->getCharacterEncoding());
 		}
 	}
 	
