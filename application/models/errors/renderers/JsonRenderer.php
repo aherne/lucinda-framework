@@ -54,5 +54,6 @@ class JsonRenderer implements ErrorRenderer {
 				echo json_encode(array("status"=>"error","body"=>""));
 			}
 		}
+		exit();
 	}
 }

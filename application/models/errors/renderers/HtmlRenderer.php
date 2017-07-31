@@ -50,5 +50,6 @@ class HtmlRenderer implements ErrorRenderer {
 				require_once("application/views/500.php");
 			}
 		}
+		exit();
 	}
 }
