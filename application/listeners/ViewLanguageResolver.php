@@ -22,7 +22,7 @@ require_once("application/models/Json.php");
  */
 class ViewLanguageResolver extends ResponseListener {
 	public function run() {
-		if($this->response->getContentType()!="text/html") return;
+		if(strpos($this->response->headers()->get("Content-Type"),"text/html")!==0) return;
 	  
 		// get compilations folder
 		$environment = $this->application->getAttribute("environment");
