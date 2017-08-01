@@ -1,5 +1,5 @@
 <?php
-require_once("application/models/Json.php");
+require_once("src/Json.php");
 
 class JsonWrapper extends Wrapper {
 	public function run() {

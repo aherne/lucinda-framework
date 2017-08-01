@@ -1,7 +1,7 @@
 <?php
 require_once("libraries/php-security-api/loader.php");
-require_once("application/models/security/DAOLocator.php");
-require_once("application/models/security/SecurityPacket.php");
+require_once("src/security/DAOLocator.php");
+require_once("src/security/SecurityPacket.php");
 
 /**
  * Sets up and performs web security in your application by binding PHP-SECURITY-API & OAUTH2-CLIENT with contents of "security" tag @ CONFIGURATION.XML, 
@@ -62,7 +62,7 @@ class SecurityListener extends RequestListener {
 			throw new ApplicationException("Entry missing in configuration.xml: security.csrf");
 		}
 
-		require_once("application/models/security/CsrfTokenWrapper.php");
+		require_once("src/security/CsrfTokenWrapper.php");
 		$this->request->setAttribute("csrf", new CsrfTokenWrapper($xml));
 	}
 
@@ -85,19 +85,19 @@ class SecurityListener extends RequestListener {
 		if(empty($xml)) return; // it is allowed for elements to not persist
 
 		if($xml->session) {
-			require_once("application/models/security/SessionPersistenceDriverWrapper.php");
+			require_once("src/security/SessionPersistenceDriverWrapper.php");
 			$wrapper = new SessionPersistenceDriverWrapper($xml->session);
 			$this->persistenceDrivers[] = $wrapper->getDriver();
 		}
 
 		if($xml->remember_me) {
-			require_once("application/models/security/RememberMePersistenceDriverWrapper.php");
+			require_once("src/security/RememberMePersistenceDriverWrapper.php");
 			$wrapper = new RememberMePersistenceDriverWrapper($xml->remember_me);
 			$this->persistenceDrivers[] = $wrapper->getDriver();
 		}
 
 		if($xml->token) {
-			require_once("application/models/security/TokenPersistenceDriverWrapper.php");
+			require_once("src/security/TokenPersistenceDriverWrapper.php");
 			$wrapper = new TokenPersistenceDriverWrapper($xml->token);
 			$this->persistenceDrivers[] = $wrapper->getDriver();
 		}
@@ -140,7 +140,7 @@ class SecurityListener extends RequestListener {
 		$wrapper = null;
 		if($xml->form) {
 			if((string) $xml->form["dao"]) {
-				require_once("application/models/security/DAOAuthenticationWrapper.php");
+				require_once("src/security/DAOAuthenticationWrapper.php");
 				$wrapper = new DAOAuthenticationWrapper(
 						$this->application->getXML(),
 						$this->request->getValidator()->getPage(),
@@ -148,7 +148,7 @@ class SecurityListener extends RequestListener {
 						$this->request->getAttribute("csrf"));
 				
 			} else {
-				require_once("application/models/security/XMLAuthenticationWrapper.php");
+				require_once("src/security/XMLAuthenticationWrapper.php");
 				$wrapper = new XMLAuthenticationWrapper(
 						$this->application->getXML(),
 						$this->request->getValidator()->getPage(),
@@ -157,7 +157,7 @@ class SecurityListener extends RequestListener {
 			}
 		}
 		if($xml->oauth2) {
-			require_once("application/models/security/Oauth2AuthenticationWrapper.php");
+			require_once("src/security/Oauth2AuthenticationWrapper.php");
 			$wrapper = new Oauth2AuthenticationWrapper(
 					$this->application->getXML(),
 					$this->request->getValidator()->getPage(),
@@ -203,14 +203,14 @@ class SecurityListener extends RequestListener {
 
 		$wrapper = null;
 		if($xml->by_route) {
-			require_once("application/models/security/XMLAuthorizationWrapper.php");
+			require_once("src/security/XMLAuthorizationWrapper.php");
 			$wrapper = new XMLAuthorizationWrapper(
 					$this->application->getXML(),
 					$this->request->getValidator()->getPage(),
 					$this->request->getAttribute("user_id"));
 		}
 		if($xml->by_dao) {
-			require_once("application/models/security/DAOAuthorizationWrapper.php");
+			require_once("src/security/DAOAuthorizationWrapper.php");
 			$wrapper = new DAOAuthorizationWrapper(
 					$this->application->getXML(),
 					$this->request->getValidator()->getPage(),

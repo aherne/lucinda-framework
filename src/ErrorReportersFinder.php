@@ -1,5 +1,5 @@
 <?php
-require_once("application/models/errors/reporters/LogReporter.php");
+require_once("src/LogReporter.php");
 require_once("application/models/LoggerFinder.php");
 require_once("application/models/ErrorInspector.php");
 
