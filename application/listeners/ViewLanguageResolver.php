@@ -1,6 +1,6 @@
 <?php
 require_once("libraries/php-view-language-api/loader.php");
-require_once("application/models/Json.php");
+require_once("src/Json.php");
 
 /**
  * Performs view templating in your application by binding PHP-VIEW-LANGUAGE-API with SERVLETS-API. View language constructs found in views:
