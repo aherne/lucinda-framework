@@ -3,6 +3,8 @@
  * Locates and instances error renderer based on XML content and information already encapsulated by Application object.
  */
 class ErrorRendererFinder {
+	const RENDERERS_FOLDER = "application/models/errors/renderers";
+	
 	protected $renderer;
 	
 	/**
@@ -52,8 +54,9 @@ class ErrorRendererFinder {
 	 */
 	protected function setRenderer(SimpleXMLElement $xml, Format $format, $displayErrors) {
 		$rendererClassName = ucwords($format->getExtension())."Renderer";
-		if(file_exists("application/models/errors/renderers/".$rendererClassName.".php")) {
-			require_once("application/models/errors/renderers/".$rendererClassName.".php");
+		$rendererFile = self::RENDERERS_FOLDER."/".$rendererClassName.".php";
+		if(file_exists($rendererFile)) {
+			require_once($rendererFile);
 			$this->renderer = new $rendererClassName($displayErrors, $format->getCharacterEncoding());
 		}
 	}

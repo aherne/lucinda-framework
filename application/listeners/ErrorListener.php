@@ -1,8 +1,8 @@
 <?php
 require_once("libraries/php-errors-api/loader.php");
 require_once("libraries/php-logging-api/loader.php");
-require_once("application/models/ErrorRendererFinder.php");
-require_once("application/models/ErrorReportersFinder.php");
+require_once("src/ErrorRendererFinder.php");
+require_once("src/ErrorReportersFinder.php");
 
 /**
  * Sets up error handling in your application by binding PHP-ERRORS-API & PHP-LOGGING-API with content of "errors" tag @ CONFIGURATION.XML, 

@@ -1,7 +1,7 @@
 <?php
 require_once("libraries/php-logging-api/loader.php");
 require_once("application/models/LoggerFinder.php");
-require_once("application/models/loggers/MultiLogger.php");
+require_once("src/MultiLogger.php");
 
 /**
  * Sets up logging in your application by binding  PHP-LOGGING-API with contents of "loggers" tag @ CONFIGURATION.XML, itself handled by SERVLETS API.  
