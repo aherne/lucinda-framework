@@ -28,14 +28,18 @@ class JsonRenderer implements ErrorRenderer {
 				case "unauthorized":
 					header("HTTP/1.1 401 Unauthorized");
 					echo json_encode(array("status"=>"unauthorized","body"=>"", "callback"=>$exception->getCallback()));
+					break;
 				case "forbidden":
 					header("HTTP/1.1 403 Forbidden");
 					echo json_encode(array("status"=>"forbidden","body"=>"", "callback"=>$exception->getCallback()));
+					break;
 				case "not_found":
 					header("HTTP/1.1 404 Not found");
 					echo json_encode(array("status"=>"not_found","body"=>"", "callback"=>$exception->getCallback()));
+					break;
 				case "login_ok":
 					echo json_encode(array("status"=>"login_ok","body"=>"", "callback"=>$exception->getCallback(), "token"=>$exception->getAccessToken()));
+					break;
 				default:
 					echo json_encode(array("status"=>$exception->getStatus(), "body"=>"", "callback"=>$exception->getCallback()));
 					break;
@@ -54,6 +58,6 @@ class JsonRenderer implements ErrorRenderer {
 				echo json_encode(array("status"=>"error","body"=>""));
 			}
 		}
-		exit();
+		die();
 	}
 }

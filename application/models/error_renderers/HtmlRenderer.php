@@ -29,12 +29,15 @@ class HtmlRenderer implements ErrorRenderer {
 				case "unauthorized":
 					header("HTTP/1.1 401 Unauthorized");
 					require_once("application/views/401.php");
+					break;
 				case "forbidden":
 					header("HTTP/1.1 403 Forbidden");
 					require_once("application/views/403.php");
+					break;
 				case "not_found":
 					header("HTTP/1.1 404 Not found");
 					require_once("application/views/404.php");
+					break;
 				default:
 					Response::sendRedirect($exception->getCallback().($exception->getStatus()!="redirect"?"?status=".$exception->getStatus():""),false,true);
 					break;
@@ -50,6 +53,6 @@ class HtmlRenderer implements ErrorRenderer {
 				require_once("application/views/500.php");
 			}
 		}
-		exit();
+		die();
 	}
 }
