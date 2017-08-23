@@ -12,7 +12,7 @@
 			<wrappers>application/wrappers</wrappers>
 			<views>application/views</views>
 			<listeners>application/listeners</listeners>
-			<models>application/listeners</models>
+			<models>application/models</models>
 			<tags>application/taglib</tags>
 			<compilations>
 				<local>{COMPILATIONS_PATH}</local>
@@ -40,16 +40,14 @@
 	<servers>
 		<sql>
 			<local>
-				<server>
-					<driver>{SQL_VENDOR}</driver>
-					<host>{HOST_NAME}</host>
-					<port>{HOST_PORT}</port>
-					<username>{USERNAME}</username>
-					<password>{PASSWORD}</password>
-					<schema>{SCHEMA}</schema>
-				</server>
+				<server driver="{SQL_VENDOR}" host="{HOST_NAME}" port="{HOST_PORT}" username="{USERNAME}" password="{PASSWORD}" schema="{SCHEMA}"/>
 			</local>
 		</sql>
+		<nosql>
+			<local>
+				<server driver="{NOSQL_VENDOR}" host="{HOST_NAME}" port="{HOST_PORT}"/>
+			</local>
+		</nosql>
 	</servers>
 	<security>
 		<authentication>
