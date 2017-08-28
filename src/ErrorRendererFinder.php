@@ -3,7 +3,7 @@
  * Locates and instances error renderer based on XML content and information already encapsulated by Application object.
  */
 class ErrorRendererFinder {
-	const RENDERERS_FOLDER = "application/models/errors/renderers";
+	const RENDERERS_FOLDER = "application/models/error_renderers";
 	
 	protected $renderer;
 	
