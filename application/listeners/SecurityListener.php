@@ -96,9 +96,15 @@ class SecurityListener extends RequestListener {
 			$this->persistenceDrivers[] = $wrapper->getDriver();
 		}
 
-		if($xml->token) {
-			require_once("src/security/TokenPersistenceDriverWrapper.php");
-			$wrapper = new TokenPersistenceDriverWrapper($xml->token);
+		if($xml->synchronizer_token) {
+			require_once("src/security/SynchronizerTokenPersistenceDriverWrapper.php");
+			$wrapper = new SynchronizerTokenPersistenceDriverWrapper($xml->synchronizer_token);
+			$this->persistenceDrivers[] = $wrapper->getDriver();
+		}
+		
+		if($xml->json_web_token) {
+			require_once("src/security/JsonWebTokenPersistenceDriverWrapper.php");
+			$wrapper = new JsonWebTokenPersistenceDriverWrapper($xml->json_web_token);
 			$this->persistenceDrivers[] = $wrapper->getDriver();
 		}
 	}
