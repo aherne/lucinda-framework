@@ -82,8 +82,8 @@ class SecurityPacket extends Exception {
 		$token = "";
 		if($userID) {
 			foreach($persistenceDrivers as $persistenceDriver) {
-				if($persistenceDriver instanceof TokenPersistenceDriverWrapper) {
-					$token = $persistenceDriver->getDriver()->getAccessToken();
+				if($persistenceDriver instanceof TokenPersistenceDriver) {
+					$token = $persistenceDriver->getAccessToken();
 				}
 			}
 		}
