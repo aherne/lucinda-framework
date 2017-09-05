@@ -47,7 +47,7 @@ class JsonRenderer implements ErrorRenderer {
 		} else if($exception instanceof PathNotFoundException) {
 			header("HTTP/1.1 404 Not found");
 			echo json_encode(array("status"=>"not_found","body"=>""));
-		} else if($exception instanceof HackingException) {
+		} else if($exception instanceof SecurityException) {
 			header("HTTP/1.1 400 Bad Request");
 			echo json_encode(array("status"=>"bad_request","body"=>""));
 		} else {
