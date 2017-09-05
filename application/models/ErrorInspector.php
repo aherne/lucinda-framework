@@ -11,7 +11,7 @@ class ErrorInspector implements ErrorSeverityFinder {
 	 */
 	public function getSeverity($exception) {
 		// do not report redirection transports or client errors
-		if($exception instanceof SecurityPacket || $exception instanceof PathNotFoundException || $exception instanceof HackingException) {
+		if($exception instanceof SecurityPacket || $exception instanceof PathNotFoundException || $exception instanceof SecurityException) {
 			return LOG_NONE;
 		} else if($exception instanceof Error) {
 			return LOG_CRIT; 	// programmer fault

@@ -42,7 +42,7 @@ class HtmlRenderer implements ErrorRenderer {
 					Response::sendRedirect($exception->getCallback().($exception->getStatus()!="redirect"?"?status=".$exception->getStatus():""),false,true);
 					break;
 			}
-		} else if($exception instanceof HackingException) {
+		} else if($exception instanceof SecurityException) {
 			header("HTTP/1.1 400 Bad Request");
 			require_once("application/views/400.php");
 		} else {

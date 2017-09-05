@@ -10,7 +10,7 @@ class MockPersistenceDriver implements PersistenceDriver {
 		$this->userID = $userID;
 	}
 	
-	public function clear($userID){
+	public function clear(){
 		$this->userID = null;
 	}
 }
