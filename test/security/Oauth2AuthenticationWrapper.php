@@ -22,7 +22,7 @@ require_once(dirname(dirname(__DIR__))."/libraries/php-servlets-api/src/exceptio
 require_once(dirname(dirname(__DIR__))."/libraries/php-security-api/src/authentication/OAuth2Authentication.php");
 require_once(dirname(dirname(__DIR__))."/src/security/DAOLocator.php");
 require_once(dirname(dirname(__DIR__))."/src/security/CsrfTokenWrapper.php");
-require_once(dirname(dirname(__DIR__))."/libraries/php-security-api/src/HackingException.php");
+require_once(dirname(dirname(__DIR__))."/libraries/php-security-api/src/SecurityException.php");
 require_once(dirname(dirname(__DIR__))."/libraries/php-security-api/src/token/SynchronizerToken.php");
 require_once(dirname(dirname(__DIR__))."/libraries/php-security-api/src/authentication/PersistenceDriver.php");
 require_once(dirname(dirname(__DIR__))."/libraries/oauth2client/loader.php");
