@@ -50,6 +50,7 @@
 		</nosql>
 	</servers>
 	<security>
+		<csrf secret="{APPLICATION_SECRET}" ignore_ip="0"/>
 		<authentication>
 			<form dao="{CLASS_PATH}">
 				<login parameter_username="" parameter_password="" page="{LOGIN_URL}" target="{PAGE_AFTER_LOGIN}" rememberMe="true|false"/>
@@ -71,10 +72,10 @@
 			</oauth2>
 		</authentication>
 		<persistence>
-			<session parameter_name="..." expiration_time="0" http_only="0" https_only="0" handler="{CLASS_PATH}" save_path="{SAVE_PATH}"/>
-			<synchronizer_token expirationTime="0" regenerationTime="0"/>
+			<session parameter_name="..." expiration_time="0" http_only="0" https_only="0" handler="{CLASS_PATH}" save_path="{SAVE_PATH}" ignore_ip="0"/>
+			<synchronizer_token expirationTime="0" regenerationTime="0" ignore_ip="0"/>
 			<json_web_token expirationTime="0" regenerationTime="0"/>
-			<rememberMe parameter_name="..."  expiration_time="0" http_only="0" https_only="0"/>
+			<rememberMe parameter_name="..."  expiration_time="0" http_only="0" https_only="0" ignore_ip="0"/>
 		</persistence>
 		<authorization callbackLoggedIn="{PAGE_URL}" callbackLoggedOut="{PAGE_URL}">
 			<by_route/>
