@@ -25,7 +25,9 @@ class RememberMePersistenceDriverWrapper extends PersistenceDriverWrapper {
 
 		$isHttpOnly = (integer) $xml["is_http_only"];
 		$isHttpsOnly = (integer) $xml["is_https_only"];
-
-		$this->driver = new RememberMePersistenceDriver($secret, $parameterName,$expirationTime,$isHttpOnly,$isHttpsOnly);
+		
+		$ip = ((string) $xml["ignore_ip"]?"":$_SERVER["REMOTE_ADDR"]);
+		
+		$this->driver = new RememberMePersistenceDriver($secret, $parameterName,$expirationTime,$isHttpOnly,$isHttpsOnly, $ip);
 	}
 }
