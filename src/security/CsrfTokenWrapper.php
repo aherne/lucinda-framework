@@ -18,12 +18,15 @@ class CsrfTokenWrapper {
 	 * @throws ApplicationException If 'secret' key is not defined in XML
 	 */
 	public function __construct(SimpleXMLElement $xml) {
+		// sets ip
+		$ip = ((string) $xml["ignore_ip"]?"":$_SERVER["REMOTE_ADDR"]);
+		
 		// sets secret
 		$secret = (string) $xml["secret"];
 		if(!$secret) throw new ApplicationException("'secret' attribute not set in security.csrf tag");
 		
 		// sets token
-		$this->token = new SynchronizerToken($_SERVER["REMOTE_ADDR"], $secret);
+		$this->token = new SynchronizerToken($ip, $secret);
 		
 		// sets expiration
 		$expiration = (string) $xml["expiration"];
