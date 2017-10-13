@@ -5,7 +5,7 @@ require_once("libraries/php-nosql-data-access-api/loader.php");
  * Reads xml for nosql database servers credentials based on detected environment, creates datasource objects on these then injects datasource 
  * objects into classes that insure a single connection is (re)used for a single database server in the duration of a request through:
  * - singletons: if we're using no more than one nosql server in application. In this case, a connection instance will be retrieved by:
- *  NoSQLConnectionSingleton::getInstance() : this returns (or creates, if it doesn't exist) an SQLConnection object for the single NoSQL server we're using
+ *  NoSQLConnectionSingleton::getInstance() : this returns (or creates, if it doesn't exist) a NoSQLConnection object for the single NoSQL server we're using
  * - singleton factories: if we're using more than one sql/nosql server in application. In this case, a connection instance will be retrieved by:
  *  NoSQLConnectionFactory::getInstance(serverName) : this returns (or creates, if it doesn't exist) an SQLConnection object for the NoSQL server identified by serverName
  *  
@@ -73,7 +73,7 @@ class NoSQLDataSourceInjector extends ApplicationListener {
 		if(!$driver) throw new ServletException("Child tag <driver> is mandatory for <server> tags!");
 		switch($driver) {
 			case "couchbase":
-				require_once("libraries/php-nosql-data-access-api/src/CouchbaseConnection.php");
+				require_once("libraries/php-nosql-data-access-api/src/CouchbaseDriver.php");
 				
 				$dataSource = new CouchbaseDataSource();
 				$dataSource->setHost((string) $databaseInfo["host"]);
@@ -88,25 +88,35 @@ class NoSQLDataSourceInjector extends ApplicationListener {
 				return $dataSource;
 				break;
 			case "memcache":
-				require_once("libraries/php-nosql-data-access-api/src/MemcacheConnection.php");
+				require_once("libraries/php-nosql-data-access-api/src/MemcacheDriver.php");
 				
 				$dataSource = new MemcacheDataSource();
 				$dataSource->setHost((string) $databaseInfo["host"]);
 				$dataSource->setPort((string) $databaseInfo["port"]);
 				return $dataSource;
 			case "memcached":
-				require_once("libraries/php-nosql-data-access-api/src/MemcachedConnection.php");
+				require_once("libraries/php-nosql-data-access-api/src/MemcachedDriver.php");
 				
 				$dataSource = new MemcachedDataSource();
 				$dataSource->setHost((string) $databaseInfo["host"]);
 				$dataSource->setPort((string) $databaseInfo["port"]);
 				return $dataSource;
 			case "redis":
-				require_once("libraries/php-nosql-data-access-api/src/RedisConnection.php");
+				require_once("libraries/php-nosql-data-access-api/src/RedisDriver.php");
 				
 				$dataSource = new RedisDataSource();
 				$dataSource->setHost((string) $databaseInfo["host"]);
 				$dataSource->setPort((string) $databaseInfo["port"]);
+				return $dataSource;
+			case "apc":
+				require_once("libraries/php-nosql-data-access-api/src/APCDriver.php");
+				
+				$dataSource = new APCDataSource();
+				return $dataSource;
+			case "apcu":
+				require_once("libraries/php-nosql-data-access-api/src/APCuDriver.php");
+				
+				$dataSource = new APCuDataSource();
 				return $dataSource;
 			default:
 				throw new ServletException("Nosql driver not supported: ".$driver);

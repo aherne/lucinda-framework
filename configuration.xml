@@ -17,6 +17,7 @@
 			<compilations>
 				<local>{COMPILATIONS_PATH}</local>
 			</compilations>
+			<cacheables>application/cacheables</cacheables>
 		</paths>
 		<secret_key>{SECRET_KEY}</secret_key>
 		<templates_extension>php</templates_extension>
@@ -101,4 +102,8 @@
 			</renderer>
 		</local>
 	</errors>
+	<http_caching expiration="{SECONDS}" class="{CACHEABLE}" no_cache="1|0">
+		<route pattern="{REGEX}" expiration="{SECONDS}" class="{CACHEABLE}"  no_cache="1|0"/>
+		
+	</http_caching>
 </xml>
