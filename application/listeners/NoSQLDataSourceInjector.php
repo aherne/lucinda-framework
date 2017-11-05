@@ -87,86 +87,23 @@ class NoSQLDataSourceInjector extends ApplicationListener {
 				$dataSource->setBucketInfo($bucket, (string) $databaseInfo["bucket_password"]);
 				return $dataSource;
 				break;
-			case "memcache":
-				$temp = (string) $databaseInfo["host"];
-				if(!$temp) throw new ServletException("For MEMCACHE driver attribute 'host' is mandatory");
-				
+			case "memcache":				
 				require_once("libraries/php-nosql-data-access-api/src/MemcacheDriver.php");
 				
 				$dataSource = new MemcacheDataSource();
-				$hostsAndPorts = $this->getHostsAndPorts($temp);
-				foreach($hostsAndPorts as $host=>$port){
-					if(!$port) {
-						$dataSource->addServer($host);
-					} else {
-						$dataSource->addServer($host, $port);
-					}
-				}
-				
-				$timeout= (string) $databaseInfo["timeout"];
-				if($timeout) {
-					$dataSource->setTimeout($timeout);
-				}
-				
-				$persistent = (string) $databaseInfo["persistent"];
-				if($persistent) {
-					$dataSource->setPersistent();
-				}
-				
+				$this->setServerInfo($databaseInfo, $dataSource);
 				return $dataSource;
 			case "memcached":
-				$temp = (string) $databaseInfo["host"];
-				if(!$temp) throw new ServletException("For MEMCACHED driver attribute 'host' is mandatory");
-				
 				require_once("libraries/php-nosql-data-access-api/src/MemcachedDriver.php");
 				
-				$dataSource = new MemcachedDataSource();				
-				$hostsAndPorts = $this->getHostsAndPorts($temp);
-				foreach($hostsAndPorts as $host=>$port){
-					if(!$port) {
-						$dataSource->addServer($host);
-					} else {
-						$dataSource->addServer($host, $port);
-					}
-				}
-				
-				$timeout= (string) $databaseInfo["timeout"];
-				if($timeout) {
-					$dataSource->setTimeout($timeout);
-				}
-				
-				$persistent = (string) $databaseInfo["persistent"];
-				if($persistent) {
-					$dataSource->setPersistent();
-				}
-				
+				$dataSource = new MemcacheDataSource();
+				$this->setServerInfo($databaseInfo, $dataSource);
 				return $dataSource;
 			case "redis":
-				$temp = (string) $databaseInfo["host"];
-				if(!$temp) throw new ServletException("For REDIS driver attribute 'host' is mandatory");
-				
 				require_once("libraries/php-nosql-data-access-api/src/RedisDriver.php");
 				
-				$dataSource = new RedisDataSource();
-				$hostsAndPorts = $this->getHostsAndPorts($temp);
-				foreach($hostsAndPorts as $host=>$port){
-					if(!$port) {
-						$dataSource->addServer($host);
-					} else {
-						$dataSource->addServer($host, $port);
-					}
-				}
-				
-				$timeout= (string) $databaseInfo["timeout"];
-				if($timeout) {
-					$dataSource->setTimeout($timeout);
-				}
-								
-				$persistent = (string) $databaseInfo["persistent"];
-				if($persistent) {
-					$dataSource->setPersistent();
-				}
-				
+				$dataSource = new MemcacheDataSource();
+				$this->setServerInfo($databaseInfo, $dataSource);
 				return $dataSource;
 			case "apc":
 				require_once("libraries/php-nosql-data-access-api/src/APCDriver.php");
@@ -183,18 +120,31 @@ class NoSQLDataSourceInjector extends ApplicationListener {
 		return $dataSource;
 	}
 	
-	private function getHostsAndPorts($temp) {
-		$output = array();
+	private function setServerInfo(SimpleXMLElement $databaseInfo, NoSQLServerDataSource $dataSource) {
+		// set host and ports
+		$temp = (string) $databaseInfo["host"];
+		if(!$temp) throw new ServletException("Driver attribute 'host' is mandatory");
 		$hosts = explode(",",$temp);
 		foreach($hosts as $hostAndPort) {
 			$hostAndPort = trim($hostAndPort);
 			$position = strpos($hostAndPort,":");
 			if($position!==false) {
-				$output[substr($hostAndPort, 0, $position)]=substr($hostAndPort,$position+1);
+				$dataSource->addServer(substr($hostAndPort, 0, $position), substr($hostAndPort,$position+1));
 			} else {
-				$output[$hostAndPort]=null;
+				$dataSource->addServer($hostAndPort);
 			}
 		}
-		return $output;
+		
+		// set timeout
+		$timeout= (string) $databaseInfo["timeout"];
+		if($timeout) {
+			$dataSource->setTimeout($timeout);
+		}
+		
+		// set persistent
+		$persistent = (string) $databaseInfo["persistent"];
+		if($persistent) {
+			$dataSource->setPersistent();
+		}
 	}
 }
