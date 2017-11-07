@@ -40,7 +40,6 @@ class HttpCachingRequestListener extends RequestListener {
 				$validator = new CacheValidator($cacheRequest);
 				$httpStatusCode = $validator->validate($policy->getCacheableDriver());
 				if($httpStatusCode==304) {
-					die("A");
 					header("HTTP/1.1 304 Not Modified");
 					exit();
 				} else if($httpStatusCode==412) {
