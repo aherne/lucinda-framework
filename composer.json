@@ -1,0 +1,15 @@
+{
+    "name": "lucinda/framework",
+    "type": "project",
+    "description": "High performance PHP framework built on love of elegance, depth of expression and quest for simplicity",
+    "keywords": ["mvc","templating","errors","logging","security","oauth2","sql","nosql","caching","fast","simple","light weight"],
+    "homepage": "http://www.lucinda-framework.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Lucian Popescu",
+            "email": "lucian.gabriel.popescu@gmail.com",
+            "role": "Developer"
+        }
+    ]
+}
