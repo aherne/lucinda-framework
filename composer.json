@@ -13,7 +13,6 @@
         }
     ],
     "require": {
-        "php": "^5.4",
         "lucinda/errors": "~1.0",
         "lucinda/http-caching": "~1.0",
         "lucinda/logging": "~1.0",
@@ -26,7 +25,6 @@
         "lucinda/view-language": "~1.0"
     },
     "require-dev": {
-        "php": "^5.4",
         "lucinda/errors": "~1.0",
         "lucinda/http-caching": "~1.0",
         "lucinda/logging": "~1.0",
