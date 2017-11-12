@@ -1,5 +1,5 @@
 <?php
-require_once("libraries/php-logging-api/loader.php");
+require_once("vendor/lucinda/logging/loader.php");
 require_once("application/models/LoggerFinder.php");
 require_once("src/MultiLogger.php");
 

@@ -1,5 +1,5 @@
 <?php
-require_once("libraries/php-security-api/loader.php");
+require_once("vendor/lucinda/security/loader.php");
 require_once("src/security/DAOLocator.php");
 require_once("src/security/SecurityPacket.php");
 

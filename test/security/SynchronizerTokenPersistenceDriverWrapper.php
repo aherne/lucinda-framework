@@ -10,11 +10,11 @@ $xmlString = '
 		</xml>';
 $xml = simplexml_load_string($xmlString);
 require_once(str_replace("test/security","src/security", __FILE__));
-require_once(dirname(dirname(__DIR__))."/libraries/php-servlets-api/src/exceptions/ApplicationException.php");
-require_once(dirname(dirname(__DIR__))."/libraries/php-security-api/src/SecurityException.php");
-require_once(dirname(dirname(__DIR__))."/libraries/php-security-api/src/authentication/AuthenticationException.php");
-require_once(dirname(dirname(__DIR__))."/libraries/php-security-api/src/token/SynchronizerToken.php");
-require_once(dirname(dirname(__DIR__))."/libraries/php-security-api/src/authentication/SynchronizerTokenPersistenceDriver.php");
+require_once(dirname(dirname(__DIR__))."/vendor/lucinda/servlets/src/exceptions/ApplicationException.php");
+require_once(dirname(dirname(__DIR__))."/vendor/lucinda/security/src/SecurityException.php");
+require_once(dirname(dirname(__DIR__))."/vendor/lucinda/security/src/authentication/AuthenticationException.php");
+require_once(dirname(dirname(__DIR__))."/vendor/lucinda/security/src/token/SynchronizerToken.php");
+require_once(dirname(dirname(__DIR__))."/vendor/lucinda/security/src/authentication/SynchronizerTokenPersistenceDriver.php");
 
 // test empty cookie
 $_SERVER["REMOTE_ADDR"] = "72.229.28.185";
