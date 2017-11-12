@@ -18,7 +18,7 @@ $xmlString = '
 		</xml>';
 $xml = simplexml_load_string($xmlString);
 require_once(str_replace("test/security","src/security", __FILE__));
-require_once(dirname(dirname(__DIR__))."/vendor/lucinda/servlets/src/exceptions/ApplicationException.php");
+require_once(dirname(dirname(__DIR__))."/vendor/lucinda/mvc/src/exceptions/ApplicationException.php");
 require_once(dirname(dirname(__DIR__))."/vendor/lucinda/security/src/authentication/OAuth2Authentication.php");
 require_once(dirname(dirname(__DIR__))."/src/security/DAOLocator.php");
 require_once(dirname(dirname(__DIR__))."/src/security/CsrfTokenWrapper.php");

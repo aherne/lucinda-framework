@@ -20,7 +20,7 @@
         "lucinda/oauth2-client": "~1.0",
         "lucinda/php-servlets-api": "~1.0",
         "lucinda/security": "~1.0",
-        "lucinda/servlets": "~1.0",
+        "lucinda/mvc": "~1.0",
         "lucinda/sql-data-access": "~1.0",
         "lucinda/view-language": "~1.0"
     },
@@ -32,7 +32,7 @@
         "lucinda/oauth2-client": "~1.0",
         "lucinda/php-servlets-api": "~1.0",
         "lucinda/security": "~1.0",
-        "lucinda/servlets": "~1.0",
+        "lucinda/mvc": "~1.0",
         "lucinda/sql-data-access": "~1.0",
         "lucinda/view-language": "~1.0"
     }
