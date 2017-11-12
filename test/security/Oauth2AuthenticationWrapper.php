@@ -25,7 +25,7 @@ require_once(dirname(dirname(__DIR__))."/src/security/CsrfTokenWrapper.php");
 require_once(dirname(dirname(__DIR__))."/vendor/lucinda/security/src/SecurityException.php");
 require_once(dirname(dirname(__DIR__))."/vendor/lucinda/security/src/token/SynchronizerToken.php");
 require_once(dirname(dirname(__DIR__))."/vendor/lucinda/security/src/authentication/PersistenceDriver.php");
-require_once(dirname(dirname(__DIR__))."/vendor/lucinda/oauth2client/loader.php");
+require_once(dirname(dirname(__DIR__))."/vendor/lucinda/oauth2-client/loader.php");
 require_once("mocks/MockPersistenceDriver.php");
 
 // instance persistence drivers
