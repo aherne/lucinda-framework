@@ -1,6 +1,5 @@
 <?php
-require_once("libraries/http-caching-api/loader.php");
-require_once("libraries/php-servlets-api/src/implemented/PageValidator.php");
+require_once("vendor/lucinda/http-caching/loader.php");
 require_once("src/caching/CachingPolicyFinder.php");
 require_once("src/caching/CacheableDriver.php");
 

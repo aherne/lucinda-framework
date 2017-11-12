@@ -1,4 +1,4 @@
 <?php
 // starts MVC api
-require_once("libraries/php-servlets-api/loader.php");
+require_once("vendor/lucinda/servlets/loader.php");
 new FrontController();
