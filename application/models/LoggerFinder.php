@@ -52,7 +52,7 @@ class LoggerFinder {
 	 * @return Logger
 	 */
 	private function getFileLogger(SimpleXMLElement $xml) {
-		require_once("libraries/php-logging-api/src/FileLogger.php");
+		require_once("vendor/lucinda/logging/src/FileLogger.php");
 		
 		$filePath = (string) $xml["path"];
 		if(!$filePath) {
@@ -75,7 +75,7 @@ class LoggerFinder {
 	 * @return Logger
 	 */
 	private function getSysLogger(SimpleXMLElement $xml) {
-		require_once("libraries/php-logging-api/src/SysLogger.php");
+		require_once("vendor/lucinda/logging/src/SysLogger.php");
 		
 		$applicationName = (string) $xml["application"];
 		if(!$applicationName) {

@@ -1,5 +1,5 @@
 <?php
-require_once("libraries/php-view-language-api/loader.php");
+require_once("vendor/lucinda/view-language/loader.php");
 require_once("src/Json.php");
 
 /**

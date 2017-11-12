@@ -15,8 +15,8 @@ $xmlString = '
 		</xml>';
 $xml = simplexml_load_string($xmlString);
 require_once(str_replace("test/security","src/security", __FILE__));
-require_once(dirname(dirname(__DIR__))."/libraries/php-servlets-api/src/exceptions/ApplicationException.php");
-require_once(dirname(dirname(__DIR__))."/libraries/php-security-api/src/authorization/DAOAuthorization.php");
+require_once(dirname(dirname(__DIR__))."/vendor/lucinda/servlets/src/exceptions/ApplicationException.php");
+require_once(dirname(dirname(__DIR__))."/vendor/lucinda/security/src/authorization/DAOAuthorization.php");
 require_once(dirname(dirname(__DIR__))."/src/security/DAOLocator.php");
 $_SERVER["REQUEST_METHOD"] = "GET";
 
