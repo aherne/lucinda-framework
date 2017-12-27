@@ -1,4 +1,5 @@
 <?php
+require_once("vendor/lucinda/oauth2-client/loader.php");
 require_once("AuthenticationWrapper.php");
 
 /**
@@ -75,13 +76,9 @@ class Oauth2AuthenticationWrapper extends AuthenticationWrapper {
 	 */
 	private function login($driverName, SimpleXMLElement $element, CsrfTokenWrapper $csrf) {
 		// detect class and load file
-		$driverClass = ucwords($driverName)."Driver";
-		$driverFilePath = "oauth2login/".$driverClass.".php";
-		if(!file_exists($driverFilePath)) throw new ApplicationException("Driver class not found: ".$driverFilePath);
-		require_once($driverFilePath);
-		
 		$clientInformation = $this->getClientInformation($element);
-		$driver = new $driverClass($clientInformation);
+		$driver = $this->getDriver($driverName, $clientInformation);
+		$loginDriver = $this->getLoginDriver($driverName, $driver);
 
 		// detect parameters from xml
 		$authorizationCode = (!empty($_GET["code"])?$_GET["code"]:"");
@@ -101,13 +98,13 @@ class Oauth2AuthenticationWrapper extends AuthenticationWrapper {
 			$accessTokenResponse = $driver->getAccessToken($_GET["code"]);
 			
 			// get 
-			$result = $this->authentication->login($driver, $accessTokenResponse->getAccessToken(), $createIfNotExists);
+			$result = $this->authentication->login($loginDriver, $accessTokenResponse->getAccessToken(), $createIfNotExists);
 			$this->setResult($result, $targetFailurePage, $targetSuccessPage);
 		} else {
 			// get scopes
 			$scopes = (string) $element["scopes"];
 			if($scopes) $targetScopes = explode(",",$scopes);
-			else $targetScopes = $driver->getDefaultScopes();
+			else $targetScopes = $loginDriver->getDefaultScopes();
 		
 			// set result
 			$result = new AuthenticationResult(AuthenticationResultStatus::DEFERRED);
@@ -146,5 +143,37 @@ class Oauth2AuthenticationWrapper extends AuthenticationWrapper {
 		// callback page is same as driver login page
 		$callbackPage = (isset($_SERVER['HTTPS'])?"https":"http")."://".$_SERVER['HTTP_HOST'].str_replace("?".$_SERVER["QUERY_STRING"],"",$_SERVER['REQUEST_URI']);
 		return new OAuth2\ClientInformation($clientID, $clientSecret, $callbackPage);
+	}
+	
+	/**
+	 * Gets driver to interface OAuth2 operations with 
+	 * 
+	 * @param string $driverName Name of OAuth2 vendor (eg: facebook)
+	 * @param OAuth2\ClientInformation $clientInformation Object that encapsulates application credentials
+	 * @throws ApplicationException If vendor is not found on disk.
+	 * @return OAuth2\Driver Instance of driver that abstracts OAuth2 operations.
+	 */
+	private function getDriver($driverName, OAuth2\ClientInformation $clientInformation) {
+		$driverClass = $driverName."Driver";
+		$driverFilePath = "vendor/lucinda/oauth2-client/drivers/".$driverClass.".php";
+		if(!file_exists($driverFilePath)) throw new ApplicationException("Driver class not found: ".$driverFilePath);
+		require_once($driverFilePath);
+		return new $driverClass($clientInformation);
+	}
+	
+	/**
+	 * Gets driver that binds OAuthLogin @ Security API to OAuth2\Driver @ OAuth2Client API
+	 * 
+	 * @param string $driverName Name of OAuth2 vendor (eg: facebook)
+	 * @param OAuth2\Driver $driver Object that encapsulates OAuth2 operations.
+	 * @throws ApplicationException If vendor is not found on disk.
+	 * @return OAuthLogin Instance that performs OAuth2 login and collects user information.
+	 */
+	private function getLoginDriver($driverName, OAuth2\Driver $driver) {
+		$driverClass = $driverName."SecurityDriver";
+		$driverFilePath = "application/models/oauth2/".$driverClass.".php";
+		if(!file_exists($driverFilePath)) throw new ApplicationException("Driver class not found: ".$driverFilePath);
+		require_once($driverFilePath);
+		return new $driverClass($driver);
 	}
 }
