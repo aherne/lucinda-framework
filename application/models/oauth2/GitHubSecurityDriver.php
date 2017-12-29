@@ -16,10 +16,10 @@ class GitHubSecurityDriver extends AbstractSecurityDriver implements OAuth2Drive
 	 * @see OAuth2Driver::getUserInformation()
 	 */
 	public function getUserInformation($accessToken) {
-		$info = $this->getResource($accessToken, self::RESOURCE_URL);
-		$tmp = $this->getResource($accessToken, self::RESOURCE_URL_EMAIL);
+		$info = $this->driver->getResource($accessToken, self::RESOURCE_URL);
+		$tmp = $this->driver->getResource($accessToken, self::RESOURCE_URL_EMAIL);
 		$info["email"] = $tmp[0]["email"];
-		return new LinkedinUserInformation($info);
+		return new GitHubUserInformation($info);
 	}
 	
 	/**

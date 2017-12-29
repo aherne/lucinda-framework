@@ -16,8 +16,8 @@ class LinkedInSecurityDriver extends AbstractSecurityDriver implements OAuth2Dri
 	 * @see OAuth2Driver::getUserInformation()
 	 */
 	public function getUserInformation($accessToken) {
-		$info = $this->getResource($accessToken, self::RESOURCE_URL);
-		$info["email"] = $this->getResource($accessToken, self::RESOURCE_URL_EMAIL);
+		$info = $this->driver->getResource($accessToken, self::RESOURCE_URL);
+		$info["email"] = $this->driver->getResource($accessToken, self::RESOURCE_URL_EMAIL);
 		return new LinkedinUserInformation($info);
 	}
 	
