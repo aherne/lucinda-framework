@@ -88,8 +88,10 @@ class Oauth2AuthenticationWrapper extends AuthenticationWrapper {
 			$createIfNotExists = (integer) $this->xml["auto_create"];
 		
 			// check state
-			if(empty($_GET['state']) || !$csrf->isValid($_GET['state'], 0)) {
-				throw new TokenException("CSRF token is invalid or missing!");
+			if($driverName != "VK") { // hardcoding: VK sends wrong state
+				if(empty($_GET['state']) || !$csrf->isValid($_GET['state'], 0)) {
+					throw new TokenException("CSRF token is invalid or missing!");
+				}	
 			}
 			
 			// get access token
@@ -191,6 +193,11 @@ class Oauth2AuthenticationWrapper extends AuthenticationWrapper {
 		
 			$clientInformation = $this->getClientInformation($element);
 			$this->drivers[$driverName] = $this->getAPIDriver($driverName, $clientInformation);
+			if($driverName == "GitHub") {
+				$applicationName = (string) $element["application_name"];
+				if(!$applicationName) throw new ApplicationException("Property 'application_name' of oauth2.driver tag is mandatory for GitHub!");
+				$this->drivers[$driverName]->setApplicationName($applicationName);
+			}
 		}
 	}
 	

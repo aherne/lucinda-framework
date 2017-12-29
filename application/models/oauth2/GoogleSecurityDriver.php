@@ -15,7 +15,7 @@ class GoogleSecurityDriver extends AbstractSecurityDriver implements OAuth2Drive
 	 * @see OAuth2Driver::getUserInformation()
 	 */
 	public function getUserInformation($accessToken) {
-		return new GoogleUserInformation($this->getResource($accessToken, self::RESOURCE_URL));
+		return new GoogleUserInformation($this->driver->getResource($accessToken, self::RESOURCE_URL));
 	}
 	
 	/**
