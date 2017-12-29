@@ -7,13 +7,13 @@ require_once("AuthenticationWrapper.php");
  * (eg: google / facebook) driver implementation, then performs login/logout if path requested matches paths @ xml.
  */
 class Oauth2AuthenticationWrapper extends AuthenticationWrapper {
-	const DEFAULT_CALLBACK_PAGE = "{DRIVER}/login";
 	const DEFAULT_LOGIN_PAGE = "login";
 	const DEFAULT_LOGOUT_PAGE = "logout";
 	const DEFAULT_TARGET_PAGE = "index";
 	
 	private $xml;
 	private $authentication;
+	private $drivers = array();
 	
 	/**
 	 * Creates an object
@@ -31,22 +31,22 @@ class Oauth2AuthenticationWrapper extends AuthenticationWrapper {
 	 * @throws OAuth2\ServerException When oauth2 remote server answers with an error.
 	 */
 	public function __construct(SimpleXMLElement $xml, $currentPage, $persistenceDrivers, CsrfTokenWrapper $csrf) {
+		// set drivers
+		$this->xml = $xml->security->authentication->oauth2;
+		$this->setDrivers();
+		
 		// create dao object
 		$locator = new DAOLocator($xml);
 		$daoObject = $locator->locate($xml->security->authentication->oauth2, "dao", "Oauth2AuthenticationDAO");
 		
 		// setup class properties
-		$this->xml = $xml->security->authentication->oauth2;
 		$this->authentication = new Oauth2Authentication($daoObject, $persistenceDrivers);
 
 		// checks if a login action was requested, in which case it forwards
 		$xmlLocal = $this->xml->driver;
 		foreach($xmlLocal as $element) {
 			$driverName = (string) $element["name"];
-			if(!$driverName) throw new ApplicationException("Property 'name' of oauth2.driver tag is mandatory!");
-		
 			$callbackPage = (string) $element["callback"];
-			if(!$callbackPage) $callbackPage = str_replace("{DRIVER}", $driverName, self::DEFAULT_CALLBACK_PAGE);
 			if($callbackPage == $currentPage) {
 				$this->login($driverName, $element, $csrf);
 			}
@@ -64,7 +64,7 @@ class Oauth2AuthenticationWrapper extends AuthenticationWrapper {
 	 * Logs user in (and registers if not found)
 	 * 
 	 * @param string $driverName Name of oauth2 driver (eg: facebook, google) that must exist as security.authentication.oauth2.{DRIVER} tag @ configuration.xml.
-	 * @param SimpleXMLElement $element Contents of security.authentication.oauth2.{DRIVER} tag @ configuration.xml.
+	 * @param SimpleXMLElement $element Object that holds XML info about driver
 	 * @param CsrfTokenWrapper $csrf Object that performs CSRF token checks. 
 	 * @throws ApplicationException If XML is malformed.
 	 * @throws AuthenticationException If one or more persistence drivers are not instanceof PersistenceDriver
@@ -74,11 +74,9 @@ class Oauth2AuthenticationWrapper extends AuthenticationWrapper {
 	 * @throws OAuth2\ClientException When oauth2 local client sends malformed requests to oauth2 server.
 	 * @throws OAuth2\ServerException When oauth2 remote server answers with an error.
 	 */
-	private function login($driverName, SimpleXMLElement $element, CsrfTokenWrapper $csrf) {
+	private function login($driverName, $element, CsrfTokenWrapper $csrf) {
 		// detect class and load file
-		$clientInformation = $this->getClientInformation($element);
-		$driver = $this->getDriver($driverName, $clientInformation);
-		$loginDriver = $this->getLoginDriver($driverName, $driver);
+		$loginDriver = $this->getLoginDriver($driverName);
 
 		// detect parameters from xml
 		$authorizationCode = (!empty($_GET["code"])?$_GET["code"]:"");
@@ -95,11 +93,12 @@ class Oauth2AuthenticationWrapper extends AuthenticationWrapper {
 			}
 			
 			// get access token
-			$accessTokenResponse = $driver->getAccessToken($_GET["code"]);
+			$accessTokenResponse = $this->drivers[$driverName]->getAccessToken($_GET["code"]);
 			
 			// get 
 			$result = $this->authentication->login($loginDriver, $accessTokenResponse->getAccessToken(), $createIfNotExists);
 			$this->setResult($result, $targetFailurePage, $targetSuccessPage);
+			var_dump($this->result);
 		} else {
 			// get scopes
 			$scopes = (string) $element["scopes"];
@@ -108,7 +107,7 @@ class Oauth2AuthenticationWrapper extends AuthenticationWrapper {
 		
 			// set result
 			$result = new AuthenticationResult(AuthenticationResultStatus::DEFERRED);
-			$result->setCallbackURI($driver->getAuthorizationCodeEndpoint($targetScopes, $csrf->generate(0)));
+			$result->setCallbackURI($this->drivers[$driverName]->getAuthorizationCodeEndpoint($targetScopes, $csrf->generate(0)));
 			$this->result = $result;
 		}
 	}
@@ -141,19 +140,22 @@ class Oauth2AuthenticationWrapper extends AuthenticationWrapper {
 		if(!$clientID || !$clientSecret) throw new ApplicationException("Tags 'client_id' and 'client_secret' are mandatory!");
 		
 		// callback page is same as driver login page
-		$callbackPage = (isset($_SERVER['HTTPS'])?"https":"http")."://".$_SERVER['HTTP_HOST'].str_replace("?".$_SERVER["QUERY_STRING"],"",$_SERVER['REQUEST_URI']);
+		$callbackPage = (string) $xml["callback"];
+		if(!$callbackPage) throw new ApplicationException("Tag 'callback' is mandatory!");
+		
+		$callbackPage = (isset($_SERVER['HTTPS'])?"https":"http")."://".$_SERVER['HTTP_HOST']."/".$callbackPage;
 		return new OAuth2\ClientInformation($clientID, $clientSecret, $callbackPage);
 	}
 	
 	/**
-	 * Gets driver to interface OAuth2 operations with 
+	 * Gets driver to interface OAuth2 operations with @ OAuth2Client API
 	 * 
 	 * @param string $driverName Name of OAuth2 vendor (eg: facebook)
 	 * @param OAuth2\ClientInformation $clientInformation Object that encapsulates application credentials
 	 * @throws ApplicationException If vendor is not found on disk.
 	 * @return OAuth2\Driver Instance of driver that abstracts OAuth2 operations.
 	 */
-	private function getDriver($driverName, OAuth2\ClientInformation $clientInformation) {
+	private function getAPIDriver($driverName, OAuth2\ClientInformation $clientInformation) {
 		$driverClass = $driverName."Driver";
 		$driverFilePath = "vendor/lucinda/oauth2-client/drivers/".$driverClass.".php";
 		if(!file_exists($driverFilePath)) throw new ApplicationException("Driver class not found: ".$driverFilePath);
@@ -165,15 +167,39 @@ class Oauth2AuthenticationWrapper extends AuthenticationWrapper {
 	 * Gets driver that binds OAuthLogin @ Security API to OAuth2\Driver @ OAuth2Client API
 	 * 
 	 * @param string $driverName Name of OAuth2 vendor (eg: facebook)
-	 * @param OAuth2\Driver $driver Object that encapsulates OAuth2 operations.
 	 * @throws ApplicationException If vendor is not found on disk.
 	 * @return OAuthLogin Instance that performs OAuth2 login and collects user information.
 	 */
-	private function getLoginDriver($driverName, OAuth2\Driver $driver) {
+	private function getLoginDriver($driverName) {
 		$driverClass = $driverName."SecurityDriver";
 		$driverFilePath = "application/models/oauth2/".$driverClass.".php";
 		if(!file_exists($driverFilePath)) throw new ApplicationException("Driver class not found: ".$driverFilePath);
 		require_once($driverFilePath);
-		return new $driverClass($driver);
+		return new $driverClass($this->drivers[$driverName]);
+	}
+	
+	/**
+	 * Sets OAuth2\Driver instances based on XML
+	 *
+	 * @throws ApplicationException If required tags aren't found in XML / do not reflect on disk
+	 */
+	private function setDrivers() {
+		$xmlLocal = $this->xml->driver;
+		foreach($xmlLocal as $element) {
+			$driverName = (string) $element["name"];
+			if(!$driverName) throw new ApplicationException("Property 'name' of oauth2.driver tag is mandatory!");
+		
+			$clientInformation = $this->getClientInformation($element);
+			$this->drivers[$driverName] = $this->getAPIDriver($driverName, $clientInformation);
+		}
+	}
+	
+	/**
+	 * Gets OAuth2 drivers
+	 * 
+	 * @return array[string:OAuth2\Driver] List of available oauth2 drivers by driver name.
+	 */
+	public function getDrivers() {
+		return $this->drivers;
 	}
 }
