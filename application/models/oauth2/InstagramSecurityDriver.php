@@ -15,7 +15,7 @@ class InstagramSecurityDriver extends AbstractSecurityDriver implements OAuth2Dr
 	 * @see OAuth2Driver::getUserInformation()
 	 */
 	public function getUserInformation($accessToken) {
-		return new InstagramUserInformation($this->getResource($accessToken, self::RESOURCE_URL));
+		return new InstagramUserInformation($this->driver->getResource($accessToken, self::RESOURCE_URL));
 	}
 	
 	/**
