@@ -58,18 +58,7 @@
 				<logout page="{LOGOUT_URL}" target="{PAGE_AFTER_LOGOUT}"/>
 			</form>
 			<oauth2 dao="{CLASS_PATH}">
-				<driver name="facebook" page="{LOGIN_URL}" target="{PAGE_AFTER_LOGIN}">
-					<app_id>{APPLICATION_ID}</app_id>
-					<app_secret>{APPLICATION_SECRET}</app_secret>
-					<callback_url>{URL_OF_PAGE_TO_RECEIVE_AUTHORIZATION_CODE}</callback_url>
-					<scopes>{OPTIONAL|DEFAULTS_TO_USERINFO_SCOPE}</scopes>
-				</driver>
-				<driver name="google" page="{LOGIN_URL}" target="{PAGE_AFTER_LOGIN}">
-					<app_id>{APPLICATION_ID}</app_id>
-					<app_secret>{APPLICATION_SECRET}</app_secret>
-					<callback_url>{URL_OF_PAGE_TO_RECEIVE_AUTHORIZATION_CODE}</callback_url>
-					<scopes>{OPTIONAL|DEFAULTS_TO_USERINFO_SCOPE}</scopes>
-				</driver>
+				<driver name="{NAME}" client_id="{CLIENT_ID}" client_secret="{CLIENT_SECRET}" callback="{PAGE_TO_RECEIVE_AUTHORIZATION_CODE}" scopes="{SCOPES}"/>
 			</oauth2>
 		</authentication>
 		<persistence>
@@ -80,7 +69,7 @@
 		</persistence>
 		<authorization callbackLoggedIn="{PAGE_URL}" callbackLoggedOut="{PAGE_URL}">
 			<by_route/>
-			<by_dao pages_dao="{CLASS_PATH}" users_dao="{CLASS_PATH}" />
+			<by_dao page_dao="{CLASS_PATH}" user_dao="{CLASS_PATH}" />
 		</authorization>
 	</security>
 	<loggers>

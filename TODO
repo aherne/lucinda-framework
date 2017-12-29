@@ -8,3 +8,7 @@ F @ErrorsAPI: if self::$objErrorHandler is not set, var dump exception
 F @Oauth2Client: add refresh token support @ Driver
 F @all APIs: add namespaces
 + @LocaleAPI: create another API for internationalization and localization
+
+1. eliminate getDefaultScopes()
+2. save oauth2\driver along with token as request attribute. to be used in retrieving info other than user info
+3
