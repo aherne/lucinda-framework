@@ -169,6 +169,8 @@ class SecurityListener extends RequestListener {
 					$this->request->getValidator()->getPage(),
 					$this->persistenceDrivers,
 					$this->request->getAttribute("csrf"));
+			// saves oauth2 drivers to be used later on
+			$this->request->setAttribute("oauth2",$wrapper->getDrivers());
 		}
 		if($wrapper) {
 			if(!$wrapper->getResult()) {
