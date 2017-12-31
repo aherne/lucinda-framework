@@ -13,86 +13,10 @@
 			<views>application/views</views>
 			<listeners>application/listeners</listeners>
 			<models>application/models</models>
-			<tags>application/taglib</tags>
-			<compilations>
-				<local>{COMPILATIONS_PATH}</local>
-			</compilations>
-			<cacheables>application/cacheables</cacheables>
 		</paths>
-		<secret_key>{SECRET_KEY}</secret_key>
-		<templates_extension>php</templates_extension>
-		<environments>
-			<local>{SERVER_NAME}</local>
-		</environments>
 	</application>
-	<listeners>
-		<listener class="EnvironmentDetector"/>
-		<listener class="ErrorListener"/>
-		<listener class="LoggingListener"/>
-		<listener class="SQLDataSourceInjector"/>
-		<listener class="NoSQLDataSourceInjector"/>
-		<listener class="SecurityListener"/>
-		<listener class="ViewLanguageResolver"/>
-	</listeners>
 	<formats>
-		<format extension="html" content_type="text/html" class="BypassWrapper"/>
+		<format extension="html" content_type="text/html"/>
 		<format extension="json" content_type="application/json" class="JsonWrapper"/>
 	</formats>
-	<servers>
-		<sql>
-			<local>
-				<server driver="{SQL_VENDOR}" host="{HOST_NAME}" port="{HOST_PORT}" username="{USERNAME}" password="{PASSWORD}" schema="{SCHEMA}"/>
-			</local>
-		</sql>
-		<nosql>
-			<local>
-				<server driver="{NOSQL_VENDOR}" host="{HOST_NAME}" port="{HOST_PORT}"/>
-			</local>
-		</nosql>
-	</servers>
-	<security>
-		<csrf secret="{APPLICATION_SECRET}" ignore_ip="0"/>
-		<authentication>
-			<form dao="{CLASS_PATH}">
-				<login parameter_username="" parameter_password="" page="{LOGIN_URL}" target="{PAGE_AFTER_LOGIN}" rememberMe="true|false"/>
-				<logout page="{LOGOUT_URL}" target="{PAGE_AFTER_LOGOUT}"/>
-			</form>
-			<oauth2 dao="{CLASS_PATH}">
-				<driver name="{NAME}" client_id="{CLIENT_ID}" client_secret="{CLIENT_SECRET}" callback="{PAGE_TO_RECEIVE_AUTHORIZATION_CODE}" scopes="{SCOPES}"/>
-			</oauth2>
-		</authentication>
-		<persistence>
-			<session parameter_name="..." expiration_time="0" http_only="0" https_only="0" handler="{CLASS_PATH}" save_path="{SAVE_PATH}" ignore_ip="0"/>
-			<synchronizer_token expirationTime="0" regenerationTime="0" ignore_ip="0"/>
-			<json_web_token expirationTime="0" regenerationTime="0"/>
-			<rememberMe parameter_name="..."  expiration_time="0" http_only="0" https_only="0" ignore_ip="0"/>
-		</persistence>
-		<authorization callbackLoggedIn="{PAGE_URL}" callbackLoggedOut="{PAGE_URL}">
-			<by_route/>
-			<by_dao page_dao="{CLASS_PATH}" user_dao="{CLASS_PATH}" />
-		</authorization>
-	</security>
-	<loggers>
-		<local>
-			<file path="{FILE_PATH}" rotation="{ROTATION_PATTERN}" format="%d %v %u %f %l %m"/>
-			<syslog application="{APPLICATION_NAME}" format="%u %f %l %m"/>
-		</local>
-	</loggers>
-	<errors inspector="{CLASS}">
-		<local>
-			<reporters>
-				<file path="{FILE_PATH}" rotation="{ROTATION_PATTERN}" format="%d %v %u %e %f %l %m"/>
-				<syslog application="{APPLICATION_NAME}" format="%u %e %f %l %m"/>
-				<sql table="{TABLE_NAME}" server="{SERVER_NAME}" rotation="{ROTATION_PATTERN}"/>
-				<reporter class="{CLASS}"/>
-			</reporters>
-			<renderer display_errors="1">
-				<{extension} class="{CLASS}"/>
-			</renderer>
-		</local>
-	</errors>
-	<http_caching expiration="{SECONDS}" class="{CACHEABLE}" no_cache="1|0">
-		<route pattern="{REGEX}" expiration="{SECONDS}" class="{CACHEABLE}"  no_cache="1|0"/>
-		
-	</http_caching>
 </xml>
