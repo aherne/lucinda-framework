@@ -1,4 +1,3 @@
-B @Framework: if a non-existent image is hit, request falls back to servlets front controller
 F @Framework: remember original page and redirect to it in case of unauthorized/ok cycle
 F @Framework: add error author & mail error reporting (so RELEVANT users will be informed)
 F @Framework: add ability to create custom logger/error reporter
