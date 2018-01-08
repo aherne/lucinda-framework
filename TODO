@@ -1,3 +1,4 @@
+B @Framework: if a non-existent image is hit, request falls back to servlets front controller
 F @Framework: remember original page and redirect to it in case of unauthorized/ok cycle
 F @Framework: add error author & mail error reporting (so RELEVANT users will be informed)
 F @Framework: add ability to create custom logger/error reporter
@@ -8,7 +9,3 @@ F @ErrorsAPI: if self::$objErrorHandler is not set, var dump exception
 F @Oauth2Client: add refresh token support @ Driver
 F @all APIs: add namespaces
 + @LocaleAPI: create another API for internationalization and localization
-
-1. eliminate getDefaultScopes()
-2. save oauth2\driver along with token as request attribute. to be used in retrieving info other than user info
-3
