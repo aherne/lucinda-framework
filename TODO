@@ -1,10 +1,15 @@
 F @Framework: remember original page and redirect to it in case of unauthorized/ok cycle
 F @Framework: add error author & mail error reporting (so RELEVANT users will be informed)
-F @Framework: add ability to create custom logger/error reporter
-? @NoSQLAPI: check if no-sql Couchbase can be converted to NoSQLServerDataSource
+F @Framework: login throttling protection
+F @Framework: add application version @ XML (tag: application.version) to force frontend files refresh cache
+D @Framework: rebuild documentation
+F @NoSQLAPI: check if no-sql Couchbase can be converted to NoSQLServerDataSource
+D @ViewLanguageAPI: functions in condition must not be decorated with ${..}
 F @ServletsAPI: response content type should be configurable in route (<route ... format="..."/>
 F @ServletsAPI: <routes ref="XML_PATH"/>
+F @ServletsAPI: remove extends AttributesFactory
 F @ErrorsAPI: if self::$objErrorHandler is not set, var dump exception
 F @Oauth2Client: add refresh token support @ Driver
 F @all APIs: add namespaces
-+ @LocaleAPI: create another API for internationalization and localization
+D @all APIs: finalize README & composer.json files
++ @LocaleAPI: create another API for internationalization and localization (PHP Gettext API)
