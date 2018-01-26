@@ -31,16 +31,32 @@ class ErrorRendererFinder {
 	 * @return string Value of extension found (eg: html).
 	 */
 	private function detectExtension(Application $application) {
-		// get extension
 		$extension = $application->getDefaultExtension();
-		$pathRequested = str_replace("?".$_SERVER["QUERY_STRING"],"",$_SERVER["REQUEST_URI"]);
-		$dotPosition = strrpos($pathRequested,".");
-		if($dotPosition!==false) {
-			$temp = strtolower(substr($pathRequested,$dotPosition+1));
-			if($application->hasFormat($temp)) {
-				$extension = $temp;
-			}
+		$pathRequested = substr(str_replace("?".$_SERVER["QUERY_STRING"],"",$_SERVER["REQUEST_URI"]),1);
+		if(!$pathRequested) $pathRequested = $application->getDefaultPage();
+		if(!$application->getAutoRouting()) {
+		    if(!$application->hasRoute($pathRequested)) {
+		        $tblRoutes = $application->getRoutes();
+		        foreach($tblRoutes as $objRoute) {
+		            if(strpos($objRoute->getPath(), "(")!==false) {
+		                preg_match_all("/(\(([^)]+)\))/", $objRoute->getPath(), $matches);
+		                $pattern = "/^".str_replace($matches[1],"([^\/]+)",str_replace("/","\/",$objRoute->getPath()))."$/";
+		                if(preg_match_all($pattern,$pathRequested,$results)==1) {
+		                    if($objRoute->getFormat()) {
+		                        $extension = $objRoute->getFormat();
+		                    }
+		                    break;
+		                }
+		            }
+		        }
+		    } else {
+		        $objRoute = $application->getRouteInfo($pathRequested);
+		        if($objRoute->getFormat()) {
+		            $extension = $objRoute->getFormat();
+		        }
+		    }
 		}
+
 		return $extension;
 	}
 	
