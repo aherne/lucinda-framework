@@ -1,1 +1,5 @@
-vendor/lucinda/
+vendor
+.idea
+.settings
+.buildpath
+.project
