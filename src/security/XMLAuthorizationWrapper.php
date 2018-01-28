@@ -33,11 +33,7 @@ class XMLAuthorizationWrapper extends AuthorizationWrapper {
 		if(!$loggedOutCallback) $loggedOutCallback = self::DEFAULT_LOGGED_OUT_PAGE;
 		
 		// authorize and save result
-		try {
-			$authorization = new XMLAuthorization($loggedInCallback, $loggedOutCallback);
-			$this->setResult($authorization->authorize($xml, $currentPage, $userID));
-		} catch(XMLException $e) {
-			throw new ApplicationException($e->getMessage());
-		}
+		$authorization = new XMLAuthorization($loggedInCallback, $loggedOutCallback);
+		$this->setResult($authorization->authorize($xml, $currentPage, $userID));
 	}
 }

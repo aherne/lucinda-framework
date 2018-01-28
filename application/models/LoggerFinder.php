@@ -95,13 +95,14 @@ class LoggerFinder {
 	 *
 	 * @param SimpleXMLElement $xml XML settings for sql logger.
 	 * @throws ApplicationException On invalid XML content.
+	 * @throws ServletException If SQLDataSourceInjector listener has not ran
 	 * @return Logger
 	 */
 	private function getSQLLogger(SimpleXMLElement $xml) {
 		require_once("application/models/loggers/SQLLogger.php");
 		
 		if(!class_exists("SQLConnectionFactory")) {
-			throw new ApplicationException("SQLDataSourceInjector listener has not ran!");
+			throw new ServletException("SQLDataSourceInjector listener has not ran!");
 		}
 		
 		$serverName = (string) $xml["server"];

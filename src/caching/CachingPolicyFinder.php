@@ -73,9 +73,9 @@ class CachingPolicyFinder {
 			
 			// loads and validates class
 			$path = $cacheablesFolder."/".$driverClass.".php";
-			if(!file_exists($path)) throw new ApplicationException("File not found: ".$path);
+			if(!file_exists($path)) throw new ServletException("File not found: ".$path);
 			require_once($path);
-			if(!class_exists($driverClass)) throw new ApplicationException("Class not found: ".$driverClass);
+			if(!class_exists($driverClass)) throw new ServletException("Class not found: ".$driverClass);
 			
 			// sets driver
 			return new $driverClass($application, $request);

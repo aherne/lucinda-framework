@@ -25,7 +25,7 @@ require_once("src/error_handling/ErrorReportersFinder.php");
  * 
  * @attribute error_handler
  */
-class ErrorListener extends ApplicationListener {
+class ErrorListener extends RequestListener {
 	const DEFAULT_LOG_FILE = "errors";
 
 	/**
@@ -97,7 +97,7 @@ class ErrorListener extends ApplicationListener {
 	 * @return ErrorRenderer|null Object to delegate error rendering to.
 	 */
 	private function getRenderer() {
-		$erf = new ErrorRendererFinder($this->application->getXML()->errors, $this->application);
+		$erf = new ErrorRendererFinder($this->application->getXML()->errors, $this->application, $this->request);
 		return $erf->getRenderer();
 	}
 }

@@ -2,7 +2,7 @@
 require_once("AuthenticationWrapper.php");
 
 /**
- * Encapsulates login request data
+ * Encapsulates login request data. Inner class of FormRequestValidator!
  */
 class LoginRequest {
 	private $sourcePage;
@@ -103,7 +103,7 @@ class LoginRequest {
 }
 
 /**
- * Encapsulates logout request data
+ * Encapsulates logout request data. Inner class of FormRequestValidator!
  */
 class LogoutRequest {
 	private $sourcePage;
@@ -172,7 +172,7 @@ class FormRequestValidator {
 	/**
 	 * Sets up login data, if operation was requested
 	 * 
-	 * @throws AuthenticationException If XML/request is malformed.
+	 * @throws ServletException If request doesn't come with mandatory parameters.
 	 * @param string $currentPage Current page requested.
 	 * @return LoginRequest|null
 	 */
@@ -201,11 +201,11 @@ class FormRequestValidator {
 		
 		// get parameter values
 		$username = (!empty($_POST[$parameterUsername])?$_POST[$parameterUsername]:"");
-		if(!$username) throw new AuthenticationException("POST parameter missing: ".$parameterUsername);
+		if(!$username) throw new ServletException("POST parameter missing: ".$parameterUsername);
 		$loginRequest->setUsername($username);
 		
 		$password = (!empty($_POST[$parameterPassword])?$_POST[$parameterPassword]:"");
-		if(!$password) throw new AuthenticationException("POST parameter missing: ".$parameterPassword);
+		if(!$password) throw new ServletException("POST parameter missing: ".$parameterPassword);
 		$loginRequest->setPassword($password);
 		
 		if($parameterRememberMe) {

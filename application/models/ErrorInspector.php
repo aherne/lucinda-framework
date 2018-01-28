@@ -18,8 +18,10 @@ class ErrorInspector implements ErrorSeverityFinder {
 		} else if($exception instanceof PHPException) {
 			return LOG_CRIT; 	// programmer fault
 		} else if($exception instanceof NoSQLConnectionException) {
-			return LOG_EMERG; 	// server fault
-		} else if($exception instanceof NoSQLStatementException) {
+		    return LOG_EMERG; 	// server fault
+		} else if($exception instanceof OperationFailedException) {
+		    return LOG_EMERG; 	// server fault
+		} else if($exception instanceof KeyNotFoundException) {
 			return LOG_CRIT; 	// programmer fault
 		} else if($exception instanceof SQLConnectionException) {
 			return LOG_EMERG;	// server fault

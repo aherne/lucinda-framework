@@ -12,52 +12,35 @@ class ErrorRendererFinder {
 	 *
 	 * @param SimpleXMLElement $xml XML tag reference object.
 	 * @param Application $application ServletsAPI object that encapsulates relevant information from configuration.xml
+	 * @param Request $request ServletsAPI object that encapsulates relevant information about client request
 	 */
-	public function __construct(SimpleXMLElement $xml, Application $application) {
-		$extension = $this->detectExtension($application);
+	public function __construct(SimpleXMLElement $xml, Application $application, Request $request) {
+	    $format = $this->getDisplayFormat($application, $request);
+	    $extension = $format->getExtension();
 		$environment = $application->getAttribute("environment");
 		$renderer = (!empty($xml) && !empty($xml->$environment)?$xml->$environment->renderer:null);
 		if(!$renderer || !isset($renderer->$extension)) {
 			return; // it is allowed to render nothing
 		}
 		
-		$this->setRenderer($renderer->$extension, $application->getFormatInfo($extension), ((string) $renderer["display_errors"]?true:false));
+		$this->setRenderer($renderer->$extension, $format, ((string) $renderer["display_errors"]?true:false));
 	}
 	
 	/**
-	 * Detects display format (extension) based on requested page semantics and configuration.xml info encapsulated by Application object
+	 * Detects display format based on Application and Request objects
 	 * 
 	 * @param Application $application ServletsAPI object that encapsulates relevant information from configuration.xml
-	 * @return string Value of extension found (eg: html).
+	 * @param Request $request ServletsAPI object that encapsulates relevant information about client request
+	 * @return Format Display format information.
 	 */
-	private function detectExtension(Application $application) {
-		$extension = $application->getDefaultExtension();
-		$pathRequested = substr(str_replace("?".$_SERVER["QUERY_STRING"],"",$_SERVER["REQUEST_URI"]),1);
-		if(!$pathRequested) $pathRequested = $application->getDefaultPage();
-		if(!$application->getAutoRouting()) {
-		    if(!$application->hasRoute($pathRequested)) {
-		        $tblRoutes = $application->getRoutes();
-		        foreach($tblRoutes as $objRoute) {
-		            if(strpos($objRoute->getPath(), "(")!==false) {
-		                preg_match_all("/(\(([^)]+)\))/", $objRoute->getPath(), $matches);
-		                $pattern = "/^".str_replace($matches[1],"([^\/]+)",str_replace("/","\/",$objRoute->getPath()))."$/";
-		                if(preg_match_all($pattern,$pathRequested,$results)==1) {
-		                    if($objRoute->getFormat()) {
-		                        $extension = $objRoute->getFormat();
-		                    }
-		                    break;
-		                }
-		            }
-		        }
-		    } else {
-		        $objRoute = $application->getRouteInfo($pathRequested);
-		        if($objRoute->getFormat()) {
-		            $extension = $objRoute->getFormat();
-		        }
+	private function getDisplayFormat(Application $application, Request $request) {
+	    $contentType = $request->getValidator()->getContentType();
+		$formats = $application->getFormats();
+		foreach($formats as $format) {
+		    if($format->getContentType() == $contentType) {
+		        return $format;
 		    }
 		}
-
-		return $extension;
 	}
 	
 	/**
