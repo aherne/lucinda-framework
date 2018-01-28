@@ -13,7 +13,7 @@
  * 
  * @attribute environment 
  */
-class EnvironmentDetector  extends ApplicationListener {
+class EnvironmentDetector  extends RequestListener {
 	public function run() {
 		$this->application->setAttribute("environment", $this->getEnvironment());
 	}
@@ -24,16 +24,16 @@ class EnvironmentDetector  extends ApplicationListener {
 		foreach($tblTMP as $environmentName=>$value1) {
 			if(is_array($value1)) { // it is allowed to have multiple server names per environment
 				foreach($value1 as $value2) {
-					if($_SERVER["SERVER_NAME"]==$value2) {
+					if($this->request->getServer()->getName()==$value2) {
 						return $environmentName;
 					}
 				}
 			} else {
-				if($_SERVER["SERVER_NAME"]==$value1) {
+			    if($this->request->getServer()->getName()==$value1) {
 					return $environmentName;
 				}
 			}
 		}
-		die("Environment not recognized for: ".$_SERVER["SERVER_NAME"]);
+		throw new ApplicationException("Environment not recognized for: ".$this->request->getServer()->getName());
 	}
 }
