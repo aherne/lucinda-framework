@@ -18,7 +18,7 @@ require_once("src/MultiLogger.php");
  * 
  * @attribute logger
  */
-class LoggingListener extends ApplicationListener {
+class LoggingListener extends RequestListener {
 	const DEFAULT_LOG_FILE = "logs";
 
 	/**

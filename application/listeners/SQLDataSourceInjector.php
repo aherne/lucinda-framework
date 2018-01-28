@@ -31,7 +31,7 @@ require_once("vendor/lucinda/sql-data-access/loader.php");
  *  	</sql>
  *  </database>
  */
-class SQLDataSourceInjector extends ApplicationListener {
+class SQLDataSourceInjector extends RequestListener {
 	public function run() {
 		$environment = $this->application->getAttribute("environment");
 		

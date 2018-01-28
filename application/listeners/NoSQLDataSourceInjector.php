@@ -31,7 +31,7 @@ require_once("vendor/lucinda/nosql-data-access/loader.php");
  *  	</nosql>
  *  </database>
  */
-class NoSQLDataSourceInjector extends ApplicationListener {
+class NoSQLDataSourceInjector extends RequestListener {
 	public function run() {
 		$environment = $this->application->getAttribute("environment");
 		
