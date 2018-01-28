@@ -3,16 +3,13 @@ F @Framework: add error author & mail error reporting (so RELEVANT users will be
 F @Framework: add ability to create custom logger/error reporter
 F @Framework: login throttling protection
 F @Framework: add application version @ XML (tag: application.version) to force frontend files refresh cache
-F @Framework: avoid double parsing of routes REGEX @ PageValidator & @ ErrorRenderer
+D @Framework: exceptions
 ? @NoSQLAPI: check if no-sql Couchbase can be converted to NoSQLServerDataSource
-F @ServletsAPI: response content type should be configurable in route (<route ... format="..."/>
 F @ServletsAPI: <routes ref="XML_PATH"/>
 F @ErrorsAPI: if self::$objErrorHandler is not set, var dump exception
 F @Oauth2Client: add refresh token support @ Driver
-+ @LocaleAPI: create another API for internationalization and localization (PHP Gettext API)
 D @ViewLanguageAPI: functions in condition must not be decorated with ${..}
 B @ViewLanguageAPI: <import file="boo" />. "Element names can contain letters, digits, hyphens, underscores, and periods"
 F @ViewLanguageAPI: support "-" in tag and attribute names.
 F @all APIs: add namespaces
-F @all APIs: update gitignores to remove ECLIPSE & PHPSTORM files and vendor, too
-D @all APIs: finalize README & composer.json files
++ @LocaleAPI: create another API for internationalization and localization (PHP Gettext API)

@@ -160,7 +160,7 @@ class Oauth2AuthenticationWrapper extends AuthenticationWrapper {
 	private function getAPIDriver($driverName, OAuth2\ClientInformation $clientInformation) {
 		$driverClass = $driverName."Driver";
 		$driverFilePath = "vendor/lucinda/oauth2-client/drivers/".$driverClass.".php";
-		if(!file_exists($driverFilePath)) throw new ApplicationException("Driver class not found: ".$driverFilePath);
+		if(!file_exists($driverFilePath)) throw new ServletException("Driver class not found: ".$driverFilePath);
 		require_once($driverFilePath);
 		return new $driverClass($clientInformation);
 	}
@@ -170,12 +170,12 @@ class Oauth2AuthenticationWrapper extends AuthenticationWrapper {
 	 * 
 	 * @param string $driverName Name of OAuth2 vendor (eg: facebook)
 	 * @throws ApplicationException If vendor is not found on disk.
-	 * @return OAuthLogin Instance that performs OAuth2 login and collects user information.
+	 * @return OAuth2Driver Instance that performs OAuth2 login and collects user information.
 	 */
 	private function getLoginDriver($driverName) {
 		$driverClass = $driverName."SecurityDriver";
 		$driverFilePath = "application/models/oauth2/".$driverClass.".php";
-		if(!file_exists($driverFilePath)) throw new ApplicationException("Driver class not found: ".$driverFilePath);
+		if(!file_exists($driverFilePath)) throw new ServletException("Driver class not found: ".$driverFilePath);
 		require_once($driverFilePath);
 		return new $driverClass($this->drivers[$driverName]);
 	}

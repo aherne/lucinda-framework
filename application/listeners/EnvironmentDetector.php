@@ -20,7 +20,7 @@ class EnvironmentDetector  extends ApplicationListener {
 	
 	private function getEnvironment() {		
 		$tblTMP = (array) $this->application->getXML()->application->environments;
-		if(empty($tblTMP)) throw new ServletException("Environments not configured!");
+		if(empty($tblTMP)) throw new ApplicationException("Environments not configured!");
 		foreach($tblTMP as $environmentName=>$value1) {
 			if(is_array($value1)) { // it is allowed to have multiple server names per environment
 				foreach($value1 as $value2) {

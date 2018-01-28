@@ -49,11 +49,11 @@ class SQLDataSourceInjector extends ApplicationListener {
 	 * @throws ServletException If tags syntax is invalid.
 	 */
 	private function injectDataSources(SimpleXMLElement $xml) {
-		if(!$xml->server) throw new ServletException("Server not set for environment!");
+	    if(!$xml->server) throw new ApplicationException("Server not set for environment!");
 		$xml = (array) $xml;
 		if(is_array($xml["server"])) {
 			foreach($xml["server"] as $element) {
-				if(!isset($element["name"])) throw new ServletException("Attribute 'name' not set for <server> tag!");
+			    if(!isset($element["name"])) throw new ApplicationException("Attribute 'name' not set for <server> tag!");
 				SQLConnectionFactory::setDataSource((string) $element["name"], $this->createDataSource($element));
 			}
 		} else {

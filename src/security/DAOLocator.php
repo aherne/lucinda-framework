@@ -32,12 +32,12 @@ class DAOLocator {
 
 		// load file
 		$daoFile = $this->daoPath."/".$dao.".php";
-		if(!file_exists($daoFile)) throw new ApplicationException("DAO file not found: ".$daoFile."!");
+		if(!file_exists($daoFile)) throw new ServletException("DAO file not found: ".$daoFile."!");
 		require_once($daoFile);
 
 		// locate class
 		$daoObject = new $dao();
-		if(!($daoObject instanceof $parentClassName)) throw new ApplicationException($dao." must be instance of ".$parentClassName."!");
+		if(!($daoObject instanceof $parentClassName)) throw new ServletException($dao." must be instance of ".$parentClassName."!");
 		return $daoObject;
 	}
 }

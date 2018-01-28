@@ -46,14 +46,14 @@ class NoSQLDataSourceInjector extends ApplicationListener {
 	 * Creates NoSQLDataSource entries based on XML info and injects them into NoSQLConnectionFactory/NoSQLConnectionSingleton
 	 * 
 	 * @param SimpleXMLElement $xml Content of database.{ENVIRONMENT_NAME}.nosql XML tag.
-	 * @throws ServletException If tags syntax is invalid.
+	 * @throws ApplicationException If tags syntax is invalid.
 	 */
 	private function injectDataSources(SimpleXMLElement $xml) {
-		if(!$xml->server) throw new ServletException("Server not set for environment!");
+		if(!$xml->server) throw new ApplicationException("Server not set for environment!");
 		$xml = (array) $xml;
 		if(is_array($xml["server"])) {
 			foreach($xml["server"] as $element) {
-				if(!isset($element["name"])) throw new ServletException("Attribute 'name' not set for <server> tag!");
+			    if(!isset($element["name"])) throw new ApplicationException("Attribute 'name' not set for <server> tag!");
 				NoSQLConnectionFactory::setDataSource((string) $element["name"], $this->createDataSource($element));
 			}
 		} else {
@@ -70,14 +70,14 @@ class NoSQLDataSourceInjector extends ApplicationListener {
 	 */
 	private function createDataSource(SimpleXMLElement $databaseInfo) {
 		$driver = (string) $databaseInfo["driver"];
-		if(!$driver) throw new ServletException("Child tag <driver> is mandatory for <server> tags!");
+		if(!$driver) throw new ApplicationException("Child tag <driver> is mandatory for <server> tags!");
 		switch($driver) {
 			case "couchbase":
 				$host = (string) $databaseInfo["host"];
 				$userName = (string) $databaseInfo["username"];
 				$password = (string) $databaseInfo["password"];
 				$bucket = (string) $databaseInfo["bucket_name"];
-				if(!$host || !$userName || !$password || !$bucket) throw new ServletException("For COUCHBASE driver following attributes are mandatory: host, username, password, bucket_name");
+				if(!$host || !$userName || !$password || !$bucket) throw new ApplicationException("For COUCHBASE driver following attributes are mandatory: host, username, password, bucket_name");
 				
 				require_once("vendor/lucinda/php-nosql-data-access-api/src/CouchbaseDriver.php");
 				
@@ -114,7 +114,7 @@ class NoSQLDataSourceInjector extends ApplicationListener {
 				
 				return new APCuDataSource();
 			default:
-				throw new ServletException("Nosql driver not supported: ".$driver);
+			    throw new ApplicationException("Nosql driver not supported: ".$driver);
 				break;
 		}
 		return $dataSource;
@@ -123,7 +123,7 @@ class NoSQLDataSourceInjector extends ApplicationListener {
 	private function setServerInfo(SimpleXMLElement $databaseInfo, NoSQLServerDataSource $dataSource) {
 		// set host and ports
 		$temp = (string) $databaseInfo["host"];
-		if(!$temp) throw new ServletException("Driver attribute 'host' is mandatory");
+		if(!$temp) throw new ApplicationException("Driver attribute 'host' is mandatory");
 		$hosts = explode(",",$temp);
 		foreach($hosts as $hostAndPort) {
 			$hostAndPort = trim($hostAndPort);
