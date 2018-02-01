@@ -37,7 +37,7 @@ class ErrorRendererFinder {
 	    $contentType = $request->getValidator()->getContentType();
 		$formats = $application->getFormats();
 		foreach($formats as $format) {
-		    if($format->getContentType() == $contentType) {
+		    if(strpos($contentType, $format->getContentType())===0) {
 		        return $format;
 		    }
 		}
