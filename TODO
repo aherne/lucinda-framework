@@ -3,6 +3,7 @@ F @Framework: add error author & mail error reporting (so RELEVANT users will be
 F @Framework: add ability to create custom logger/error reporter
 F @Framework: login throttling protection
 F @Framework: add application version @ XML (tag: application.version) to force frontend files refresh cache
+B @Framework: Uncaught PathNotFoundException: Route could not be matched to routes.route in /var/www/html/spin_my_bonus/vendor/lucinda/mvc/src/implemented/PageValidator.php on line 56
 D @Framework: exceptions & ErrorInspector
 ? @Framework: EnvironmentDetector/ErrorListener dilema
 F @ServletsAPI: <routes ref="XML_PATH"/>
