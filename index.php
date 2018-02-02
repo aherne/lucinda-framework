@@ -1,11 +1,8 @@
 <?php
-// starts MVC api
+// take control of STDERR
+require_once("src/ErrorsFrontController.php");
+new ErrorsFrontController();
+
+// take control of STDOUT
 require_once("vendor/lucinda/mvc/loader.php");
-try {
-	new FrontController();
-} catch(PathNotFoundException $exception) {
-	// below applies only if display format is HTML
-	header("HTTP/1.0 404 Not Found");
-	header('Content-Type: text/html; charset=UTF-8');
-	require_once("application/views/404.php");
-}
+new FrontController();

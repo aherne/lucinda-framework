@@ -1,9 +1,7 @@
 F @Framework: remember original page and redirect to it in case of unauthorized/ok cycle
 F @Framework: add error author & mail error reporting (so RELEVANT users will be informed)
-F @Framework: add ability to create custom logger/error reporter
 F @Framework: login throttling protection
 F @Framework: add application version @ XML (tag: application.version) to force frontend files refresh cache
-B @Framework: Uncaught PathNotFoundException: Route could not be matched to routes.route in /var/www/html/spin_my_bonus/vendor/lucinda/mvc/src/implemented/PageValidator.php on line 56
 D @Framework: exceptions & ErrorInspector
 ? @Framework: EnvironmentDetector/ErrorListener dilema
 F @ServletsAPI: <routes ref="XML_PATH"/>
@@ -12,52 +10,7 @@ B @ServletsAPI: when ViewWrapper is used, route "view" and "extension" attribute
 D @ViewLanguageAPI: functions in condition must not be decorated with ${..}
 B @ViewLanguageAPI: <import file="boo" />. "Element names can contain letters, digits, hyphens, underscores, and periods"
 F @ViewLanguageAPI: support "-" in tag and attribute names.
-F @ErrorsAPI: if self::$objErrorHandler is not set, var dump exception
 F @Oauth2Client: add refresh token support @ Driver
 ? @NoSQLAPI: check if no-sql Couchbase can be converted to NoSQLServerDataSource
 F @all APIs: add namespaces
-+ @LocaleAPI: create another API for internationalization and localization (PHP Gettext API)
-
-
-\Errors\Levels {
-	
-}
-<errors>
-	<error class="EXCEPTION" level="..."
-
-</errors>
-\Errors\FrontController($documentDescriptor, $contentType) {
-	- detects environment & loggers based on environment
-	- instances view
-	handle(Exception/Error $exception) {
-		// detects controller name based on exception
-
-		// logs error
-		$controller = new $foundController($this->contentType);
-		if($controller->getSeverity()!=LOG_NONE) {
-			foreach($this->logger as $logger) {
-				$logger->$severity($exception);
-			}
-		}
-
-		// TODO: stop rendering
-		header(CONTENT_TYPE);
-		if($controller->getViewBody()) {
-			echo $controller->getViewBody();
-		} else {
-			...
-		}
-		
-	}
-}
-	
-
-\Errors\Controller($exception, $loggers) {
-	integer getLoggingSeverity();
-	string getHTTPStatus(); // should be header value as well as a shortcut
-	string getResponseStream();	// gets response stream
-	string getCallback();	//
-	ErrorSeverity getSeverity();
-	string getViewFile();
-	string getViewBody();
-}
++ @LocaleAPI: create another API for internationalization and localization (PHP Gettext)
