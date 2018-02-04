@@ -36,6 +36,7 @@ class ErrorInspector implements ErrorSeverityFinder {
 	        case "OAuth2\ClientException":
 	        case "AuthenticationException":
 	        case "AuthorizationException":
+	        case "PHPException":
 	            return LOG_CRIT;
 	            break;
 	        case "ViewException":
