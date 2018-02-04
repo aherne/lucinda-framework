@@ -10,33 +10,40 @@ class ErrorInspector implements ErrorSeverityFinder {
 	 * @see ErrorSeverityFinder::getSeverity()
 	 */
 	public function getSeverity($exception) {
-		// do not report redirection transports or client errors
-		if($exception instanceof SecurityPacket || $exception instanceof PathNotFoundException || $exception instanceof SecurityException) {
-			return LOG_NONE;
-		} else if($exception instanceof Error) {
-			return LOG_CRIT; 	// programmer fault
-		} else if($exception instanceof PHPException) {
-			return LOG_CRIT; 	// programmer fault
-		} else if($exception instanceof NoSQLConnectionException) {
-		    return LOG_EMERG; 	// server fault
-		} else if($exception instanceof OperationFailedException) {
-		    return LOG_EMERG; 	// server fault
-		} else if($exception instanceof KeyNotFoundException) {
-			return LOG_CRIT; 	// programmer fault
-		} else if($exception instanceof SQLConnectionException) {
-			return LOG_EMERG;	// server fault
-		} else if($exception instanceof SQLStatementException) {
-			return LOG_CRIT; 	// programmer fault
-		} else if($exception instanceof ServletException) {
-			return LOG_ALERT;	// programmer fault
-		} else if($exception instanceof ApplicationException) {
-			return LOG_ALERT; 	// programmer fault
-		} else if($exception instanceof AuthenticationException) {
-			return LOG_ALERT; 	// programmer fault
-		} else if($exception instanceof ViewException) {
-			return LOG_CRIT;	// programmer fault
-		} else {
-			return LOG_ERR;		// client fault (in principle)
-		}
+	    $type = get_class($exception);	    
+	    switch($type) {
+	        case "PathNotFoundException":
+	        case "MethodNotAllowedException":
+	        case "SecurityPacket":
+	        case "SessionHijackException":
+	        case "EncryptionException":
+	        case "TokenException":
+	        case "FileUploadException":
+	            return LOG_NONE;
+	            break;
+	        case "SQLConnectionException":
+	        case "NoSQLConnectionException":
+	        case "OAuth2\ServerException":
+	            return LOG_EMERG;
+	            break;
+	        case "ApplicationException":
+	        case "ServletException":
+	        case "FormatNotFoundException":
+	        case "SQLStatementException":
+	        case "SQLException":
+	        case "OperationFailedException":
+	        case "KeyNotFoundException":
+	        case "OAuth2\ClientException":
+	        case "AuthenticationException":
+	        case "AuthorizationException":
+	            return LOG_CRIT;
+	            break;
+	        case "ViewException":
+	            return LOG_ALERT;
+	            break;
+	        default:
+	            return LOG_ERR;
+	            break;
+	    }
 	}
 }
