@@ -32,15 +32,15 @@ class JsonRenderer implements ErrorRenderer {
                 switch($exception->getStatus()) {
                     case "unauthorized":
                         header("HTTP/1.1 401 Unauthorized");
-                        $payload = array("status"=>"unauthorized","body"=>"", "callback"=>$exception->getCallback());
+                        $payload = array("status"=>"error","body"=>"", "callback"=>$exception->getCallback());
                         break;
                     case "forbidden":
                         header("HTTP/1.1 403 Forbidden");
-                        $payload = array("status"=>"forbidden","body"=>"", "callback"=>$exception->getCallback());
+                        $payload = array("status"=>"error","body"=>"", "callback"=>$exception->getCallback());
                         break;
                     case "not_found":
                         header("HTTP/1.1 404 Not found");
-                        $payload = array("status"=>"not_found","body"=>"", "callback"=>$exception->getCallback());
+                        $payload = array("status"=>"error","body"=>"", "callback"=>$exception->getCallback());
                         break;
                     case "login_ok":
                         $payload = array("status"=>"login_ok","body"=>"", "callback"=>$exception->getCallback(), "token"=>$exception->getAccessToken());
@@ -52,15 +52,15 @@ class JsonRenderer implements ErrorRenderer {
                 break;
             case "MethodNotAllowedException":
                 header("HTTP/1.1 405 Method Not Allowed");
-                $payload = array("status"=>"method_not_allowed","body"=>"");
+                $payload = array("status"=>"error","body"=>"");
                 break;
             case "SecurityException":
                 header("HTTP/1.1 400 Bad Request");
-                $payload = array("status"=>"bad_request","body"=>"");
+                $payload = array("status"=>"error","body"=>"");
                 break;
             case "PathNotFoundException":
                 header("HTTP/1.1 404 Not found");
-                $payload = array("status"=>"not_found","body"=>"");
+                $payload = array("status"=>"error","body"=>"");
                 break;
             default:
                 header("HTTP/1.1 500 Internal server error");
