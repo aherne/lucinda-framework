@@ -7,6 +7,7 @@ require_once("PersistenceDriverWrapper.php");
  */
 class SessionPersistenceDriverWrapper extends PersistenceDriverWrapper {
 	const DEFAULT_PARAMETER_NAME = "uid";
+	const HANDLER_FOLDER = "application/models";
 
 	/**
 	 * {@inheritDoc}
@@ -21,6 +22,28 @@ class SessionPersistenceDriverWrapper extends PersistenceDriverWrapper {
 		$isHttpsOnly = (integer) $xml["is_https_only"];
 		$ip = ((string) $xml["ignore_ip"]?"":$_SERVER["REMOTE_ADDR"]);
 		
+		$handler = (string) $xml["handler"];
+		if($handler) {
+		    session_set_save_handler($this->getHandlerInstance($handler), true);
+		}
+		
 		$this->driver = new SessionPersistenceDriver($parameterName, $expirationTime, $isHttpOnly, $isHttpsOnly, $ip);
+	}
+	
+	/**
+	 * Gets instance of handler based on handler name
+	 * 
+	 * @param string $handlerName Name of handler class
+	 * @throws ServletException If handler file/class not found or latter is not instanceof SessionHandlerInterface
+	 * @return SessionHandlerInterface
+	 */
+	private function getHandlerInstance($handlerName) {
+	    $file = self::HANDLER_FOLDER."/".$handlerName.".php";
+	    if(!file_exists($file)) throw new ServletException("Handler file not found: ".$file);
+	    require_once($file);
+	    if(!class_exists($handlerName)) throw new ServletException("Handler class not found: ".$handlerName);
+	    $object = new $handlerName();
+	    if(!($object instanceof SessionHandlerInterface))  throw new ServletException("Handler must be instance of SessionHandlerInterface!");
+	    return $object;
 	}
 }
