@@ -4,13 +4,14 @@ require_once("src/XMLSessionSetup.php");
 
 /**
  * Performs internationalization & localization by binding php-internationalization-api with XML tag:
- * <internationalization domain="DOMAIN" folder="FOLDER" method="METHOD"/>
+ * <internationalization locale="LOCALE" domain="DOMAIN" folder="FOLDER" method="METHOD"/>
  * or:
- * <internationalization method="session">
+ * <internationalization locale="LOCALE" domain="DOMAIN" folder="FOLDER" method="session">
  *  <session expiration="{value}" is_http_only="{value}" is_https_only="{value}" handler="{value}"/>
  * </internationalization>
  *
  * Where:
+ * - LOCALE: (mandatory) value of default locale (eg: en_US)
  * - DOMAIN: (optional) name of MO file storing localized content (if not set defaults to: "messages")
  * - FOLDER: (optional) folder storing locales (if not set defaults to "locale")
  * - METHOD: (mandatory) method to be used in detecting locales. Possible values:
@@ -19,13 +20,9 @@ require_once("src/XMLSessionSetup.php");
  *      - session: detects locale via "locale" session parameter, itself originating from a supported "locale" querystring parameter.
  *
  * If detected locale is not yet supported, uses "en_US". If latter is not supported either, a LocaleException is thrown!
- *
- * sudo locale-gen en_US
- * sudo locale-gen ru_RU
  */
 class LocalizationListener extends RequestListener
 {
-    const DEFAULT_LOCALE = "en_US";
     const PARAMETER_NAME = "locale";
 
     public function run() {
@@ -33,13 +30,14 @@ class LocalizationListener extends RequestListener
         if(empty($xml)) throw new ApplicationException("Tag missing/empty in configuration.xml: internationalization");
 
         // detect locale
+        $defaultLocale =  (string) $xml["locale"];
+        if(!$defaultLocale) throw new ApplicationException("Attribute missing/empty in configuration.xml: internationalization['locale]");
         $detectionMethod = (string) $xml["method"];
         if(!$detectionMethod) throw new ApplicationException("Attribute missing/empty in configuration.xml: internationalization['method]");
-        $locale = $this->getLocale($xml);
-        if(!$locale) $locale = self::DEFAULT_LOCALE;
+        $detectedLocale = $this->getLocale($xml);
 
         // compiles settings
-        $settings = new Lucinda\Internationalization\Settings($locale);
+        $settings = new Lucinda\Internationalization\Settings($detectedLocale);
         $charset = $this->application->getFormatInfo($this->application->getDefaultExtension())->getCharacterEncoding();
         if($charset) $settings->setCharset($charset);
         $domain = (string) $xml["domain"];
@@ -47,11 +45,11 @@ class LocalizationListener extends RequestListener
         $folder = (string) $xml["folder"];
         if($folder) $settings->setFolder($folder);
 
-        // if locale is not supported, override it with default
+        // if locale has no translations on disk, override it with default
         $file = $settings->getFolder().DIRECTORY_SEPARATOR.$settings->getLocale().DIRECTORY_SEPARATOR."LC_MESSAGES".DIRECTORY_SEPARATOR.$settings->getDomain().".mo";
         if(!file_exists($file)) {
-            $locale = "en_US";
-            $settings->setLocale($locale);
+            $detectedLocale = $defaultLocale;
+            $settings->setLocale($detectedLocale);
         }
 
         // sets internationalization settings (throws LocaleException)
@@ -59,7 +57,7 @@ class LocalizationListener extends RequestListener
 
         // save locale in session
         if($detectionMethod == "session") {
-            $this->request->getSession()->set(self::PARAMETER_NAME, $locale);
+            $this->request->getSession()->set(self::PARAMETER_NAME, $detectedLocale);
         }
     }
 
@@ -101,6 +99,6 @@ class LocalizationListener extends RequestListener
                 throw new ApplicationException("Invalid detection method: ".$method);
                 break;
         }
-        return self::DEFAULT_LOCALE;
+        return (string) $xml["locale"];
     }
 }
