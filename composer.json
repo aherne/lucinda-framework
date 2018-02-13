@@ -2,7 +2,7 @@
     "name": "lucinda/framework",
     "type": "project",
     "description": "High performance PHP framework built on love of elegance, depth of expression and quest for simplicity",
-    "keywords": ["mvc","templating","errors","logging","security","oauth2","sql","nosql","caching","fast","simple","light weight"],
+    "keywords": ["mvc","templating","errors","logging","security","oauth2","sql","nosql","caching","fast","simple","light weight","internationalization","localization","i18n"],
     "homepage": "http://www.lucinda-framework.com",
     "license": "MIT",
     "authors": [
@@ -21,7 +21,8 @@
         "lucinda/security": "~1.0",
         "lucinda/mvc": "~1.0",
         "lucinda/sql-data-access": "~1.0",
-        "lucinda/view-language": "~1.0"
+        "lucinda/view-language": "~1.0",
+        "lucinda/internationalization": "~1.0"
     },
     "require-dev": {
         "lucinda/errors": "~1.0",
@@ -32,6 +33,7 @@
         "lucinda/security": "~1.0",
         "lucinda/mvc": "~1.0",
         "lucinda/sql-data-access": "~1.0",
-        "lucinda/view-language": "~1.0"
+        "lucinda/view-language": "~1.0",
+        "lucinda/internationalization": "~1.0"
     }
 }

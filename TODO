@@ -2,8 +2,6 @@ F @Framework: remember original page and redirect to it in case of unauthorized/
 F @Framework: add error author & mail error reporting (so RELEVANT users will be informed)
 F @Framework: login throttling protection
 F @Framework: add application version @ XML (tag: application.version) to force frontend files refresh cache
-D @Framework: exceptions & ErrorInspector
-? @Framework: EnvironmentDetector/ErrorListener dilema
 F @ServletsAPI: <routes ref="XML_PATH"/>
 F @ServletsAPI: expand listeners to cover more states (BEFORE & AFTER)
 B @ServletsAPI: when ViewWrapper is used, route "view" and "extension" attributes are ignored
@@ -13,4 +11,3 @@ F @ViewLanguageAPI: support "-" in tag and attribute names.
 F @Oauth2Client: add refresh token support @ Driver
 ? @NoSQLAPI: check if no-sql Couchbase can be converted to NoSQLServerDataSource
 F @all APIs: add namespaces
-+ @LocaleAPI: create another API for internationalization and localization (PHP Gettext)
