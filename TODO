@@ -11,3 +11,4 @@ F @ViewLanguageAPI: support "-" in tag and attribute names.
 F @Oauth2Client: add refresh token support @ Driver
 ? @NoSQLAPI: check if no-sql Couchbase can be converted to NoSQLServerDataSource
 F @all APIs: add namespaces
+1) (?) make 404 page use view language
