@@ -76,6 +76,7 @@ class SQLDataSourceInjector extends RequestListener {
 		$dataSource->setUserName((string) $databaseInfo["username"]);
 		$dataSource->setPassword((string) $databaseInfo["password"]);
 		$dataSource->setSchema((string) $databaseInfo["schema"]);
+        $dataSource->setCharset((string) $databaseInfo["charset"]);
 		return $dataSource;
 	}
 }
