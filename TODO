@@ -1,14 +1,27 @@
-F @Framework: remember original page and redirect to it in case of unauthorized/ok cycle
+F @Framework: remember original page and redirect to it in case of successful authentication
+    To do so, original page must be saved into session
 F @Framework: add error author & mail error reporting (so RELEVANT users will be informed)
+    To do so, I must add ErrorListener
 F @Framework: login throttling protection
-F @Framework: make 404 page use view language (?)
-F @Framework: modularize EnvironmentDetector to support detecting by path of project
+    To do so, login attempts must be saved in session. If they exceed a LIMIT, they should be rejected for a TIME.
+F @Framework: make 404 page able to use view language
+    To do so, HtmlRenderer must know of "environment".
+? @Framework: improve EnvironmentDetector to support detecting by path of project
+    In your httpd.conf or a .htaccess file, put:
+        SetEnv APPLICATION_ENV "development"
+        fastcgi_param   APPLICATION_ENV  development;
+    Then in your application, use the getenv function to get the value:
+        $environment = getenv("APPLICATION_ENV");
+    This would:
+        - make ErrorsFrontController act like a real FrontController where routes are Exceptions (only there are no page controllers)
+        - remove ErrorListener, then detach all STDERR flow to ErrorsFrontController
+        - ErrorsFrontController work with a different XML (eg: errors.xml)
 F @ServletsAPI: add application version @ XML (tag: application.version) to force frontend files refresh cache
 F @ServletsAPI: <routes ref="XML_PATH"/>
 F @ServletsAPI: expand listeners to cover more states (BEFORE & AFTER)
-B @ServletsAPI: when ViewWrapper is used, route "view" and "extension" attributes are ignored
-D @ViewLanguageAPI: functions in condition must not be decorated with ${..}
 F @ViewLanguageAPI: Tag & attribute names must be able to contain [a-zA-Z0-9-_.]
+? @ViewLanguageAPI: template inheritance
 F @Oauth2Client: add refresh token support @ Driver
 F @NoSQLAPI: check if no-sql Couchbase can be converted to NoSQLServerDataSource
 F @all APIs: add namespaces, then composer autoload
+D @all APIs: changelogs
