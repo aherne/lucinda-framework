@@ -19,6 +19,8 @@ F @Framework: make 404 page able to use view language
 F @ServletsAPI: add application version @ XML (tag: application.version) to force frontend files refresh cache
 F @ServletsAPI: <routes ref="XML_PATH"/>
 F @ServletsAPI: expand listeners to cover more states (BEFORE & AFTER)
+F @InternationalizationAPI: expand Writer Translations into a class
+D @InternationalizaitonAPI: feed README.md
 F @ViewLanguageAPI: Tag & attribute names must be able to contain [a-zA-Z0-9-_.]
 ? @ViewLanguageAPI: template inheritance
 F @Oauth2Client: add refresh token support @ Driver
