@@ -19,9 +19,9 @@ class EnvironmentDetector  extends RequestListener {
 	}
 	
 	private function getEnvironment() {		
-		$tblTMP = (array) $this->application->getXML()->application->environments;
-		if(empty($tblTMP)) throw new ApplicationException("Environments not configured!");
-		foreach($tblTMP as $environmentName=>$value1) {
+		$tMP = (array) $this->application->getXML()->application->environments;
+		if(empty($tMP)) throw new ApplicationException("Environments not configured!");
+		foreach($tMP as $environmentName=>$value1) {
 			if(is_array($value1)) { // it is allowed to have multiple server names per environment
 				foreach($value1 as $value2) {
 					if($this->request->getServer()->getName()==$value2) {
