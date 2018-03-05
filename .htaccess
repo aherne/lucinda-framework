@@ -1,5 +1,5 @@
 RewriteEngine on
 Options -Indexes
 ErrorDocument 404 default
-RewriteRule ^favicon\.ico$ public/favicon.ico
-RewriteRule !public/(.*) index.php
+RewriteCond %{REQUEST_URI} !^/public
+RewriteRule ^(.*)$ index.php
