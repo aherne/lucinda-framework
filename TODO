@@ -16,13 +16,14 @@ F @Framework: make 404 page able to use view language
         - make ErrorsFrontController act like a real FrontController where routes are Exceptions (only there are no page controllers)
         - remove ErrorListener, then detach all STDERR flow to ErrorsFrontController
         - ErrorsFrontController work with a different XML (eg: errors.xml)
-F @ServletsAPI: add application version @ XML (tag: application.version) to force frontend files refresh cache
+F @ServletsAPI: Request uri should use parse_url
 F @ServletsAPI: <routes ref="XML_PATH"/>
 F @ServletsAPI: expand listeners to cover more states (BEFORE & AFTER)
 F @InternationalizationAPI: expand Writer Translations into a class
 D @InternationalizaitonAPI: feed README.md
 F @ViewLanguageAPI: Tag & attribute names must be able to contain [a-zA-Z0-9-_.]
 ? @ViewLanguageAPI: template inheritance
+D @ViewLanguageAPI: short ifs: ${(${page}=='index'?'':'')}
 F @Oauth2Client: add refresh token support @ Driver
 F @NoSQLAPI: check if no-sql Couchbase can be converted to NoSQLServerDataSource
 F @all APIs: add namespaces, then composer autoload
