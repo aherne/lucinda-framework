@@ -27,4 +27,4 @@ D @ViewLanguageAPI: short ifs: ${(${page}=='index'?'':'')}
 F @Oauth2Client: add refresh token support @ Driver
 F @NoSQLAPI: check if no-sql Couchbase can be converted to NoSQLServerDataSource
 F @all APIs: add namespaces, then composer autoload
-D @all APIs: changelogs
+D @all
