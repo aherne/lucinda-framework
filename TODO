@@ -24,7 +24,7 @@ D @InternationalizaitonAPI: feed README.md
 F @ViewLanguageAPI: Tag & attribute names must be able to contain [a-zA-Z0-9-_.]
 ? @ViewLanguageAPI: template inheritance
 D @ViewLanguageAPI: short ifs: ${(${page}=='index'?'':'')}
+D @ViewLanguageAPI: template inheritance: <list:$[type] data="$[data]" pagination="$[pagination]"/>
 F @Oauth2Client: add refresh token support @ Driver
 F @NoSQLAPI: check if no-sql Couchbase can be converted to NoSQLServerDataSource
 F @all APIs: add namespaces, then composer autoload
-D @all
