@@ -55,7 +55,7 @@ class HtmlRenderer implements ErrorRenderer {
                 require_once("application/views/400.html");
                 break;
             case "PathNotFoundException":
-                header("HTTP/1.0 404 Not Found");
+                header("HTTP/1.1 404 Not Found");
                 require_once("application/views/404.html");
                 break;
             default:
