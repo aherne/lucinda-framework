@@ -96,13 +96,13 @@ class NoSQLDataSourceInjector extends RequestListener {
 			case "memcached":
 				require_once("vendor/lucinda/nosql-data-access/src/MemcachedDriver.php");
 				
-				$dataSource = new MemcacheDataSource();
+				$dataSource = new MemcachedDataSource();
 				$this->setServerInfo($databaseInfo, $dataSource);
 				return $dataSource;
 			case "redis":
 				require_once("vendor/lucinda/nosql-data-access/src/RedisDriver.php");
 				
-				$dataSource = new MemcacheDataSource();
+				$dataSource = new RedisDataSource();
 				$this->setServerInfo($databaseInfo, $dataSource);
 				return $dataSource;
 			case "apc":
