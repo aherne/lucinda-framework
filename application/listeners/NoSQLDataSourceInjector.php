@@ -79,7 +79,7 @@ class NoSQLDataSourceInjector extends RequestListener {
 				$bucket = (string) $databaseInfo["bucket_name"];
 				if(!$host || !$userName || !$password || !$bucket) throw new ApplicationException("For COUCHBASE driver following attributes are mandatory: host, username, password, bucket_name");
 				
-				require_once("vendor/lucinda/php-nosql-data-access-api/src/CouchbaseDriver.php");
+				require_once("vendor/lucinda/nosql-data-access/src/CouchbaseDriver.php");
 				
 				$dataSource = new CouchbaseDataSource();
 				$dataSource->setHost($host);
@@ -88,29 +88,29 @@ class NoSQLDataSourceInjector extends RequestListener {
 				return $dataSource;
 				break;
 			case "memcache":				
-				require_once("vendor/lucinda/php-nosql-data-access-api/src/MemcacheDriver.php");
+				require_once("vendor/lucinda/nosql-data-access/src/MemcacheDriver.php");
 				
 				$dataSource = new MemcacheDataSource();
 				$this->setServerInfo($databaseInfo, $dataSource);
 				return $dataSource;
 			case "memcached":
-				require_once("vendor/lucinda/php-nosql-data-access-api/src/MemcachedDriver.php");
+				require_once("vendor/lucinda/nosql-data-access/src/MemcachedDriver.php");
 				
 				$dataSource = new MemcacheDataSource();
 				$this->setServerInfo($databaseInfo, $dataSource);
 				return $dataSource;
 			case "redis":
-				require_once("vendor/lucinda/php-nosql-data-access-api/src/RedisDriver.php");
+				require_once("vendor/lucinda/nosql-data-access/src/RedisDriver.php");
 				
 				$dataSource = new MemcacheDataSource();
 				$this->setServerInfo($databaseInfo, $dataSource);
 				return $dataSource;
 			case "apc":
-				require_once("vendor/lucinda/php-nosql-data-access-api/src/APCDriver.php");
+				require_once("vendor/lucinda/nosql-data-access/src/APCDriver.php");
 				
 				return new APCDataSource();
 			case "apcu":
-				require_once("vendor/lucinda/php-nosql-data-access-api/src/APCuDriver.php");
+				require_once("vendor/lucinda/nosql-data-access/src/APCuDriver.php");
 				
 				return new APCuDataSource();
 			default:
