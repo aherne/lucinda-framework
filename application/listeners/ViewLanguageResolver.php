@@ -31,9 +31,15 @@ class ViewLanguageResolver extends ResponseListener {
 		$tagsFolder = (string) $this->application->getXML()->application->paths->tags;
 		$extension = (string) $this->application->getXML()->application->templates_extension;
 		
+		// gets view file
+		$viewFile = $this->response->getView();
+		if(strpos($viewFile, $this->application->getViewsPath())===0) {
+		    $viewFile = substr($viewFile, strlen($this->application->getViewsPath())+1);
+		}
+		
 		// compiles templates recursively into a single compilation file
 		$vlp = new ViewLanguageParser($this->application->getViewsPath(), $extension, $compilationsFolder, $tagsFolder);
-		$compilationFile = $vlp->compile($this->response->getView());
+		$compilationFile = $vlp->compile($viewFile);
 		
 		// converts objects sent to response into array (throws JsonException if object is non-convertible)
 		$json = new Json();
