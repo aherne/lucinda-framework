@@ -1,7 +1,6 @@
 <?php
 require_once("vendor/lucinda/http-caching/loader.php");
-require_once("src/caching/CachingPolicyFinder.php");
-require_once("src/caching/CacheableDriver.php");
+require_once("src/caching/CachingPolicyBinder.php");
 
 /**
  * Reads xml HTTP caching policies, binds HTTP Caching API to Servlets API and sets up CachingPolicy that matches currently requested resource
@@ -29,10 +28,13 @@ require_once("src/caching/CacheableDriver.php");
 class HttpCachingRequestListener extends RequestListener {
 	public function run() {
 		// detects caching_policy
-		$policy = $this->getCachingPolicy();
+		$cpb = new CachingPolicyBinder($this->application, $this->request);
+		$policy = $cpb->getPolicy();
+		
+		// saves policy for later usage
 		$this->request->setAttribute("caching_policy", $policy);
 		
-		// perform validation
+		// performs cache validation
 		if(!$policy->getCachingDisabled() && $policy->getCacheableDriver()) {
 			$cacheRequest = new CacheRequest();
 			if($cacheRequest->isValidatable()) {
@@ -50,43 +52,5 @@ class HttpCachingRequestListener extends RequestListener {
 				}
 			}
 		}
-	}
-	
-	/**
-	 * Gets caching policy 
-	 * 
-	 * @throws ApplicationException
-	 * @return CachingPolicy
-	 */
-	private function getCachingPolicy() {
-		// get global caching policy
-		$caching = $this->application->getXML()->http_caching;
-		if(!$caching) throw new ApplicationException("Entry missing in configuration.xml: http_caching");
-		$finder = new CachingPolicyFinder($caching, $this->application, $this->request);
-		$globalPolicy = $finder->getPolicy();
-		
-		// get route-specific caching policy (whatever is not specifically
-		$pv = new PageValidator($this->request->getURI()->getPage(), $this->application);
-		$page = $pv->getPage();
-		$tmp = (array) $this->application->getXML()->http_caching;
-		if(!empty($tmp["route"])) {
-			$elements = is_array($tmp["route"])?$tmp["route"]:array($tmp["route"]);
-			foreach($elements as $info) {
-				$route = $info["url"];
-				if($route === null) throw new ApplicationException("Property missing in http_caching.route tag: url");
-				if($route == $page) {
-					$finder = new CachingPolicyFinder($info, $this->application, $this->request);
-					$routePolicy = $finder->getPolicy();
-					
-					$finalPolicy = new CachingPolicy();
-					$finalPolicy->setCachingDisabled($routePolicy->getCachingDisabled()!==null?$routePolicy->getCachingDisabled():$globalPolicy->getCachingDisabled());
-					$finalPolicy->setExpirationPeriod($routePolicy->getExpirationPeriod()!==null?$routePolicy->getExpirationPeriod():$globalPolicy->getExpirationPeriod());
-					$finalPolicy->setCacheableDriver($routePolicy->getCacheableDriver()!==null?$routePolicy->getCacheableDriver():$globalPolicy->getCacheableDriver());
-					return $finalPolicy;
-				}
-			}
-		}
-		
-		return $globalPolicy;
 	}
 }

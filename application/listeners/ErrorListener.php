@@ -30,66 +30,24 @@ class ErrorListener extends RequestListener {
      * @see Runnable::run()
      */
     public function run() {
-        // updates framework handler based on data in XML & Request
+        // gets generic error handler
         $errorHandler = PHPException::getErrorHandler();
+        
+        // adds reporters to error handler
+        $erf = new ErrorReportersFinder($this->application->getXML()->errors, $this->application->getAttribute("environment"));
         $reporters = $this->getReporters();
         foreach($reporters as $reporter) {
             $errorHandler->addReporter($reporter);
         }
-        $renderer = $this->getRenderer();
+        
+        // sets renderer to error handler
+        $erf = new ErrorRendererFinder($this->application->getXML()->errors, $this->application, $this->request);
+        $renderer = $erf->getRenderer();
         if($renderer) {
             $errorHandler->setRenderer($this->getRenderer());
         }
 
         // saves handler for latter manipulation
         $this->application->setAttribute("error_handler", $errorHandler);
-    }
-
-    /**
-     * Finds error reporter among children of errors.{ENVIRONMENT}.reporters tag. Following children are recognized:
-     * 		<file path="{FILE_PATH}" rotation="{ROTATION_PATTERN}"/>
-     * 		<syslog application="{APPLICATION_NAME}"/>
-     * 		<sql table="{TABLE_NAME}" server="{SERVER_NAME}" rotation="{ROTATION_PATTERN}"/>
-     * 		<logger class="{CLASS}" .../>
-     *
-     * Of which:
-     * - "file": reporting is done in a file on your server's disk
-     * - "syslog": reporting is done via syslog service running on your server
-     * - "sql": reporting is done into an sql table
-     * - "logger": if you want to add a custom reporter (class must extend CustomLogger)
-     *
-     * It is allowed to have multiple reporters at the same time! If no reporter is defined, error will not be reported at all.
-     *
-     * @throws ApplicationException
-     * @return LogReporter[] List of ErrorReporter to delegate error reporting to.
-     */
-    private function getReporters() {
-        $erf = new ErrorReportersFinder($this->application->getXML()->errors, $this->application->getAttribute("environment"));
-        return $erf->getReporters();
-    }
-
-
-    /**
-     * Finds child of  errors.{ENVIRONMENT}.renderer XML tag that matches page format (extension). Tag syntax:
-     *
-     * <renderer display_errors="{0 OR 1}">
-     * 		<{extension} ?(class="{CLASS}" ...)/>
-     * 		...
-     * </renderer>
-     *
-     * Using "display_errors" flag, one toggles showing details about error on screen. Setting it to "1" is recommended for development environments,
-     * but it should always be "0" on live environments (otherwise details of your application will be leaked to outside world).
-     *
-     * If no tag is found to match extension, no error rendering is done (a blank page is outputted). Otherwise:
-     * - IF no "class" parameter is supplied, rendering is handled by framework as long as extension is html or json. For other extensions, a blank page is outputted.
-     * - ELSE, a file by same name as class is searched and required in "application/models" folder, then an instance of that class (which must extend CustomRenderer)
-     * is returned.
-     *
-     * @throws ApplicationException If XML structure is invalid
-     * @return ErrorRenderer|null Object to delegate error rendering to.
-     */
-    private function getRenderer() {
-        $erf = new ErrorRendererFinder($this->application->getXML()->errors, $this->application, $this->request);
-        return $erf->getRenderer();
     }
 }

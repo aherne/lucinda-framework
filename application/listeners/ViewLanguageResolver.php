@@ -1,5 +1,6 @@
 <?php
 require_once("vendor/lucinda/view-language/loader.php");
+require_once("src/ViewLanguageWrapper.php");
 require_once("src/Json.php");
 
 /**
@@ -24,22 +25,9 @@ class ViewLanguageResolver extends ResponseListener {
 	public function run() {
 		if(strpos($this->response->headers()->get("Content-Type"),"text/html")!==0) return;
 	  
-		// get compilations folder
-		$environment = $this->application->getAttribute("environment");
-		$compilationsFolder = (string) $this->application->getXML()->application->paths->compilations->$environment;
-		if(!$compilationsFolder) throw new ApplicationException("Compilations folder not defined!");
-		$tagsFolder = (string) $this->application->getXML()->application->paths->tags;
-		$extension = (string) $this->application->getXML()->application->templates_extension;
-		
-		// gets view file
-		$viewFile = $this->response->getView();
-		if(strpos($viewFile, $this->application->getViewsPath())===0) {
-		    $viewFile = substr($viewFile, strlen($this->application->getViewsPath())+1);
-		}
-		
-		// compiles templates recursively into a single compilation file
-		$vlp = new ViewLanguageParser($this->application->getViewsPath(), $extension, $compilationsFolder, $tagsFolder);
-		$compilationFile = $vlp->compile($viewFile);
+		// get compilation file
+		$wrapper = new ViewLanguageWrapper($this->application, $this->response);
+		$compilationFile = $wrapper->getCompilationFile();
 		
 		// converts objects sent to response into array (throws JsonException if object is non-convertible)
 		$json = new Json();

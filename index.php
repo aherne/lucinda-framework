@@ -1,6 +1,6 @@
 <?php
 // take control of STDERR
-require_once("src/ErrorsFrontController.php");
+require_once("src/error_handling/ErrorsFrontController.php");
 new ErrorsFrontController();
 
 // take control of STDOUT

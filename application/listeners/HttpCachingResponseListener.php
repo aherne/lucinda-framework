@@ -6,8 +6,11 @@
  */
 class HttpCachingResponseListener extends ResponseListener {
 	public function run() {
+	    // gets caching policy
 		$policy = $this->request->getAttribute("caching_policy");
 		if(!$policy) throw new ApplicationException("No caching policy defined!");
+		
+		// sets cache response headers in accordance to caching policy
 		if(!$policy->getCachingDisabled() && $policy->getCacheableDriver()) {
 			$cacheable = $policy->getCacheableDriver();
 			

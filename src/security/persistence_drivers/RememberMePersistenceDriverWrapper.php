@@ -1,5 +1,6 @@
 <?php
 require_once("PersistenceDriverWrapper.php");
+require_once("IPDetector.php");
 
 /**
  * Binds RememberMePersistenceDriver @ SECURITY API with settings from configuration.xml @ SERVLETS-API and sets up an object on which one can
@@ -26,8 +27,9 @@ class RememberMePersistenceDriverWrapper extends PersistenceDriverWrapper {
 		$isHttpOnly = (integer) $xml["is_http_only"];
 		$isHttpsOnly = (integer) $xml["is_https_only"];
 		
-		$ip = ((string) $xml["ignore_ip"]?"":$_SERVER["REMOTE_ADDR"]);
+		$ipDetector = new IPDetector();
+		$ipAddress = $ipDetector->getIP();
 		
-		$this->driver = new RememberMePersistenceDriver($secret, $parameterName,$expirationTime,$isHttpOnly,$isHttpsOnly, $ip);
+		$this->driver = new RememberMePersistenceDriver($secret, $parameterName,$expirationTime,$isHttpOnly,$isHttpsOnly, $ipAddress);
 	}
 }

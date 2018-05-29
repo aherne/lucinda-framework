@@ -21,7 +21,7 @@ class Oauth2AuthenticationWrapper extends AuthenticationWrapper {
 	 * @param SimpleXMLElement $xml Contents of security.authentication.oauth2 tag @ configuration.xml.
 	 * @param string $currentPage Current page requested.
 	 * @param PersistenceDriver[] $persistenceDrivers List of drivers to persist information across requests.
-	 * @param CsrfTokenWrapper $csrf Object that performs CSRF token checks.
+	 * @param CsrfTokenDetector $csrf Object that performs CSRF token checks.
 	 * @throws ApplicationException If XML is malformed.
 	 * @throws AuthenticationException If one or more persistence drivers are not instanceof PersistenceDriver
 	 * @throws TokenException If CSRF checks fail.
@@ -30,7 +30,7 @@ class Oauth2AuthenticationWrapper extends AuthenticationWrapper {
 	 * @throws OAuth2\ClientException When oauth2 local client sends malformed requests to oauth2 server.
 	 * @throws OAuth2\ServerException When oauth2 remote server answers with an error.
 	 */
-	public function __construct(SimpleXMLElement $xml, $currentPage, $persistenceDrivers, CsrfTokenWrapper $csrf) {
+	public function __construct(SimpleXMLElement $xml, $currentPage, $persistenceDrivers, CsrfTokenDetector $csrf) {
 		// set drivers
 		$this->xml = $xml->security->authentication->oauth2;
 		$this->setDrivers();
@@ -65,7 +65,7 @@ class Oauth2AuthenticationWrapper extends AuthenticationWrapper {
 	 * 
 	 * @param string $driverName Name of oauth2 driver (eg: facebook, google) that must exist as security.authentication.oauth2.{DRIVER} tag @ configuration.xml.
 	 * @param SimpleXMLElement $element Object that holds XML info about driver
-	 * @param CsrfTokenWrapper $csrf Object that performs CSRF token checks. 
+	 * @param CsrfTokenDetector $csrf Object that performs CSRF token checks. 
 	 * @throws ApplicationException If XML is malformed.
 	 * @throws AuthenticationException If one or more persistence drivers are not instanceof PersistenceDriver
 	 * @throws TokenException If CSRF checks fail.
@@ -74,7 +74,7 @@ class Oauth2AuthenticationWrapper extends AuthenticationWrapper {
 	 * @throws OAuth2\ClientException When oauth2 local client sends malformed requests to oauth2 server.
 	 * @throws OAuth2\ServerException When oauth2 remote server answers with an error.
 	 */
-	private function login($driverName, $element, CsrfTokenWrapper $csrf) {
+	private function login($driverName, $element, CsrfTokenDetector $csrf) {
 		// detect class and load file
 		$loginDriver = $this->getLoginDriver($driverName);
 

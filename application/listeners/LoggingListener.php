@@ -18,49 +18,24 @@ require_once("src/MultiLogger.php");
  * 
  * @attribute logger
  */
-class LoggingListener extends RequestListener {
-	const DEFAULT_LOG_FILE = "logs";
-
+class LoggingListener extends ApplicationListener {
 	/**
 	 * {@inheritDoc}
 	 * @see Runnable::run()
 	 */
 	public function run() {
-		$this->application->setAttribute("logger", $this->getLogger());
-	}
-	
-	/**
-	 * Finds logger among children of loggers.{ENVIRONMENT} tag. Following children are recognized:
-	 * 		<file path="{FILE_PATH}" rotation="{ROTATION_PATTERN}"/>
-	 * 		<syslog application="{APPLICATION_NAME}"/>
-	 * 		<sql table="{TABLE_NAME}" server="{SERVER_NAME}" rotation="{ROTATION_PATTERN}"/>
-	 * 		<logger class="{CLASS}" .../>
-	 * 
-	 * Where:
-	 * - "file": logging is done in a file on your server's disk
-	 * - "syslog": logging is done via syslog service running on your server
-	 * - "logger": if you want to add a custom reporter (class must extend CustomLogger class)
-	 * 
-	 * If no logger is defined, no logging will be made
-	 * 
-	 * @throws ApplicationException On invalid XML content.
-	 * @return MultiLogger|null
-	 */
-	private function getLogger() {
-		// look for container tag
-		$environment = $this->application->getAttribute("environment");
-		$xml = $this->application->getXML()->loggers;
-		if(empty($xml) || empty($xml->$environment)) {
-			return;
-		}
-		
-		// find loggers and return a global wrapper
-		$finder = new LoggerFinder($xml->$environment);
-		$loggers = $finder->getLoggers();
-		if(empty($loggers)) {
-			return;
-		} else {
-			return new MultiLogger($loggers);
-		}			
+	    // look for container tag
+	    $environment = $this->application->getAttribute("environment");
+	    $xml = $this->application->getXML()->loggers;
+	    if(empty($xml) || empty($xml->$environment)) {
+	        return;
+	    }
+	    
+	    // finds loggers and return a global wrapper
+	    $finder = new LoggerFinder($xml->$environment);
+	    $loggers = $finder->getLoggers();
+	    if(!empty($loggers)) {
+	        $this->application->setAttribute("logger", new MultiLogger($loggers));
+	    }					
 	}
 }

@@ -1,5 +1,6 @@
 <?php
 require_once("vendor/lucinda/sql-data-access/loader.php");
+require_once("src/datasource_detection/SQLDatasourceDetection.php");
 
 /**
  * Reads xml for sql database servers credentials based on detected environment, creates datasource objects on these then injects datasource
@@ -31,52 +32,23 @@ require_once("vendor/lucinda/sql-data-access/loader.php");
  *  	</sql>
  *  </database>
  */
-class SQLDataSourceInjector extends RequestListener {
+class SQLDataSourceInjector extends ApplicationListener {
 	public function run() {
 		$environment = $this->application->getAttribute("environment");
-		
-		// detect & inject sql data sources
 		$xml = $this->application->getXML()->servers->sql->$environment;
 		if(!empty($xml)) {
-			$this->injectDataSources($xml);
+		    if(!$xml->server) throw new ApplicationException("Server not set for environment!");
+		    $xml = (array) $xml;
+		    if(is_array($xml["server"])) {
+		        foreach($xml["server"] as $element) {
+		            if(!isset($element["name"])) throw new ApplicationException("Attribute 'name' not set for <server> tag!");
+		            $dsd = new SQLDataSourceDetection($element);
+		            SQLConnectionFactory::setDataSource((string) $element["name"], $dsd->getDataSource());
+		        }
+		    } else {
+		        $dsd = new SQLDataSourceDetection($xml["server"]);
+		        SQLConnectionSingleton::setDataSource($dsd->getDataSource());
+		    }
 		}
-	}
-	
-	/**
-	 * Creates SQLDataSource entries based on XML info and injects them into SQLConnectionFactory/SQLConnectionSingleton
-	 *
-	 * @param SimpleXMLElement $xml Content of database.{ENVIRONMENT_NAME}.sql XML tag.
-	 * @throws ServletException If tags syntax is invalid.
-	 */
-	private function injectDataSources(SimpleXMLElement $xml) {
-	    if(!$xml->server) throw new ApplicationException("Server not set for environment!");
-		$xml = (array) $xml;
-		if(is_array($xml["server"])) {
-			foreach($xml["server"] as $element) {
-			    if(!isset($element["name"])) throw new ApplicationException("Attribute 'name' not set for <server> tag!");
-				SQLConnectionFactory::setDataSource((string) $element["name"], $this->createDataSource($element));
-			}
-		} else {
-			SQLConnectionSingleton::setDataSource($this->createDataSource($xml["server"]));
-		}
-	}
-	
-	/**
-	 * Creates and returns a SQLDataSource object based on XML info.
-	 *
-	 * @param SimpleXMLElement $databaseInfo
-	 * @return SQLDataSource
-	 */
-	private function createDataSource(SimpleXMLElement $databaseInfo) {
-		$dataSource = new SQLDataSource();
-		$dataSource->setDriverName((string) $databaseInfo["driver"]);
-		$dataSource->setDriverOptions((array) $databaseInfo["options"]);
-		$dataSource->setHost((string) $databaseInfo["host"]);
-		$dataSource->setPort((string) $databaseInfo["port"]);
-		$dataSource->setUserName((string) $databaseInfo["username"]);
-		$dataSource->setPassword((string) $databaseInfo["password"]);
-		$dataSource->setSchema((string) $databaseInfo["schema"]);
-        $dataSource->setCharset((string) $databaseInfo["charset"]);
-		return $dataSource;
 	}
 }

@@ -1,5 +1,6 @@
 <?php
 require_once("PersistenceDriverWrapper.php");
+require_once("IPDetector.php");
 
 /**
  * Binds SessionPersistenceDriver @ SECURITY API with settings from configuration.xml @ SERVLETS-API and sets up an object on which one can
@@ -20,14 +21,16 @@ class SessionPersistenceDriverWrapper extends PersistenceDriverWrapper {
 		$expirationTime = (integer) $xml["expiration"];
 		$isHttpOnly = (integer) $xml["is_http_only"];
 		$isHttpsOnly = (integer) $xml["is_https_only"];
-		$ip = ((string) $xml["ignore_ip"]?"":$_SERVER["REMOTE_ADDR"]);
 		
 		$handler = (string) $xml["handler"];
 		if($handler) {
 		    session_set_save_handler($this->getHandlerInstance($handler), true);
 		}
+				
+		$ipDetector = new IPDetector();
+		$ipAddress = $ipDetector->getIP();
 		
-		$this->driver = new SessionPersistenceDriver($parameterName, $expirationTime, $isHttpOnly, $isHttpsOnly, $ip);
+		$this->driver = new SessionPersistenceDriver($parameterName, $expirationTime, $isHttpOnly, $isHttpsOnly, $ipAddress);
 	}
 	
 	/**

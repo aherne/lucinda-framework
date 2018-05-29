@@ -13,27 +13,22 @@
  * 
  * @attribute environment 
  */
-class EnvironmentDetector  extends RequestListener {
+class EnvironmentDetector  extends ApplicationListener {
+    const DEFAULT_METHOD = "host";
+    
 	public function run() {
-		$this->application->setAttribute("environment", $this->getEnvironment());
-	}
-	
-	private function getEnvironment() {		
-		$tMP = (array) $this->application->getXML()->application->environments;
-		if(empty($tMP)) throw new ApplicationException("Environments not configured!");
-		foreach($tMP as $environmentName=>$value1) {
-			if(is_array($value1)) { // it is allowed to have multiple server names per environment
-				foreach($value1 as $value2) {
-					if($this->request->getServer()->getName()==$value2) {
-						return $environmentName;
-					}
-				}
-			} else {
-			    if($this->request->getServer()->getName()==$value1) {
-					return $environmentName;
-				}
-			}
-		}
-		throw new ApplicationException("Environment not recognized for: ".$this->request->getServer()->getName());
+	    // identifies detection method
+	    $detectionMethod = (string) $application->getXML()->application->environments["detection_method"];
+	    if(!$detectionMethod) $detectionMethod = self::DEFAULT_METHOD;
+	    
+	    // detects and loads matching EnvironmentDetection class 
+	    $className = ucwords(strtolower($detectionMethod))."EnvironmentDetection";
+	    $fileName = "src/environment_detection/".$className.".php";
+	    if(!file_exists($fileName)) throw new ApplicationException("Unrecognized environment detection method: ".$detectionMethod);
+	    require_once("src/environment_detection/".$className.".php");
+	    
+	    // instances class and injects result into application object
+	    $object = new $className($this->application);	    
+	    $this->application->setAttribute("environment", $object->getEnvironment());
 	}
 }
