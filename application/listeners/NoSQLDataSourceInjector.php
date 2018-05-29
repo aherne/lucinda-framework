@@ -1,5 +1,6 @@
 <?php
 require_once("vendor/lucinda/nosql-data-access/loader.php");
+require_once("src/datasource_detection/NoSQLDatasourceDetection.php");
 
 /**
  * Reads xml for nosql database servers credentials based on detected environment, creates datasource objects on these then injects datasource 
@@ -31,120 +32,23 @@ require_once("vendor/lucinda/nosql-data-access/loader.php");
  *  	</nosql>
  *  </database>
  */
-class NoSQLDataSourceInjector extends RequestListener {
-	public function run() {
-		$environment = $this->application->getAttribute("environment");
-		
-		// detect & inject nosql data sources
-		$xml = $this->application->getXML()->servers->nosql->$environment;
-		if(!empty($xml)) {
-			$this->injectDataSources($xml);
-		}
-	}
-	
-	/**
-	 * Creates NoSQLDataSource entries based on XML info and injects them into NoSQLConnectionFactory/NoSQLConnectionSingleton
-	 * 
-	 * @param SimpleXMLElement $xml Content of database.{ENVIRONMENT_NAME}.nosql XML tag.
-	 * @throws ApplicationException If tags syntax is invalid.
-	 */
-	private function injectDataSources(SimpleXMLElement $xml) {
-		if(!$xml->server) throw new ApplicationException("Server not set for environment!");
-		$xml = (array) $xml;
-		if(is_array($xml["server"])) {
-			foreach($xml["server"] as $element) {
-			    if(!isset($element["name"])) throw new ApplicationException("Attribute 'name' not set for <server> tag!");
-				NoSQLConnectionFactory::setDataSource((string) $element["name"], $this->createDataSource($element));
-			}
-		} else {
-			NoSQLConnectionSingleton::setDataSource($this->createDataSource($xml["server"]));
-		}
-	}
-
-	/**
-	 * Creates a driver-specific NoSQLDataSource entry based on XML info.
-	 *
-	 * @param SimpleXMLElement $databaseInfo
-	 * @return NoSQLDataSource
-	 * @throws ServletException If tags syntax is invalid or driver is not supported
-	 */
-	private function createDataSource(SimpleXMLElement $databaseInfo) {
-		$driver = (string) $databaseInfo["driver"];
-		if(!$driver) throw new ApplicationException("Child tag <driver> is mandatory for <server> tags!");
-		switch($driver) {
-			case "couchbase":
-				$host = (string) $databaseInfo["host"];
-				$userName = (string) $databaseInfo["username"];
-				$password = (string) $databaseInfo["password"];
-				$bucket = (string) $databaseInfo["bucket_name"];
-				if(!$host || !$userName || !$password || !$bucket) throw new ApplicationException("For COUCHBASE driver following attributes are mandatory: host, username, password, bucket_name");
-				
-				require_once("vendor/lucinda/nosql-data-access/src/CouchbaseDriver.php");
-				
-				$dataSource = new CouchbaseDataSource();
-				$dataSource->setHost($host);
-				$dataSource->setAuthenticationInfo($userName, $password);				
-				$dataSource->setBucketInfo($bucket, (string) $databaseInfo["bucket_password"]);
-				return $dataSource;
-				break;
-			case "memcache":				
-				require_once("vendor/lucinda/nosql-data-access/src/MemcacheDriver.php");
-				
-				$dataSource = new MemcacheDataSource();
-				$this->setServerInfo($databaseInfo, $dataSource);
-				return $dataSource;
-			case "memcached":
-				require_once("vendor/lucinda/nosql-data-access/src/MemcachedDriver.php");
-				
-				$dataSource = new MemcachedDataSource();
-				$this->setServerInfo($databaseInfo, $dataSource);
-				return $dataSource;
-			case "redis":
-				require_once("vendor/lucinda/nosql-data-access/src/RedisDriver.php");
-				
-				$dataSource = new RedisDataSource();
-				$this->setServerInfo($databaseInfo, $dataSource);
-				return $dataSource;
-			case "apc":
-				require_once("vendor/lucinda/nosql-data-access/src/APCDriver.php");
-				
-				return new APCDataSource();
-			case "apcu":
-				require_once("vendor/lucinda/nosql-data-access/src/APCuDriver.php");
-				
-				return new APCuDataSource();
-			default:
-			    throw new ApplicationException("Nosql driver not supported: ".$driver);
-				break;
-		}
-		return $dataSource;
-	}
-	
-	private function setServerInfo(SimpleXMLElement $databaseInfo, NoSQLServerDataSource $dataSource) {
-		// set host and ports
-		$temp = (string) $databaseInfo["host"];
-		if(!$temp) throw new ApplicationException("Driver attribute 'host' is mandatory");
-		$hosts = explode(",",$temp);
-		foreach($hosts as $hostAndPort) {
-			$hostAndPort = trim($hostAndPort);
-			$position = strpos($hostAndPort,":");
-			if($position!==false) {
-				$dataSource->addServer(substr($hostAndPort, 0, $position), substr($hostAndPort,$position+1));
-			} else {
-				$dataSource->addServer($hostAndPort);
-			}
-		}
-		
-		// set timeout
-		$timeout= (string) $databaseInfo["timeout"];
-		if($timeout) {
-			$dataSource->setTimeout($timeout);
-		}
-		
-		// set persistent
-		$persistent = (string) $databaseInfo["persistent"];
-		if($persistent) {
-			$dataSource->setPersistent();
-		}
-	}
+class NoSQLDataSourceInjector extends ApplicationListener {
+    public function run() {
+        $environment = $this->application->getAttribute("environment");
+        $xml = $this->application->getXML()->servers->sql->$environment;
+        if(!empty($xml)) {
+            if(!$xml->server) throw new ApplicationException("Server not set for environment!");
+            $xml = (array) $xml;
+            if(is_array($xml["server"])) {
+                foreach($xml["server"] as $element) {
+                    if(!isset($element["name"])) throw new ApplicationException("Attribute 'name' not set for <server> tag!");
+                    $dsd = new NoSQLDataSourceDetection($element);
+                    NoSQLConnectionFactory::setDataSource((string) $element["name"], $dsd->getDataSource());
+                }
+            } else {
+                $dsd = new NoSQLDataSourceDetection($xml["server"]);
+                NoSQLConnectionSingleton::setDataSource($dsd->getDataSource());
+            }
+        }
+    }
 }

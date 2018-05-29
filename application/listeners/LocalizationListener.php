@@ -1,6 +1,7 @@
 <?php
 require_once("vendor/lucinda/internationalization/src/Reader.php");
-require_once("src/XMLSessionSetup.php");
+require_once("src/internationalization/LocaleDetector.php");
+require_once("src/internationalization/SettingsDetector.php");
 
 /**
  * Performs internationalization & localization by binding php-internationalization-api with XML tag:
@@ -29,76 +30,19 @@ class LocalizationListener extends RequestListener
         $xml = $this->application->getXML()->internationalization;
         if(empty($xml)) throw new ApplicationException("Tag missing/empty in configuration.xml: internationalization");
 
-        // detect locale
-        $defaultLocale =  (string) $xml["locale"];
-        if(!$defaultLocale) throw new ApplicationException("Attribute missing/empty in configuration.xml: internationalization['locale]");
-        $detectionMethod = (string) $xml["method"];
-        if(!$detectionMethod) throw new ApplicationException("Attribute missing/empty in configuration.xml: internationalization['method]");
-        $detectedLocale = $this->getLocale($xml);
-
+        // identifies locale
+        $localeDetector = new LocaleDetector($xml, $this->request);
+        
         // compiles settings
-        $settings = new Lucinda\Internationalization\Settings($detectedLocale);
-        $charset = $this->application->getFormatInfo($this->application->getDefaultExtension())->getCharacterEncoding();
-        if($charset) $settings->setCharset($charset);
-        $domain = (string) $xml["domain"];
-        if($domain) $settings->setDomain($domain);
-        $folder = (string) $xml["folder"];
-        if($folder) $settings->setFolder($folder);
-
-        // if locale has no translations on disk, override it with default
-        $file = $settings->getFolder().DIRECTORY_SEPARATOR.$settings->getLocale().DIRECTORY_SEPARATOR."LC_MESSAGES".DIRECTORY_SEPARATOR.$settings->getDomain().".mo";
-        if(!file_exists($file)) {
-            $detectedLocale = $defaultLocale;
-            $settings->setLocale($detectedLocale);
-        }
-
+        $detector = new SettingsDetector($this->application, $xml, $localeDetector);
+        $settings = $detector->getSettings();
+        
         // sets internationalization settings (throws LocaleException)
         new Lucinda\Internationalization\Reader($settings);
 
-        // save locale in session
-        if($detectionMethod == "session") {
-            $this->request->getSession()->set(self::PARAMETER_NAME, $detectedLocale);
+        // saves locale in session
+        if($localeDetector->getDetectionMethod() == "session") {
+            $this->request->getSession()->set(self::PARAMETER_NAME, $settings->getLocale());
         }
-    }
-
-    private function getLocale(SimpleXMLElement $xml) {
-        $method =  (string) $xml["method"];
-        switch($method) {
-            case "header":
-                $header = $this->request->getHeader("Accept-Language");
-                if($header) {
-                    return str_replace("-", "_", substr($header, 0, strpos($header, ",")));
-                }
-                break;
-            case "request":
-                $parameter = $this->request->getURI()->getParameter(self::PARAMETER_NAME);
-                if($parameter) {
-                    return $parameter;
-                }
-                break;
-            case "session":
-                $session = $this->request->getSession();
-                if(!$session->isStarted()) {
-                    $tag = $xml->session;
-                    if(!empty($tag)) {
-                        $setup = new XMLSessionSetup($tag);
-                        $session->start($setup->getSecurityOptions(), $setup->getHandler());
-                    } else {
-                        $session->start();
-                    }
-                }
-                $parameter = $this->request->getURI()->getParameter(self::PARAMETER_NAME);
-                if($parameter) {
-                    return $parameter;
-                }
-                if($session->contains(self::PARAMETER_NAME)) {
-                    return $session->get(self::PARAMETER_NAME);
-                }
-                break;
-            default:
-                throw new ApplicationException("Invalid detection method: ".$method);
-                break;
-        }
-        return (string) $xml["locale"];
     }
 }

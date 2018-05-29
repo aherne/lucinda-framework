@@ -1,4 +1,6 @@
 <?php
+require_once("CacheableDriver.php");
+
 /**
  * Encapsulates basic HTTP caching policies rules.
  */

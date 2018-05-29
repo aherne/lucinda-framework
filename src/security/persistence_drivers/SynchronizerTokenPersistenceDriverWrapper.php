@@ -1,5 +1,6 @@
 <?php
 require_once("PersistenceDriverWrapper.php");
+require_once("IPDetector.php");
 
 /**
  * Binds SynchronizerTokenPersistenceDriver @ SECURITY API with settings from configuration.xml @ SERVLETS-API and sets up an object on which one can
@@ -22,7 +23,10 @@ class SynchronizerTokenPersistenceDriverWrapper extends PersistenceDriverWrapper
 
 		$regenerationTime = (integer) $xml["regeneration"];
 		if(!$regenerationTime) $regenerationTime = self::DEFAULT_REGENERATION_TIME;
-
-		$this->driver = new SynchronizerTokenPersistenceDriver($secret, $expirationTime, $regenerationTime);
+		
+		$ipDetector = new IPDetector();
+		$ipAddress = $ipDetector->getIP();
+		
+		$this->driver = new SynchronizerTokenPersistenceDriver($secret, $expirationTime, $regenerationTime, $ipAddress);
 	}
 }

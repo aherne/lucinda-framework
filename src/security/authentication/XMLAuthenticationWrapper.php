@@ -15,14 +15,14 @@ class XMLAuthenticationWrapper extends AuthenticationWrapper {
 	 * @param SimpleXMLElement $xml Contents of security.authentication.form tag @ configuration.xml.
 	 * @param string $currentPage Current page requested.
 	 * @param PersistenceDriver[] $persistenceDrivers List of drivers to persist information across requests.
-	 * @param CsrfTokenWrapper $csrf Object that performs CSRF token checks.
+	 * @param CsrfTokenDetector $csrf Object that performs CSRF token checks.
 	 * @throws ApplicationException If XML is malformed.
 	 * @throws AuthenticationException If one or more persistence drivers are not instanceof PersistenceDriver
 	 * @throws TokenException If CSRF checks fail
 	 * @throws SQLConnectionException If connection to database server fails.
 	 * @throws SQLStatementException If query to database server fails.
 	 */
-	public function __construct(SimpleXMLElement $xml, $currentPage, $persistenceDrivers, CsrfTokenWrapper $csrf) {
+	public function __construct(SimpleXMLElement $xml, $currentPage, $persistenceDrivers, CsrfTokenDetector $csrf) {
 		// set driver
 		$this->driver = new XMLAuthentication($xml, $persistenceDrivers);
 		
