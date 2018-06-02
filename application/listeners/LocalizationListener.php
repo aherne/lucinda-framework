@@ -33,8 +33,11 @@ class LocalizationListener extends RequestListener
         // identifies locale
         $localeDetector = new LocaleDetector($xml, $this->request);
         
+        // identifies charset
+        $charset = $this->application->getFormatInfo($this->application->getDefaultExtension())->getCharacterEncoding();
+        
         // compiles settings
-        $detector = new SettingsDetector($this->application, $xml, $localeDetector);
+        $detector = new SettingsDetector($charset, $xml, $localeDetector);
         $settings = $detector->getSettings();
         
         // sets internationalization settings (throws LocaleException)
