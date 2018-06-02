@@ -1,6 +1,9 @@
 <?php
 require_once("DataSourceDetection.php");
 
+/**
+ * Encapsulates NoSQLDataSource detection (itself encapsulating database server settings) based on <server> XML tag contents
+ */
 class NoSQLDataSourceDetection extends DataSourceDetection {    
     protected function setDataSource(SimpleXMLElement $databaseInfo) {
         $driver = (string) $databaseInfo["driver"];
@@ -27,26 +30,31 @@ class NoSQLDataSourceDetection extends DataSourceDetection {
                 $dataSource = new MemcacheDataSource();
                 $this->setServerInfo($databaseInfo, $dataSource);
                 $this->dataSource = $dataSource;
+                break;
             case "memcached":
                 require_once("vendor/lucinda/nosql-data-access/src/MemcachedDriver.php");
                 
                 $dataSource = new MemcachedDataSource();
                 $this->setServerInfo($databaseInfo, $dataSource);
                 $this->dataSource = $dataSource;
+                break;
             case "redis":
                 require_once("vendor/lucinda/nosql-data-access/src/RedisDriver.php");
                 
                 $dataSource = new RedisDataSource();
                 $this->setServerInfo($databaseInfo, $dataSource);
                 $this->dataSource = $dataSource;
+                break;
             case "apc":
                 require_once("vendor/lucinda/nosql-data-access/src/APCDriver.php");
                 
                 $this->dataSource = new APCDataSource();
+                break;
             case "apcu":
                 require_once("vendor/lucinda/nosql-data-access/src/APCuDriver.php");
                 
                 $this->dataSource = new APCuDataSource();
+                break;
             default:
                 throw new ApplicationException("Nosql driver not supported: ".$driver);
                 break;

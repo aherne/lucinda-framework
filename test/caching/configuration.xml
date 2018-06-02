@@ -1,0 +1,22 @@
+<xml>
+    <application>
+        <default_page>index</default_page>
+        <default_extension>html</default_extension>
+        <auto_routing>0</auto_routing>
+        
+        <paths>
+            <cacheables>models</cacheables>
+        </paths>
+    </application>
+    <routes>
+        <route url="login" controller="LoginController" view="login"/>
+        <route url="index" controller="IndexController" view="index"/>
+    </routes>
+    <formats>
+        <format extension="html" content_type="text/html" charset="UTF-8"/>
+    </formats>
+    
+    <http_caching expiration="100" no_cache="0" class="TestCacheable">
+        <route url="login" no_cache="1"/>
+    </http_caching>
+</xml>

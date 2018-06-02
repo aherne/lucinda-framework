@@ -31,6 +31,10 @@ class HttpCachingRequestListener extends RequestListener {
 		$cpb = new CachingPolicyBinder($this->application, $this->request);
 		$policy = $cpb->getPolicy();
 		
+		// create and inject driver object
+		$driverClass = $policy->getCacheableDriver();
+		$policy->setCacheableDriver(new $driverClass($this->application, $this->request));
+		
 		// saves policy for later usage
 		$this->request->setAttribute("caching_policy", $policy);
 		

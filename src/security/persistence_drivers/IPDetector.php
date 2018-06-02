@@ -9,7 +9,7 @@ class IPDetector {
      * Kick starts ip detection process
      */
     public function __construct() {
-        $this->setIP($request);
+        $this->setIP();
     }
     
     /**

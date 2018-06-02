@@ -43,6 +43,7 @@ class Authentication {
             // saves oauth2 drivers to be used later on
             $request->setAttribute("oauth2",$wrapper->getDrivers());
         }
+        return $wrapper;
     }
     
     private function authenticate(AuthenticationWrapper $wrapper, Request $request, $persistenceDrivers) {
