@@ -11,8 +11,8 @@ class CachingPolicyBinder {
     /**
      * CachingPolicyBinder constructor.
      *
-     * @param SimpleXMLElement $xml XML document containing http caching API bindings
-     * @param string $route Relative page path requested by client
+     * @param Application $application Encapsulates application settings @ ServletsAPI.
+     * @param Request $request Encapsulates request information.
      */
     public function __construct(Application $application, Request $request) {
         $this->setPolicy($application, $request);

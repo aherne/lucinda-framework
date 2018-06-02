@@ -1,6 +1,6 @@
 <?php
 require_once("vendor/lucinda/view-language/loader.php");
-require_once("src/ViewLanguageWrapper.php");
+require_once("src/view_language/ViewLanguageWrapper.php");
 require_once("src/Json.php");
 
 /**
@@ -26,7 +26,7 @@ class ViewLanguageResolver extends ResponseListener {
 		if(strpos($this->response->headers()->get("Content-Type"),"text/html")!==0) return;
 	  
 		// get compilation file
-		$wrapper = new ViewLanguageWrapper($this->application, $this->response);
+		$wrapper = new ViewLanguageWrapper($this->application->getXML(), $this->response->getView(), $this->application->getAttribute("environment"));
 		$compilationFile = $wrapper->getCompilationFile();
 		
 		// converts objects sent to response into array (throws JsonException if object is non-convertible)

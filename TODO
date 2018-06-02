@@ -3,3 +3,4 @@ Make a PHP7 version of framework
 4. group view-related XML tags
 3. make security API work on cloudflare
 remove ignore_ip flag
+document that @ internationalization "locale" parameter must be used in session/request based locale detection

@@ -17,8 +17,6 @@ echo "getCachingDisabled: ".($test->getPolicy()->getCachingDisabled()?"NOK":"OK"
 echo "getExpirationPeriod: ".($test->getPolicy()->getExpirationPeriod()==100?"OK":"NOK")."\n";
 echo "getCacheableDriver: ".(get_class($test->getPolicy()->getCacheableDriver())=="TestCacheable"?"OK":"NOK")."\n";
 
-
-
 // check route-based caching
 echo "ROUTE-BASED SETTINGS:\n";
 $_SERVER["REQUEST_URI"] = "/login";
