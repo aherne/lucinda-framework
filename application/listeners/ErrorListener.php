@@ -35,7 +35,7 @@ class ErrorListener extends RequestListener {
         
         // adds reporters to error handler
         $erf = new ErrorReportersFinder($this->application->getXML()->errors, $this->application->getAttribute("environment"));
-        $reporters = $this->getReporters();
+        $reporters = $erf->getReporters();
         foreach($reporters as $reporter) {
             $errorHandler->addReporter($reporter);
         }
@@ -44,7 +44,7 @@ class ErrorListener extends RequestListener {
         $erf = new ErrorRendererFinder($this->application->getXML()->errors, $this->application, $this->request);
         $renderer = $erf->getRenderer();
         if($renderer) {
-            $errorHandler->setRenderer($this->getRenderer());
+            $errorHandler->setRenderer($renderer);
         }
 
         // saves handler for latter manipulation

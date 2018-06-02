@@ -3,7 +3,7 @@ require_once("vendor/lucinda/security/loader.php");
 require_once("src/security/UserIdDetector.php");
 require_once("src/security/CsrfTokenDetector.php");
 require_once("src/security/PersistenceDriversDetector.php");
-require_once("src/security/CSRFTokenDetector.php");
+require_once("src/security/CsrfTokenDetector.php");
 require_once("src/security/Authentication.php");
 require_once("src/security/Authorization.php");
 

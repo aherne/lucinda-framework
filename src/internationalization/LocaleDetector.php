@@ -2,6 +2,7 @@
 require_once("XMLSessionSetup.php");
 
 class LocaleDetector {
+    const PARAMETER_NAME = "locale";
     private $detectionMethod;
     private $defaultLocale;
     private $detectedLocale;

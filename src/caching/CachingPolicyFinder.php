@@ -13,27 +13,30 @@ class CachingPolicyFinder {
 	 * @param Request $request
 	 */
 	public function __construct(SimpleXMLElement $xml, Application $application, Request $request) {
-		$this->setPolicy($xml, $application, $request);
+	    $this->setPolicy($xml, $application, $request);
 	}
 	
 	/**
 	 * Generates and saves a CachingPolicy object
-	 * 
+	 *
 	 * @param SimpleXMLElement $xml Tag that's holding policies.
 	 * @param Application $application
 	 * @param Request $request
 	 */
 	private function setPolicy(SimpleXMLElement $xml, Application $application, Request $request) {
-		$this->policy = new CachingPolicy();
-		$this->policy->setCachingDisabled($this->getNoCache($xml));
-		$this->policy->setExpirationPeriod($this->getExpirationPeriod($xml));
-		$this->policy->setCacheableDriver($this->getCacheableDriver($xml, $application, $request));
+	    $this->policy = new CachingPolicy();
+	    $this->policy->setCachingDisabled($this->getNoCache($xml));
+	    $this->policy->setExpirationPeriod($this->getExpirationPeriod($xml));
+	    $cacheableDriver = $this->getCacheableDriver($xml, $application, $request);
+	    if($cacheableDriver!==null) {
+	        $this->policy->setCacheableDriver($cacheableDriver);
+	    }
 	}
 	
 	/**
 	 * Gets "no_cache" property value.
-	 * 
-	 * @param SimpleXMLElement $xml
+	 *
+     * @param SimpleXMLElement $xml Tag that's holding policies.
 	 * @return NULL|boolean
 	 */
 	private function getNoCache(SimpleXMLElement $xml) {
@@ -46,8 +49,8 @@ class CachingPolicyFinder {
 	
 	/**
 	 * Gets "expiration" property value.
-	 * 
-	 * @param SimpleXMLElement $xml
+	 *
+     * @param SimpleXMLElement $xml Tag that's holding policies.
 	 * @return number|NULL
 	 */
 	private function getExpirationPeriod(SimpleXMLElement $xml) {
@@ -61,17 +64,19 @@ class CachingPolicyFinder {
 	/**
 	 * Gets CacheableDriver instance that matches "class" property value.
 	 *
-	 * @param SimpleXMLElement $xml
+     * @param SimpleXMLElement $xml Tag that's holding policies.
+	 * @param Application $application
+	 * @param Request $request
 	 * @return CacheableDriver|NULL
 	 */
 	private function getCacheableDriver(SimpleXMLElement $xml, Application $application, Request $request) {
 		$driverClass = (string) $xml["class"];
 		if($driverClass) {
-			// get cacheables folder
-			$cacheablesFolder = (string) $application->getXML()->application->paths->cacheables;
-			if(!$cacheablesFolder) throw new ApplicationException("Entry missing in configuration.xml: application.paths.cacheables");
-			
-			// loads and validates class
+		    // get cacheables folder
+		    $cacheablesFolder = (string) $application->getXML()->application->paths->cacheables;
+		    if(!$cacheablesFolder) throw new ApplicationException("Entry missing in configuration.xml: application.paths.cacheables");
+		    
+		    // loads and validates class
 			$path = $cacheablesFolder."/".$driverClass.".php";
 			if(!file_exists($path)) throw new ServletException("File not found: ".$path);
 			require_once($path);

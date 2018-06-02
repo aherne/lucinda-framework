@@ -1,6 +1,6 @@
 <?php
 require_once("vendor/lucinda/nosql-data-access/loader.php");
-require_once("src/datasource_detection/NoSQLDatasourceDetection.php");
+require_once("src/datasource_detection/NoSQLDataSourceDetection.php");
 
 /**
  * Reads xml for nosql database servers credentials based on detected environment, creates datasource objects on these then injects datasource 
