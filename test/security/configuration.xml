@@ -11,6 +11,8 @@
         <route url="login"/>
         <route url="index"/>
         <route url="logout"/>
+        <route url="private"/>
+        <route url="missing"/>
     </routes>
     <formats>
         <format extension="html" content_type="text/html" charset="UTF-8"/>
@@ -26,5 +28,8 @@
                 <logout/>
             </form>
         </authentication>
+        <authorization>
+			<by_dao page_dao="PageAuthorization" user_dao="UserAuthorization"/>
+        </authorization>
     </security>
 </xml>
