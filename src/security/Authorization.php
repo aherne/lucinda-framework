@@ -3,13 +3,13 @@ require_once("DAOLocator.php");
 require_once("SecurityPacket.php");
 
 class Authorization {
-    public function __construct(Application $application, Request $request) {
-        $wrapper = $this->getWrapper($application, $request);
+    public function __construct(SimpleXMLElement $xml, Request $request) {
+        $wrapper = $this->getWrapper($xml, $request);
         $this->authorize($wrapper, $request);
     }
     
-    private function getWrapper(Application $application, Request $request) {
-        $xml = $application->getXML()->security->authorization;
+    private function getWrapper(SimpleXMLElement $xmlRoot, Request $request) {
+        $xml = $xmlRoot->security->authorization;
         if(empty($xml)) {
             throw new ApplicationException("Entry missing in configuration.xml: security.authentication");
         }
@@ -18,14 +18,14 @@ class Authorization {
         if($xml->by_route) {
             require_once("authorization/XMLAuthorizationWrapper.php");
             $wrapper = new XMLAuthorizationWrapper(
-                $application->getXML(),
+                $xmlRoot,
                 $request->getValidator()->getPage(),
                 $request->getAttribute("user_id"));
         }
         if($xml->by_dao) {
             require_once("authorization/DAOAuthorizationWrapper.php");
             $wrapper = new DAOAuthorizationWrapper(
-                $application->getXML(),
+                $xmlRoot,
                 $request->getValidator()->getPage(),
                 $request->getAttribute("user_id"));
         }

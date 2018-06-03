@@ -1,14 +1,24 @@
 <?php
+/**
+ * Detects mechanisms for authenticated state persistence set in security.persistence XML tag.
+ */
 class PersistenceDriversDetector {
     private $persistenceDrivers;
     
-    public function __construct(Application $application) {
-        $this->setPersistenceDrivers($application);
+    /**
+     * @param SimpleXMLElement $xml XML that contains security.persistence tag.
+     */
+    public function __construct(SimpleXMLElement $xml) {
+        $this->setPersistenceDrivers($xml);
     }
     
-    
-    private function setPersistenceDrivers(Application $application) {
-        $xml = $application->getXML()->security->persistence;
+    /**
+     * Detects persistence drivers based on XML
+     * 
+     * @param SimpleXMLElement $xml XML that contains security.persistence tag.
+     */
+    private function setPersistenceDrivers(SimpleXMLElement $xml) {
+        $xml = $xml->security->persistence;
         if(empty($xml)) return; // it is allowed for elements to not persist
         
         if($xml->session) {
@@ -36,6 +46,11 @@ class PersistenceDriversDetector {
         }
     }
     
+    /**
+     * Gets detected drivers for authenticated state persistence.
+     * 
+     * @return PersistenceDriver[]
+     */
     public function getPersistenceDrivers() {
         return $this->persistenceDrivers;
     }

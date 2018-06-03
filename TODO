@@ -1,6 +1,6 @@
 Make a PHP7 version of framework
-2. application/models/LoggerFinder: make it elegant to support adding other loggers without changing class
+2. application/models/LoggerFinder, src/error_handling/Error***Finder: make it elegant to support adding other loggers without changing class
 4. group view-related XML tags
-3. make security API work on cloudflare
-remove ignore_ip flag
+document remove ignore_ip flag
 document that @ internationalization "locale" parameter must be used in session/request based locale detection
+solve in master FormRequestValidator bug @ line 199

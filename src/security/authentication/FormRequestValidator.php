@@ -196,7 +196,7 @@ class FormRequestValidator {
 		$parameterUsername = (string) $this->xml->login["parameter_username"];
 		if(!$parameterUsername) $parameterUsername = self::DEFAULT_PARAMETER_USERNAME;
 		$parameterPassword = (string) $this->xml->login["parameter_password"];
-		if(!$parameterUsername) $parameterUsername = self::DEFAULT_PARAMETER_PASSWORD;
+		if(!$parameterPassword) $parameterPassword = self::DEFAULT_PARAMETER_PASSWORD;
 		$parameterRememberMe = (string) $this->xml->login["parameter_rememberMe"];
 		
 		// get parameter values
