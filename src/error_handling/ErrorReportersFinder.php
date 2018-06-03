@@ -1,6 +1,6 @@
 <?php
 require_once("LogReporter.php");
-require_once("application/models/LoggerFinder.php");
+require_once("src/logging/LoggingWrapper.php");
 require_once("application/models/ErrorInspector.php");
 
 /**
@@ -29,7 +29,7 @@ class ErrorReportersFinder {
 	 */
 	protected function setReporters(SimpleXMLElement $xml) {
 		$esf = new ErrorInspector();
-		$finder = new LoggerFinder($xml);
+		$finder = new LoggingWrapper($xml);
 		$loggers  = $finder->getLoggers();
 		foreach($loggers as $logger) {
 			$this->reporters[] = new LogReporter($logger, $esf);
