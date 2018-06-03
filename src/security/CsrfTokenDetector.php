@@ -1,4 +1,6 @@
 <?php
+require_once("persistence_drivers/IPDetector.php");
+
 /**
  * Binds SynchronizerToken @ SECURITY-API with settings from configuration.xml @ SERVLETS-API  then sets up an object based on which one can perform 
  * CSRF checks later on in application's lifecycle.
@@ -17,14 +19,15 @@ class CsrfTokenDetector {
 	 * @param SimpleXMLElement $xml Contents of security.csrf @ configuration.xml
 	 * @throws ApplicationException If 'secret' key is not defined in XML
 	 */
-	public function __construct(Application $application, Request $request) {
-	    $xml = $application->getXML()->security->csrf;
+	public function __construct(SimpleXMLElement $xml) {
+	    $xml = $xml->security->csrf;
 	    if(empty($xml)) {
 	        throw new ApplicationException("Entry missing in configuration.xml: security.csrf");
 	    }    
 	    
-		// sets ip
-		$ip = ((string) $xml["ignore_ip"]?"":$request->getClient()->getIP());
+	    // sets ip
+	    $ipDetector = new IPDetector();
+	    $ip = $ipDetector->getIP();
 		
 		// sets secret
 		$secret = (string) $xml["secret"];

@@ -46,7 +46,7 @@ class SecurityListener extends RequestListener {
 
 	public function run() {
 	    // detects drivers in which authenticated state is stored (eg: session) based on XML
-	    $pdd = new PersistenceDriversDetector($this->application);
+	    $pdd = new PersistenceDriversDetector($this->application->getXML());
 	    $persistenceDrivers = $pdd->getPersistenceDrivers();
 	    		
 	    // detects logged in user id based on drivers above
@@ -54,13 +54,13 @@ class SecurityListener extends RequestListener {
 	    $this->request->setAttribute("user_id", $uid->getUserID());
 	    
 	    // detects CSRF token based on XML and user's ip address
-	    $csrf = new CsrfTokenDetector($this->application, $this->request);
+	    $csrf = new CsrfTokenDetector($this->application->getXML());
 	    $this->request->setAttribute("csrf", $csrf);
 				
 	    // authenticates user (if authentication was requested)
-	    new Authentication($this->application, $this->request, $persistenceDrivers);
+	    new Authentication($this->application->getXML(), $this->request, $persistenceDrivers);
 		
 	    // authorizes user access to requested page
-		new Authorization($this->application, $this->request);
+	    new Authorization($this->application->getXML(), $this->request);
 	}
 }

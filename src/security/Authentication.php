@@ -3,13 +3,13 @@ require_once("DAOLocator.php");
 require_once("SecurityPacket.php");
 
 class Authentication {
-    public function __construct(Application $application, Request $request, $persistenceDrivers) {
-        $wrapper = $this->getWrapper($application, $request, $persistenceDrivers);
+    public function __construct(SimpleXMLElement $xml, Request $request, $persistenceDrivers) {
+        $wrapper = $this->getWrapper($xml, $request, $persistenceDrivers);
         $this->authenticate($wrapper, $request, $persistenceDrivers);
     }
     
-    private function getWrapper(Application $application, Request $request, $persistenceDrivers) {
-        $xml = $application->getXML()->security->authentication;
+    private function getWrapper(SimpleXMLElement $xmlRoot, Request $request, $persistenceDrivers) {
+        $xml = $xmlRoot->security->authentication;
         if(empty($xml)) {
             throw new ApplicationException("Entry missing in configuration.xml: security.authentication");
         }
@@ -19,15 +19,14 @@ class Authentication {
             if((string) $xml->form["dao"]) {
                 require_once("authentication/DAOAuthenticationWrapper.php");
                 $wrapper = new DAOAuthenticationWrapper(
-                    $application->getXML(),
+                    $xmlRoot,
                     $request->getValidator()->getPage(),
                     $persistenceDrivers,
-                    $request->getAttribute("csrf"));
-                
+                    $request->getAttribute("csrf"));               
             } else {
                 require_once("authentication/XMLAuthenticationWrapper.php");
                 $wrapper = new XMLAuthenticationWrapper(
-                    $application->getXML(),
+                    $xmlRoot,
                     $request->getValidator()->getPage(),
                     $persistenceDrivers,
                     $request->getAttribute("csrf"));
@@ -36,7 +35,7 @@ class Authentication {
         if($xml->oauth2) {
             require_once("authentication/Oauth2AuthenticationWrapper.php");
             $wrapper = new Oauth2AuthenticationWrapper(
-                $application->getXML(),
+                $xmlRoot,
                 $request->getValidator()->getPage(),
                 $persistenceDrivers,
                 $request->getAttribute("csrf"));
