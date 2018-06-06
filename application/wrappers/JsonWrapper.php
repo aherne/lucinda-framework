@@ -1,5 +1,5 @@
 <?php
-require_once("src/Json.php");
+require_once("application/models/Json.php");
 
 /**
  * Implements a view resolver that renders JSON content.

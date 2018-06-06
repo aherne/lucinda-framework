@@ -3,7 +3,6 @@
 
 <xml>
 	<application>
-		<default_character_encoding>UTF-8</default_character_encoding>
 		<default_page>index</default_page>
 		<default_extension>html</default_extension>
 		<auto_routing>1</auto_routing>
@@ -16,7 +15,7 @@
 		</paths>
 	</application>
 	<formats>
-		<format extension="html" content_type="text/html"/>
-		<format extension="json" content_type="application/json" class="JsonWrapper"/>
+		<format extension="html" content_type="text/html" charset="UTF-8"/>
+		<format extension="json" content_type="application/json" class="JsonWrapper" charset="UTF-8"/>
 	</formats>
 </xml>

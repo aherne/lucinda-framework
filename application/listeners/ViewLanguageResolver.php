@@ -1,7 +1,7 @@
 <?php
 require_once("vendor/lucinda/view-language/loader.php");
 require_once("src/view_language/ViewLanguageWrapper.php");
-require_once("src/Json.php");
+require_once("application/models/Json.php");
 
 /**
  * Performs view templating in your application by binding PHP-VIEW-LANGUAGE-API with SERVLETS-API. View language constructs found in views:

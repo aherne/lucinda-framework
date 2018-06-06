@@ -1,29 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE xml>
-
 <xml>
-	<exceptions log_level="LOG_ERR" view="error">
-		<exception class="PathNotFoundException" log_level="LOG_NONE" view="404"/>
-		<exception class="MethodNotAllowedException" log_level="LOG_NONE" view="405"/>
-		<exception class="SecurityPacket" log_level="LOG_NONE" view="security-packet"/>
-		<exception class="SessionHijackException" log_level="LOG_NONE" view="400"/>
-		<exception class="EncryptionException" log_level="LOG_NONE" view="400"/>
-		<exception class="TokenException" log_level="LOG_NONE" view="400"/>
-		<exception class="FileUploadException" log_level="LOG_NONE"/>
-		<exception class="SQLConnectionException" log_level="LOG_EMERG"/>
-		<exception class="NoSQLConnectionException" log_level="LOG_EMERG"/>
-		<exception class="OAuth2\ServerException" log_level="LOG_EMERG"/>
-		<exception class="ApplicationException" log_level="LOG_CRIT"/>
-		<exception class="ServletException" log_level="LOG_CRIT"/>
-		<exception class="FormatNotFoundException" log_level="LOG_CRIT"/>
-		<exception class="SQLStatementException" log_level="LOG_CRIT"/>
-		<exception class="SQLException" log_level="LOG_CRIT"/>
-		<exception class="OperationFailedException" log_level="LOG_CRIT"/>
-		<exception class="KeyNotFoundException" log_level="LOG_CRIT"/>
-		<exception class="OAuth2\ClientException" log_level="LOG_CRIT"/>
-		<exception class="AuthenticationException" log_level="LOG_CRIT"/>
-		<exception class="AuthorizationException" log_level="LOG_CRIT"/>
-		<exception class="PHPException" log_level="LOG_CRIT"/>
-		<exception class="ViewException" log_level="LOG_ALERT"/>
+	<application>
+		<default_extension>html</default_extension>
+		<default_character_encoding>html</default_character_encoding>
+		<paths>
+			<controllers>application/controllers</controllers>
+			<views>application/views</views>
+			<reporters>application/models/errors/reporters</reporters>
+			<renderers>application/models/errors/renderers</renderers>
+		</paths>
+		<display_errors>
+			<local>1</local>
+		</display_errors>
+	</application>
+	<reporters>
+		<!-- TODO: document how environment variable is  -->
+		<local>
+			<reporter class="MailReporter"/>
+			<reporter class="SyslogReporter"/>
+			<reporter class="FileReporter"/>
+		</local>
+	</reporters>
+	<renderers>
+		<renderer extension="html" content_type="text/html" class="HtmlRenderer" charset="UTF-8"/>
+		<renderer extension="json" content_type="application/json" class="JsonRenderer" charset="UTF-8"/>
+	</renderers>
+	<exceptions log_level="ERR" http_status="500">
+		<exception class="PathNotFoundException" log_level="NONE" http_status="404"/>
+		<exception class="MethodNotAllowedException" log_level="NONE" http_status="405"/>
+		<exception class="SecurityPacket" log_level="NONE" controller="SecurityPacketController"/>
+		<exception class="SessionHijackException" log_level="NONE" http_status="400"/>
+		<exception class="EncryptionException" log_level="NONE" http_status="400"/>
+		<exception class="TokenException" log_level="NONE" view="400"/>
+		<exception class="FileUploadException" log_level="NONE"/>
+		<exception class="SQLConnectionException" log_level="EMERG"/>
+		<exception class="NoSQLConnectionException" log_level="EMERG"/>
+		<exception class="OAuth2\ServerException" log_level="EMERG"/>
+		<exception class="ApplicationException" log_level="CRIT"/>
+		<exception class="ServletException" log_level="CRIT"/>
+		<exception class="FormatNotFoundException" log_level="CRIT"/>
+		<exception class="SQLStatementException" log_level="CRIT"/>
+		<exception class="SQLException" log_level="CRIT"/>
+		<exception class="OperationFailedException" log_level="CRIT"/>
+		<exception class="KeyNotFoundException" log_level="CRIT"/>
+		<exception class="OAuth2\ClientException" log_level="CRIT"/>
+		<exception class="AuthenticationException" log_level="CRIT"/>
+		<exception class="AuthorizationException" log_level="CRIT"/>
+		<exception class="PHPException" log_level="CRIT"/>
+		<exception class="ViewException" log_level="ALERT"/>
 	</exceptions>
 </xml>
