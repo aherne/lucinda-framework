@@ -13,22 +13,8 @@
  *
  * @attribute environment
  */
-class EnvironmentDetector  extends ApplicationListener {
-    const DEFAULT_METHOD = "host";
-    
+class EnvironmentDetector  extends ApplicationListener {  
     public function run() {
-        // identifies detection method
-        $detectionMethod = (string) $this->application->getXML()->application->environments["detection_method"];
-        if(!$detectionMethod) $detectionMethod = self::DEFAULT_METHOD;
-        
-        // detects and loads matching EnvironmentDetection class
-        $className = ucwords(strtolower($detectionMethod))."EnvironmentDetection";
-        $fileName = "src/environment_detection/".$className.".php";
-        if(!file_exists($fileName)) throw new ApplicationException("Unrecognized environment detection method: ".$detectionMethod);
-        require_once("src/environment_detection/".$className.".php");
-        
-        // instances class and injects result into application object
-        $object = new $className($this->application->getXML());
-        $this->application->setAttribute("environment", $object->getEnvironment());
+        $this->application->setAttribute("environment", getenv("ENVIRONMENT"));
     }
 }

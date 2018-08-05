@@ -12,6 +12,7 @@
 			<views>application/views</views>
 			<listeners>application/listeners</listeners>
 			<models>application/models</models>
+			<loggers>application/models/loggers</loggers>
 		</paths>
 	</application>
 	<formats>

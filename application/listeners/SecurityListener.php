@@ -1,11 +1,6 @@
 <?php
 require_once("vendor/lucinda/security/loader.php");
-require_once("src/security/UserIdDetector.php");
-require_once("src/security/CsrfTokenDetector.php");
-require_once("src/security/PersistenceDriversDetector.php");
-require_once("src/security/CsrfTokenDetector.php");
-require_once("src/security/Authentication.php");
-require_once("src/security/Authorization.php");
+require_once("vendor/lucinda/framework-engine/src/security/SecurityFilter.php");
 
 /**
  * Sets up and performs web security in your application by binding PHP-SECURITY-API & OAUTH2-CLIENT with contents of "security" tag @ CONFIGURATION.XML, 
@@ -44,23 +39,10 @@ require_once("src/security/Authorization.php");
 class SecurityListener extends RequestListener {
 	private $persistenceDrivers = array();
 
-	public function run() {
-	    // detects drivers in which authenticated state is stored (eg: session) based on XML
-	    $pdd = new PersistenceDriversDetector($this->application->getXML());
-	    $persistenceDrivers = $pdd->getPersistenceDrivers();
-	    		
-	    // detects logged in user id based on drivers above
-	    $uid = new UserIdDetector($persistenceDrivers);
-	    $this->request->setAttribute("user_id", $uid->getUserID());
-	    
-	    // detects CSRF token based on XML and user's ip address
-	    $csrf = new CsrfTokenDetector($this->application->getXML());
-	    $this->request->setAttribute("csrf", $csrf);
-				
-	    // authenticates user (if authentication was requested)
-	    new Authentication($this->application->getXML(), $this->request, $persistenceDrivers);
-		
-	    // authorizes user access to requested page
-	    new Authorization($this->application->getXML(), $this->request);
+	public function run() {	    
+	    $securityFilter = new SecurityFilter($this->application->getXML(), $this->request->getValidator()->getPage(), $this->request->getURI()->getContextPath());
+	    $this->request->setAttribute("user_id", $securityFilter->getUserID());
+	    $this->request->setAttribute("csrf", $securityFilter->getCsrfToken());
+	    $this->request->setAttribute("oauth2", $securityFilter->getOAuth2Drivers());
 	}
 }

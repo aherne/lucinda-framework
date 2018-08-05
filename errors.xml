@@ -15,9 +15,7 @@
 		</display_errors>
 	</application>
 	<reporters>
-		<!-- TODO: document how environment variable is  -->
 		<local>
-			<reporter class="MailReporter"/>
 			<reporter class="SyslogReporter"/>
 			<reporter class="FileReporter"/>
 		</local>
@@ -26,28 +24,18 @@
 		<renderer extension="html" content_type="text/html" class="HtmlRenderer" charset="UTF-8"/>
 		<renderer extension="json" content_type="application/json" class="JsonRenderer" charset="UTF-8"/>
 	</renderers>
-	<exceptions log_level="ERR" http_status="500">
-		<exception class="PathNotFoundException" log_level="NONE" http_status="404"/>
-		<exception class="MethodNotAllowedException" log_level="NONE" http_status="405"/>
-		<exception class="SecurityPacket" log_level="NONE" controller="SecurityPacketController"/>
-		<exception class="SessionHijackException" log_level="NONE" http_status="400"/>
-		<exception class="EncryptionException" log_level="NONE" http_status="400"/>
-		<exception class="TokenException" log_level="NONE" view="400"/>
-		<exception class="FileUploadException" log_level="NONE"/>
-		<exception class="SQLConnectionException" log_level="EMERG"/>
-		<exception class="NoSQLConnectionException" log_level="EMERG"/>
-		<exception class="OAuth2\ServerException" log_level="EMERG"/>
-		<exception class="ApplicationException" log_level="CRIT"/>
-		<exception class="ServletException" log_level="CRIT"/>
-		<exception class="FormatNotFoundException" log_level="CRIT"/>
-		<exception class="SQLStatementException" log_level="CRIT"/>
-		<exception class="SQLException" log_level="CRIT"/>
-		<exception class="OperationFailedException" log_level="CRIT"/>
-		<exception class="KeyNotFoundException" log_level="CRIT"/>
-		<exception class="OAuth2\ClientException" log_level="CRIT"/>
-		<exception class="AuthenticationException" log_level="CRIT"/>
-		<exception class="AuthorizationException" log_level="CRIT"/>
-		<exception class="PHPException" log_level="CRIT"/>
-		<exception class="ViewException" log_level="ALERT"/>
+	<exceptions error_type="5" controller="ErrorsController">
+		<exception class="PathNotFoundException"  http_status="404 Not Found" error_type="3" view="404"/>
+		<exception class="MethodNotAllowedException"  http_status="405 Method Not Allowed" error_type="3" view="405"/>
+		<exception class="SecurityPacket"  controller="SecurityPacketController" error_type="1"/>
+		<exception class="SessionHijackException"  http_status="400 Bad Request" error_type="3" view="400"/>
+		<exception class="EncryptionException"  http_status="400 Bad Request" error_type="3" view="400"/>
+		<exception class="TokenException"  http_status="400 Bad Request" error_type="3" view="400"/>
+		<exception class="FileUploadException" http_status="400 Bad Request" error_type="2" view="400"/>
+		<exception class="SQLConnectionException" error_type="2" controller="ErrorsController"/>
+		<exception class="NoSQLConnectionException" error_type="2" controller="ErrorsController"/>
+		<exception class="OAuth2\ServerException" error_type="2" controller="ErrorsController"/>
+		<exception class="PHPException" error_type="4" controller="ErrorsController"/>
+		<exception class="ViewException" error_type="4" controller="ErrorsController"/>
 	</exceptions>
 </xml>
