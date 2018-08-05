@@ -1,7 +1,6 @@
 <?php
 require_once("vendor/lucinda/internationalization/src/Reader.php");
-require_once("src/internationalization/LocaleDetector.php");
-require_once("src/internationalization/SettingsDetector.php");
+require_once("vendor/lucinda/framework-engine/src/caching/LocalizationBinder.php");
 
 /**
  * Performs internationalization & localization by binding php-internationalization-api with XML tag:
@@ -24,28 +23,7 @@ require_once("src/internationalization/SettingsDetector.php");
  */
 class LocalizationListener extends RequestListener
 {
-    const PARAMETER_NAME = "locale";
-
     public function run() {
-        $xml = $this->application->getXML()->internationalization;
-        if(empty($xml)) throw new ApplicationException("Tag missing/empty in configuration.xml: internationalization");
-
-        // identifies locale
-        $localeDetector = new LocaleDetector($xml, $this->request);
-        
-        // identifies charset
-        $charset = $this->application->getFormatInfo($this->application->getDefaultExtension())->getCharacterEncoding();
-        
-        // compiles settings
-        $detector = new SettingsDetector($charset, $xml, $localeDetector);
-        $settings = $detector->getSettings();
-        
-        // sets internationalization settings (throws LocaleException)
-        new Lucinda\Internationalization\Reader($settings);
-
-        // saves locale in session
-        if($localeDetector->getDetectionMethod() == "session") {
-            $this->request->getSession()->set(self::PARAMETER_NAME, $settings->getLocale());
-        }
+        new LocalizationBinder($this->application, $this->request);
     }
 }

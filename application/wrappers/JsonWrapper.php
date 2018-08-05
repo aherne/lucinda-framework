@@ -1,5 +1,5 @@
 <?php
-require_once("application/models/Json.php");
+require_once("vendor/lucinda/framework-engine/src/Json.php");
 
 /**
  * Implements a view resolver that renders JSON content.

@@ -1,7 +1,6 @@
 <?php
 require_once("vendor/lucinda/logging/loader.php");
-require_once("src/logging/LoggingWrapper.php");
-require_once("src/logging/MultiLogger.php");
+require_once("vendor/lucinda/framework-engine/src/logging/LoggingFilter.php");
 
 /**
  * Sets up logging in your application by binding  PHP-LOGGING-API with contents of "loggers" tag @ CONFIGURATION.XML, itself handled by SERVLETS API.  
@@ -24,18 +23,7 @@ class LoggingListener extends ApplicationListener {
 	 * @see Runnable::run()
 	 */
 	public function run() {
-	    // look for container tag
-	    $environment = $this->application->getAttribute("environment");
-	    $xml = $this->application->getXML()->loggers;
-	    if(empty($xml) || empty($xml->$environment)) {
-	        return;
-	    }
-	    
-	    // finds loggers and return a global wrapper
-	    $finder = new LoggingWrapper($xml->$environment);
-	    $loggers = $finder->getLoggers();
-	    if(!empty($loggers)) {
-	        $this->application->setAttribute("logger", new MultiLogger($loggers));
-	    }					
+	    $binder = new LoggingFilter($this->application->getXML(), $this->application->getAttribute("environment"));
+	    $this->application->setAttribute("logger", $binder->getLogger());
 	}
 }

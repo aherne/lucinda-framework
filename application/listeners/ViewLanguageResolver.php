@@ -1,7 +1,6 @@
 <?php
 require_once("vendor/lucinda/view-language/loader.php");
-require_once("src/view_language/ViewLanguageWrapper.php");
-require_once("application/models/Json.php");
+require_once("vendor/lucinda/framework-engine/src/view_language/ViewLanguageBinder.php");
 
 /**
  * Performs view templating in your application by binding PHP-VIEW-LANGUAGE-API with SERVLETS-API. View language constructs found in views:
@@ -22,27 +21,8 @@ require_once("application/models/Json.php");
  * Notice: error rendering (but not reporting) will be disabled before compilation is saved to output buffer, so we won't have mixed content in view. 
  */
 class ViewLanguageResolver extends ResponseListener {
-	public function run() {
-		if(strpos($this->response->headers()->get("Content-Type"),"text/html")!==0) return;
-	  
-		// get compilation file
-		$wrapper = new ViewLanguageWrapper($this->application->getXML(), $this->response->getView(), $this->application->getAttribute("environment"));
-		$compilationFile = $wrapper->getCompilationFile();
-		
-		// converts objects sent to response into array (throws JsonException if object is non-convertible)
-		$json = new Json();
-		$data = $json->decode($json->encode($this->response->toArray()));
-		 
-		// disables error rendering
-		$errorHandler = $this->application->getAttribute("error_handler");
-		if($errorHandler) {
-			$errorHandler->setRenderer(null);
-		}
-
-		// commits response to output stream
-		ob_start();
-		require_once($compilationFile);
-		$this->response->getOutputStream()->set(ob_get_contents());
-		ob_end_clean();
+    public function run() {
+        if(strpos($this->response->headers()->get("Content-Type"),"text/html")!==0) return;
+        new ViewLanguageBinder($this->application, $this->response);
 	}
 }
