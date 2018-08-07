@@ -1,6 +1,6 @@
 <?php
 require_once("vendor/lucinda/logging/loader.php");
-require_once("vendor/lucinda/framework-engine/src/logging/LoggingFilter.php");
+require_once("vendor/lucinda/framework-engine/src/logging/LoggingBinder.php");
 
 /**
  * Sets up logging in your application by binding  PHP-LOGGING-API with contents of "loggers" tag @ CONFIGURATION.XML, itself handled by SERVLETS API.  
@@ -23,7 +23,7 @@ class LoggingListener extends ApplicationListener {
 	 * @see Runnable::run()
 	 */
 	public function run() {
-	    $binder = new LoggingFilter($this->application->getXML(), $this->application->getAttribute("environment"));
+	    $binder = new LoggingBinder($this->application);
 	    $this->application->setAttribute("logger", $binder->getLogger());
 	}
 }

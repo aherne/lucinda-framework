@@ -1,6 +1,6 @@
 <?php
 require_once("vendor/lucinda/security/loader.php");
-require_once("vendor/lucinda/framework-engine/src/security/SecurityFilter.php");
+require_once("vendor/lucinda/framework-engine/src/security/SecurityBinder.php");
 
 /**
  * Sets up and performs web security in your application by binding PHP-SECURITY-API & OAUTH2-CLIENT with contents of "security" tag @ CONFIGURATION.XML, 
@@ -40,7 +40,7 @@ class SecurityListener extends RequestListener {
 	private $persistenceDrivers = array();
 
 	public function run() {	    
-	    $securityFilter = new SecurityFilter($this->application->getXML(), $this->request->getValidator()->getPage(), $this->request->getURI()->getContextPath());
+	    $securityFilter = new SecurityBinder($this->application, $this->request);
 	    $this->request->setAttribute("user_id", $securityFilter->getUserID());
 	    $this->request->setAttribute("csrf", $securityFilter->getCsrfToken());
 	    $this->request->setAttribute("oauth2", $securityFilter->getOAuth2Drivers());
