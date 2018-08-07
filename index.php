@@ -1,8 +1,8 @@
 <?php
 // perform environment detection
-// TODO: clarity environment detection
+$environment = getenv("ENVIRONMENT");
+if(!$environment) die("Value of environment variable 'ENVIRONMENT' could not be detected!");
 // TODO: clarify content type & charset @ error renderers
-// TODO: put log reporter in application/models
 
 // take control of STDERR
 require_once("vendor/lucinda/errors-mvc/src/FrontController.php");
