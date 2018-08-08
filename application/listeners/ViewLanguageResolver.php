@@ -29,16 +29,17 @@ class ViewLanguageResolver extends ResponseListener {
 		$compilationsFolder = (string) $this->application->getXML()->application->paths->compilations->$environment;
 		if(!$compilationsFolder) throw new ApplicationException("Compilations folder not defined!");
 		$tagsFolder = (string) $this->application->getXML()->application->paths->tags;
+		$viewsFolder  = $this->application->getViewsPath();
 		$extension = (string) $this->application->getXML()->application->templates_extension;
 		
 		// gets view file
 		$viewFile = $this->response->getView();
-		if(strpos($viewFile, $this->application->getViewsPath())===0) {
-		    $viewFile = substr($viewFile, strlen($this->application->getViewsPath())+1);
+		if($viewsFolder && strpos($viewFile, $viewsFolder)===0) {
+		    $viewFile = substr($viewFile, strlen($viewsFolder)+1);
 		}
 		
 		// compiles templates recursively into a single compilation file
-		$vlp = new ViewLanguageParser($this->application->getViewsPath(), $extension, $compilationsFolder, $tagsFolder);
+		$vlp = new ViewLanguageParser($viewsFolder, $extension, $compilationsFolder, $tagsFolder);
 		$compilationFile = $vlp->compile($viewFile);
 		
 		// converts objects sent to response into array (throws JsonException if object is non-convertible)
