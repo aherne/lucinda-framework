@@ -1,6 +1,6 @@
 <?php
 require_once("vendor/lucinda/http-caching/loader.php");
-require_once("vendor/lucinda/framework-engine/src/caching/CachingRunner.php");
+require_once("vendor/lucinda/framework-engine/src/caching/CachingBinder.php");
 
 class HttpCachingListener extends ResponseListener {
     public function run() {
