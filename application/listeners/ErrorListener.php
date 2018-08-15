@@ -29,7 +29,7 @@ class ErrorListener extends RequestListener {
      * @see Runnable::run()
      */
     public function run() {
-        $handler = Lucinda\MVC\STDERR\PHPException::getErrorHandler();
+        $handler = \Lucinda\MVC\STDERR\PHPException::getErrorHandler();
         $handler->setContentType($this->request->getValidator()->getContentType());
     }
 }

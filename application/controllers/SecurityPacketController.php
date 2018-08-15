@@ -1,5 +1,5 @@
 <?php
-class SecurityPacketController  extends Lucinda\MVC\STDERR\Controller {
+class SecurityPacketController  extends \Lucinda\MVC\STDERR\Controller {
     public function run() {
         $this->setResponseStatus();
         $this->setResponseBody();

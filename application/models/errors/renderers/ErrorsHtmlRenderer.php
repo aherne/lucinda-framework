@@ -1,5 +1,5 @@
 <?php
-class ErrorsHtmlRenderer extends Lucinda\MVC\STDERR\ErrorRenderer
+class ErrorsHtmlRenderer implements \Lucinda\MVC\STDERR\ErrorRenderer
 {
     public function render(Lucinda\MVC\STDERR\Response $response) {
         if(!headers_sent()) {
