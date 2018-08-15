@@ -1,5 +1,5 @@
 <?php
-class ErrorsController extends Lucinda\MVC\STDERR\Controller {
+class ErrorsController extends \Lucinda\MVC\STDERR\Controller {
     public function run() {
         $this->setResponseStatus();
         $this->setResponseBody();
