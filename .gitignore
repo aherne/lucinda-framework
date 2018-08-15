@@ -3,3 +3,4 @@ vendor
 .settings
 .buildpath
 .project
+composer.lock
