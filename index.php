@@ -8,7 +8,8 @@ if(!$environment) die("Value of environment variable 'ENVIRONMENT' could not be 
 
 // takes control of STDERR
 require_once("vendor/lucinda/errors-mvc/src/FrontController.php");
-new Lucinda\MVC\STDERR\FrontController("errors.xml", getenv("ENVIRONMENT"));
+require_once("application/models/errors/EmergencyHandler.php");
+new Lucinda\MVC\STDERR\FrontController("errors.xml", getenv("ENVIRONMENT"), new EmergencyHandler());
 
 // takes control of STDOUT
 require_once("vendor/lucinda/mvc/loader.php");
