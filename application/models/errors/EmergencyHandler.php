@@ -1,6 +1,6 @@
 <?php
 /**
- * Handler that prevents FrontController handling itself
+ * Handler that prevents default error handler handling its own errors
  */
 class EmergencyHandler implements Lucinda\MVC\STDERR\ErrorHandler
 {
