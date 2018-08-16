@@ -1,7 +1,7 @@
 <?php
 class DefaultCacheableDriver extends CacheableDriver {
     protected function setTime() {
-        return null;
+        $this->last_modified_time = null;
     }
     
     protected function setEtag() {
@@ -10,6 +10,6 @@ class DefaultCacheableDriver extends CacheableDriver {
         $uri = $this->request->getServer()->getName()."/".$this->request->getURI()->getContextPath()."/".$this->request->getURI()->getPage()."?".$this->request->getURI()->getQueryString();
         $headers = $this->response->headers()->toArray();
         $outputStream = $this->response->getOutputStream()->get();
-        return sha1($secret."#".$uri."#".json_encode($headers)."#".$outputStream);
+        $this->etag = sha1($secret."#".$uri."#".json_encode($headers)."#".$outputStream);
     }
 }

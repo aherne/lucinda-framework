@@ -7,19 +7,48 @@
 		<default_extension>html</default_extension>
 		<auto_routing>1</auto_routing>
 		<paths>
-			<controllers>application/controllers</controllers>
+            <compilations>
+                <local>test/compilations</local>
+            </compilations>
+            <cacheables>application/models/cacheables</cacheables>
+			<controllers>test/controllers</controllers>
 			<wrappers>application/wrappers</wrappers>
-			<views>application/views</views>
+			<views>test/views</views>
 			<listeners>application/listeners</listeners>
 			<models>application/models</models>
 			<loggers>application/models/loggers</loggers>
 		</paths>
+        <templates_extension>html</templates_extension>
 	</application>
 	<listeners>
 		<listener class="EnvironmentDetector"/>
+		<listener class="LoggingListener"/>
+		<listener class="SQLDataSourceInjector"/>
+		<listener class="NoSQLDataSourceInjector"/>
+		<listener class="ErrorListener"/>
+		<listener class="ViewLanguageResolver"/>
+		<listener class="HttpCachingListener"/>
 	</listeners>
+	<loggers>
+		<local>
+			<logger class="FileLoggerWrapper" path="access" format="%d %f %l %m"/>
+		</local>
+	</loggers>
 	<formats>
-		<format extension="html" content_type="text/html" charset="UTF-8"/>
+		<format extension="html" content_type="text/html" charset="UTF-8" class="BypassWrapper" />
 		<format extension="json" content_type="application/json" class="JsonWrapper" charset="UTF-8"/>
 	</formats>
+	<servers>
+		<sql>
+			<local>
+				<server driver="mysql" host="localhost" port="3306" username="root" password="" schema="flickr"/>
+			</local>
+		</sql>
+		<nosql>
+			<local>
+				<server driver="redis" host="localhost" port="6379"/>
+			</local>
+		</nosql>
+	</servers>
+	<http_caching class="DefaultCacheableDriver" secret="b6@M|JS{ZzD9ClL"/>
 </xml>

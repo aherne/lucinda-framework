@@ -1,23 +1,23 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a617fea5d5a12751871d74cbcd9bad6f",
+    "content-hash": "e19879eccdff84bc3583ff26b5f79a72",
     "packages": [
         {
-            "name": "lucinda/errors",
-            "version": "v1.2.2",
+            "name": "lucinda/errors-mvc",
+            "version": "v1.0.3.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/aherne/php-errors-api.git",
-                "reference": "af7f12e14c0643b82e88c1424c4d18c6e085a8dd"
+                "url": "https://github.com/aherne/errors-api.git",
+                "reference": "d2d5e1edcf43a8b221997533fddb90b07e3ef8cd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aherne/php-errors-api/zipball/af7f12e14c0643b82e88c1424c4d18c6e085a8dd",
-                "reference": "af7f12e14c0643b82e88c1424c4d18c6e085a8dd",
+                "url": "https://api.github.com/repos/aherne/errors-api/zipball/d2d5e1edcf43a8b221997533fddb90b07e3ef8cd",
+                "reference": "d2d5e1edcf43a8b221997533fddb90b07e3ef8cd",
                 "shasum": ""
             },
             "type": "library",
@@ -32,17 +32,71 @@
                     "role": "Developer"
                 }
             ],
-            "description": "Bootstraps errors and handles them via reporters and renderers",
-            "homepage": "http://www.lucinda-framework.com/errors-api",
+            "description": "MVC API for STDERR flow in PHP applications",
             "keywords": [
-                "aop",
-                "aspect oriented programming",
                 "errors",
-                "handler",
-                "renderer",
-                "reporter"
+                "mvc",
+                "stderr"
             ],
-            "time": "2018-04-27T13:58:00+00:00"
+            "time": "2018-08-06T05:18:51+00:00"
+        },
+        {
+            "name": "lucinda/framework-engine",
+            "version": "v1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/aherne/lucinda-framework-engine.git",
+                "reference": "5bed42d262ea4763b6847b848aebd010f76d8e7e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/aherne/lucinda-framework-engine/zipball/5bed42d262ea4763b6847b848aebd010f76d8e7e",
+                "reference": "5bed42d262ea4763b6847b848aebd010f76d8e7e",
+                "shasum": ""
+            },
+            "require": {
+                "lucinda/errors-mvc": "~1.0",
+                "lucinda/http-caching": "~1.0",
+                "lucinda/internationalization": "~1.0",
+                "lucinda/logging": "~1.0",
+                "lucinda/mvc": "~1.0",
+                "lucinda/nosql-data-access": "~1.0",
+                "lucinda/oauth2-client": "~1.0",
+                "lucinda/security": "~1.0",
+                "lucinda/sql-data-access": "~1.0",
+                "lucinda/view-language": "~1.0"
+            },
+            "require-dev": {
+                "lucinda/errors-mvc": "~1.0",
+                "lucinda/http-caching": "~1.0",
+                "lucinda/internationalization": "~1.0",
+                "lucinda/logging": "~1.0",
+                "lucinda/mvc": "~1.0",
+                "lucinda/nosql-data-access": "~1.0",
+                "lucinda/oauth2-client": "~1.0",
+                "lucinda/security": "~1.0",
+                "lucinda/sql-data-access": "~1.0",
+                "lucinda/view-language": "~1.0"
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Lucian Popescu",
+                    "email": "lucian.gabriel.popescu@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Engine used behind Lucinda Framework",
+            "homepage": "http://www.lucinda-framework.com",
+            "keywords": [
+                "mvc",
+                "stdout"
+            ],
+            "time": "2018-08-08T14:39:50+00:00"
         },
         {
             "name": "lucinda/http-caching",
@@ -152,16 +206,16 @@
         },
         {
             "name": "lucinda/mvc",
-            "version": "v1.4.4.3",
+            "version": "v1.4.4.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aherne/php-servlets-api.git",
-                "reference": "9f2f7eb219586d7ecfa62001c22a44929dae1a2b"
+                "reference": "93daded18d9e0cb9aa8b11b9408ea33aadd35fbd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aherne/php-servlets-api/zipball/9f2f7eb219586d7ecfa62001c22a44929dae1a2b",
-                "reference": "9f2f7eb219586d7ecfa62001c22a44929dae1a2b",
+                "url": "https://api.github.com/repos/aherne/php-servlets-api/zipball/93daded18d9e0cb9aa8b11b9408ea33aadd35fbd",
+                "reference": "93daded18d9e0cb9aa8b11b9408ea33aadd35fbd",
                 "shasum": ""
             },
             "type": "library",
@@ -184,20 +238,20 @@
                 "servlets",
                 "view resolvers"
             ],
-            "time": "2018-03-29T12:45:52+00:00"
+            "time": "2018-08-03T13:45:28+00:00"
         },
         {
             "name": "lucinda/nosql-data-access",
-            "version": "v1.1.0.1",
+            "version": "v1.1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aherne/php-nosql-data-access-api.git",
-                "reference": "5c49aa3f8a881fbbf6a0c4bfc871d99add922619"
+                "reference": "7695ba50a6237948e4ffbc17af77f6589bad72bd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aherne/php-nosql-data-access-api/zipball/5c49aa3f8a881fbbf6a0c4bfc871d99add922619",
-                "reference": "5c49aa3f8a881fbbf6a0c4bfc871d99add922619",
+                "url": "https://api.github.com/repos/aherne/php-nosql-data-access-api/zipball/7695ba50a6237948e4ffbc17af77f6589bad72bd",
+                "reference": "7695ba50a6237948e4ffbc17af77f6589bad72bd",
                 "shasum": ""
             },
             "type": "library",
@@ -224,7 +278,7 @@
                 "nosql",
                 "redis"
             ],
-            "time": "2018-04-13T09:22:40+00:00"
+            "time": "2018-07-24T14:07:07+00:00"
         },
         {
             "name": "lucinda/oauth2-client",
@@ -337,16 +391,16 @@
         },
         {
             "name": "lucinda/view-language",
-            "version": "v1.2.3.2",
+            "version": "v1.3.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aherne/php-view-language-api.git",
-                "reference": "0ac732856e1e11030fbb582d7fe13bf8623106f5"
+                "reference": "668c0c154ce83eeb92b2f5c8bcdb185817a34b15"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aherne/php-view-language-api/zipball/0ac732856e1e11030fbb582d7fe13bf8623106f5",
-                "reference": "0ac732856e1e11030fbb582d7fe13bf8623106f5",
+                "url": "https://api.github.com/repos/aherne/php-view-language-api/zipball/668c0c154ce83eeb92b2f5c8bcdb185817a34b15",
+                "reference": "668c0c154ce83eeb92b2f5c8bcdb185817a34b15",
                 "shasum": ""
             },
             "type": "library",
@@ -368,7 +422,7 @@
                 "templating",
                 "views"
             ],
-            "time": "2018-05-14T12:46:05+00:00"
+            "time": "2018-08-06T12:28:15+00:00"
         }
     ],
     "packages-dev": [],
