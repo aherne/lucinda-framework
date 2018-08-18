@@ -10,10 +10,11 @@
             <compilations>
                 <local>test/compilations</local>
             </compilations>
-            <cacheables>application/models/cacheables</cacheables>
+        	<dao>test/models</dao>
 			<controllers>test/controllers</controllers>
-			<wrappers>application/wrappers</wrappers>
 			<views>test/views</views>
+            <cacheables>application/models/cacheables</cacheables>
+			<wrappers>application/wrappers</wrappers>
 			<listeners>application/listeners</listeners>
 			<models>application/models</models>
 			<loggers>application/models/loggers</loggers>
@@ -26,6 +27,7 @@
 		<listener class="SQLDataSourceInjector"/>
 		<listener class="NoSQLDataSourceInjector"/>
 		<listener class="ErrorListener"/>
+		<listener class="SecurityListener"/>
 		<listener class="ViewLanguageResolver"/>
 		<listener class="HttpCachingListener"/>
 	</listeners>
@@ -41,7 +43,7 @@
 	<servers>
 		<sql>
 			<local>
-				<server driver="mysql" host="localhost" port="3306" username="root" password="" schema="flickr"/>
+				<server driver="mysql" host="localhost" port="3306" username="root" password="" schema="test"/>
 			</local>
 		</sql>
 		<nosql>
@@ -51,4 +53,20 @@
 		</nosql>
 	</servers>
 	<http_caching class="DefaultCacheableDriver" secret="b6@M|JS{ZzD9ClL"/>
+	
+	<security>
+		<csrf secret="pxNa}aJSS|ojCPA"/>
+		<authentication>
+			<form dao="Users">
+				<login/>
+				<logout/>
+			</form>
+		</authentication>
+		<persistence>
+			<session/>
+		</persistence>
+		<authorization>
+			<by_dao page_dao="Pages" user_dao="Users" />
+		</authorization>
+	</security>
 </xml>

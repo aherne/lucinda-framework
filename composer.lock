@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "lucinda/errors-mvc",
-            "version": "v1.0.3.1",
+            "version": "v1.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aherne/errors-api.git",
-                "reference": "d2d5e1edcf43a8b221997533fddb90b07e3ef8cd"
+                "reference": "d5f9e491d11d3f27ef6fe12131552a52154dd44e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aherne/errors-api/zipball/d2d5e1edcf43a8b221997533fddb90b07e3ef8cd",
-                "reference": "d2d5e1edcf43a8b221997533fddb90b07e3ef8cd",
+                "url": "https://api.github.com/repos/aherne/errors-api/zipball/d5f9e491d11d3f27ef6fe12131552a52154dd44e",
+                "reference": "d5f9e491d11d3f27ef6fe12131552a52154dd44e",
                 "shasum": ""
             },
             "type": "library",
@@ -38,20 +38,20 @@
                 "mvc",
                 "stderr"
             ],
-            "time": "2018-08-06T05:18:51+00:00"
+            "time": "2018-08-16T02:33:55+00:00"
         },
         {
             "name": "lucinda/framework-engine",
-            "version": "v1.0.1",
+            "version": "v1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aherne/lucinda-framework-engine.git",
-                "reference": "5bed42d262ea4763b6847b848aebd010f76d8e7e"
+                "reference": "a33853ac8d9df26060c66761ac86b677ebdc27bc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aherne/lucinda-framework-engine/zipball/5bed42d262ea4763b6847b848aebd010f76d8e7e",
-                "reference": "5bed42d262ea4763b6847b848aebd010f76d8e7e",
+                "url": "https://api.github.com/repos/aherne/lucinda-framework-engine/zipball/a33853ac8d9df26060c66761ac86b677ebdc27bc",
+                "reference": "a33853ac8d9df26060c66761ac86b677ebdc27bc",
                 "shasum": ""
             },
             "require": {
@@ -96,20 +96,20 @@
                 "mvc",
                 "stdout"
             ],
-            "time": "2018-08-08T14:39:50+00:00"
+            "time": "2018-08-16T02:22:52+00:00"
         },
         {
             "name": "lucinda/http-caching",
-            "version": "v1.1.0",
+            "version": "v1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aherne/http-caching-api.git",
-                "reference": "d73b85627dc9203de2a226bb0d6924ade1ec9e07"
+                "reference": "88c892feba7db23d9660a47e9338e3bb761bdd57"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aherne/http-caching-api/zipball/d73b85627dc9203de2a226bb0d6924ade1ec9e07",
-                "reference": "d73b85627dc9203de2a226bb0d6924ade1ec9e07",
+                "url": "https://api.github.com/repos/aherne/http-caching-api/zipball/88c892feba7db23d9660a47e9338e3bb761bdd57",
+                "reference": "88c892feba7db23d9660a47e9338e3bb761bdd57",
                 "shasum": ""
             },
             "type": "library",
@@ -130,7 +130,7 @@
                 "caching",
                 "http"
             ],
-            "time": "2018-01-28T11:50:06+00:00"
+            "time": "2018-08-17T15:18:15+00:00"
         },
         {
             "name": "lucinda/internationalization",
