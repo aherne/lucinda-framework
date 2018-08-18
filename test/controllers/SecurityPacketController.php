@@ -12,7 +12,8 @@ class SecurityPacketController  extends \Lucinda\MVC\STDERR\Controller {
                 exit();
                 break;
             case "forbidden":
-                $this->response->setHttpStatus("403 Forbidden");
+                header("Location: /index?status=UNAUTHORIZED");
+                exit();
                 break;
             case "not_found":
                 $this->response->setHttpStatus("404 Not found");
