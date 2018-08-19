@@ -42,16 +42,16 @@
         },
         {
             "name": "lucinda/framework-engine",
-            "version": "v1.0.2",
+            "version": "v1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aherne/lucinda-framework-engine.git",
-                "reference": "a33853ac8d9df26060c66761ac86b677ebdc27bc"
+                "reference": "f8c8f74c7f5742aafd3abe6652e68bb1598d62e2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aherne/lucinda-framework-engine/zipball/a33853ac8d9df26060c66761ac86b677ebdc27bc",
-                "reference": "a33853ac8d9df26060c66761ac86b677ebdc27bc",
+                "url": "https://api.github.com/repos/aherne/lucinda-framework-engine/zipball/f8c8f74c7f5742aafd3abe6652e68bb1598d62e2",
+                "reference": "f8c8f74c7f5742aafd3abe6652e68bb1598d62e2",
                 "shasum": ""
             },
             "require": {
@@ -96,7 +96,7 @@
                 "mvc",
                 "stdout"
             ],
-            "time": "2018-08-16T02:22:52+00:00"
+            "time": "2018-08-18T04:57:17+00:00"
         },
         {
             "name": "lucinda/http-caching",
