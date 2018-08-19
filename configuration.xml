@@ -28,6 +28,7 @@
 		<listener class="NoSQLDataSourceInjector"/>
 		<listener class="ErrorListener"/>
 		<listener class="SecurityListener"/>
+		<listener class="LocalizationLIstener"/>
 		<listener class="ViewLanguageResolver"/>
 		<listener class="HttpCachingListener"/>
 	</listeners>
@@ -52,7 +53,7 @@
 			</local>
 		</nosql>
 	</servers>
-	<http_caching class="DefaultCacheableDriver" secret="b6@M|JS{ZzD9ClL"/>
+	<http_caching expiration="20" class="DefaultCacheableDriver" secret="b6@M|JS{ZzD9ClL"/>
 	
 	<security>
 		<csrf secret="pxNa}aJSS|ojCPA"/>
@@ -69,4 +70,6 @@
 			<by_dao page_dao="Pages" user_dao="Users" />
 		</authorization>
 	</security>
+	
+	<internationalization locale="en_US" method="request" folder="locale" domain="messages"/>
 </xml>
