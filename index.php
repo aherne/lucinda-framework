@@ -1,13 +1,16 @@
 <?php
-// perform environment detection
+// adds root to include path
+set_include_path(get_include_path(). PATH_SEPARATOR . __DIR__);
+
+// performs environment detection
 $environment = getenv("ENVIRONMENT");
 if(!$environment) die("Value of environment variable 'ENVIRONMENT' could not be detected!");
-// TODO: clarify content type & charset @ error renderers
 
-// take control of STDERR
+// takes control of STDERR
 require_once("vendor/lucinda/errors-mvc/src/FrontController.php");
-new Lucinda\MVC\STDERR\FrontController("errors.xml", getenv("ENVIRONMENT"));
+require_once("application/models/errors/EmergencyHandler.php");
+new Lucinda\MVC\STDERR\FrontController("errors.xml", getenv("ENVIRONMENT"), new EmergencyHandler());
 
-// take control of STDOUT
+// takes control of STDOUT
 require_once("vendor/lucinda/mvc/loader.php");
 new FrontController("configuration.xml");
