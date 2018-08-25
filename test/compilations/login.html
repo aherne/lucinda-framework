@@ -1,0 +1,10 @@
+
+<?php echo _('greeting'); ?>
+<form action="" method="POST">
+	<input type="hidden" name="csrf" value="<?php echo $data["csrf"]; ?>"/>
+	Name: <input type="text" name="username"/>
+	Password: <input type="text" name="password"/>
+	<input type="submit" value="LOGIN"/>
+</form>
+<?php echo translate("normal"); ?>
+<?php echo translate("parameterized","messages","Lucian","15"); ?>

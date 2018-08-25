@@ -2,10 +2,9 @@
 <!DOCTYPE xml>
 <xml>
 	<application>
-		<default_extension>html</default_extension>
-		<default_character_encoding>html</default_character_encoding>
+		<default_content_type>text/html; charset=UTF-8</default_content_type>
 		<paths>
-			<controllers>application/controllers</controllers>
+			<controllers>test/controllers</controllers>
 			<views>application/views</views>
 			<reporters>application/models/errors/reporters</reporters>
 			<renderers>application/models/errors/renderers</renderers>
@@ -16,8 +15,7 @@
 	</application>
 	<reporters>
 		<local>
-			<reporter class="SyslogReporter"/>
-			<reporter class="FileReporter"/>
+			<reporter class="FileReporter" path="errors" format="%d %f %l %m"/>
 		</local>
 	</reporters>
 	<renderers>

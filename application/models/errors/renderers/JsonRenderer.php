@@ -1,5 +1,5 @@
 <?php
-class ErrorsJsonRenderer implements \Lucinda\MVC\STDERR\ErrorRenderer
+class JsonRenderer implements \Lucinda\MVC\STDERR\ErrorRenderer
 {
     public function render(Lucinda\MVC\STDERR\Response $response) {
         if(!headers_sent()) {

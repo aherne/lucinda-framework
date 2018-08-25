@@ -1,0 +1,13 @@
+2018-08-18 03:48:40 C:\wamp64\www\lucinda-framework\vendor\lucinda\framework-engine\src\ClassLoader.php 16 File not found: Users
+2018-08-18 03:48:41 C:\wamp64\www\lucinda-framework\vendor\lucinda\framework-engine\src\ClassLoader.php 16 File not found: Users
+2018-08-18 03:50:24 C:\wamp64\www\lucinda-framework\vendor\lucinda\framework-engine\src\ClassLoader.php 16 File not found: Users
+2018-08-18 04:45:56 C:\wamp64\www\lucinda-framework\test\compilations\index.html 2 Undefined index: user
+2018-08-18 04:46:04 C:\wamp64\www\lucinda-framework\test\compilations\index.html 2 Undefined index: user
+2018-08-18 04:46:04 C:\wamp64\www\lucinda-framework\test\compilations\index.html 2 Undefined index: user
+2018-08-18 05:06:05 C:\wamp64\www\lucinda-framework\vendor\lucinda\mvc\src\request\Session.php 69 Session not started!
+2018-08-18 05:06:11 C:\wamp64\www\lucinda-framework\vendor\lucinda\mvc\src\request\Session.php 69 Session not started!
+2018-08-18 11:21:20 C:\wamp64\www\lucinda-framework\application\listeners\LocalizationListener.php 3 require_once(vendor/lucinda/framework-engine/src/caching/LocalizationBinder.php): failed to open stream: No such file or directory
+2018-08-18 11:22:20 C:\wamp64\www\lucinda-framework\vendor\lucinda\internationalization\src\Reader.php 52 Locale not found: locale\en_US\LC_MESSAGES\messages.mo
+2018-08-18 11:43:26 C:\wamp64\www\lucinda-framework\test\compilations\login.html 2 Call to undefined function __()
+2018-08-18 11:53:25 C:\wamp64\www\lucinda-framework\vendor\lucinda\internationalization\src\Reader.php 52 Locale not found: locale\en_US\LC_MESSAGES\messages.mo
+2018-08-18 12:02:36 C:\wamp64\www\lucinda-framework\vendor\lucinda\internationalization\src\Reader.php 52 Locale not found: locale\en_US\LC_MESSAGES\messages.mo
