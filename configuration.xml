@@ -28,7 +28,7 @@
 		<listener class="NoSQLDataSourceInjector"/>
 		<listener class="ErrorListener"/>
 		<listener class="SecurityListener"/>
-		<listener class="LocalizationLIstener"/>
+		<listener class="LocalizationListener"/>
 		<listener class="ViewLanguageResolver"/>
 		<listener class="HttpCachingListener"/>
 	</listeners>
