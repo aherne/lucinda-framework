@@ -1,6 +1,7 @@
 <?php
 require_once("vendor/lucinda/internationalization/src/Reader.php");
 require_once("vendor/lucinda/framework-engine/src/internationalization/LocalizationBinder.php");
+require_once("application/models/internationalization/Translate.php");
 
 /**
  * Performs internationalization & localization by binding php-internationalization-api with XML tag:
