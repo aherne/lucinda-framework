@@ -7,69 +7,15 @@
 		<default_extension>html</default_extension>
 		<auto_routing>1</auto_routing>
 		<paths>
-            <compilations>
-                <local>test/compilations</local>
-            </compilations>
-        	<dao>test/models</dao>
-			<controllers>test/controllers</controllers>
-			<views>test/views</views>
-            <cacheables>application/models/cacheables</cacheables>
+			<controllers>application/controllers</controllers>
+			<views>application/views</views>
 			<wrappers>application/wrappers</wrappers>
 			<listeners>application/listeners</listeners>
 			<models>application/models</models>
-			<loggers>application/models/loggers</loggers>
 		</paths>
-        <templates_extension>html</templates_extension>
 	</application>
 	<listeners>
 		<listener class="EnvironmentDetector"/>
-		<listener class="LoggingListener"/>
-		<listener class="SQLDataSourceInjector"/>
-		<listener class="NoSQLDataSourceInjector"/>
 		<listener class="ErrorListener"/>
-		<listener class="SecurityListener"/>
-		<listener class="LocalizationListener"/>
-		<listener class="ViewLanguageResolver"/>
-		<listener class="HttpCachingListener"/>
 	</listeners>
-	<loggers>
-		<local>
-			<logger class="FileLoggerWrapper" path="access" format="%d %f %l %m"/>
-		</local>
-	</loggers>
-	<formats>
-		<format extension="html" content_type="text/html" charset="UTF-8" class="BypassWrapper" />
-		<format extension="json" content_type="application/json" class="JsonWrapper" charset="UTF-8"/>
-	</formats>
-	<servers>
-		<sql>
-			<local>
-				<server driver="mysql" host="localhost" port="3306" username="root" password="" schema="test"/>
-			</local>
-		</sql>
-		<nosql>
-			<local>
-				<server driver="redis" host="localhost" port="6379"/>
-			</local>
-		</nosql>
-	</servers>
-	<http_caching expiration="20" class="DefaultCacheableDriver" secret="b6@M|JS{ZzD9ClL"/>
-	
-	<security>
-		<csrf secret="pxNa}aJSS|ojCPA"/>
-		<authentication>
-			<form dao="Users">
-				<login/>
-				<logout/>
-			</form>
-		</authentication>
-		<persistence>
-			<session/>
-		</persistence>
-		<authorization>
-			<by_dao page_dao="Pages" user_dao="Users" />
-		</authorization>
-	</security>
-	
-	<internationalization locale="en_US" method="request" folder="locale" domain="messages"/>
 </xml>

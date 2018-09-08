@@ -8,8 +8,7 @@ class SecurityPacketController  extends \Lucinda\MVC\STDERR\Controller {
     private function setResponseStatus() {
         switch($this->request->getException()->getStatus()) {
             case "unauthorized":
-                header("Location: /login?status=UNAUTHORIZED");
-                exit();
+                $this->response->setHttpStatus("401 Unauthorized");
                 break;
             case "forbidden":
                 $this->response->setHttpStatus("403 Forbidden");

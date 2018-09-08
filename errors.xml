@@ -4,7 +4,7 @@
 	<application>
 		<default_content_type>text/html; charset=UTF-8</default_content_type>
 		<paths>
-			<controllers>test/controllers</controllers>
+			<controllers>application/controllers</controllers>
 			<views>application/views</views>
 			<reporters>application/models/errors/reporters</reporters>
 			<renderers>application/models/errors/renderers</renderers>
