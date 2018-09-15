@@ -17,13 +17,13 @@ require_once("vendor/lucinda/framework-engine/src/logging/LoggingBinder.php");
  * 
  * @attribute logger
  */
-class LoggingListener extends ApplicationListener {
+class LoggingListener extends Lucinda\MVC\STDOUT\ApplicationListener {
 	/**
 	 * {@inheritDoc}
 	 * @see Runnable::run()
 	 */
 	public function run() {
 	    $binder = new LoggingBinder($this->application);
-	    $this->application->setAttribute("logger", $binder->getLogger());
+	    $this->application->attributes()->set("logger", $binder->getLogger());
 	}
 }

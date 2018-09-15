@@ -13,29 +13,17 @@
         }
     ],
     "require": {
-        "lucinda/http-caching": "~1.0",
-        "lucinda/logging": "~1.0",
-        "lucinda/nosql-data-access": "~1.0",
+        "lucinda/http-caching": "~2.0",
+        "lucinda/logging": "~2.0",
+        "lucinda/nosql-data-access": "~2.0",
         "lucinda/oauth2-client": "~1.0",
-        "lucinda/security": "~1.0",
-        "lucinda/mvc": "~1.0",
-        "lucinda/sql-data-access": "~1.0",
-        "lucinda/view-language": "~1.0",
-        "lucinda/internationalization": "~1.0",
-        "lucinda/errors-mvc": "~1.0",
-        "lucinda/framework-engine": "~1.0"
+        "lucinda/security": "~2.0",
+        "lucinda/mvc": "~2.0",
+        "lucinda/sql-data-access": "~2.0",
+        "lucinda/view-language": "~2.0",
+        "lucinda/internationalization": "~2.0",
+        "lucinda/errors-mvc": "~1.0"
     },
     "require-dev": {
-        "lucinda/http-caching": "~1.0",
-        "lucinda/logging": "~1.0",
-        "lucinda/nosql-data-access": "~1.0",
-        "lucinda/oauth2-client": "~1.0",
-        "lucinda/security": "~1.0",
-        "lucinda/mvc": "~1.0",
-        "lucinda/sql-data-access": "~1.0",
-        "lucinda/view-language": "~1.0",
-        "lucinda/internationalization": "~1.0",
-        "lucinda/errors-mvc": "~1.0",
-        "lucinda/framework-engine": "~1.0"
     }
 }

@@ -32,7 +32,7 @@ require_once("vendor/lucinda/framework-engine/src/datasource_detection/SQLDataSo
  *  	</sql>
  *  </database>
  */
-class SQLDataSourceInjector extends ApplicationListener {
+class SQLDataSourceInjector extends Lucinda\MVC\STDOUT\ApplicationListener {
     public function run() {
         new SQLDataSourceBinder($this->application);
 	}
