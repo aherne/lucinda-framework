@@ -4,12 +4,12 @@
 <xml>
 	<application>
 		<default_page>index</default_page>
-		<default_extension>html</default_extension>
+		<default_format>html</default_format>
 		<auto_routing>1</auto_routing>
 		<paths>
 			<controllers>application/controllers</controllers>
 			<views>application/views</views>
-			<wrappers>application/wrappers</wrappers>
+			<resolvers>application/resolvers</resolvers>
 			<listeners>application/listeners</listeners>
 			<models>application/models</models>
 		</paths>
@@ -18,4 +18,8 @@
 		<listener class="EnvironmentDetector"/>
 		<listener class="ErrorListener"/>
 	</listeners>
+    <formats>
+        <format name="html" content_type="text/html" charset="UTF-8" class="HtmlResolver"/>
+        <format name="json" content_type="application/json" charset="UTF-8" class="JsonResolver"/>
+    </formats>
 </xml>

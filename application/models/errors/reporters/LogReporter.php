@@ -1,4 +1,5 @@
 <?php
+require_once("vendor/lucinda/logging/loader.php");
 require_once("vendor/lucinda/errors-mvc/src/ErrorReporter.php");
 require_once("vendor/lucinda/errors-mvc/src/Request.php");
 require_once("vendor/lucinda/errors-mvc/src/ErrorType.php");

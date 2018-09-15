@@ -6,3 +6,8 @@ document that @ internationalization "locale" parameter must be used in session/
 document that "format" attribute is mandatory @ file & sys logger (http://www.lucinda-framework.com/framework/event-listeners#LoggingListener)
 solve in master FormRequestValidator bug @ line 199
 new version: SQLLogger was removed (change http://www.lucinda-framework.com/framework/error-handling)
+
+ERRORS XML
+	TODO: change extension to name; change default_content_type to default_format
+		TODO: change all errors here
+	

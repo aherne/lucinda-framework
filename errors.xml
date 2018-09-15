@@ -19,21 +19,21 @@
 		</local>
 	</reporters>
 	<renderers>
-		<renderer extension="html" content_type="text/html" class="HtmlRenderer" charset="UTF-8"/>
-		<renderer extension="json" content_type="application/json" class="JsonRenderer" charset="UTF-8"/>
+		<renderer content_type="text/html" class="HtmlRenderer" charset="UTF-8"/>
+		<renderer content_type="application/json" class="JsonRenderer" charset="UTF-8"/>
 	</renderers>
 	<exceptions error_type="5" controller="ErrorsController">
-		<exception class="PathNotFoundException"  http_status="404 Not Found" error_type="3" view="404"/>
-		<exception class="MethodNotAllowedException"  http_status="405 Method Not Allowed" error_type="3" view="405"/>
-		<exception class="SecurityPacket"  controller="SecurityPacketController" error_type="1"/>
-		<exception class="SessionHijackException"  http_status="400 Bad Request" error_type="3" view="400"/>
-		<exception class="EncryptionException"  http_status="400 Bad Request" error_type="3" view="400"/>
-		<exception class="TokenException"  http_status="400 Bad Request" error_type="3" view="400"/>
-		<exception class="FileUploadException" http_status="400 Bad Request" error_type="2" view="400"/>
-		<exception class="SQLConnectionException" error_type="2" controller="ErrorsController"/>
-		<exception class="NoSQLConnectionException" error_type="2" controller="ErrorsController"/>
+		<exception class="Lucinda\MVC\STDOUT\PathNotFoundException"  http_status="404 Not Found" error_type="3" view="404"/>
+		<exception class="Lucinda\MVC\STDOUT\MethodNotAllowedException"  http_status="405 Method Not Allowed" error_type="3" view="405"/>
+		<exception class="Lucinda\Framework\SecurityPacket"  controller="SecurityPacketController" error_type="1"/>
+		<exception class="Lucinda\WebSecurity\SessionHijackException"  http_status="400 Bad Request" error_type="3" view="400"/>
+		<exception class="Lucinda\WebSecurityEncryptionException"  http_status="400 Bad Request" error_type="3" view="400"/>
+		<exception class="Lucinda\WebSecurityTokenException"  http_status="400 Bad Request" error_type="3" view="400"/>
+		<exception class="Lucinda\MVC\STDOUT\FileUploadException" http_status="400 Bad Request" error_type="2" view="400"/>
+		<exception class="Lucinda\SQL\ConnectionException" error_type="2" controller="ErrorsController"/>
+		<exception class="Lucinda\NoSQL\ConnectionException" error_type="2" controller="ErrorsController"/>
 		<exception class="OAuth2\ServerException" error_type="2" controller="ErrorsController"/>
-		<exception class="PHPException" error_type="4" controller="ErrorsController"/>
-		<exception class="ViewException" error_type="4" controller="ErrorsController"/>
+		<exception class="Lucinda\MVC\STDERR\PHPException" error_type="4" controller="ErrorsController"/>
+		<exception class="Lucinda\Templating\ViewException" error_type="4" controller="ErrorsController"/>
 	</exceptions>
 </xml>
