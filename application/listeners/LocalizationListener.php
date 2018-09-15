@@ -22,7 +22,7 @@ require_once("application/models/internationalization/Translate.php");
  *
  * If detected locale is not yet supported, uses "en_US". If latter is not supported either, a LocaleException is thrown!
  */
-class LocalizationListener extends RequestListener
+class LocalizationListener extends Lucinda\MVC\STDOUT\RequestListener
 {
     public function run() {
         new LocalizationBinder($this->application, $this->request);

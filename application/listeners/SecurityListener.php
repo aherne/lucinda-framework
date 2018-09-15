@@ -36,13 +36,13 @@ require_once("vendor/lucinda/framework-engine/src/security/SecurityBinder.php");
  * @attribute user_id Stores unique user identifier (for logged in users).
  * @attribute oauth2 Stores oauth2 drivers detected (if any).
  */
-class SecurityListener extends RequestListener {
+class SecurityListener extends Lucinda\MVC\STDOUT\RequestListener {
 	private $persistenceDrivers = array();
 
 	public function run() {	    
 	    $securityFilter = new SecurityBinder($this->application, $this->request);
-	    $this->request->setAttribute("user_id", $securityFilter->getUserID());
-	    $this->request->setAttribute("csrf", $securityFilter->getCsrfToken());
-	    $this->request->setAttribute("oauth2", $securityFilter->getOAuth2Drivers());
+	    $this->request->attributes()->set("user_id", $securityFilter->getUserID());
+	    $this->request->attributes()->set("csrf", $securityFilter->getCsrfToken());
+	    $this->request->attributes()->set("oauth2", $securityFilter->getOAuth2Drivers());
 	}
 }

@@ -20,7 +20,7 @@ require_once("vendor/lucinda/framework-engine/src/view_language/ViewLanguageBind
  * 
  * Notice: error rendering (but not reporting) will be disabled before compilation is saved to output buffer, so we won't have mixed content in view. 
  */
-class ViewLanguageResolver extends ResponseListener {
+class ViewLanguageResolver extends Lucinda\MVC\STDOUT\ResponseListener {
     public function run() {
         if(strpos($this->response->headers()->get("Content-Type"),"text/html")!==0) return;
         new ViewLanguageBinder($this->application, $this->response);

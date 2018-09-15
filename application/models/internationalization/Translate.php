@@ -1,6 +1,6 @@
 <?php
 /**
- * Translates text into preferred or default locale. Ignores er
+ * Translates text into preferred or default locale. Like gettext, ignores errors.
  * 
  * @param string $key Dictionary key by which translation can be accessed, relative to dictionary name (eg: furniture) 
  * @param string $domain Dictionary file name in which translation should be found (eg: house)

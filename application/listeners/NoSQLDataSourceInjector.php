@@ -32,7 +32,7 @@ require_once("vendor/lucinda/framework-engine/src/datasource_detection/NoSQLData
  *  	</nosql>
  *  </database>
  */
-class NoSQLDataSourceInjector extends ApplicationListener {
+class NoSQLDataSourceInjector extends Lucinda\MVC\STDOUT\ApplicationListener {
     public function run() {
         new NoSQLDataSourceBinder($this->application);
     }

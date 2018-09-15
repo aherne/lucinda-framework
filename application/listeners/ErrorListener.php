@@ -5,7 +5,7 @@ require_once("application/models/errors/reporters/LogReporter.php");
 /**
  * Binds STDERR MVC with Logging API in order to direct reporters to loggers and render in same content type as current page
  */
-class ErrorListener extends RequestListener {
+class ErrorListener extends Lucinda\MVC\STDOUT\RequestListener {
     /**
      * {@inheritDoc}
      * @see Runnable::run()
