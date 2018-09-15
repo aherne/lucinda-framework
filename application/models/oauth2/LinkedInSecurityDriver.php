@@ -5,7 +5,7 @@ require_once("LinkedInUserInformation.php");
 /**
  * Binds OAuth2\Driver @ OAuth2Client API with OAuth2Driver @ Security API for Linkedin
  */
-class LinkedInSecurityDriver extends AbstractSecurityDriver implements OAuth2Driver {
+class LinkedInSecurityDriver extends AbstractSecurityDriver implements Lucinda\WebSecurity\OAuth2Driver {
 	// login-related constants
 	const SCOPES = array("r_basicprofile","r_emailaddress");
 	const RESOURCE_URL = "https://api.linkedin.com/v1/people/~";
@@ -13,7 +13,7 @@ class LinkedInSecurityDriver extends AbstractSecurityDriver implements OAuth2Dri
 
 	/**
 	 * {@inheritDoc}
-	 * @see OAuth2Driver::getUserInformation()
+	 * @see Lucinda\WebSecurity\OAuth2Driver::getUserInformation()
 	 */
 	public function getUserInformation($accessToken) {
 		$info = $this->driver->getResource($accessToken, self::RESOURCE_URL);
@@ -23,7 +23,7 @@ class LinkedInSecurityDriver extends AbstractSecurityDriver implements OAuth2Dri
 	
 	/**
 	 * {@inheritDoc}
-	 * @see OAuth2Driver::getDefaultScopes()
+	 * @see Lucinda\WebSecurity\OAuth2Driver::getDefaultScopes()
 	 */
 	public function getDefaultScopes() {
 		return self::SCOPES;

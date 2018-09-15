@@ -23,7 +23,7 @@ abstract class LogReporter implements Lucinda\MVC\STDERR\ErrorReporter {
 	 * Detects logger based on XML attributes.
 	 * 
 	 * @param SimpleXMLElement $xml Contents of reporter tag @ errors document descriptor XML
-	 * @return Logger
+	 * @return Lucinda\Logging\Logger
 	 */
 	abstract protected function getLogger(SimpleXMLElement $xml);
 	

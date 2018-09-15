@@ -1,5 +1,5 @@
 <?php
-abstract class AbstractUserInformation implements OAuth2UserInformation {
+abstract class AbstractUserInformation implements Lucinda\WebSecurity\OAuth2UserInformation {
 	protected $id;
 	protected $name;
 	protected $email;

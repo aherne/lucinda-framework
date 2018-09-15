@@ -6,7 +6,7 @@ require_once("vendor/lucinda/framework-engine/src/Json.php");
  */
 class JsonResolver extends Lucinda\MVC\STDOUT\ViewResolver {
     public function getContent() {
-		$json = new Json();
+		$json = new Lucinda\Framework\Json();
 		return $json->encode(array("status"=>"ok","body"=>$this->response->toArray()));
 	}
 }
