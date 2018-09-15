@@ -7,14 +7,14 @@ class SyslogReporter extends LogReporter {
         
         $applicationName = (string) $xml["application"];
         if(!$applicationName) {
-            throw new ApplicationException("Property 'path' missing in configuration.xml tag: syslog!");
+            throw new Lucinda\MVC\STDOUT\XMLException("Property 'path' missing in configuration.xml tag: syslog!");
         }
         
         $pattern= (string) $xml["format"];
         if(!$pattern) {
-            throw new ApplicationException("Property 'format' missing in configuration.xml tag: syslog!");
+            throw new Lucinda\MVC\STDOUT\XMLException("Property 'format' missing in configuration.xml tag: syslog!");
         }
         
-        return new SysLogger($applicationName, new LogFormatter($pattern));
+        return new Lucinda\Logging\SysLogger($applicationName, new Lucinda\Logging\LogFormatter($pattern));
     }
 }

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "7a132ef7959b05bc5bc83a168788aa1b",
+    "content-hash": "335f4614b61d50c2edd0f5272db8404e",
     "packages": [
         {
             "name": "lucinda/errors-mvc",
@@ -39,6 +39,51 @@
                 "stderr"
             ],
             "time": "2018-08-16T02:33:55+00:00"
+        },
+        {
+            "name": "lucinda/framework-engine",
+            "version": "v1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/aherne/lucinda-framework-engine.git",
+                "reference": "6406db079e110b5ce2dca19bbad74d03a12371d2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/aherne/lucinda-framework-engine/zipball/6406db079e110b5ce2dca19bbad74d03a12371d2",
+                "reference": "6406db079e110b5ce2dca19bbad74d03a12371d2",
+                "shasum": ""
+            },
+            "require": {
+                "lucinda/http-caching": "~2.0",
+                "lucinda/internationalization": "~2.0",
+                "lucinda/logging": "~2.0",
+                "lucinda/mvc": "~2.0",
+                "lucinda/nosql-data-access": "~2.0",
+                "lucinda/oauth2-client": "~1.0",
+                "lucinda/security": "~2.0",
+                "lucinda/sql-data-access": "~2.0",
+                "lucinda/view-language": "~2.0"
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Lucian Popescu",
+                    "email": "lucian.gabriel.popescu@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Engine used behind Lucinda Framework",
+            "homepage": "http://www.lucinda-framework.com",
+            "keywords": [
+                "mvc",
+                "stdout"
+            ],
+            "time": "2018-09-15T10:03:20+00:00"
         },
         {
             "name": "lucinda/http-caching",
@@ -148,16 +193,16 @@
         },
         {
             "name": "lucinda/mvc",
-            "version": "v2.0.0",
+            "version": "v2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aherne/php-servlets-api.git",
-                "reference": "00086ca518861d2158c1e4e1c4c1edfd6ea8dd63"
+                "reference": "5a87466839925310202d38ee6f4a4e75d12abbc2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aherne/php-servlets-api/zipball/00086ca518861d2158c1e4e1c4c1edfd6ea8dd63",
-                "reference": "00086ca518861d2158c1e4e1c4c1edfd6ea8dd63",
+                "url": "https://api.github.com/repos/aherne/php-servlets-api/zipball/5a87466839925310202d38ee6f4a4e75d12abbc2",
+                "reference": "5a87466839925310202d38ee6f4a4e75d12abbc2",
                 "shasum": ""
             },
             "type": "library",
@@ -180,7 +225,7 @@
                 "servlets",
                 "view resolvers"
             ],
-            "time": "2018-09-09T07:04:25+00:00"
+            "time": "2018-09-15T10:04:00+00:00"
         },
         {
             "name": "lucinda/nosql-data-access",

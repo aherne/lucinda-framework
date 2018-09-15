@@ -1,29 +1,20 @@
 <?php
-require_once("vendor/lucinda/logging/loader.php");
 require_once("vendor/lucinda/framework-engine/src/logging/LoggingBinder.php");
 
 /**
- * Sets up logging in your application by binding  PHP-LOGGING-API with contents of "loggers" tag @ CONFIGURATION.XML, itself handled by SERVLETS API.  
+ * Binds STDOUT MVC with Logging API and contents of 'loggers' tag @ configuration.xml
+ * in order for developers to be able to log a message to a provider (eg: syslog).
  * 
- * Syntax for "logging" XML tag is:
- * <loggers>
- * 		<{ENVIRONMENT_NAME}>
- * 			...
- * 		</{ENVIRONMENT_NAME}>
- * </loggers>
- * 
- * Because behavior depends on environment, this listener requires EnvironmentDetector to be ran beforehand. First logger identified in loggers.{ENVIRONMENT} tag  
- * will be the one made available across application as "logger" application attribute.
- * 
- * @attribute logger
+ * Sets attributes:
+ * - logger: (Lucinda\Framework\MultiLogger) encapsulated logger(s) detected, able to distribute message to all loggers registered
  */
 class LoggingListener extends Lucinda\MVC\STDOUT\ApplicationListener {
-	/**
-	 * {@inheritDoc}
-	 * @see Runnable::run()
-	 */
+    /**
+     * {@inheritDoc}
+     * @see Lucinda\MVC\STDOUT\Runnable::run()
+     */
 	public function run() {
-	    $binder = new LoggingBinder($this->application);
+	    $binder = new Lucinda\Framework\LoggingBinder($this->application);
 	    $this->application->attributes()->set("logger", $binder->getLogger());
 	}
 }

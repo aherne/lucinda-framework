@@ -71,7 +71,7 @@ class SecurityPacketController  extends \Lucinda\MVC\STDERR\Controller {
     }
     
     
-    private function redirect(SecurityPacket $exception) {
+    private function redirect(Lucinda\Framework\SecurityPacket $exception) {
         $location = $exception->getCallback().($exception->getStatus()!="redirect"?"?status=".$exception->getStatus():"");
         
         header("Cache-Control: no-cache, no-store, must-revalidate"); // HTTP 1.1.

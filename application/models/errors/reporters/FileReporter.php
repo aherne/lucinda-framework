@@ -7,14 +7,14 @@ class FileReporter extends LogReporter {
         
         $filePath = (string) $xml["path"];
         if(!$filePath) {
-            throw new ApplicationException("Property 'path' missing in configuration.xml tag: file!");
+            throw new Lucinda\MVC\STDOUT\XMLException("Property 'path' missing in configuration.xml tag: file!");
         }
         
         $pattern= (string) $xml["format"];
         if(!$pattern) {
-            throw new ApplicationException("Property 'format' missing in configuration.xml tag: file!");
+            throw new Lucinda\MVC\STDOUT\XMLException("Property 'format' missing in configuration.xml tag: file!");
         }
         
-        return new FileLogger($filePath, (string) $xml["rotation"], new LogFormatter($pattern));
+        return new Lucinda\Logging\FileLogger($filePath, (string) $xml["rotation"], new Lucinda\Logging\LogFormatter($pattern));
     }
 }
