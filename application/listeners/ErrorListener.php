@@ -1,6 +1,4 @@
 <?php
-require_once("vendor/lucinda/logging/loader.php");
-require_once("application/models/errors/reporters/LogReporter.php");
 
 /**
  * Binds STDERR MVC with Logging API in order to reporter errors to loggers in same content type as current page
