@@ -7,7 +7,7 @@ document that "format" attribute is mandatory @ file & sys logger (http://www.lu
 solve in master FormRequestValidator bug @ line 199
 new version: SQLLogger was removed (change http://www.lucinda-framework.com/framework/error-handling)
 
-ERRORS XML
-	TODO: change extension to name; change default_content_type to default_format
-		TODO: change all errors here
 	
+engine: rename VIewLanguageBinder >> ViewLanguageBinder; LoggingBinder; NoSQLDataSourceBinder
+stdout mvc: is_subclass_of($className, $parentClassName) >> is_subclass_of($className, __NAMESPACE__."\\".$parentClassName)
+stderr mvc: replace all files

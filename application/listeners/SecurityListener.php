@@ -1,5 +1,4 @@
 <?php
-require_once("vendor/lucinda/security/loader.php");
 require_once("vendor/lucinda/framework-engine/src/security/SecurityBinder.php");
 
 /**
