@@ -41,7 +41,7 @@ abstract class LogReporter implements Lucinda\MVC\STDERR\ErrorReporter {
 			    $this->logger->emergency($request->getException());
 				break;
 		    case Lucinda\MVC\STDERR\ErrorType::SYNTAX:
-			    $this->logger->alert($$request->getException());
+			    $this->logger->alert($request->getException());
 				break;
 		    case Lucinda\MVC\STDERR\ErrorType::LOGICAL:
 			    $this->logger->critical($request->getException());

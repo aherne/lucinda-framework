@@ -3,7 +3,7 @@ require_once("LogReporter.php");
 
 class SyslogReporter extends LogReporter {
     protected function getLogger(SimpleXMLElement $xml) {
-        require_once("vendor/lucinda/logging/src/SysLogger.php");
+        require_once(dirname(dirname(dirname(dirname(__DIR__))))."/vendor/lucinda/logging/src/SysLogger.php");
         
         $applicationName = (string) $xml["application"];
         if(!$applicationName) {
