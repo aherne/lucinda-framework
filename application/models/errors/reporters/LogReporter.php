@@ -5,7 +5,7 @@ require_once("vendor/lucinda/errors-mvc/src/Request.php");
 require_once("vendor/lucinda/errors-mvc/src/ErrorType.php");
 
 /**
- * Binds Errors MVC API to Logging API in order to report errors through loggers.
+ * Binds STDERR MVC API to Logging API in order to report errors through loggers.
  */
 abstract class LogReporter implements Lucinda\MVC\STDERR\ErrorReporter {
 	private $logger;

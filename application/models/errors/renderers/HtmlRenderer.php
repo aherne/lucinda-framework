@@ -1,6 +1,13 @@
 <?php
+/**
+ * STDERR MVC error renderer for HTML format.
+ */
 class HtmlRenderer implements \Lucinda\MVC\STDERR\ErrorRenderer
 {
+    /**
+     * {@inheritDoc}
+     * @see \Lucinda\MVC\STDERR\ErrorRenderer::render()
+     */
     public function render(Lucinda\MVC\STDERR\Response $response) {
         if(!headers_sent()) {
             header("HTTP/1.1 ".$response->getHttpStatus());

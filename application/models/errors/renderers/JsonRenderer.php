@@ -1,4 +1,7 @@
 <?php
+/**
+ * STDERR MVC error renderer for JSON format.
+ */
 class JsonRenderer implements \Lucinda\MVC\STDERR\ErrorRenderer
 {
     public function render(Lucinda\MVC\STDERR\Response $response) {
