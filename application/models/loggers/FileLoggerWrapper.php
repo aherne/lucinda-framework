@@ -8,12 +8,12 @@ class FileLoggerWrapper extends Lucinda\Framework\AbstractLoggerWrapper {
         
         $filePath = (string) $xml["path"];
         if(!$filePath) {
-            throw new Lucinda\MVC\STDOUT\XMLException("Property 'path' missing in configuration.xml tag: file!");
+            throw new Lucinda\MVC\STDOUT\XMLException("Attribute 'path' is mandatory for 'file' tag");
         }
         
         $pattern= (string) $xml["format"];
         if(!$pattern) {
-            throw new Lucinda\MVC\STDOUT\XMLException("Property 'format' missing in configuration.xml tag: file!");
+            throw new Lucinda\MVC\STDOUT\XMLException("Attribute 'format' is mandatory for 'file' tag");
         }
         
         $this->logger = new Lucinda\Logging\FileLogger($filePath, (string) $xml["rotation"], new Lucinda\Logging\LogFormatter($pattern));

@@ -2,10 +2,7 @@
 <!DOCTYPE xml>
 
 <xml>
-	<application>
-		<default_page>index</default_page>
-		<default_format>html</default_format>
-		<auto_routing>1</auto_routing>
+	<application default_page="index" default_format="html" auto_routing="1">
 		<paths>
 			<controllers>application/controllers</controllers>
 			<views>application/views</views>
@@ -14,10 +11,6 @@
 			<models>application/models</models>
 		</paths>
 	</application>
-	<listeners>
-		<listener class="EnvironmentDetector"/>
-		<listener class="ErrorListener"/>
-	</listeners>
     <formats>
         <format name="html" content_type="text/html" charset="UTF-8" class="HtmlResolver"/>
         <format name="json" content_type="application/json" charset="UTF-8" class="JsonResolver"/>
