@@ -1,8 +1,12 @@
 <?php
 /**
- * Simple (HTML) view wrapper, used whenever an explicit wrapper for content type was not set.
+ * View resolver for HTML response format to be used whenever developers do not desire HTML templating (NOT RECOMMENDED!)
  */
 class HtmlResolver extends Lucinda\MVC\STDOUT\ViewResolver {
+    /**
+     * {@inheritDoc}
+     * @see \Lucinda\MVC\STDOUT\ViewResolver::getContent()
+     */
     public function getContent() {
         $output = "";
         $view = $this->application->getViewsPath()."/".$this->response->getView();

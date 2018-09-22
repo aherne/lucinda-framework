@@ -2,9 +2,13 @@
 require_once("vendor/lucinda/framework-engine/src/Json.php");
 
 /**
- * Implements a view resolver that renders JSON content.
+ * View resolver for JSON response format
  */
 class JsonResolver extends Lucinda\MVC\STDOUT\ViewResolver {
+    /**
+     * {@inheritDoc}
+     * @see \Lucinda\MVC\STDOUT\ViewResolver::getContent()
+     */
     public function getContent() {
 		$json = new Lucinda\Framework\Json();
 		return $json->encode(array("status"=>"ok","body"=>$this->response->attributes()->toArray()));

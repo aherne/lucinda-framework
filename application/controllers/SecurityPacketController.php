@@ -1,10 +1,18 @@
 <?php
+/**
+ * STDERR MVC controller running whenever a Lucinda\Framework\SecurityPacket is thrown during STDOUT phase.
+ * Class is open for modification if, for example, developers want to simply redirect to callback page when HTML response format is required
+ * instead of showing 401/403/404 views.  
+ */
 class SecurityPacketController  extends \Lucinda\MVC\STDERR\Controller {
     public function run() {
         $this->setResponseStatus();
         $this->setResponseBody();
     }
     
+    /**
+     * Sets response HTTP status code according to outcome of security validation
+     */
     private function setResponseStatus() {
         switch($this->request->getException()->getStatus()) {
             case "unauthorized":
@@ -21,6 +29,11 @@ class SecurityPacketController  extends \Lucinda\MVC\STDERR\Controller {
         }
     }
     
+    /**
+     * Sets response body from view file or stream.
+     *
+     * @throws Exception If content type of response is other than JSON or HTML.
+     */
     private function setResponseBody() {
         // gets content type
         $contentType = $this->response->getHeader("Content-Type");
@@ -70,7 +83,11 @@ class SecurityPacketController  extends \Lucinda\MVC\STDERR\Controller {
         }
     }
     
-    
+    /**
+     * Performs a temporary redirect based on SecurityPacket coordinates
+     * 
+     * @param Lucinda\Framework\SecurityPacket $exception
+     */
     private function redirect(Lucinda\Framework\SecurityPacket $exception) {
         $location = $exception->getCallback().($exception->getStatus()!="redirect"?"?status=".$exception->getStatus():"");
         

@@ -1,7 +1,14 @@
 <?php
 require_once("LogReporter.php");
 
+/**
+ * Logs error into a dedicated SYSLOG server, whose details may vary according to development environment.
+ */
 class SyslogReporter extends LogReporter {
+    /**
+     * {@inheritDoc}
+     * @see LogReporter::getLogger()
+     */
     protected function getLogger(SimpleXMLElement $xml) {
         require_once(dirname(dirname(dirname(dirname(__DIR__))))."/vendor/lucinda/logging/src/SysLogger.php");
         

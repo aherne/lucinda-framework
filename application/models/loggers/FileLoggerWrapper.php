@@ -1,8 +1,13 @@
 <?php
 /**
- * Detects and constructs instance of FileLogger based on XML content.
+ * Logs message into file on disk, whose location varies according to development environment.  
+ * ATTENTION: web server must have write access on folder file is located into! 
  */
 class FileLoggerWrapper extends Lucinda\Framework\AbstractLoggerWrapper {
+    /**
+     * {@inheritDoc}
+     * @see \Lucinda\Framework\AbstractLoggerWrapper::setLogger()
+     */
     protected function setLogger(SimpleXMLElement $xml) {
         require_once("vendor/lucinda/logging/src/FileLogger.php");
         

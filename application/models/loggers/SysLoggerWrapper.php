@@ -1,6 +1,6 @@
 <?php
 /**
- * Detects and constructs instance of FileLogger based on XML content.
+ * Logs message into a dedicated SYSLOG server, whose details may vary according to development environment.
  */
 class SysLoggerWrapper extends Lucinda\Framework\AbstractLoggerWrapper {
     protected function setLogger(SimpleXMLElement $xml) {
