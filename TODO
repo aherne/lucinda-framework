@@ -7,7 +7,9 @@ document that "format" attribute is mandatory @ file & sys logger (http://www.lu
 solve in master FormRequestValidator bug @ line 199
 new version: SQLLogger was removed (change http://www.lucinda-framework.com/framework/error-handling)
 
-	
-engine: rename VIewLanguageBinder >> ViewLanguageBinder; LoggingBinder; NoSQLDataSourceBinder
-stdout mvc: is_subclass_of($className, $parentClassName) >> is_subclass_of($className, __NAMESPACE__."\\".$parentClassName)
-stderr mvc: replace all files
+replaced application.paths.loggers with loggers[path]
+replaced application.paths.dao with security[dao_path]
+replaced application.paths.cacheables with http_caching[drivers_path]
+removed BypassWrapper, renamed JsonWrapper to JsonResolver
+renamed application.wrappers >> application.resolvers
+changed templates_extension @ application from tag to attribute

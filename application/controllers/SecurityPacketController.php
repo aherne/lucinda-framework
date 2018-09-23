@@ -5,6 +5,8 @@
  * instead of showing 401/403/404 views.  
  */
 class SecurityPacketController  extends \Lucinda\MVC\STDERR\Controller {
+    const REDIRECT_ON_ERRORS = true;
+    
     public function run() {
         $this->setResponseStatus();
         $this->setResponseBody();
@@ -46,19 +48,23 @@ class SecurityPacketController  extends \Lucinda\MVC\STDERR\Controller {
         
         // sets response content
         if(strpos($contentType, "text/html")==0) {
-            switch($status) {
-                case "unauthorized":
-                    $this->response->setView($this->application->getViewsPath()."/401");
-                    break;
-                case "forbidden":
-                    $this->response->setView($this->application->getViewsPath()."/403");
-                    break;
-                case "not_found":
-                    $this->response->setView($this->application->getViewsPath()."/404");
-                    break;
-                default:
-                    $this->redirect($exception);
-                    break;
+            if(self::REDIRECT_ON_ERRORS) {
+                $this->redirect($exception);
+            } else {
+                switch($status) {
+                    case "unauthorized":
+                        $this->response->setView($this->application->getViewsPath()."/401");
+                        break;
+                    case "forbidden":
+                        $this->response->setView($this->application->getViewsPath()."/403");
+                        break;
+                    case "not_found":
+                        $this->response->setView($this->application->getViewsPath()."/404");
+                        break;
+                    default:
+                        $this->redirect($exception);
+                        break;
+                }
             }
         } else if(strpos($contentType, "application/json")==0) {
             switch($status) {
