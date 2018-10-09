@@ -8,15 +8,7 @@
 			<reporters>application/models/errors/reporters</reporters>
 			<renderers>application/models/errors/renderers</renderers>
 		</paths>
-		<display_errors>
-			<local>1</local>
-		</display_errors>
 	</application>
-	<reporters>
-		<local>
-			<reporter class="FileReporter" path="errors" format="%d %f %l %m"/>
-		</local>
-	</reporters>
 	<renderers>
 		<renderer content_type="text/html" class="HtmlRenderer" charset="UTF-8"/>
 		<renderer content_type="application/json" class="JsonRenderer" charset="UTF-8"/>
