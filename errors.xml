@@ -8,6 +8,9 @@
 			<reporters>application/models/errors/reporters</reporters>
 			<renderers>application/models/errors/renderers</renderers>
 		</paths>
+		<display_errors>
+			<local>1</local>
+		</display_errors>
 	</application>
 	<renderers>
 		<renderer content_type="text/html" class="HtmlRenderer" charset="UTF-8"/>
