@@ -29,7 +29,6 @@ class ErrorsController extends \Lucinda\MVC\STDERR\Controller {
         // gets whether or not errors should be displayed
         $developmentEnvironment = getenv("ENVIRONMENT");
         $displayErrors = (string) $this->application->getXML()->application->display_errors->{$developmentEnvironment};
-        if(!$displayErrors) $displayErrors = true;
         
         // gets content type
         $contentType = $this->response->getHeader("Content-Type");
