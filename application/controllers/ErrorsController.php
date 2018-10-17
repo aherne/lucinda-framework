@@ -47,7 +47,7 @@ class ErrorsController extends \Lucinda\MVC\STDERR\Controller {
             }
         } else if(strpos($contentType, "application/json")==0) {
             if($displayErrors) {
-                $this->response->setBody(array("status"=>"error", "body"=>$exception->getMessage()));
+                $this->response->setBody(array("status"=>"error", "body"=>$this->request->getException()->getMessage()));
             }
         } else {
             throw new Exception("Unsupported content type!");
