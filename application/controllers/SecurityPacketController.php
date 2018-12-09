@@ -5,7 +5,7 @@
  * instead of showing 401/403/404 views.  
  */
 class SecurityPacketController  extends \Lucinda\MVC\STDERR\Controller {
-    const REDIRECT_ON_ERRORS = true;
+    const REDIRECT = true;
     
     public function run() {
         $this->setResponseStatus();
@@ -48,8 +48,9 @@ class SecurityPacketController  extends \Lucinda\MVC\STDERR\Controller {
         
         // sets response content
         if(strpos($contentType, "text/html")==0) {
-            if(self::REDIRECT_ON_ERRORS) {
-                $this->redirect($exception);
+            $location = $exception->getCallback().($exception->getStatus()!="redirect"?"?status=".$exception->getStatus():"");
+            if(self::REDIRECT) {
+                $this->response->redirect($location);
             } else {
                 switch($status) {
                     case "unauthorized":
@@ -62,45 +63,14 @@ class SecurityPacketController  extends \Lucinda\MVC\STDERR\Controller {
                         $this->response->setView($this->application->getViewsPath()."/404");
                         break;
                     default:
-                        $this->redirect($exception);
+                        $this->response->redirect($location, false, true);
                         break;
                 }
             }
         } else if(strpos($contentType, "application/json")==0) {
-            switch($status) {
-                case "unauthorized":
-                    $this->response->setBody(array("status"=>"error","body"=>"", "callback"=>$exception->getCallback()));
-                    break;
-                case "forbidden":
-                    $this->response->setBody(array("status"=>"error","body"=>"", "callback"=>$exception->getCallback()));
-                    break;
-                case "not_found":
-                    $this->response->setBody(array("status"=>"error","body"=>"", "callback"=>$exception->getCallback()));
-                    break;
-                case "login_ok":
-                    $this->response->setBody(array("status"=>"login_ok","body"=>"", "callback"=>$exception->getCallback(), "token"=>$exception->getAccessToken()));
-                    break;
-                default:
-                    $this->response->setBody(array("status"=>$exception->getStatus(), "body"=>"", "callback"=>$exception->getCallback()));
-                    break;
-            }
+            $this->response->setBody(array("status"=>$exception->getStatus(),"body"=>"", "callback"=>$exception->getCallback(), "token"=>$exception->getAccessToken()));
         } else {
             throw new Exception("Unsupported content type!");
         }
-    }
-    
-    /**
-     * Performs a temporary redirect based on SecurityPacket coordinates
-     * 
-     * @param Lucinda\Framework\SecurityPacket $exception
-     */
-    private function redirect(Lucinda\Framework\SecurityPacket $exception) {
-        $location = $exception->getCallback().($exception->getStatus()!="redirect"?"?status=".$exception->getStatus():"");
-        
-        header("Cache-Control: no-cache, no-store, must-revalidate"); // HTTP 1.1.
-        header("Pragma: no-cache");
-        header("Expires: 0");
-        header('Location: '.$location, true, 302);
-        exit();
     }
 }
