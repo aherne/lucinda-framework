@@ -11,12 +11,17 @@ class ViewLanguageRenderer implements \Lucinda\MVC\STDERR\ErrorRenderer {
             // gets simplexml application object
             $application = simplexml_load_file(dirname(__DIR__, 4)."/stderr.xml")->application;
             
+            // gets view file
+            $viewFile = $response->getView();
+            $viewsPath = (string) $application->paths->views;
+            $viewFile = substr($viewFile, strpos($viewFile, $viewsPath)+strlen($viewsPath)+1);
+            
             // converts view language to PHP
-            $wrapper = new Lucinda\Framework\ViewLanguageBinder($application, $this->response->getView());
+            $wrapper = new Lucinda\Framework\ViewLanguageBinder($application, $viewFile);
             $compilationFile = $wrapper->getCompilationFile();
             
             // compiles PHP file into output buffer
-            $data = $this->response->getAttributes();
+            $data = $response->getAttributes();
             ob_start();
             require_once($compilationFile);
             $output = ob_get_contents();
