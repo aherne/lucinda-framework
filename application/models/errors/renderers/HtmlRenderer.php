@@ -9,21 +9,16 @@ class HtmlRenderer implements \Lucinda\MVC\STDERR\ErrorRenderer
      * @see \Lucinda\MVC\STDERR\ErrorRenderer::render()
      */
     public function render(Lucinda\MVC\STDERR\Response $response) {
-        if(!headers_sent()) {
-            header("HTTP/1.1 ".$response->getHttpStatus());
+        $viewFile = $response->getView();
+        if($viewFile && !$response->getBody()) {
+            if(!file_exists($viewFile.".html")) throw new \Lucinda\MVC\STDERR\Exception("View file not found: ".$viewFile);
+            ob_start();
+            $_VIEW = $response->getAttributes();
+            require_once($viewFile.".html");
+            $output = ob_get_contents();
+            ob_end_clean();
+            $response->setBody($output);
         }
-        
-        // loads headers
-        $headers = $response->getHeaders();
-        foreach($headers as $name=>$value) {
-            header($name.": ".$value);
-        }
-            
-        // show output
-        if($response->getBody()) {
-            echo $response->getBody();
-        } else if($response->getView()) {
-            require_once($response->getView().".html");
-        }
+        $response->commit();
     }
 }

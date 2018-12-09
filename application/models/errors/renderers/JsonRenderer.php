@@ -1,21 +1,14 @@
 <?php
+require_once(dirname(__DIR__, 2)."/json/Json.php");
+
 /**
  * STDERR MVC error renderer for JSON format.
  */
 class JsonRenderer implements \Lucinda\MVC\STDERR\ErrorRenderer
 {
     public function render(Lucinda\MVC\STDERR\Response $response) {
-        if(!headers_sent()) {
-            header("HTTP/1.1 ".$response->getHttpStatus());
-        }
-        
-        // loads headers
-        $headers = $response->getHeaders();
-        foreach($headers as $name=>$value) {
-            header($name.": ".$value);
-        }
-        
-        // show output
-        echo json_encode($response->getBody());
+        $json = new Json();
+        $response->setBody($json->encode($response->getAttributes()));
+        $response->commit();
     }
 }
