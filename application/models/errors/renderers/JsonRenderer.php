@@ -9,6 +9,5 @@ class JsonRenderer implements \Lucinda\MVC\STDERR\ErrorRenderer
     public function render(Lucinda\MVC\STDERR\Response $response) {
         $json = new Json();
         $response->setBody($json->encode($response->getAttributes()));
-        $response->commit();
     }
 }
