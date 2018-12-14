@@ -30,6 +30,5 @@ class ViewLanguageRenderer implements \Lucinda\MVC\STDERR\ErrorRenderer {
             // saves stream
             $response->setBody($output);
         }
-        $response->commit();
     }
 }

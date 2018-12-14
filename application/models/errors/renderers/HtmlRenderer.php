@@ -19,6 +19,5 @@ class HtmlRenderer implements \Lucinda\MVC\STDERR\ErrorRenderer
             ob_end_clean();
             $response->setBody($output);
         }
-        $response->commit();
     }
 }
