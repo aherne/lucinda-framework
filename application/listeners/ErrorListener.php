@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Binds STDERR MVC with Logging API in order to reporter errors to loggers in same content type as current page
  */

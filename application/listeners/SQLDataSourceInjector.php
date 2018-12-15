@@ -13,6 +13,6 @@ class SQLDataSourceInjector extends Lucinda\MVC\STDOUT\ApplicationListener {
      * @see Lucinda\MVC\STDOUT\Runnable::run()
      */
     public function run() {
-        new Lucinda\Framework\SQLDataSourceBinder($this->application);
+        new Lucinda\Framework\SQLDataSourceBinder($this->application->getTag("servers")->sql, ENVIRONMENT);
 	}
 }
