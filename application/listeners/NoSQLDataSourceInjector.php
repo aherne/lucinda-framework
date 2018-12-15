@@ -13,6 +13,6 @@ class NoSQLDataSourceInjector extends Lucinda\MVC\STDOUT\ApplicationListener {
      * @see Lucinda\MVC\STDOUT\Runnable::run()
      */
     public function run() {
-        new Lucinda\Framework\NoSQLDataSourceBinder($this->application);
+        new Lucinda\Framework\NoSQLDataSourceBinder($this->application->getTag("servers")->nosql, ENVIRONMENT);
     }
 }
