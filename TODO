@@ -1,85 +1,10 @@
 Make a PHP7 version of framework
-2. application/models/LoggerFinder, src/error_handling/Error***Finder: make it elegant to support adding other loggers without changing class
-4. group view-related XML tags
-document remove ignore_ip flag
-document that @ internationalization "locale" parameter must be used in session/request based locale detection
 document that "format" attribute is mandatory @ file & sys logger (http://www.lucinda-framework.com/framework/event-listeners#LoggingListener)
-solve in master FormRequestValidator bug @ line 199
-new version: SQLLogger was removed (change http://www.lucinda-framework.com/framework/error-handling)
-
+	link to explain format syntax
 replaced application.paths.loggers with loggers[path]
 replaced application.paths.dao with security[dao_path]
 replaced application.paths.cacheables with http_caching[drivers_path]
 removed BypassWrapper, renamed JsonWrapper to JsonResolver
 renamed application.wrappers >> application.resolvers
 changed templates_extension @ application from tag to attribute
-
-XML & DAO Authentication use password_hash & password_verify
-
 VIewLanguage: document what kind of arguments data attribute can have (eg: cannot contain dashes)
-
-
-Home
-What's New
-What's Pending
-Benchmarks
-Blog
-	How is art relevant to programming?
-	Why did I write my own framework?
-	What were its design principles?
-Installation
-Documentation
-	Framework
-		Bootstrapping
-		STDOUT MVC
-			XML
-			Event Listeners
-				Attributes
-			View Resolvers
-		STDERR MVC
-			XML
-			Error Reporters
-			View Resolvers
-		Models
-		Views
-	STDOUT MVC
-		XML
-		Reference Guide
-		User Guide
-	STDERR MVC
-		XML
-		Reference Guide
-		User Guide
-	View Language
-		Reference Guide
-			Macros
-			Tags
-			Programming
-			Expressions
-		User Guide
-	Logging
-		Reference Guide
-		User Guide
-	Web Security
-		Reference Guide
-			Authentication
-				Persistence Drivers
-			Authorization
-			Tokens
-		User Guide
-	OAuth2 Client API
-		Reference Guide
-		User Guide
-	SQL Data Access
-		Reference Guide
-		User Guide
-	NoSQL Data Access
-		Reference Guide
-		User Guide
-	Internationalization
-		Reference Guide
-		User Guide
-	HTTP Caching
-		Reference Guide
-		User Guide
-	
