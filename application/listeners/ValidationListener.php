@@ -4,7 +4,7 @@ require_once("vendor/lucinda/framework-engine/src/validation/ValidationBinder.ph
  * Binds STDOUT MVC API with Parameters Validation API based on contents of <routes> stdout.xml tag for request/path parameters validation.
  *
  * Sets attribute:
- * - validation_results: (Lucinda\ParameterValidator\ResultsList) stores validation results for each parameter
+ * - validation_results: (Lucinda\RequestValidator\ResultsList) stores validation results for each parameter
  */
 class SecurityListener extends Lucinda\MVC\STDOUT\RequestListener {
     /**
