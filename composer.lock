@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "335f4614b61d50c2edd0f5272db8404e",
+    "content-hash": "02ef4ba5ac49421727568335149ba510",
     "packages": [
         {
             "name": "lucinda/errors-mvc",
-            "version": "v1.0.4",
+            "version": "v1.0.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aherne/errors-api.git",
-                "reference": "d5f9e491d11d3f27ef6fe12131552a52154dd44e"
+                "reference": "d2a557ea66344421514ab99fbe93401a35be77b0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aherne/errors-api/zipball/d5f9e491d11d3f27ef6fe12131552a52154dd44e",
-                "reference": "d5f9e491d11d3f27ef6fe12131552a52154dd44e",
+                "url": "https://api.github.com/repos/aherne/errors-api/zipball/d2a557ea66344421514ab99fbe93401a35be77b0",
+                "reference": "d2a557ea66344421514ab99fbe93401a35be77b0",
                 "shasum": ""
             },
             "type": "library",
@@ -38,20 +38,20 @@
                 "mvc",
                 "stderr"
             ],
-            "time": "2018-08-16T02:33:55+00:00"
+            "time": "2018-12-15T06:01:18+00:00"
         },
         {
             "name": "lucinda/framework-engine",
-            "version": "v1.1.0",
+            "version": "v1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aherne/lucinda-framework-engine.git",
-                "reference": "6406db079e110b5ce2dca19bbad74d03a12371d2"
+                "reference": "68aa30942513647d4186e863a68a0fc274dcd1f2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aherne/lucinda-framework-engine/zipball/6406db079e110b5ce2dca19bbad74d03a12371d2",
-                "reference": "6406db079e110b5ce2dca19bbad74d03a12371d2",
+                "url": "https://api.github.com/repos/aherne/lucinda-framework-engine/zipball/68aa30942513647d4186e863a68a0fc274dcd1f2",
+                "reference": "68aa30942513647d4186e863a68a0fc274dcd1f2",
                 "shasum": ""
             },
             "require": {
@@ -61,6 +61,7 @@
                 "lucinda/mvc": "~2.0",
                 "lucinda/nosql-data-access": "~2.0",
                 "lucinda/oauth2-client": "~1.0",
+                "lucinda/request-validator": "~1.0",
                 "lucinda/security": "~2.0",
                 "lucinda/sql-data-access": "~2.0",
                 "lucinda/view-language": "~2.0"
@@ -83,7 +84,7 @@
                 "mvc",
                 "stdout"
             ],
-            "time": "2018-09-15T10:03:20+00:00"
+            "time": "2018-12-22T05:49:28+00:00"
         },
         {
             "name": "lucinda/http-caching",
@@ -193,16 +194,16 @@
         },
         {
             "name": "lucinda/mvc",
-            "version": "v2.0.2",
+            "version": "v2.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aherne/php-servlets-api.git",
-                "reference": "5a87466839925310202d38ee6f4a4e75d12abbc2"
+                "reference": "f53499f993f35c1a03d63e6ce6a7989a7010eb7e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aherne/php-servlets-api/zipball/5a87466839925310202d38ee6f4a4e75d12abbc2",
-                "reference": "5a87466839925310202d38ee6f4a4e75d12abbc2",
+                "url": "https://api.github.com/repos/aherne/php-servlets-api/zipball/f53499f993f35c1a03d63e6ce6a7989a7010eb7e",
+                "reference": "f53499f993f35c1a03d63e6ce6a7989a7010eb7e",
                 "shasum": ""
             },
             "type": "library",
@@ -225,20 +226,20 @@
                 "servlets",
                 "view resolvers"
             ],
-            "time": "2018-09-15T10:04:00+00:00"
+            "time": "2018-09-30T13:26:07+00:00"
         },
         {
             "name": "lucinda/nosql-data-access",
-            "version": "v2.0.0",
+            "version": "v2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aherne/php-nosql-data-access-api.git",
-                "reference": "aeb9fed30dfaf4bbe62d4f18433d553e22cc019d"
+                "reference": "6a86b7a21dbc54bfe65536329b718c02b1f8aa4d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aherne/php-nosql-data-access-api/zipball/aeb9fed30dfaf4bbe62d4f18433d553e22cc019d",
-                "reference": "aeb9fed30dfaf4bbe62d4f18433d553e22cc019d",
+                "url": "https://api.github.com/repos/aherne/php-nosql-data-access-api/zipball/6a86b7a21dbc54bfe65536329b718c02b1f8aa4d",
+                "reference": "6a86b7a21dbc54bfe65536329b718c02b1f8aa4d",
                 "shasum": ""
             },
             "type": "library",
@@ -265,7 +266,7 @@
                 "nosql",
                 "redis"
             ],
-            "time": "2018-09-09T11:16:54+00:00"
+            "time": "2018-09-23T07:25:48+00:00"
         },
         {
             "name": "lucinda/oauth2-client",
@@ -302,17 +303,52 @@
             "time": "2018-01-27T14:14:34+00:00"
         },
         {
-            "name": "lucinda/security",
-            "version": "v2.0.0",
+            "name": "lucinda/request-validator",
+            "version": "v1.0.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/aherne/php-security-api.git",
-                "reference": "6823a07ccaad8ea2da7ad71cd09bfc58af7e3605"
+                "url": "https://github.com/aherne/php-parameter-validator.git",
+                "reference": "02b2e174c69faeaf2df69a3c1134cae1b58696ef"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aherne/php-security-api/zipball/6823a07ccaad8ea2da7ad71cd09bfc58af7e3605",
-                "reference": "6823a07ccaad8ea2da7ad71cd09bfc58af7e3605",
+                "url": "https://api.github.com/repos/aherne/php-parameter-validator/zipball/02b2e174c69faeaf2df69a3c1134cae1b58696ef",
+                "reference": "02b2e174c69faeaf2df69a3c1134cae1b58696ef",
+                "shasum": ""
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Lucian Popescu",
+                    "email": "lucian.gabriel.popescu@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Encapsulates path/request parameters validation",
+            "homepage": "https://github.com/aherne/php-parameter-validator",
+            "keywords": [
+                "path parameters",
+                "request parameters",
+                "validation"
+            ],
+            "time": "2018-12-19T15:28:02+00:00"
+        },
+        {
+            "name": "lucinda/security",
+            "version": "v2.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/aherne/php-security-api.git",
+                "reference": "cf98b2bca409d57a2969177245912a5d5d4a69be"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/aherne/php-security-api/zipball/cf98b2bca409d57a2969177245912a5d5d4a69be",
+                "reference": "cf98b2bca409d57a2969177245912a5d5d4a69be",
                 "shasum": ""
             },
             "type": "library",
@@ -340,7 +376,7 @@
                 "token",
                 "xml"
             ],
-            "time": "2018-09-09T08:47:48+00:00"
+            "time": "2018-10-01T09:05:30+00:00"
         },
         {
             "name": "lucinda/sql-data-access",
@@ -378,16 +414,16 @@
         },
         {
             "name": "lucinda/view-language",
-            "version": "v2.0.0",
+            "version": "v2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aherne/php-view-language-api.git",
-                "reference": "a4ec6677d08b7609769f5f56fc9c49f36d0262a3"
+                "reference": "fa70cb35dd01e08aaeeda4396f118f6f39c9f4e9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aherne/php-view-language-api/zipball/a4ec6677d08b7609769f5f56fc9c49f36d0262a3",
-                "reference": "a4ec6677d08b7609769f5f56fc9c49f36d0262a3",
+                "url": "https://api.github.com/repos/aherne/php-view-language-api/zipball/fa70cb35dd01e08aaeeda4396f118f6f39c9f4e9",
+                "reference": "fa70cb35dd01e08aaeeda4396f118f6f39c9f4e9",
                 "shasum": ""
             },
             "type": "library",
@@ -409,7 +445,7 @@
                 "templating",
                 "views"
             ],
-            "time": "2018-09-09T08:04:10+00:00"
+            "time": "2018-11-06T10:57:56+00:00"
         }
     ],
     "packages-dev": [],

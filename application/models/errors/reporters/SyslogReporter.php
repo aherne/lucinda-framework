@@ -1,13 +1,13 @@
 <?php
-require_once("LogReporter.php");
+require_once(dirname(__DIR__,4)."/vendor/lucinda/framework-engine/src/error_reporting/LogReporter.php");
 
 /**
  * Logs error into a dedicated SYSLOG server, whose details may vary according to development environment.
  */
-class SyslogReporter extends LogReporter {
+class SyslogReporter extends Lucinda\Framework\LogReporter {
     /**
      * {@inheritDoc}
-     * @see LogReporter::getLogger()
+     * @see Lucinda\Framework\LogReporter::getLogger()
      */
     protected function getLogger(SimpleXMLElement $xml) {
         require_once(dirname(dirname(dirname(dirname(__DIR__))))."/vendor/lucinda/logging/src/SysLogger.php");
