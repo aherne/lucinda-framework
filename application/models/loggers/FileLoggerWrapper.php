@@ -3,7 +3,7 @@
  * Logs message into file on disk, whose location varies according to development environment.  
  * ATTENTION: web server must have write access on folder file is located into! 
  */
-class FileLoggerWrapper extends Lucinda\Framework\AbstractLoggerWrapper {
+class FileLoggerWrapper extends \Lucinda\Framework\AbstractLoggerWrapper {
     /**
      * {@inheritDoc}
      * @see \Lucinda\Framework\AbstractLoggerWrapper::setLogger()

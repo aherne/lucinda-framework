@@ -5,7 +5,7 @@ require_once("vendor/lucinda/framework-engine/src/view_language/ViewLanguageBind
  * View resolver for HTML format binding STDOUT MVC with View Language API and contents of 'application' tag @ configuration.xml
  * in order to be able to perform templating in a view
  */
-class ViewLanguageResolver extends Lucinda\MVC\STDOUT\ViewResolver {
+class ViewLanguageResolver extends \Lucinda\MVC\STDOUT\ViewResolver {
     /**
      * {@inheritDoc}
      * @see \Lucinda\MVC\STDOUT\ViewResolver::getContent()

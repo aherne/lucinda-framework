@@ -6,7 +6,11 @@
  */
 class SecurityPacketController  extends \Lucinda\MVC\STDERR\Controller {
     const REDIRECT = true;
-    
+
+    /**
+     * {@inheritDoc}
+     * @see \Lucinda\MVC\STDERR\Controller::run()
+     */
     public function run() {
         $this->setResponseStatus();
         $this->setResponseBody();
