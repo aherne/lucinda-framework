@@ -8,10 +8,10 @@ require_once("vendor/lucinda/framework-engine/src/logging/LoggingBinder.php");
  * Sets attributes:
  * - logger: (Lucinda\Framework\MultiLogger) encapsulated logger(s) detected, able to distribute message to all loggers registered
  */
-class LoggingListener extends Lucinda\MVC\STDOUT\ApplicationListener {
+class LoggingListener extends \Lucinda\MVC\STDOUT\ApplicationListener {
     /**
      * {@inheritDoc}
-     * @see Lucinda\MVC\STDOUT\Runnable::run()
+     * @see \Lucinda\MVC\STDOUT\Runnable::run()
      */
 	public function run() {
 	    $binder = new Lucinda\Framework\LoggingBinder($this->application->getTag("loggers"), ENVIRONMENT);

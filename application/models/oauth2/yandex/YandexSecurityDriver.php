@@ -1,18 +1,18 @@
 <?php
-require_once("AbstractSecurityDriver.php");
+require_once("../AbstractSecurityDriver.php");
 require_once("YandexUserInformation.php");
 
 /**
  * Binds OAuth2\Driver @ OAuth2Client API with OAuth2Driver @ Security API for Yandex
  */
-class YandexSecurityDriver extends AbstractSecurityDriver implements Lucinda\WebSecurity\OAuth2Driver {
+class YandexSecurityDriver extends AbstractSecurityDriver implements \Lucinda\WebSecurity\OAuth2Driver {
 	// login-related constants
 	const SCOPES = array();
 	const RESOURCE_URL = "https://login.yandex.ru/info";
 	
 	/**
 	 * {@inheritDoc}
-	 * @see Lucinda\WebSecurity\OAuth2Driver::getUserInformation()
+	 * @see \Lucinda\WebSecurity\OAuth2Driver::getUserInformation()
 	 */
 	public function getUserInformation($accessToken) {
 		return new YandexUserInformation($this->driver->getResource($accessToken, self::RESOURCE_URL));
@@ -20,7 +20,7 @@ class YandexSecurityDriver extends AbstractSecurityDriver implements Lucinda\Web
 	
 	/**
 	 * {@inheritDoc}
-	 * @see Lucinda\WebSecurity\OAuth2Driver::getDefaultScopes()
+	 * @see \Lucinda\WebSecurity\OAuth2Driver::getDefaultScopes()
 	 */
 	public function getDefaultScopes() {
 		return self::SCOPES;

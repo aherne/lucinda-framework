@@ -1,11 +1,11 @@
 <?php
-require_once("AbstractSecurityDriver.php");
+require_once("../AbstractSecurityDriver.php");
 require_once("GitHubUserInformation.php");
 
 /**
  * Binds OAuth2\Driver @ OAuth2Client API with OAuth2Driver @ Security API for Github
  */
-class GitHubSecurityDriver extends AbstractSecurityDriver implements Lucinda\WebSecurity\OAuth2Driver {
+class GitHubSecurityDriver extends AbstractSecurityDriver implements \Lucinda\WebSecurity\OAuth2Driver {
 	// login-related constants
 	const SCOPES = array("read:user","user:email");
 	const RESOURCE_URL = "https://api.github.com/user";
@@ -13,7 +13,7 @@ class GitHubSecurityDriver extends AbstractSecurityDriver implements Lucinda\Web
 
 	/**
 	 * {@inheritDoc}
-	 * @see Lucinda\WebSecurity\OAuth2Driver::getUserInformation()
+	 * @see \Lucinda\WebSecurity\OAuth2Driver::getUserInformation()
 	 */
 	public function getUserInformation($accessToken) {
 		$info = $this->driver->getResource($accessToken, self::RESOURCE_URL);
@@ -24,7 +24,7 @@ class GitHubSecurityDriver extends AbstractSecurityDriver implements Lucinda\Web
 	
 	/**
 	 * {@inheritDoc}
-	 * @see Lucinda\WebSecurity\OAuth2Driver::getDefaultScopes()
+	 * @see \Lucinda\WebSecurity\OAuth2Driver::getDefaultScopes()
 	 */
 	public function getDefaultScopes() {
 		return self::SCOPES;

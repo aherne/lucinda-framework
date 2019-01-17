@@ -10,7 +10,7 @@ class Json {
 	 * 
 	 * @param mixed $data
 	 * @return string
-	 * @throws JsonException
+	 * @throws JsonException If encoding of mixed data into json failed
 	 */
 	public function encode($data) {
 		$result = json_encode($data, JSON_UNESCAPED_UNICODE);
@@ -24,7 +24,7 @@ class Json {
 	 * @param string $json
 	 * @param boolean $assoc
 	 * @return mixed
-	 * @throws JsonException
+	 * @throws JsonException If decoding of json into array failed
 	 */
 	public function decode($json, $assoc=true) {
 		$result = json_decode($json, $assoc);
@@ -35,7 +35,7 @@ class Json {
 	/**
 	 * Checks if encoding/decoding went without error. If error, throws JsonException.
 	 * 
-	 * @throws JsonException
+	 * @throws JsonException If decoding/encoding of json failed.
 	 */
 	private function checkError() {
 		$errorID = json_last_error();

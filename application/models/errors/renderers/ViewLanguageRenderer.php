@@ -1,6 +1,9 @@
 <?php
 require_once(dirname(__DIR__, 4)."/vendor/lucinda/framework-engine/src/view_language/ViewLanguageBinder.php");
 
+/**
+ * STDERR MVC error renderer for HTML format using ViewLanguage templating.
+ */
 class ViewLanguageRenderer implements \Lucinda\MVC\STDERR\ErrorRenderer {
     /**
      * {@inheritDoc}

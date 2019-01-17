@@ -3,7 +3,7 @@
  * CacheableDriver that generates a last modified time based on host, response body & headers. Useful when app is behind proxies that hide ETAGs.
  * Requires a NoSQL provider to save generated last modified time into. 
  */
-class EtagCacheableDriver extends Lucinda\Framework\CacheableDriver {
+class DateCacheableDriver extends \Lucinda\Framework\CacheableDriver {
     const EXPIRATION = 24*60*60;
     
     /**

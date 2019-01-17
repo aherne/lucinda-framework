@@ -2,7 +2,11 @@
 /**
  * Logs message into a dedicated SYSLOG server, whose details may vary according to development environment.
  */
-class SysLoggerWrapper extends Lucinda\Framework\AbstractLoggerWrapper {
+class SysLoggerWrapper extends \Lucinda\Framework\AbstractLoggerWrapper {
+    /**
+     * {@inheritDoc}
+     * @see \Lucinda\Framework\AbstractLoggerWrapper::setLogger()
+     */
     protected function setLogger(SimpleXMLElement $xml) {
         require_once("vendor/lucinda/logging/src/SysLogger.php");
         

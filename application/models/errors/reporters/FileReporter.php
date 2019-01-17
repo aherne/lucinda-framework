@@ -5,10 +5,10 @@ require_once(dirname(__DIR__,4)."/vendor/lucinda/framework-engine/src/error_repo
  * Logs error into file on disk, whose location varies according to development environment. 
  * ATTENTION: web server must have write access on folder file is located into! 
  */
-class FileReporter extends Lucinda\Framework\LogReporter {
+class FileReporter extends \Lucinda\Framework\LogReporter {
     /**
      * {@inheritDoc}
-     * @see Lucinda\Framework\LogReporter::getLogger()
+     * @see \Lucinda\Framework\LogReporter::getLogger()
      */
     protected function getLogger(SimpleXMLElement $xml) {
         $rootFolder = dirname(dirname(dirname(dirname(__DIR__))));

@@ -2,7 +2,7 @@
 /**
  * CacheableDriver that generates an ETAG based on host, response body & headers. 
  */
-class EtagCacheableDriver extends Lucinda\Framework\CacheableDriver {
+class EtagCacheableDriver extends \Lucinda\Framework\CacheableDriver {
     /**
      * {@inheritDoc}
      * @see \Lucinda\Framework\CacheableDriver::setTime()
