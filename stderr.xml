@@ -5,8 +5,8 @@
 		<paths>
 			<controllers>application/controllers</controllers>
 			<views>application/views</views>
-			<reporters>application/models/errors/reporters</reporters>
-			<renderers>application/models/errors/renderers</renderers>
+			<reporters>application/reporters</reporters>
+			<renderers>application/renderers</renderers>
 		</paths>
 	</application>
 	<renderers>

@@ -1,5 +1,5 @@
 <?php
-require_once(dirname(__DIR__,4)."/vendor/lucinda/framework-engine/src/error_reporting/LogReporter.php");
+require_once(dirname(__DIR__,2)."/vendor/lucinda/framework-engine/src/error_reporting/LogReporter.php");
 
 /**
  * Logs error into file on disk, whose location varies according to development environment. 
@@ -11,7 +11,7 @@ class FileReporter extends \Lucinda\Framework\LogReporter {
      * @see \Lucinda\Framework\LogReporter::getLogger()
      */
     protected function getLogger(SimpleXMLElement $xml) {
-        $rootFolder = dirname(dirname(dirname(dirname(__DIR__))));
+        $rootFolder = dirname(__DIR__,2);
         require_once($rootFolder."/vendor/lucinda/logging/src/FileLogger.php");
         
         $filePath = $rootFolder."/".$xml["path"];

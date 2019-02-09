@@ -12,7 +12,7 @@ class HtmlResolver extends \Lucinda\MVC\STDOUT\ViewResolver {
         $view = $this->application->getViewsPath()."/".$this->response->getView();
 		if($view) {
 			$_VIEW = $this->response->attributes()->toArray();
-			$view .= ".php";
+			$view .= ".html";
 			if(!file_exists($view)) throw new Lucinda\MVC\STDOUT\ServletException("View file not found: ".$view);
 			
 			

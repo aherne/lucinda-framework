@@ -42,16 +42,16 @@
         },
         {
             "name": "lucinda/framework-engine",
-            "version": "v1.2.4",
+            "version": "v1.2.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aherne/lucinda-framework-engine.git",
-                "reference": "0a87ada00dcee81789d902fc24ff7b565e3b53b6"
+                "reference": "e9252aafeaa97ab8c3acf650491626177784bab2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aherne/lucinda-framework-engine/zipball/0a87ada00dcee81789d902fc24ff7b565e3b53b6",
-                "reference": "0a87ada00dcee81789d902fc24ff7b565e3b53b6",
+                "url": "https://api.github.com/repos/aherne/lucinda-framework-engine/zipball/e9252aafeaa97ab8c3acf650491626177784bab2",
+                "reference": "e9252aafeaa97ab8c3acf650491626177784bab2",
                 "shasum": ""
             },
             "require": {
@@ -85,7 +85,7 @@
                 "mvc",
                 "stdout"
             ],
-            "time": "2019-01-15T14:20:44+00:00"
+            "time": "2019-01-16T08:22:03+00:00"
         },
         {
             "name": "lucinda/http-caching",
@@ -123,16 +123,16 @@
         },
         {
             "name": "lucinda/internationalization",
-            "version": "v2.0.1",
+            "version": "v2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aherne/php-internationalization-api.git",
-                "reference": "131b24e1551e00173bc12ae733a389bf17643848"
+                "reference": "e7e7f7986c0079fc7f34fb56756bee009f559ae1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aherne/php-internationalization-api/zipball/131b24e1551e00173bc12ae733a389bf17643848",
-                "reference": "131b24e1551e00173bc12ae733a389bf17643848",
+                "url": "https://api.github.com/repos/aherne/php-internationalization-api/zipball/e7e7f7986c0079fc7f34fb56756bee009f559ae1",
+                "reference": "e7e7f7986c0079fc7f34fb56756bee009f559ae1",
                 "shasum": ""
             },
             "require": {
@@ -157,7 +157,7 @@
                 "internationalization",
                 "localization"
             ],
-            "time": "2019-01-13T06:11:11+00:00"
+            "time": "2019-01-16T11:12:01+00:00"
         },
         {
             "name": "lucinda/logging",
@@ -271,16 +271,16 @@
         },
         {
             "name": "lucinda/oauth2-client",
-            "version": "v1.6.1",
+            "version": "v1.6.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aherne/oauth2client.git",
-                "reference": "7be378144787b6b479b4546c85e7f6061bf1fcf6"
+                "reference": "6d5d58172f58ee885dc7aaf6d00653d26370c230"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aherne/oauth2client/zipball/7be378144787b6b479b4546c85e7f6061bf1fcf6",
-                "reference": "7be378144787b6b479b4546c85e7f6061bf1fcf6",
+                "url": "https://api.github.com/repos/aherne/oauth2client/zipball/6d5d58172f58ee885dc7aaf6d00653d26370c230",
+                "reference": "6d5d58172f58ee885dc7aaf6d00653d26370c230",
                 "shasum": ""
             },
             "type": "library",
@@ -301,7 +301,7 @@
                 "client",
                 "oauth2"
             ],
-            "time": "2019-01-13T08:42:30+00:00"
+            "time": "2019-01-16T08:12:30+00:00"
         },
         {
             "name": "lucinda/request-validator",

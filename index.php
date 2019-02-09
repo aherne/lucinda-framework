@@ -6,7 +6,7 @@ define("ENVIRONMENT", $environment);
 
 // takes control of STDERR
 require_once("vendor/lucinda/errors-mvc/src/FrontController.php");
-require_once("application/models/errors/EmergencyHandler.php");
+require_once("application/models/EmergencyHandler.php");
 new Lucinda\MVC\STDERR\FrontController("stderr.xml", ENVIRONMENT, __DIR__, new EmergencyHandler());
 
 // takes control of STDOUT
