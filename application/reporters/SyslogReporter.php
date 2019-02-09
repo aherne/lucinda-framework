@@ -10,7 +10,7 @@ class SyslogReporter extends \Lucinda\Framework\LogReporter {
      * @see \Lucinda\Framework\LogReporter::getLogger()
      */
     protected function getLogger(SimpleXMLElement $xml) {
-        require_once(dirname(dirname(dirname(dirname(__DIR__))))."/vendor/lucinda/logging/src/SysLogger.php");
+        require_once(dirname(__DIR__,2)."/vendor/lucinda/logging/src/SysLogger.php");
         
         $applicationName = (string) $xml["application"];
         if(!$applicationName) {
