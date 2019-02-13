@@ -8,6 +8,9 @@
 			<reporters>application/reporters</reporters>
 			<renderers>application/renderers</renderers>
 		</paths>
+		<display_errors>
+			<local>0</local>
+		</display_errors>
 	</application>
 	<renderers>
 		<renderer content_type="text/html" class="HtmlRenderer" charset="UTF-8"/>
