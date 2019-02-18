@@ -1,5 +1,5 @@
 <?php
-require_once(dirname(__DIR__, 2)."/vendor/lucinda/framework-engine/src/view_language/ViewLanguageBinder.php");
+require_once(dirname(dirname(__DIR__))."/vendor/lucinda/framework-engine/src/view_language/ViewLanguageBinder.php");
 
 /**
  * STDERR MVC error renderer for HTML format using ViewLanguage templating.
@@ -12,7 +12,7 @@ class ViewLanguageRenderer implements \Lucinda\MVC\STDERR\ErrorRenderer {
     public function render(Lucinda\MVC\STDERR\Response $response) {
         if(!$response->getBody()) {
             // gets simplexml application object
-            $application = simplexml_load_file(dirname(__DIR__, 2)."/stderr.xml")->application;
+            $application = simplexml_load_file(dirname(dirname(__DIR__))."/stderr.xml")->application;
             
             // gets view file
             $viewFile = $response->getView();
