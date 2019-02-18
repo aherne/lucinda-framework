@@ -9,18 +9,14 @@
  */
 function translate($key, $domain="", ...$parameters) {
     try {
-        $translations = Lucinda\Internationalization\Reader::getInstance()->getTranslations($domain);
-        if(!isset($translations[$key])) {
-            return $key;
-        }
-        $translation = $translations[$key];
+        $translation = Lucinda\Internationalization\Reader::getInstance()->getTranslation($key, $domain);
         if(!empty($parameters)) {
             foreach($parameters as $key=>$value) {
                 $translation = str_replace("%".$key, $value, $translation);
             }
         }
+        return $translation;
     } catch(Exception $e) {
         return $key;
     }
-    return $translation;
 }
