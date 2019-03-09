@@ -1,5 +1,5 @@
 <?php
-require_once("JsonException.php");
+if(!class_exists("JsonException")) require_once("JsonException.php");
 
 /**
  * Simple wrapper over json functionality.
