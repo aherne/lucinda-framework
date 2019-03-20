@@ -10,7 +10,8 @@ class EmergencyHandler implements \Lucinda\MVC\STDERR\ErrorHandler
      * @see \Lucinda\MVC\STDERR\ErrorHandler::handle()
      */
     public function handle($exception) {
-        die($exception->getMessage());
+        require_once(dirname(__DIR__)."/views/debug.php");
+        die();
     }
 }
 
