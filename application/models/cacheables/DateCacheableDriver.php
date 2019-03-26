@@ -13,18 +13,20 @@ class DateCacheableDriver extends \Lucinda\Framework\CacheableDriver {
     protected function setTime() {
         // generates etag
         $etag = sha1($this->request->getServer()->getName()."#".json_encode($this->response->headers()->toArray())."#".$this->response->getOutputStream()->get());
-        if($etag) {
-            $connection = Lucinda\NoSQL\ConnectionSingleton::getInstance();
-            if($connection->contains($etag)) {
-                $modifiedTime = $connection->get($etag);
-                if(!$modifiedTime) {
-                    $connection->delete($etag);
-                }
-            } else {
-                $connection->set($etag, time(), self::EXPIRATION);
+        $connection = Lucinda\NoSQL\ConnectionSingleton::getInstance();
+
+        $modifiedTime = "";
+        if($connection->contains($etag)) {
+            $modifiedTime = $connection->get($etag);
+            if(!$modifiedTime) {
+                $connection->delete($etag);
             }
+        } else {
+            $modifiedTime = time();
+            $connection->set($etag, $modifiedTime, self::EXPIRATION);
         }
-        return $modifiedTime;
+
+        $this->last_modified_time =  $modifiedTime;
     }
     
     /**
