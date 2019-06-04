@@ -16,7 +16,7 @@ class ViewLanguageResolver extends \Lucinda\MVC\STDOUT\ViewResolver {
         $compilationFile = $wrapper->getCompilationFile();
         
         // compiles PHP file into output buffer
-        $data = $this->response->attributes()->toArray();
+        $data = $this->response->attributes();
         ob_start();
         require_once($compilationFile);
         $output = ob_get_contents();

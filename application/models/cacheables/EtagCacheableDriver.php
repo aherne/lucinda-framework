@@ -14,6 +14,6 @@ class EtagCacheableDriver extends \Lucinda\Framework\CacheableDriver {
      * @see \Lucinda\Framework\CacheableDriver::setEtag()
      */
     protected function setEtag() {
-        $this->etag = sha1($this->request->getServer()->getName()."#".json_encode($this->response->headers()->toArray())."#".$this->response->getOutputStream()->get());
+        $this->etag = sha1($this->request->getServer()->getName()."#".json_encode($this->response->headers())."#".$this->response->getOutputStream()->get());
     }
 }

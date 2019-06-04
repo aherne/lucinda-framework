@@ -17,7 +17,7 @@ class ErrorsController extends \Lucinda\MVC\STDERR\Controller {
      * Sets response status to HTTP status code 500
      */
     private function setResponseStatus() {
-        $this->response->setHttpStatus("500 Internal Server Error");
+        $this->response->setStatus(500);
     }
     
     /**
@@ -30,7 +30,7 @@ class ErrorsController extends \Lucinda\MVC\STDERR\Controller {
         $displayErrors = $this->application->getDisplayErrors();
         
         // gets content type
-        $contentType = $this->response->getHeader("Content-Type");
+        $contentType = $this->response->header("Content-Type");
         
         // sets view
         if(strpos($contentType, "text/html")==0) {
@@ -40,13 +40,13 @@ class ErrorsController extends \Lucinda\MVC\STDERR\Controller {
                 require_once($this->application->getViewsPath()."/debug.php");
                 $output = ob_get_contents();
                 ob_end_clean();
-                $this->response->setBody($output);
+                $this->response->getOutputStream()->write($output);
             } else {
                 $this->response->setView($this->application->getViewsPath()."/500");
             }
         } else if(strpos($contentType, "application/json")==0) {
-            $this->response->setAttribute("status", "error");
-            $this->response->setAttribute("body", $displayErrors?$this->request->getException()->getMessage():"");
+            $this->response->attributes("status", "error");
+            $this->response->attributes("body", $displayErrors?$this->request->getException()->getMessage():"");
         } else {
             throw new Exception("Unsupported content type!");
         }
