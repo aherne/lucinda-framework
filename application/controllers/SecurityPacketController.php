@@ -22,13 +22,13 @@ class SecurityPacketController  extends \Lucinda\MVC\STDERR\Controller {
     private function setResponseStatus() {
         switch($this->request->getException()->getStatus()) {
             case "unauthorized":
-                $this->response->setHttpStatus("401 Unauthorized");
+                $this->response->setStatus(401);
                 break;
             case "forbidden":
-                $this->response->setHttpStatus("403 Forbidden");
+                $this->response->setStatus(403);
                 break;
             case "not_found":
-                $this->response->setHttpStatus("404 Not found");
+                $this->response->setStatus(404);
                 break;
             default:
                 break;
@@ -42,7 +42,7 @@ class SecurityPacketController  extends \Lucinda\MVC\STDERR\Controller {
      */
     private function setResponseBody() {
         // gets content type
-        $contentType = $this->response->getHeader("Content-Type");
+        $contentType = $this->response->header("Content-Type");
         
         // gets packet status
         $status = $this->request->getException()->getStatus();
@@ -72,10 +72,10 @@ class SecurityPacketController  extends \Lucinda\MVC\STDERR\Controller {
                 }
             }
         } else if(strpos($contentType, "application/json")==0) {
-            $this->response->setAttribute("status", $exception->getStatus());
-            $this->response->setAttribute("body", "");
-            $this->response->setAttribute("callback", $exception->getCallback());
-            $this->response->setAttribute("token", $exception->getAccessToken());
+            $this->response->attributes("status", $exception->getStatus());
+            $this->response->attributes("body", "");
+            $this->response->attributes("callback", $exception->getCallback());
+            $this->response->attributes("token", $exception->getAccessToken());
         } else {
             throw new Exception("Unsupported content type!");
         }

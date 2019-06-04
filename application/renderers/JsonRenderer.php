@@ -12,6 +12,6 @@ class JsonRenderer implements \Lucinda\MVC\STDERR\ErrorRenderer
      */
     public function render(Lucinda\MVC\STDERR\Response $response) {
         $json = new Json();
-        $response->setBody($json->encode(array("status"=>"error","body"=>$response->getAttributes())));
+        $response->getOutputStream()->write($json->encode(array("status"=>"error","body"=>$response->attributes())));
     }
 }

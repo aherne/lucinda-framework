@@ -11,7 +11,7 @@ class HttpCachingListener extends \Lucinda\MVC\STDOUT\ResponseListener {
      * @see \Lucinda\MVC\STDOUT\Runnable::run()
      */
     public function run() {
-        if(strpos($this->response->headers()->get("Content-Type"),"text/html")!==0) return;
+        if(strpos($this->response->headers("Content-Type"),"text/html")!==0) return;
         new Lucinda\Framework\CachingBinder($this->application, $this->request, $this->response);
     }
 }

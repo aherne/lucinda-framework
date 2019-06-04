@@ -11,6 +11,6 @@ class JsonResolver extends \Lucinda\MVC\STDOUT\ViewResolver {
      */
     public function getContent() {
 		$json = new Json();
-		return $json->encode(array("status"=>"ok","body"=>$this->response->attributes()->toArray()));
+		return $json->encode(array("status"=>"ok","body"=>$this->response->attributes()));
 	}
 }

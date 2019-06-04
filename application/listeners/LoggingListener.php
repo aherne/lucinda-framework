@@ -15,6 +15,6 @@ class LoggingListener extends \Lucinda\MVC\STDOUT\ApplicationListener {
      */
 	public function run() {
 	    $binder = new Lucinda\Framework\LoggingBinder($this->application->getTag("loggers"), ENVIRONMENT);
-	    $this->application->attributes()->set("logger", $binder->getLogger());
+	    $this->application->attributes("logger", $binder->getLogger());
 	}
 }
