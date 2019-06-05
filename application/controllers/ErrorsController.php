@@ -30,7 +30,7 @@ class ErrorsController extends \Lucinda\MVC\STDERR\Controller {
         $displayErrors = $this->application->getDisplayErrors();
 
         // gets content type
-        $contentType = $this->response->header("Content-Type");
+        $contentType = $this->response->headers("Content-Type");
         
         // sets view
         if(strpos($contentType, "text/html")===0) {
