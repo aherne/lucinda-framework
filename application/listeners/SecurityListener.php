@@ -19,6 +19,6 @@ class SecurityListener extends \Lucinda\MVC\STDOUT\RequestListener {
 	    $securityFilter = new Lucinda\Framework\SecurityBinder($this->application, $this->request);
 	    $this->request->attributes("user_id", $securityFilter->getUserID());
 	    $this->request->attributes("csrf", $securityFilter->getCsrfToken());
-	    $this->request->attributes("oauth2", $securityFilter->getOAuth2Drivers());
+	    $this->request->attributes("oauth2", $securityFilter->getOAuth2Driver());
 	}
 }
