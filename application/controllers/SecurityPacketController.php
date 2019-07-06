@@ -72,10 +72,12 @@ class SecurityPacketController  extends \Lucinda\MVC\STDERR\Controller {
                 }
             }
         } else if(strpos($contentType, "application/json")==0) {
-            $this->response->attributes("status", $exception->getStatus());
-            $this->response->attributes("body", "");
-            $this->response->attributes("callback", $exception->getCallback());
-            $this->response->attributes("token", $exception->getAccessToken());
+            $this->response->getOutputStream()->write(json_encode(array(
+                "status"=>$exception->getStatus(),
+                "body"=>"",
+                "callback"=>$exception->getCallback(),
+                "token"=>$exception->getAccessToken()
+            )));
         } else {
             throw new Exception("Unsupported content type!");
         }
