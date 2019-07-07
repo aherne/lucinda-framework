@@ -17,7 +17,7 @@ class SecurityListener extends \Lucinda\MVC\STDOUT\RequestListener {
      * @see \Lucinda\MVC\STDOUT\Runnable::run()
      */
 	public function run() {	    
-	    $securityFilter = new Lucinda\Framework\SecurityBinder($this->application, $this->request);
+	    $securityFilter = new Lucinda\Framework\SecurityBinder($this->application, $this->request, ENVIRONMENT);
 	    $this->request->attributes("user_id", $securityFilter->getUserID());
 	    $this->request->attributes("csrf", $securityFilter->getCsrfToken());
 	    $this->request->attributes("oauth2", $securityFilter->getOAuth2Driver());
