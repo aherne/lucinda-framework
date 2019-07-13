@@ -42,7 +42,7 @@ class SecurityPacketController  extends \Lucinda\MVC\STDERR\Controller {
      */
     private function setResponseBody() {
         // gets content type
-        $contentType = $this->response->header("Content-Type");
+        $contentType = $this->response->headers("Content-Type");
         
         // gets packet status
         $status = $this->request->getException()->getStatus();
