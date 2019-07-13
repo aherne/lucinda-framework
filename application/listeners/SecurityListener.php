@@ -1,6 +1,5 @@
 <?php
 require_once("vendor/lucinda/framework-engine/src/security/SecurityBinder.php");
-require_once("application/models/SQL.php");
 
 /**
  * Binds STDOUT MVC API with Web Security API + OAuth2 Client API and contents of 'security' tag @ configuration.xml
@@ -21,5 +20,6 @@ class SecurityListener extends \Lucinda\MVC\STDOUT\RequestListener {
 	    $this->request->attributes("user_id", $securityFilter->getUserID());
 	    $this->request->attributes("csrf", $securityFilter->getCsrfToken());
 	    $this->request->attributes("oauth2", $securityFilter->getOAuth2Driver());
+	    $this->request->attributes("access_token", $securityFilter->getAccessToken());
 	}
 }
