@@ -18,7 +18,7 @@
 	</renderers>
 	<exceptions error_type="LOGICAL" controller="ErrorsController">
 		<exception class="Lucinda\MVC\STDOUT\PathNotFoundException"  http_status="404" error_type="CLIENT" view="404"/>
-		<exception class="Lucinda\MVC\STDOUT\MethodNotAllowedException"  http_status="405" error_type="CLIENT" view="405"/>
+		<exception class="MethodNotAllowedException"  http_status="405" error_type="CLIENT" view="405"/>
 		<exception class="Lucinda\Framework\SecurityPacket" controller="SecurityPacketController" error_type="NONE"/>
 		<exception class="Lucinda\WebSecurity\SessionHijackException"  http_status="400" error_type="CLIENT" view="400"/>
 		<exception class="Lucinda\WebSecurity\EncryptionException"  http_status="400" error_type="CLIENT" view="400"/>
