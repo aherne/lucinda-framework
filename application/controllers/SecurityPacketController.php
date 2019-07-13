@@ -51,7 +51,7 @@ class SecurityPacketController  extends \Lucinda\MVC\STDERR\Controller {
         $exception = $this->request->getException();
         
         // sets response content
-        if(strpos($contentType, "text/html")==0) {
+        if(strpos($contentType, "text/html")===0) {
             $location = $exception->getCallback().($exception->getStatus()!="redirect"?"?status=".$exception->getStatus():"");
             if(self::REDIRECT) {
                 $this->response->redirect($location);
