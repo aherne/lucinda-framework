@@ -71,7 +71,7 @@ class SecurityPacketController  extends \Lucinda\MVC\STDERR\Controller {
                         break;
                 }
             }
-        } else if(strpos($contentType, "application/json")==0) {
+        } else if(strpos($contentType, "application/json")===0) {
             $this->response->getOutputStream()->write(json_encode(array(
                 "status"=>$exception->getStatus(),
                 "body"=>"",
