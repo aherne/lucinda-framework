@@ -9,6 +9,6 @@ class ErrorListener extends \Lucinda\MVC\STDOUT\RequestListener {
      */
     public function run() {
         $handler = \Lucinda\MVC\STDERR\PHPException::getErrorHandler();
-        $handler->setContentType($this->request->getValidator()->getContentType());
+        $handler->setContentType($this->application->formats($this->request->getValidator()->getFormat())->getContentType());
     }
 }
