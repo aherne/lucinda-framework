@@ -17,7 +17,7 @@ class ErrorsController extends \Lucinda\MVC\STDERR\Controller {
      * Sets response status to HTTP status code 500
      */
     private function setResponseStatus() {
-        $this->response->setStatus(500);
+        $this->response->setHttpStatus(500);
     }
 
     /**
@@ -30,7 +30,7 @@ class ErrorsController extends \Lucinda\MVC\STDERR\Controller {
         $displayErrors = $this->application->getDisplayErrors();
 
         // gets content type
-        $contentType = $this->response->headers("Content-Type");
+        $contentType = $this->response->getHeader("Content-Type");
         
         // sets view
         if(strpos($contentType, "text/html")===0) {
