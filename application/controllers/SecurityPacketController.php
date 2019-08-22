@@ -2,16 +2,18 @@
 /**
  * STDERR MVC controller running whenever a Lucinda\Framework\SecurityPacket is thrown during STDOUT phase.
  * Class is open for modification if, for example, developers want to simply redirect to callback page when HTML response format is required
- * instead of showing 401/403/404 views.  
+ * instead of showing 401/403/404 views.
  */
-class SecurityPacketController  extends \Lucinda\MVC\STDERR\Controller {
+class SecurityPacketController extends \Lucinda\MVC\STDERR\Controller
+{
     const REDIRECT = true;
 
     /**
      * {@inheritDoc}
      * @see \Lucinda\MVC\STDERR\Controller::run()
      */
-    public function run() {
+    public function run()
+    {
         $this->setResponseStatus();
         $this->setResponseBody();
     }
@@ -19,8 +21,9 @@ class SecurityPacketController  extends \Lucinda\MVC\STDERR\Controller {
     /**
      * Sets response HTTP status code according to outcome of security validation
      */
-    private function setResponseStatus() {
-        switch($this->request->getException()->getStatus()) {
+    private function setResponseStatus()
+    {
+        switch ($this->request->getException()->getStatus()) {
             case "unauthorized":
                 $this->response->setStatus(401);
                 break;
@@ -41,7 +44,8 @@ class SecurityPacketController  extends \Lucinda\MVC\STDERR\Controller {
      *
      * @throws Exception If content type of response is other than JSON or HTML.
      */
-    private function setResponseBody() {
+    private function setResponseBody()
+    {
         // gets content type
         $contentType = $this->response->headers("Content-Type");
         
@@ -52,12 +56,12 @@ class SecurityPacketController  extends \Lucinda\MVC\STDERR\Controller {
         $exception = $this->request->getException();
         
         // sets response content
-        if(strpos($contentType, "text/html")===0) {
+        if (strpos($contentType, "text/html")===0) {
             $location = $exception->getCallback().($exception->getStatus()!="redirect"?"?status=".$exception->getStatus():"");
-            if(self::REDIRECT) {
+            if (self::REDIRECT) {
                 $this->response->redirect($location);
             } else {
-                switch($status) {
+                switch ($status) {
                     case "unauthorized":
                         $this->response->setView($this->application->getViewsPath()."/401");
                         break;
@@ -72,7 +76,7 @@ class SecurityPacketController  extends \Lucinda\MVC\STDERR\Controller {
                         break;
                 }
             }
-        } else if(strpos($contentType, "application/json")===0) {
+        } elseif (strpos($contentType, "application/json")===0) {
             $this->response->attributes("status", $exception->getStatus());
             $this->response->attributes("callback", $exception->getCallback());
             $this->response->attributes("token", $exception->getAccessToken());

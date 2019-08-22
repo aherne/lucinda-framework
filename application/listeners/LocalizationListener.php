@@ -12,7 +12,8 @@ class LocalizationListener extends \Lucinda\MVC\STDOUT\RequestListener
      * {@inheritDoc}
      * @see \Lucinda\MVC\STDOUT\Runnable::run()
      */
-    public function run() {
+    public function run()
+    {
         new Lucinda\Framework\LocalizationBinder($this->application, $this->request);
     }
 }

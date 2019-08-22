@@ -7,12 +7,14 @@ require_once("vendor/lucinda/framework-engine/src/datasource_detection/NoSQLData
  * Sets up and injects a Lucinda\NoSQL\DataSource object that will be used automatically when querying database via
  * Lucinda\NoSQL\ConnectionSingleton or Lucinda\NoSQL\ConnectionFactory.
  */
-class NoSQLDataSourceInjector extends \Lucinda\MVC\STDOUT\ApplicationListener {
+class NoSQLDataSourceInjector extends \Lucinda\MVC\STDOUT\ApplicationListener
+{
     /**
      * {@inheritDoc}
      * @see \Lucinda\MVC\STDOUT\Runnable::run()
      */
-    public function run() {
+    public function run()
+    {
         new Lucinda\Framework\NoSQLDataSourceBinder($this->application->getTag("servers")->nosql, ENVIRONMENT);
     }
 }
