@@ -9,9 +9,9 @@ class EmergencyHandler implements \Lucinda\MVC\STDERR\ErrorHandler
      * {@inheritDoc}
      * @see \Lucinda\MVC\STDERR\ErrorHandler::handle()
      */
-    public function handle($exception) {
+    public function handle($exception)
+    {
         require_once(dirname(__DIR__)."/views/debug.php");
         die();
     }
 }
-

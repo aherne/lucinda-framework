@@ -8,10 +8,13 @@ class HtmlRenderer implements \Lucinda\MVC\STDERR\ErrorRenderer
      * {@inheritDoc}
      * @see \Lucinda\MVC\STDERR\ErrorRenderer::render()
      */
-    public function render(Lucinda\MVC\STDERR\Response $response) {
+    public function render(Lucinda\MVC\STDERR\Response $response)
+    {
         $viewFile = $response->getView();
-        if($viewFile) {
-            if(!file_exists($viewFile.".html")) throw new \Lucinda\MVC\STDERR\Exception("View file not found: ".$viewFile);
+        if ($viewFile) {
+            if (!file_exists($viewFile.".html")) {
+                throw new \Lucinda\MVC\STDERR\Exception("View file not found: ".$viewFile);
+            }
             ob_start();
             $_VIEW = $response->attributes();
             require_once($viewFile.".html");

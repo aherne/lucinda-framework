@@ -2,21 +2,23 @@
 /**
  * Logs message into a dedicated SYSLOG server, whose details may vary according to development environment.
  */
-class SysLoggerWrapper extends \Lucinda\Framework\AbstractLoggerWrapper {
+class SysLoggerWrapper extends \Lucinda\Framework\AbstractLoggerWrapper
+{
     /**
      * {@inheritDoc}
      * @see \Lucinda\Framework\AbstractLoggerWrapper::setLogger()
      */
-    protected function setLogger(SimpleXMLElement $xml) {
+    protected function setLogger(SimpleXMLElement $xml)
+    {
         require_once("vendor/lucinda/logging/src/SysLogger.php");
         
         $applicationName = (string) $xml["application"];
-        if(!$applicationName) {
+        if (!$applicationName) {
             throw new Lucinda\MVC\STDOUT\XMLException("Attribute 'path' is mandatory for 'syslog' tag");
         }
         
         $pattern= (string) $xml["format"];
-        if(!$pattern) {
+        if (!$pattern) {
             throw new Lucinda\MVC\STDOUT\XMLException("Attribute 'format' is mandatory for 'syslog' tag");
         }
         

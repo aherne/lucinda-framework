@@ -5,12 +5,14 @@ require_once("vendor/lucinda/framework-engine/src/view_language/ViewLanguageBind
  * View resolver for HTML format binding STDOUT MVC with View Language API and contents of 'application' tag @ configuration.xml
  * in order to be able to perform templating in a view
  */
-class ViewLanguageResolver extends \Lucinda\MVC\STDOUT\ViewResolver {
+class ViewLanguageResolver extends \Lucinda\MVC\STDOUT\ViewResolver
+{
     /**
      * {@inheritDoc}
      * @see \Lucinda\MVC\STDOUT\ViewResolver::getContent()
      */
-    public function getContent() {
+    public function getContent()
+    {
         // converts view language to PHP
         $wrapper = new Lucinda\Framework\ViewLanguageBinder($this->application->getTag("application"), $this->response->getView());
         $compilationFile = $wrapper->getCompilationFile();
@@ -23,5 +25,5 @@ class ViewLanguageResolver extends \Lucinda\MVC\STDOUT\ViewResolver {
         ob_end_clean();
         
         return $output;
-	}
+    }
 }

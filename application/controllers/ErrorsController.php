@@ -3,12 +3,14 @@
  * STDERR MVC controller that gets activated whenever an error occurs during application lifecycle.
  * Class is open for modification if developers want to use templating on response body or support formats other than html and json.
  */
-class ErrorsController extends \Lucinda\MVC\STDERR\Controller {
+class ErrorsController extends \Lucinda\MVC\STDERR\Controller
+{
     /**
      * {@inheritDoc}
      * @see \Lucinda\MVC\STDERR\Controller::run()
      */
-    public function run() {
+    public function run()
+    {
         $this->setResponseStatus();
         $this->setResponseBody();
     }
@@ -16,7 +18,8 @@ class ErrorsController extends \Lucinda\MVC\STDERR\Controller {
     /**
      * Sets response status to HTTP status code 500
      */
-    private function setResponseStatus() {
+    private function setResponseStatus()
+    {
         $this->response->setStatus(500);
     }
 
@@ -25,7 +28,8 @@ class ErrorsController extends \Lucinda\MVC\STDERR\Controller {
      *
      * @throws Exception If content type of response is other than JSON or HTML.
      */
-    private function setResponseBody() {
+    private function setResponseBody()
+    {
         // gets whether or not errors should be displayed
         $displayErrors = $this->application->getDisplayErrors();
 
@@ -33,8 +37,8 @@ class ErrorsController extends \Lucinda\MVC\STDERR\Controller {
         $contentType = $this->response->headers("Content-Type");
         
         // sets view
-        if(strpos($contentType, "text/html")===0) {
-            if($displayErrors) {
+        if (strpos($contentType, "text/html")===0) {
+            if ($displayErrors) {
                 $exception = $this->request->getException();
                 ob_start();
                 require_once($this->application->getViewsPath()."/debug.php");
@@ -44,7 +48,7 @@ class ErrorsController extends \Lucinda\MVC\STDERR\Controller {
             } else {
                 $this->response->setView($this->application->getViewsPath()."/500");
             }
-        } else if(strpos($contentType, "application/json")==0) {
+        } elseif (strpos($contentType, "application/json")==0) {
             $this->response->attributes("message", $displayErrors?$this->request->getException()->getMessage():"");
             $this->response->attributes("file", $displayErrors?$this->request->getException()->getFile():"");
             $this->response->attributes("line", $displayErrors?$this->request->getException()->getLine():"");

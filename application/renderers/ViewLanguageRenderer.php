@@ -4,12 +4,14 @@ require_once(dirname(dirname(__DIR__))."/vendor/lucinda/framework-engine/src/vie
 /**
  * STDERR MVC error renderer for HTML format using ViewLanguage templating.
  */
-class ViewLanguageRenderer implements \Lucinda\MVC\STDERR\ErrorRenderer {
+class ViewLanguageRenderer implements \Lucinda\MVC\STDERR\ErrorRenderer
+{
     /**
      * {@inheritDoc}
      * @see \Lucinda\MVC\STDERR\ErrorRenderer::render()
      */
-    public function render(Lucinda\MVC\STDERR\Response $response) {
+    public function render(Lucinda\MVC\STDERR\Response $response)
+    {
         // gets simplexml application object
         $application = simplexml_load_file(dirname(dirname(__DIR__))."/stderr.xml")->application;
         
