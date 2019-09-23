@@ -13,6 +13,7 @@
         }
     ],
     "require": {
+        "ext-simplexml": "*",           	
         "lucinda/framework-engine": "~1.0",
         "lucinda/http-caching": "~2.0",
         "lucinda/logging": "~2.0",
