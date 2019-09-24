@@ -11,7 +11,9 @@ class EmergencyHandler implements \Lucinda\MVC\STDERR\ErrorHandler
      */
     public function handle($exception)
     {
-        require_once(dirname(__DIR__)."/views/debug.php");
+        $xml = simplexml_load_file(dirname(dirname(__DIR__))."/stderr.xml");
+        $displayErrors = $xml->application->display_errors->{ENVIRONMENT};
+        require_once(dirname(__DIR__)."/views/".($displayErrors?"debug.php":"500.html"));
         die();
     }
 }
