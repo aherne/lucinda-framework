@@ -7,7 +7,7 @@
 class SecurityPacketController extends \Lucinda\MVC\STDERR\Controller
 {
     const REDIRECT = true;
-
+    
     /**
      * {@inheritDoc}
      * @see \Lucinda\MVC\STDERR\Controller::run()
@@ -59,6 +59,11 @@ class SecurityPacketController extends \Lucinda\MVC\STDERR\Controller
         if (strpos($contentType, "text/html")===0) {
             $location = $exception->getCallback().($exception->getStatus()!="redirect"?"?status=".$exception->getStatus():"");
             if (self::REDIRECT) {
+                if ($status == "unauthorized") {
+                    $location .=  "&source=".urlencode($_SERVER["REQUEST_URI"]);
+                } else if ($status == "login_ok" && !empty($_GET["source"])) {
+                    $location = $_GET["source"];
+                }
                 $this->response->redirect($location);
             } else {
                 switch ($status) {
