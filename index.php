@@ -1,7 +1,9 @@
 <?php
 // performs environment detection
 $environment = getenv("ENVIRONMENT");
-if(!$environment) die("Value of environment variable 'ENVIRONMENT' could not be detected!");
+if (!$environment) {
+    die("Value of environment variable 'ENVIRONMENT' could not be detected!");
+}
 define("ENVIRONMENT", $environment);
 
 // takes control of STDERR
