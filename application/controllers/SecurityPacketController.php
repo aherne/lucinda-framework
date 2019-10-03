@@ -60,9 +60,11 @@ class SecurityPacketController extends \Lucinda\MVC\STDERR\Controller
             $location = $exception->getCallback().($exception->getStatus()!="redirect"?"?status=".$exception->getStatus():"");
             if (self::REDIRECT) {
                 if ($status == "unauthorized") {
-                    $location .=  "&source=".urlencode($_SERVER["REQUEST_URI"]);
+                    $location .= "&source=".urlencode($_SERVER["REQUEST_URI"]);
                 } else if ($status == "login_ok" && !empty($_GET["source"])) {
                     $location = $_GET["source"];
+                } else if ($penalty = $this->request->getException()->getTimePenalty()) {
+                    $location .= "&wait=".$penalty;
                 }
                 $this->response->redirect($location);
             } else {
