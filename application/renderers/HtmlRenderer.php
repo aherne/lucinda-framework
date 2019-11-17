@@ -17,7 +17,7 @@ class HtmlRenderer implements \Lucinda\MVC\STDERR\ErrorRenderer
             }
             ob_start();
             $_VIEW = $response->attributes();
-            require_once($viewFile.".html");
+            require($viewFile.".html");
             $output = ob_get_contents();
             ob_end_clean();
             $response->getOutputStream()->write($output);

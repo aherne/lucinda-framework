@@ -1,5 +1,5 @@
 <?php
-require_once(dirname(dirname(__DIR__))."/vendor/lucinda/framework-engine/src/view_language/ViewLanguageBinder.php");
+require(dirname(dirname(__DIR__))."/vendor/lucinda/framework-engine/src/view_language/ViewLanguageBinder.php");
 
 /**
  * STDERR MVC error renderer for HTML format using ViewLanguage templating.
@@ -27,7 +27,7 @@ class ViewLanguageRenderer implements \Lucinda\MVC\STDERR\ErrorRenderer
         // compiles PHP file into output buffer
         $data = $response->attributes();
         ob_start();
-        require_once($compilationFile);
+        require($compilationFile);
         $output = ob_get_contents();
         ob_end_clean();
         

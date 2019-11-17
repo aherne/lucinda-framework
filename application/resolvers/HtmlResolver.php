@@ -21,7 +21,7 @@ class HtmlResolver extends \Lucinda\MVC\STDOUT\ViewResolver
             
             
             ob_start();
-            require_once($view);
+            require($view);
             $output = ob_get_contents();
             ob_end_clean();
         }

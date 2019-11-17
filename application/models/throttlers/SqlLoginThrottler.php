@@ -1,5 +1,5 @@
 <?php
-require_once("BasicLoginThrottler.php");
+require("BasicLoginThrottler.php");
 
 /**
  * Extension of BasicLoginThrottler that uses an SQL database as storage medium 

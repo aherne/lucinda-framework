@@ -1,5 +1,5 @@
 <?php
-require_once("LinkedInUserInformation.php");
+require("LinkedInUserInformation.php");
 
 /**
  * Binds OAuth2\Driver @ OAuth2Client API with OAuth2Driver @ Security API for Linkedin

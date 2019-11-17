@@ -1,5 +1,5 @@
 <?php
-require_once(dirname(__DIR__)."/models/MethodNotAllowedException.php");
+require(dirname(__DIR__)."/models/MethodNotAllowedException.php");
 
 /**
  * Defines an abstract RESTful controller. Classes extending it must have methods whose name is identical to request methods they are expecting.

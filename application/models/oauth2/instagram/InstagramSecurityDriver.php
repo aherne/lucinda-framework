@@ -1,5 +1,5 @@
 <?php
-require_once("InstagramUserInformation.php");
+require("InstagramUserInformation.php");
 
 /**
  * Binds OAuth2\Driver @ OAuth2Client API with OAuth2Driver @ Security API for Instagram

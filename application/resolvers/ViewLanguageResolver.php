@@ -1,5 +1,5 @@
 <?php
-require_once("vendor/lucinda/framework-engine/src/view_language/ViewLanguageBinder.php");
+require("vendor/lucinda/framework-engine/src/view_language/ViewLanguageBinder.php");
 
 /**
  * View resolver for HTML format binding STDOUT MVC with View Language API and contents of 'application' tag @ configuration.xml
@@ -20,7 +20,7 @@ class ViewLanguageResolver extends \Lucinda\MVC\STDOUT\ViewResolver
         // compiles PHP file into output buffer
         $data = $this->response->attributes();
         ob_start();
-        require_once($compilationFile);
+        require($compilationFile);
         $output = ob_get_contents();
         ob_end_clean();
         

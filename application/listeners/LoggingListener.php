@@ -1,5 +1,5 @@
 <?php
-require_once("vendor/lucinda/framework-engine/src/logging/LoggingBinder.php");
+require("vendor/lucinda/framework-engine/src/logging/LoggingBinder.php");
 
 /**
  * Binds STDOUT MVC with Logging API and contents of 'loggers' tag @ configuration.xml based on development environment
