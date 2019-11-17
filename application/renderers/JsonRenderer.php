@@ -1,5 +1,5 @@
 <?php
-require_once(dirname(__DIR__)."/models/json/Json.php");
+require(dirname(__DIR__)."/models/json/Json.php");
 
 /**
  * STDERR MVC error renderer for JSON format.

@@ -1,5 +1,5 @@
 <?php
-require_once("vendor/lucinda/framework-engine/src/datasource_detection/NoSQLDataSourceBinder.php");
+require("vendor/lucinda/framework-engine/src/datasource_detection/NoSQLDataSourceBinder.php");
 
 /**
  * Binds STDOUT MVC with NoSQL Data Access API and contents of 'nosql' subtag of 'servers' tag @ configuration.xml

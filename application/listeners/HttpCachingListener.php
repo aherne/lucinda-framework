@@ -1,5 +1,5 @@
 <?php
-require_once("vendor/lucinda/framework-engine/src/caching/CachingBinder.php");
+require("vendor/lucinda/framework-engine/src/caching/CachingBinder.php");
 
 /**
  * Binds STDOUT MVC with Http Caching API and contents of 'http_caching' tag @ configuration.xml

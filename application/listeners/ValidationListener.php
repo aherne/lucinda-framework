@@ -1,5 +1,5 @@
 <?php
-require_once("vendor/lucinda/framework-engine/src/validation/ValidationBinder.php");
+require("vendor/lucinda/framework-engine/src/validation/ValidationBinder.php");
 /**
  * Binds STDOUT MVC API with Parameters Validation API based on contents of <routes> stdout.xml tag for request/path parameters validation.
  *

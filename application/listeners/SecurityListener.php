@@ -1,5 +1,5 @@
 <?php
-require_once("vendor/lucinda/framework-engine/src/security/SecurityBinder.php");
+require("vendor/lucinda/framework-engine/src/security/SecurityBinder.php");
 
 /**
  * Binds STDOUT MVC API with Web Security API + OAuth2 Client API and contents of 'security' tag @ configuration.xml

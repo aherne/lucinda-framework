@@ -1,6 +1,6 @@
 <?php
 if (!class_exists("JsonException")) {
-    require_once("JsonException.php");
+    require("JsonException.php");
 }
 
 /**

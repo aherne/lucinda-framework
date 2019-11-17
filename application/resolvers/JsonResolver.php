@@ -1,5 +1,5 @@
 <?php
-require_once("application/models/json/Json.php");
+require("application/models/json/Json.php");
 
 /**
  * View resolver for JSON response format

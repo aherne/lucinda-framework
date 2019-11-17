@@ -1,6 +1,6 @@
 <?php
-require_once("vendor/lucinda/framework-engine/src/internationalization/LocalizationBinder.php");
-require_once("application/models/internationalization/Translate.php");
+require("vendor/lucinda/framework-engine/src/internationalization/LocalizationBinder.php");
+require("application/models/internationalization/Translate.php");
 
 /**
  * Binds STDOUT MVC with Internationalization API and contents of 'internationalization' tag @ configuration.xml

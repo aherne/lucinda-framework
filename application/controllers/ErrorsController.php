@@ -41,7 +41,7 @@ class ErrorsController extends \Lucinda\MVC\STDERR\Controller
             if ($displayErrors) {
                 $exception = $this->request->getException();
                 ob_start();
-                require_once($this->application->getViewsPath()."/debug.php");
+                require($this->application->getViewsPath()."/debug.php");
                 $output = ob_get_contents();
                 ob_end_clean();
                 $this->response->getOutputStream()->write($output);

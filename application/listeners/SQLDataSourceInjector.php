@@ -1,6 +1,6 @@
 <?php
-require_once("vendor/lucinda/framework-engine/src/datasource_detection/SQLDataSourceBinder.php");
-require_once("application/models/SQL.php");
+require("vendor/lucinda/framework-engine/src/datasource_detection/SQLDataSourceBinder.php");
+require("application/models/SQL.php");
 
 /**
  * Binds STDOUT MVC with SQL Data Access API and contents of 'sql' subtag of 'servers' tag @ configuration.xml
