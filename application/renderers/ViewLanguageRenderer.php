@@ -1,5 +1,5 @@
 <?php
-require(dirname(dirname(__DIR__))."/vendor/lucinda/framework-engine/src/view_language/ViewLanguageBinder.php");
+require_once(dirname(dirname(__DIR__))."/vendor/lucinda/framework-engine/src/view_language/ViewLanguageBinder.php");
 
 /**
  * STDERR MVC error renderer for HTML format using ViewLanguage templating.
