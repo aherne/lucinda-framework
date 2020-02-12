@@ -1,5 +1,5 @@
 <?php
-require("vendor/lucinda/framework-engine/src/view_language/ViewLanguageBinder.php");
+require_once("vendor/lucinda/framework-engine/src/view_language/ViewLanguageBinder.php");
 
 /**
  * View resolver for HTML format binding STDOUT MVC with View Language API and contents of 'application' tag @ configuration.xml
