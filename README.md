@@ -15,9 +15,9 @@ Table of contents:
         - [Programmatic API integration](#programmatic-integration)
 - [Project Structure](#project-structure)
 - [Documentation](#documentation)
-   - [index.php](#index.php)
-   - [stdout.xml](#stdout.xml)
-   - [stderr.xml](#stderr.xml)
+   - [index.php](#index-php)
+   - [stdout.xml](#stdout-xml)
+   - [stderr.xml](#stderr-xml)
    - [Attributes](#attributes)
 - Tutorials
 
@@ -71,7 +71,7 @@ Bootstrapping is the process by which all requests to YOUR_HOST_NAME are *routed
 
 This process requires you to perform two steps, regardless of operating system:
 
-- registering YOUR_HOST_NAME in [.hosts](#setting-.hosts-file) file
+- registering YOUR_HOST_NAME in [.hosts](#setting-hosts-file) file
 - creating a virtual host on your [Apache2](#configuring-apache2) / [NGINX](#configuring-nginx) web server to perform bootstrapping
 - setting [development environment](#setting-development-environment)
 
@@ -206,24 +206,24 @@ MVC APIs have some tags holding attributes that point to class names and paths. 
 
 | API | XML File | XML Tag | Tag Attribute | Class Prototype | Description |
 | --- | --- | ---  | --- | --- | --- |
-| [STDERR MVC API](https://github.com/aherne/errors-api/tree/v2.0.0) | [stderr.xml](#stderr.xml) | [reporter](https://github.com/aherne/errors-api#reporters) | class | [Lucinda\STDERR\Reporter](https://github.com/aherne/errors-api#abstract-class-reporter) | reports error to a storage medium |
-| [STDERR MVC API](https://github.com/aherne/errors-api/tree/v2.0.0) | [stderr.xml](#stderr.xml) | [resolver](https://github.com/aherne/errors-api#resolvers) | class | [Lucinda\STDERR\ViewResolver](https://github.com/aherne/errors-api#abstract-class-viewresolver) | resolves view into response by format |
-| [STDERR MVC API](https://github.com/aherne/errors-api/tree/v2.0.0) | [stderr.xml](#stderr.xml) | [exceptions/exception](https://github.com/aherne/errors-api#exceptions) | controller | [Lucinda\STDERR\Controller](https://github.com/aherne/errors-api#abstract-class-controller) | handles an exception route |
-| [STDOUT MVC API](https://github.com/aherne/php-servlets-api/tree/v3.0.0) | [stdout.xml](#stdout.xml) | [format](https://github.com/aherne/php-servlets-api#formats) | class | [Lucinda\STDOUT\ViewResolver](https://github.com/aherne/php-servlets-api#abstract-class-viewresolver) | resolves view into response by format |
-| [STDOUT MVC API](https://github.com/aherne/php-servlets-api/tree/v3.0.0) | [stdout.xml](#stdout.xml) | [route](https://github.com/aherne/php-servlets-api#routes) | controller | [Lucinda\STDOUT\Controller](https://github.com/aherne/php-servlets-api#abstract-class-controller) | handles an URI route |
-| [STDOUT MVC API](https://github.com/aherne/php-servlets-api/tree/v3.0.0) | [stdout.xml](#stdout.xml) | [session](https://github.com/aherne/php-servlets-api#session) | handler | [\SessionHandlerInterface](https://www.php.net/manual/en/class.sessionhandlerinterface.php) | handles session by storage medium |
+| [STDERR MVC API](https://github.com/aherne/errors-api/tree/v2.0.0) | [stderr.xml](#stderr-xml) | [reporter](https://github.com/aherne/errors-api#reporters) | class | [Lucinda\STDERR\Reporter](https://github.com/aherne/errors-api#abstract-class-reporter) | reports error to a storage medium |
+| [STDERR MVC API](https://github.com/aherne/errors-api/tree/v2.0.0) | [stderr.xml](#stderr-xml) | [resolver](https://github.com/aherne/errors-api#resolvers) | class | [Lucinda\STDERR\ViewResolver](https://github.com/aherne/errors-api#abstract-class-viewresolver) | resolves view into response by format |
+| [STDERR MVC API](https://github.com/aherne/errors-api/tree/v2.0.0) | [stderr.xml](#stderr-xml) | [exceptions/exception](https://github.com/aherne/errors-api#exceptions) | controller | [Lucinda\STDERR\Controller](https://github.com/aherne/errors-api#abstract-class-controller) | handles an exception route |
+| [STDOUT MVC API](https://github.com/aherne/php-servlets-api/tree/v3.0.0) | [stdout.xml](#stdout-xml) | [format](https://github.com/aherne/php-servlets-api#formats) | class | [Lucinda\STDOUT\ViewResolver](https://github.com/aherne/php-servlets-api#abstract-class-viewresolver) | resolves view into response by format |
+| [STDOUT MVC API](https://github.com/aherne/php-servlets-api/tree/v3.0.0) | [stdout.xml](#stdout-xml) | [route](https://github.com/aherne/php-servlets-api#routes) | controller | [Lucinda\STDOUT\Controller](https://github.com/aherne/php-servlets-api#abstract-class-controller) | handles an URI route |
+| [STDOUT MVC API](https://github.com/aherne/php-servlets-api/tree/v3.0.0) | [stdout.xml](#stdout-xml) | [session](https://github.com/aherne/php-servlets-api#session) | handler | [\SessionHandlerInterface](https://www.php.net/manual/en/class.sessionhandlerinterface.php) | handles session by storage medium |
 
 Whatever is hooked there will be integrated by MVC APIs automatically, whenever interpreter reaches respective section. APIs to integrate, on the other hand, provide their own hook points as well:
 
 | API | XML File | XML Tag | Tag Attribute | Class Prototype | Description |
 | --- | --- | --- | --- | --- | --- |
-| [HTTP Headers API](https://github.com/aherne/headers-api) |  [stdout.xml](#stdout.xml) | [headers](https://github.com/aherne/headers-api#headers) | cacheable* | [Lucinda\Headers\Cacheable](https://github.com/aherne/headers-api/blob/master/src/Cacheable.php) | generates ETag and LastModified header values for response |
-| [Logging API](https://github.com/aherne/php-logging-api/tree/v3.0.0) | [stdout.xml](#stdout.xml) | [logger](https://github.com/aherne/php-logging-api/tree/v3.0.0#configuration) | class | [Lucinda\Logging\AbstractLoggerWrapper](https://github.com/aherne/php-logging-api/blob/v3.0.0/src/AbstractLoggerWrapper.php) | writes message/exception to a storage medium |
-| [Web Security API](https://github.com/aherne/php-security-api/tree/v3.0.0) | [stdout.xml](#stdout.xml) | [form](https://github.com/aherne/php-security-api/tree/v3.0.0#security) | dao | [Lucinda\WebSecurity\Authentication\DAO\UserAuthenticationDAO](https://github.com/aherne/php-security-api/blob/v3.0.0/src/Authentication/DAO/UserAuthenticationDAO.php) | authenticates user in database by form |
-| [Web Security API](https://github.com/aherne/php-security-api/tree/v3.0.0) | [stdout.xml](#stdout.xml) | [form](https://github.com/aherne/php-security-api/tree/v3.0.0#security) | throttler | [Lucinda\WebSecurity\Authentication\Form\LoginThrottler](https://github.com/aherne/php-security-api/blob/v3.0.0/src/Authentication/Form/LoginThrottler.php) | throttles failed login attempts against brute-force attacks |
-| [Web Security API](https://github.com/aherne/php-security-api/tree/v3.0.0) | [stdout.xml](#stdout.xml) | [oauth2](https://github.com/aherne/php-security-api/tree/v3.0.0#security) | dao | [Lucinda\WebSecurity\Authentication\OAuth2\VendorAuthenticationDAO](https://github.com/aherne/php-security-api/blob/v3.0.0/src/Authentication/OAuth2/VendorAuthenticationDAO.php) | authenticates user in database by oauth2 provider |
-| [Web Security API](https://github.com/aherne/php-security-api/tree/v3.0.0) | [stdout.xml](#stdout.xml) | [by_dao](https://github.com/aherne/php-security-api/tree/v3.0.0#security) | page_dao | [Lucinda\WebSecurity\Authorization\DAO\PageAuthorizationDAO](https://github.com/aherne/php-security-api/blob/v3.0.0/src/Authorization/DAO/PageAuthorizationDAO.php) | gets rights for route requested in database |
-| [Web Security API](https://github.com/aherne/php-security-api/tree/v3.0.0) | [stdout.xml](#stdout.xml) | [by_dao](https://github.com/aherne/php-security-api/tree/v3.0.0#security) | user_dao | [Lucinda\WebSecurity\Authorization\DAO\UserAuthorizationDAO](https://github.com/aherne/php-security-api/blob/v3.0.0/src/Authorization/DAO/PageAuthorizationDAO.php) | authorizes user to route requested in database |
+| [HTTP Headers API](https://github.com/aherne/headers-api) |  [stdout.xml](#stdout-xml) | [headers](https://github.com/aherne/headers-api#headers) | cacheable* | [Lucinda\Headers\Cacheable](https://github.com/aherne/headers-api/blob/master/src/Cacheable.php) | generates ETag and LastModified header values for response |
+| [Logging API](https://github.com/aherne/php-logging-api/tree/v3.0.0) | [stdout.xml](#stdout-xml) | [logger](https://github.com/aherne/php-logging-api/tree/v3.0.0#configuration) | class | [Lucinda\Logging\AbstractLoggerWrapper](https://github.com/aherne/php-logging-api/blob/v3.0.0/src/AbstractLoggerWrapper.php) | writes message/exception to a storage medium |
+| [Web Security API](https://github.com/aherne/php-security-api/tree/v3.0.0) | [stdout.xml](#stdout-xml) | [form](https://github.com/aherne/php-security-api/tree/v3.0.0#security) | dao | [Lucinda\WebSecurity\Authentication\DAO\UserAuthenticationDAO](https://github.com/aherne/php-security-api/blob/v3.0.0/src/Authentication/DAO/UserAuthenticationDAO.php) | authenticates user in database by form |
+| [Web Security API](https://github.com/aherne/php-security-api/tree/v3.0.0) | [stdout.xml](#stdout-xml) | [form](https://github.com/aherne/php-security-api/tree/v3.0.0#security) | throttler | [Lucinda\WebSecurity\Authentication\Form\LoginThrottler](https://github.com/aherne/php-security-api/blob/v3.0.0/src/Authentication/Form/LoginThrottler.php) | throttles failed login attempts against brute-force attacks |
+| [Web Security API](https://github.com/aherne/php-security-api/tree/v3.0.0) | [stdout.xml](#stdout-xml) | [oauth2](https://github.com/aherne/php-security-api/tree/v3.0.0#security) | dao | [Lucinda\WebSecurity\Authentication\OAuth2\VendorAuthenticationDAO](https://github.com/aherne/php-security-api/blob/v3.0.0/src/Authentication/OAuth2/VendorAuthenticationDAO.php) | authenticates user in database by oauth2 provider |
+| [Web Security API](https://github.com/aherne/php-security-api/tree/v3.0.0) | [stdout.xml](#stdout-xml) | [by_dao](https://github.com/aherne/php-security-api/tree/v3.0.0#security) | page_dao | [Lucinda\WebSecurity\Authorization\DAO\PageAuthorizationDAO](https://github.com/aherne/php-security-api/blob/v3.0.0/src/Authorization/DAO/PageAuthorizationDAO.php) | gets rights for route requested in database |
+| [Web Security API](https://github.com/aherne/php-security-api/tree/v3.0.0) | [stdout.xml](#stdout-xml) | [by_dao](https://github.com/aherne/php-security-api/tree/v3.0.0#security) | user_dao | [Lucinda\WebSecurity\Authorization\DAO\UserAuthorizationDAO](https://github.com/aherne/php-security-api/blob/v3.0.0/src/Authorization/DAO/PageAuthorizationDAO.php) | authorizes user to route requested in database |
 
 \*: attribute added by Lucinda framework
 
@@ -239,8 +239,8 @@ Following event types are available, corresponding to a prototype  respective li
 
 | Event Type | Class Prototype | Triggered |
 | --- | --- | --- |
-| Lucinda\STDOUT\EventType::START | [Lucinda\STDOUT\EventListeners\Start](https://github.com/aherne/php-servlets-api#abstract-class-eventlisteners-start) | Before [stdout.xml](#stdout.xml) is read. |
-| Lucinda\STDOUT\EventType::APPLICATION	| [Lucinda\STDOUT\EventListeners\Application](https://github.com/aherne/php-servlets-api#abstract-class-eventlisteners-application)	| After [stdout.xml](#stdout.xml) is read, before request is read |
+| Lucinda\STDOUT\EventType::START | [Lucinda\STDOUT\EventListeners\Start](https://github.com/aherne/php-servlets-api#abstract-class-eventlisteners-start) | Before [stdout.xml](#stdout-xml) is read. |
+| Lucinda\STDOUT\EventType::APPLICATION	| [Lucinda\STDOUT\EventListeners\Application](https://github.com/aherne/php-servlets-api#abstract-class-eventlisteners-application)	| After [stdout.xml](#stdout-xml) is read, before request is read |
 | Lucinda\STDOUT\EventType::REQUEST | [Lucinda\STDOUT\EventListeners\Request](https://github.com/aherne/php-servlets-api#abstract-class-eventlisteners-request) | After request is read, before controller runs |
 | Lucinda\STDOUT\EventType::RESPONSE | [Lucinda\STDOUT\EventListeners\Response](https://github.com/aherne/php-servlets-api#abstract-class-eventlisteners-response) | After view resolver runs, before response is outputted |
 | Lucinda\STDOUT\EventType::END | [Lucinda\STDOUT\EventListeners\End](https://github.com/aherne/php-servlets-api#abstract-class-eventlisteners-end)	 | After response is outputted |
@@ -260,18 +260,18 @@ Any project using this framework will use following file/folder structure:
  * [*.htaccess*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/.htaccess): Apache2 configuration file
  * [*composer.json*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/composer.json): framework or your project composer dependencies definitions
  * [*configure.php*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/configure.php): step-by-step console configurer adapting framework to your project needs
- * [*index.php*](#index.php): bootstrap PHP file starting framework
- * [*stderr.xml*](#stderr.xml): configures [STDERR MVC API](https://github.com/aherne/errors-api/tree/v2.0.0) to manage exception-response flow. 			
- * [*stdout.xml*](#stdout.xml): configures [STDOUT MVC API](https://github.com/aherne/php-servlets-api/tree/v3.0.0) to manage request-response flow.
+ * [*index.php*](#index-php): bootstrap PHP file starting framework
+ * [*stderr.xml*](#stderr-xml): configures [STDERR MVC API](https://github.com/aherne/errors-api/tree/v2.0.0) to manage exception-response flow. 			
+ * [*stdout.xml*](#stdout-xml): configures [STDOUT MVC API](https://github.com/aherne/php-servlets-api/tree/v3.0.0) to manage request-response flow.
  * **application**: contains framework skeleton logic and user code built on its foundation
     * **cacheables**: stores classes implementing [Lucinda\Headers\Cacheable](https://github.com/aherne/headers-api/blob/master/src/Cacheable.php)
-       * [*DateCacheable*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/cacheables/DateCacheable.php): binds to [STDOUT MVC API](https://github.com/aherne/php-servlets-api/tree/v3.0.0) and [NoSQL Data Access API](https://github.com/aherne/php-nosql-data-access-api/tree/v3.0.0) for generating a *LastModified* response header value based on response body<br/><small>Requires [*NoSQLDataSourceInjector*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/NoSQLDataSourceInjector.php)</small>
-       * [*EtagCacheable*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/cacheables/EtagCacheable.php): binds to [STDOUT MVC API](https://github.com/aherne/php-servlets-api/tree/v3.0.0) for generating an *Etag* response header value based on response body
+       * [*DateCacheable*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/cacheables/DateCacheable.php): binds to [STDOUT MVC API](https://github.com/aherne/php-servlets-api/tree/v3.0.0) and [NoSQL Data Access API](https://github.com/aherne/php-nosql-data-access-api/tree/v3.0.0) for generating a *LastModified* response header value based on response body<br/><small>Requires: [*HttpHeadersListener*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/HttpHeadersListener.php) + [*NoSQLDataSourceInjector*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/NoSQLDataSourceInjector.php)</small>
+       * [*EtagCacheable*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/cacheables/EtagCacheable.php): binds to [STDOUT MVC API](https://github.com/aherne/php-servlets-api/tree/v3.0.0) for generating an *Etag* response header value based on response body.<br/><small>Requires: [*HttpHeadersListener*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/HttpHeadersListener.php)</small>
     * **controllers**: stores classes implementing [Lucinda\STDOUT\Controller](https://github.com/aherne/php-servlets-api#abstract-class-controller) (or [Lucinda\Framework\RestController](https://github.com/aherne/lucinda-framework-engine/tree/v2.0.0/#RestController), if your project is RESTful) and [Lucinda\STDERR\Controller](https://github.com/aherne/errors-api#abstract-class-controller), of whom following are provided by framework
        * [*ErrorsController*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/controllers/ErrorsController.php): implements [Lucinda\STDERR\Controller](https://github.com/aherne/errors-api#abstract-class-controller) to handle all errors/exceptions, unless specifically handled
-       * [*SecurityPacketController*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/controllers/SecurityPacketController.php): implements [Lucinda\STDERR\Controller](https://github.com/aherne/errors-api#abstract-class-controller) to specifically handle [Lucinda\WebSecurity\SecurityPacket](https://github.com/aherne/php-security-api/tree/v3.0.0#handling-securitypacket) exceptions thrown when authentication/authorization requires state change<br/><small>Requires [*SecurityListener*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/SecurityListener.php)</small>
+       * [*SecurityPacketController*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/controllers/SecurityPacketController.php): implements [Lucinda\STDERR\Controller](https://github.com/aherne/errors-api#abstract-class-controller) to specifically handle [Lucinda\WebSecurity\SecurityPacket](https://github.com/aherne/php-security-api/tree/v3.0.0#handling-securitypacket) exceptions thrown when authentication/authorization requires state change<br/><small>Requires: [*SecurityListener*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/SecurityListener.php)</small>
     * **handlers**: stores classes implementing [\SessionHandlerInterface](https://www.php.net/manual/en/class.sessionhandlerinterface.php)
-       * [*NoSQLSessionHandler*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/handlers/NoSQLSessionHandler.php): binds to [NoSQL Data Access API](https://github.com/aherne/php-nosql-data-access-api/tree/v3.0.0) for saving session into a key-value store for distributed applications<br/><small>Requires [*NoSQLDataSourceInjector*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/NoSQLDataSourceInjector.php)</small>
+       * [*NoSQLSessionHandler*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/handlers/NoSQLSessionHandler.php): binds to [NoSQL Data Access API](https://github.com/aherne/php-nosql-data-access-api/tree/v3.0.0) for saving session into a key-value store for distributed applications<br/><small>Requires: [*NoSQLDataSourceInjector*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/NoSQLDataSourceInjector.php)</small>
     * **listeners**: stores event listeners (to be used in this order, if you need any!), each awarding an ability
        * [*LoggingListener*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/LoggingListener.php): binds [Logging API](https://github.com/aherne/php-logging-api/tree/v3.0.0) to gain logging ability
        * [*SQLDataSourceInjector*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/SQLDataSourceInjector.php): binds [STDOUT MVC API](https://github.com/aherne/php-servlets-api/tree/v3.0.0) to gain SQL querying ability
@@ -281,20 +281,20 @@ Any project using this framework will use following file/folder structure:
 [OAuth2 Client API](https://github.com/aherne/oauth2client/tree/v3.0.0) to gain authentication/authorization abilities
        * [*LocalizationListener*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/LocalizationListener.php): binds [STDOUT MVC API](https://github.com/aherne/php-servlets-api/tree/v3.0.0) to [Internationalization API](https://github.com/aherne/php-internationalization-api/tree/v3.0.0) in order to gain automated translation ability for views
        * [*HttpHeadersListener*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/HttpHeadersListener.php): binds [STDOUT MVC API](https://github.com/aherne/php-servlets-api/tree/v3.0.0) to [HTTP Headers API](https://github.com/aherne/headers-api) in order to gain HTTP headers abilities
-       * [*HttpCorsListener*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/HttpCorsListener.php): binds [STDOUT MVC API](https://github.com/aherne/php-servlets-api/tree/v3.0.0) to [HTTP Headers API](https://github.com/aherne/headers-api) in order to validate CORS requests and render response immediately<br/><small>Requires [*HttpHeadersListener*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/HttpHeadersListener.php)</small>
-       * [*HttpCachingListener*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/HttpCachingListener.php): binds [STDOUT MVC API](https://github.com/aherne/php-servlets-api/tree/v3.0.0) to [HTTP Headers API](https://github.com/aherne/headers-api) in order to validate cache header requests and respond with headers whenever possible<br/><small>Requires [*HttpHeadersListener*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/HttpHeadersListener.php)</small>
+       * [*HttpCorsListener*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/HttpCorsListener.php): binds [STDOUT MVC API](https://github.com/aherne/php-servlets-api/tree/v3.0.0) to [HTTP Headers API](https://github.com/aherne/headers-api) in order to validate CORS requests and render response immediately<br/><small>Requires: [*HttpHeadersListener*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/HttpHeadersListener.php)</small>
+       * [*HttpCachingListener*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/HttpCachingListener.php): binds [STDOUT MVC API](https://github.com/aherne/php-servlets-api/tree/v3.0.0) to [HTTP Headers API](https://github.com/aherne/headers-api) in order to validate cache header requests and respond with headers whenever possible<br/><small>Requires: [*HttpHeadersListener*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/HttpHeadersListener.php)</small>
     * **loggers**: stores classes implementing [Lucinda\Logging\AbstractLoggerWrapper](https://github.com/aherne/php-logging-api/blob/v3.0.0/src/AbstractLoggerWrapper.php)
        * [*FileLogger*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/loggers/FileLogger.php): uses [Logging API](https://github.com/aherne/php-logging-api/tree/v3.0.0) to log into files
        * [*SyslogLogger*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/loggers/SyslogLogger.php): uses [Logging API](https://github.com/aherne/php-logging-api/tree/v3.0.0) to log into syslog
     * **models**: stores your project's business logic
         * **dao**: stores data access object classes working with databases
-           * [*NoSqlLoginThrottler*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/models/dao/NoSqlLoginThrottler.php): implements [Lucinda\WebSecurity\Authentication\Form\LoginThrottler](https://github.com/aherne/php-security-api/blob/v3.0.0/src/Authentication/Form/LoginThrottler.php), using SQL database to track failed logins<br/><small>Requires [*SQLDataSourceInjector*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/SQLDataSourceInjector.php)</small>
-           * [*SqlLoginThrottler*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/models/dao/NoSqlLoginThrottler.php): implements [Lucinda\WebSecurity\Authentication\Form\LoginThrottler](https://github.com/aherne/php-security-api/blob/v3.0.0/src/Authentication/Form/LoginThrottler.php), using NoSQL database to track failed logins<br/><small>Requires [*NoSQLDataSourceInjector*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/NoSQLDataSourceInjector.php)</small>
+           * [*NoSqlLoginThrottler*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/models/dao/NoSqlLoginThrottler.php): implements [Lucinda\WebSecurity\Authentication\Form\LoginThrottler](https://github.com/aherne/php-security-api/blob/v3.0.0/src/Authentication/Form/LoginThrottler.php), using SQL database to track failed logins<br/><small>Requires: [*SecurityListener*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/SecurityListener.php) + [*SQLDataSourceInjector*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/SQLDataSourceInjector.php)</small>
+           * [*SqlLoginThrottler*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/models/dao/NoSqlLoginThrottler.php): implements [Lucinda\WebSecurity\Authentication\Form\LoginThrottler](https://github.com/aherne/php-security-api/blob/v3.0.0/src/Authentication/Form/LoginThrottler.php), using NoSQL database to track failed logins<br/><small>Requires: [*SecurityListener*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/SecurityListener.php) + [*NoSQLDataSourceInjector*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/NoSQLDataSourceInjector.php)</small>
         * [*Attributes*](#attributes): extends [Lucinda\STDOUT\Attributes](https://github.com/aherne/php-servlets-api/tree/v3.0.0#configuring-shared-variables) to contain data detected by project event listeners, accessible in subsequent event listeners and controllers via getters.
         * [*EmergencyHandler*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/models/EmergencyHandler.php): a [Lucinda\STDERR\ErrorHandler](https://github.com/aherne/errors-api/blob/v2.0.0/src/ErrorHandler.php) to be used when errors are encountered as [STDERR MVC API](https://github.com/aherne/errors-api/tree/v2.0.0) is handling
-        * [*getRemoteResource*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/composer.json): a procedural function that makes it extremely easy to retrieve a resource from a connected OAuth2 provider<br/><small>Requires [*SecurityListener*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/SecurityListener.php)</small>
-        * [*SQL*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/composer.json):  a procedural function that makes it extremely easy to query an SQL server using prepared statements and handle results<br/><small>Requires [*SQLDataSourceInjector*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/SQLDataSourceInjector.php)</small>
-        * [*translate*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/composer.json): a procedural function that makes it extremely easy to automatically translate sections in views by keyword <br/><small>Requires [*LocalizationListener*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/LocalizationListener.php)</small>
+        * [*getRemoteResource*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/composer.json): a procedural function that makes it extremely easy to retrieve a resource from a connected OAuth2 provider<br/><small>Requires: [*SecurityListener*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/SecurityListener.php)</small>
+        * [*SQL*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/composer.json):  a procedural function that makes it extremely easy to query an SQL server using prepared statements and handle results<br/><small>Requires: [*SQLDataSourceInjector*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/SQLDataSourceInjector.php)</small>
+        * [*translate*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/composer.json): a procedural function that makes it extremely easy to automatically translate sections in views by keyword <br/><small>Requires: [*LocalizationListener*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/LocalizationListener.php)</small>
     * **renderers**: stores classes implementing [Lucinda\STDERR\ViewResolver](https://github.com/aherne/errors-api#abstract-class-viewresolver)
         * [*HtmlRenderer*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/renderers/HtmlRenderer.php): binds [STDERR MVC API](https://github.com/aherne/errors-api/tree/v2.0.0) with [View Language API](https://github.com/aherne/php-view-language-api/tree/v3.0.0) to resolve *html* views
         * [*JsonRenderer*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/renderers/JsonRenderer.php): binds [STDERR MVC API](https://github.com/aherne/errors-api/tree/v2.0.0) with [Lucinda\Framework\Json](https://github.com/aherne/lucinda-framework-engine/tree/v2.0.0/#Json) to resolve *json* views
@@ -312,25 +312,25 @@ Any project using this framework will use following file/folder structure:
 
 ## Documentation
 
-### index.php
+### index.php<a name="index-php"></a>
 
 All requests to your project, except those pointing to static files (eg: public folder), will be [bootstrapped](#bootstrapping) to [**index.php**](https://github.com/aherne/lucinda-framework/blob/v3.0.0/index.php) file, whose only job is to start the framework and manage your application in following steps:
 
 * loads composer autoloader
 * detects development environment registered on web server (see ) into **ENVIRONMENT** constant
 * registers [STDERR MVC API](https://github.com/aherne/errors-api/tree/v2.0.0) as handler of exception-response flow based on:
-   * **[stderr.xml](#stderr.xml)** file where API is configured
+   * **[stderr.xml](#stderr-xml)** file where API is configured
    * **ENVIRONMENT** detected above
    * **[EmergencyHandler](https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/models/EmergencyHandler.php)** instance to handle errors that may occur during handling process itself
 * lets above stand in suspended animation unless an error/exception is thrown below
 * registers [STDOUT MVC API](https://github.com/aherne/php-servlets-api/tree/v3.0.0) as handler of request-response flow based on:
-   * **[stdout.xml](#stdout.xml)** file where API is configured
+   * **[stdout.xml](#stdout-xml)** file where API is configured
    * **ENVIRONMENT** detected above
    * **[Attributes](#attributes)** instance to make values set by event listeners available to controllers or subsequent event listeners
 * registers event listeners that execute when a [STDOUT MVC API](https://github.com/aherne/php-servlets-api/tree/v3.0.0) lifecycle event is reached (**[ErrorListener](https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/ErrorListener.php)** added by default)
 * starts request-response handling
 
-### stderr.xml
+### stderr.xml<a name="stderr-xml"></a>
 
 This file is required to configure [STDERR MVC API](https://github.com/aherne/errors-api/tree/v2.0.0) as well as providing an integration platform of other APIs via following tags:
 
@@ -339,13 +339,15 @@ This file is required to configure [STDERR MVC API](https://github.com/aherne/er
 - [*resolvers*](https://github.com/aherne/errors-api#resolvers): stores view resolver definitions for [STDERR MVC API](https://github.com/aherne/errors-api/tree/v2.0.0)
 - [*reporters*](https://github.com/aherne/errors-api#reporters): stores reporters for [STDERR MVC API](https://github.com/aherne/errors-api/tree/v2.0.0) per **ENVIRONMENT**, binding to [Logging API](https://github.com/aherne/php-logging-api/tree/v3.0.0)
 
-### stdout.xml
+### stdout.xml<a name="stdout-xml"></a>
 
 This file is required to configure [STDOUT MVC API](https://github.com/aherne/php-servlets-api/tree/v3.0.0) as well as providing an integration platform of other APIs via following tags:
 
 - [*application*](https://github.com/aherne/php-servlets-api#application): stores application settings for [STDOUT MVC API](https://github.com/aherne/php-servlets-api/tree/v3.0.0)
 - [*routes*](https://github.com/aherne/php-servlets-api#routes): stores routes for [STDOUT MVC API](https://github.com/aherne/php-servlets-api/tree/v3.0.0), [Web Security API](https://github.com/aherne/php-security-api/tree/v3.0.0) or [HTTP Headers API](https://github.com/aherne/headers-api), each mapping a request URI
 - [*formats*](https://github.com/aherne/php-servlets-api#formats): stores view resolver definitions for [STDOUT MVC API](https://github.com/aherne/php-servlets-api/tree/v3.0.0)
+- [*session*](https://github.com/aherne/php-servlets-api#session): stores rules to create session with for [STDOUT MVC API](https://github.com/aherne/php-servlets-api/tree/v3.0.0)
+- [*cookies*](https://github.com/aherne/php-servlets-api#cookies): stores rules to create cookies with for [STDOUT MVC API](https://github.com/aherne/php-servlets-api/tree/v3.0.0)
 - [*templating*](https://github.com/aherne/php-view-language-api#configuration): stores html templating settings for [View Language API](https://github.com/aherne/php-view-language-api/tree/v3.0.0)
 - [*loggers*](https://github.com/aherne/php-logging-api#configuration): stores loggers for [Logging API](https://github.com/aherne/php-logging-api/tree/v3.0.0) per **ENVIRONMENT**
 - [*sql*](https://github.com/aherne/php-sql-data-access-api#configuration): stores SQL database servers to connect to for [SQL Data Access API](https://github.com/aherne/php-sql-data-access-api/tree/v3.0.0) per **ENVIRONMENT**
@@ -367,8 +369,8 @@ Framework extends above with [Attributes](https://github.com/aherne/php-servlets
 
 | Method | Arguments | Returns | Description | Event Listener |
 | --- | --- | --- | --- | --- |
-| getHeaders | void | \Lucinda\Headers\Wrapper\|NULL | Gets class to use in reading request headers received and writing response headers | [*HttpHeadersListener*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/HttpHeadersListener.php) |
-| getLogger | void | \Lucinda\Logging\Logger\|NULL | Gets class to log messages with | [*LoggingListener*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/LoggingListener.php) |
+| getHeaders | void | [\Lucinda\Headers\Wrapper](https://github.com/aherne/headers-api#initialization)\|NULL | Gets class to use in reading request headers received and writing response headers | [*HttpHeadersListener*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/HttpHeadersListener.php) |
+| getLogger | void | [\Lucinda\Logging\Logger](https://github.com/aherne/php-logging-api/tree/v3.0.0#logging)\|NULL | Gets class to log messages with | [*LoggingListener*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/LoggingListener.php) |
 | getUserId | void | string\|integer | Gets logged in user id | [*SecurityListener*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/SecurityListener.php) |
 | getCsrfToken | void | string\|NULL | Gets token to send as 'csrf' POST param when logging in by form | [*SecurityListener*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/SecurityListener.php) |
 | getAccessToken | void | string\|NULL | Gets token to be remembered and presented by client for stateless authentication as 'Authorization' header | [*SecurityListener*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/SecurityListener.php) |
