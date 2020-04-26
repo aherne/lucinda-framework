@@ -3,83 +3,8 @@
 		<title>Welcome to Lucinda Framework</title>
 		<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet"> 
 		<link href="https://fonts.googleapis.com/css?family=Cinzel" rel="stylesheet">
-		<link href="https://fonts.googleapis.com/css?family=Oswald" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="/public/default.css"/>
 	</head>
-	<style>
-	p, li, span {
-	    font-family: Montserrat;
-    	line-height: 1.5em;
-    	font-size: 14px;
-    }
-	h2, h3, h4 {
-    	font-family: Cinzel;
-	}
-	h2 {
-	    color: #24339F;
-	    border-bottom: 1px dotted #24339F;
-	}
-	code {
-		color: blue;
-	}
-	
-	i.red {
-		color:red;
-	}
-	code {
-	    font-family: Courier New;
-	    border: 1px solid #CCCCCC;
-	    text-align: left;
-	    white-space: pre-wrap;
-	    display: inline-block;
-	    width: 100%;
-	    font-size: 14px;
-	    padding: 10px;
-	    background-color: #DDDDDD;
-	    line-height: 20px;
-	    box-sizing: border-box;
-	    color: black;
-	}
-	
-	.xml {
-		background-color: #006600;
-    	padding: 0px 5px 0px 5px;
-	    text-decoration: none;
-	    border-radius: 4px;
-    	color: #EEEEEE;
-	}
-	
-	.php {
-		background-color: #ababff;
-    	padding: 0px 5px 0px 5px;
-	    text-decoration: none;
-	    border-radius: 4px;
-    	color: #EEEEEE;
-	}
-	
-	.php.engine {
-		background-color: #8585ff;
-	}
-	
-	.api {
-		background-color: #0083a0;
-    	padding: 0px 5px 0px 5px;
-	    text-decoration: none;
-	    border-radius: 4px;
-    	color: #EEEEEE;
-	}
-	
-	span {
-		background-color: #333333;
-    	padding: 0px 5px 0px 5px;
-	    text-decoration: none;
-	    border-radius: 4px;
-    	color: #EEEEEE;
-	}
-	
-	em {
-		text-decoration:underline;
-	}
-	</style>
 	<body>
 		<img src="https://www.lucinda-framework.com/cover.png"/>
 		<p>Welcome to Lucinda 3.0! This ultra high performance PHP framework, developed with simplicity and modularity at its foundation, functions as an XML-based contract of completely independent APIs:</p>
@@ -216,7 +141,6 @@
 		<h2 id="configurer">Console Configurer</h2>
 		<p>To easily integrate APIs other than absolute minimal (STDOUT/STDERR MVC APIs), go to project root and run in console/terminal:</p>
 		<code>php configure.php project</code>
-		<h3>What are the options to configure?</h3>
 		<p>A step-by-step installer will configure your project based on following options:</p>
 		<ol>
 			<li><i class="red">isREST</i>: whether your project is a RESTful web service API. Default: 0 (no)</li>
@@ -312,105 +236,5 @@
 				</ol>
 			</li>
 		</ol>
-		
-		<h3>What happens once installer completes?</h3>
-		
-		<h4>Files Created or Changed</h4>
-		
-		<p>Once installer completes, following files are added/modified:</p>
-		
-		<ul>
-			<li><strong>index.php</strong>: following <a href="https://github.com/aherne/php-servlets-api/tree/v3.0.0#binding-events" target="_blank">event listeners</a> for <a href="https://github.com/aherne/php-servlets-api/tree/v3.0.0" target="_blank" class="api">STDOUT MVC API</a> are added depending on your choices:
-				<ul>
-					<li><a href="https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/LoggingListener.php" target="_blank" class="php">LoggingListener</a>: if <i class="red">logging</i>=1</li>
-					<li><a href="https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/SQLDataSourceInjector.php" target="_blank" class="php">SQLDataSourceInjector</a>: if <i class="red">sqlServer</i>=1</li>
-					<li><a href="https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/NoSQLDataSourceInjector.php" target="_blank" class="php">NoSQLDataSourceInjector</a>: if <i class="red">nosqlServer</i>=1</li>
-					<li><a href="https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/SecurityListener.php" target="_blank" class="php">SecurityListener</a>: if <i class="red">security</i>=1</li>
-					<li><a href="https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/LocalizationListener.php" target="_blank" class="php">LocalizationListener</a>: if <i class="red">internationalization</i>=1</li>
-					<li><a href="https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/HttpHeadersListener.php" target="_blank" class="php">HttpHeadersListener</a>: if <i class="red">headers</i>=1</li>
-					<li><a href="https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/HttpCorsListener.php" target="_blank" class="php">HttpCorsListener</a>: if <i class="red">cors</i>=1</li>
-					<li><a href="https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/HttpCachingListener.php" target="_blank" class="php">HttpCachingListener</a>: if <i class="red">caching</i>=1</li>
-				</ul>
-			</li>
-			<li><strong>stdout.xml</strong>: file is rewritten to fit your choices, setting following tags:
-				<ul>
-					<li><a href="https://github.com/aherne/php-servlets-api#application" target="_blank" class="xml">application</a>: always</li>
-					<li><a href="https://github.com/aherne/php-servlets-api#routes" target="_blank" class="xml">routes</a>: always</li>
-					<li><a href="https://github.com/aherne/php-servlets-api#formats" target="_blank" class="xml">formats</a>: always</li>
-					<li><a href="https://github.com/aherne/php-servlets-api#session" target="_blank" class="xml">session</a>: if <i class="red">detectionMethod</i> includes <i class="red">session</i> or <i class="red">persistenceDrivers</i> includes <i class="red">session</i></li>
-					<li><a href="https://github.com/aherne/php-view-language-api#configuration" target="_blank" class="xml">templating</a>: if <i class="red">isREST</i>=0</li>
-					<li><a href="https://github.com/aherne/php-logging-api#configuration" target="_blank" class="xml">loggers</a>: if <i class="red">logging</i>=1</li>
-					<li><a href="https://github.com/aherne/php-sql-data-access-api#configuration" target="_blank" class="xml">sql</a>: if <i class="red">sql</i>=1</li>
-					<li><a href="https://github.com/aherne/php-nosql-data-access-api#configuration" target="_blank" class="xml">nosql</a>: if <i class="red">nosql</i>=1</li>
-					<li><a href="https://github.com/aherne/php-security-api#security" target="_blank" class="xml">security</a>: if <i class="red">security</i>=1</li>
-					<li><a href="https://github.com/aherne/php-security-api#users" target="_blank" class="xml">users</a>: if <i class="red">authenticationMethod</i>=<i class="red">xml</i></li>
-					<li><a href="https://github.com/aherne/php-internationalization-api#configuration" target="_blank" class="xml">internationalization</a>: if <i class="red">internationalization</i>=1</li>
-					<li><a href="https://github.com/aherne/headers-api#configuration" target="_blank" class="xml">headers</a>: if <i class="red">headers</i>=1</li>
-				</ul>
-			</li>
-			<li><strong>stderr.xml</strong>: file is rewritten to fit your choices, adding following tags:
-				<ul>
-					<li><a href="https://github.com/aherne/errors-api#application" target="_blank" class="xml">application</a>: always</li>
-					<li><a href="https://github.com/aherne/errors-api#exceptions" target="_blank" class="xml">exceptions</a>: always</li>
-					<li><a href="https://github.com/aherne/errors-api#resolvers" target="_blank" class="xml">resolvers</a>: always</li>
-					<li><a href="https://github.com/aherne/errors-api#reporters" target="_blank" class="xml">reporters</a>: always</li>
-				</ul>
-			</li>
-			<li><strong>application/controllers</strong>: mock controllers are added depending on your choices</li>
-			<li><strong>application/models/dao</strong>: (if <i class="red">security</i>=1) data access object classes are created according to your choices
-				<ul>
-					<li><a href="https://github.com/aherne/lucinda-framework-configurer/blob/v2.0.0/files/models/dao/PagesAuthorization.php" target="_blank" class="php">PagesAuthorization</a>: (if <i class="red">authorizationMethod</i>=<i class="red">database</i>) stores the logic by which routes are checked in database for rights</li>
-					<li><a href="https://github.com/aherne/lucinda-framework-configurer/blob/v2.0.0/files/models/dao/" target="_blank" class="php">UsersAuthorization</a>: (if <i class="red">authorizationMethod</i>=<i class="red">database</i>) stores the logic by which users are matched to routes in database for access rights</li>
-					<li><a href="https://github.com/aherne/lucinda-framework-configurer/blob/v2.0.0/files/models/dao/" target="_blank" class="php">UsersFormAuthentication</a>: (if <i class="red">authenticationMethod</i> includes <i class="red">database</i>) stores the logic by which form login is checked in database</li>
-					<li><a href="https://github.com/aherne/lucinda-framework-configurer/blob/v2.0.0/files/models/dao/UsersOAuth2Authentication.php" target="_blank" class="php">UsersOAuth2Authentication</a>: (if <i class="red">authenticationMethod</i> includes <i class="red">oauth2</i>) stores the logic by which oauth2 users are registered and checked in database</li>
-				</ul>
-			</li>
-			<li><strong>application/tags</strong>:  (if <i class="red">isRest</i>=0) mock tags are added depending on your choices</li>
-			<li><strong>application/views</strong>:  (if <i class="red">isRest</i>=0) mock views are added depending on your choices</li>
-			<li><strong>public</strong>: (if <i class="red">isRest</i>=0) mock css is added </li>
-		</ul>
-		
-		<h4>Tables Added</h4>
-		<p>If <i class="red">security</i>=1, following MySQL tables were created as well:</p>
-		<ul>
-			<li>if <i class="red">authenticationMethod</i>=<i class="red">database</i>
-				<ul>
-					<li><em>users</em>: stores your site users</li>
-				</ul>
-			</li>
-			<li>if <i class="red">authenticationMethod</i>=<i class="red">database+oauth2</i>
-				<ul>
-					<li><em>oauth2_providers</em>: stores all supported providers (facebook, google, github, instagram, linkedin, yahoo, yandex, vk)</li>
-					<li><em>users</em>: stores your site users by id, name, email</li>
-					<li><em>users_form</em>: stores list of users logging in by form</li>
-					<li><em>users_oauth2</em>: stores list of users logging in by oauth2 providers</li>
-				</ul>
-			</li>
-			<li>
-				if <i class="red">authorizationMethod</i>=<i class="red">database</i>
-				<ul>
-					<li><em>resources</em>: stores list of site resources (all values of <i class="red">url</i> attribute in routes @ <strong>stdout.xml</strong> must be present here)</li>
-					<li><em>roles</em>: stores list of roles for your site</li>
-					<li><em>users_roles</em>: stores roles users belong to</li>
-					<li><em>roles_resources</em>: stores resources allowed per role</li>		
-				</ul>
-			</li>												
-		</ul>
-		
-		<h4>Roles Created</h4>
-		<p>If <i class="red">security</i>=1, following mock roles were created:</p>
-		
-		<ul>
-			<li><em>GUESTS</em>: implicit role for non-logged in users</li>
-			<li><em>MEMBERS</em>: default role for logged in users</li>
-			<li><em>ADMINISTRATORS</em>: default role for super users (if <i class="red">isCMS</i>=1)</li>
-		</ul>
-		
-		<h4>Users Created</h4>
-		<p>If <i class="red">security</i>=1, following mock users were created:</p>
-		<ul>
-			<li><em>John Doe</em> (username: <i>john</i>, password: <i>doe</i>), belonging to <em>MEMBERS</em> and <em>ADMINISTRATORS</em> (if <i class="red">isCMS</i>=1) roles</li>
-			<li><em>Jane Doe</em> (username: <i>jane</i>, password: <i>doe</i>), belonging to <em>MEMBERS</em> role</li>
-		</ul>
 	</body>
 </html>
