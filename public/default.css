@@ -3,6 +3,11 @@
 	font-weight: bold;
 }
 
+.panel {
+	background-color: #EEEEEE;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
 
 p, li, span {
     font-family: Montserrat;
