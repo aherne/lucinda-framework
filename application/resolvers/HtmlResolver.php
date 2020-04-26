@@ -55,7 +55,9 @@ class HtmlResolver extends \Lucinda\STDOUT\ViewResolver implements \Lucinda\STDE
     public function handle(\Throwable $exception): void
     {
         // close output buffer
-        ob_end_clean();
+        if (ob_get_length()) {
+            ob_end_clean();
+        }
         
         // delegate handling to STDERR MVC API
         $this->defaultErrorHandler->handle($exception);
