@@ -57,9 +57,8 @@ cd YOUR_WEB_ROOT
 git clone -b v3.0.0 https://github.com/aherne/lucinda-framework YOUR_PROJECT_NAME
 cd YOUR_PROJECT_NAME
 composer update
-# if OS != Windows, run these commands as well:
-mkdir compilations
-chmod 777 compilations
+mkdir -m 777 compilations # if your OS is UNIX-based (eg: Mac, Linux)
+mkdir compilations # if your OS is Windows-based
 ```
 
 After you've finished [bootstrapping](#bootstrapping) and have a YOUR_HOST_NAME ready, pointing to YOUR_WEB_ROOT/YOUR_PROJECT_NAME, open your browser at http://YOUR_HOST_NAME and follow steps described there to configure your project.
