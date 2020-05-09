@@ -48,6 +48,8 @@ Framework logic thus becomes strictly one of integrating all above functionaliti
 
 As its composing APIs, framework is PHP 7.1+ and PSR4 autoload compliant, using unit testing (for engine) as well as functional testing (for skeleton and configurer) to insure stability.
 
+![diagram](https://www.lucinda-framework.com/public/images/svg/Lucinda Framework.svg)
+
 ## Installation
 
 To install framework, open console and run:
