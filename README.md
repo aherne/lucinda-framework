@@ -38,7 +38,7 @@ Lucinda Framework 3.0 is an ultra high performance web application skeleton deve
 | [HTTP Headers API](https://github.com/aherne/headers-api) | encapsulates HTTP Request/Response headers according to ISO standards and applies Cache/CORS validation when demanded |
 | [Internationalization API](https://github.com/aherne/php-internationalization-api/tree/v3.0.0) | makes it possible for HTML views to be translated automatically to client's locale |
 
-![diagram](https://www.lucinda-framework.com/public/images/svg/lucinda-framework.svg?version=1.0.0)
+![diagram](https://www.lucinda-framework.com/public/images/svg/lucinda-framework.svg?version=1.0.1)
 
 Framework logic thus becomes strictly one of integrating all above functionalities for a common goal, that of providing an integrated platform for programmers to start developing on. To further modularity and ease of update even further, framework itself is broken into THREE APIs, each with its own repo:
 
