@@ -25,6 +25,10 @@ Table of contents:
 
 Lucinda Framework 3.0 is an ultra high performance web application skeleton developed with simplicity and modularity at its foundation. In order to fulfil these goals, it functions as an XML-based contract of completely independent APIs, each designed for a particular aspect of a web application's logic:
 
+![diagram](https://www.lucinda-framework.com/public/images/svg/lucinda-framework.svg?version=1.0.1)
+
+APIs that take part in this dance are:
+
 | API | Description |
 | --- | --- |
 | [STDOUT MVC API](https://github.com/aherne/php-servlets-api/tree/v3.0.0) | handles HTTP requests into responses using MVC paradigm |
@@ -37,8 +41,6 @@ Lucinda Framework 3.0 is an ultra high performance web application skeleton deve
 | [OAuth2 Client API](https://github.com/aherne/oauth2client/tree/v3.0.0) | communicates with OAuth2 Providers (eg: Facebook) in order to retrieve remote resources owned by client |
 | [HTTP Headers API](https://github.com/aherne/headers-api) | encapsulates HTTP Request/Response headers according to ISO standards and applies Cache/CORS validation when demanded |
 | [Internationalization API](https://github.com/aherne/php-internationalization-api/tree/v3.0.0) | makes it possible for HTML views to be translated automatically to client's locale |
-
-![diagram](https://www.lucinda-framework.com/public/images/svg/lucinda-framework.svg?version=1.0.1)
 
 Framework logic thus becomes strictly one of integrating all above functionalities for a common goal, that of providing an integrated platform for programmers to start developing on. To further modularity and ease of update even further, framework itself is broken into THREE APIs, each with its own repo:
 
