@@ -5,7 +5,7 @@ Table of contents:
 - [About](#about)
 - [Installation](#installation)
    - [Bootstrapping](#bootstrapping)
-     - Setting [.hosts file](#setting-hosts-file)
+     - Setting [hosts file](#setting-hosts-file)
      - Setting [Apache2](#configuring-apache2) / [NGINX](#configuring-nginx) virtual host
      - Setting [development environment](#setting-development-environment)
    - [Configuration](#configuration)
@@ -57,8 +57,7 @@ cd YOUR_WEB_ROOT
 git clone -b v3.0.0 https://github.com/aherne/lucinda-framework YOUR_PROJECT_NAME
 cd YOUR_PROJECT_NAME
 composer update
-mkdir -m 777 compilations # if your OS is UNIX-based (eg: Mac, Linux)
-mkdir compilations # if your OS is Windows-based
+php -r 'mkdir("compilations");chmod("compilations", 0777);'
 ```
 
 After you've finished [bootstrapping](#bootstrapping) and have a YOUR_HOST_NAME ready, pointing to YOUR_WEB_ROOT/YOUR_PROJECT_NAME, open your browser at http://YOUR_HOST_NAME and follow steps described there to configure your project.
@@ -73,15 +72,15 @@ Bootstrapping is the process by which all requests to YOUR_HOST_NAME are *routed
 
 This process requires you to perform two steps, regardless of operating system:
 
-- registering YOUR_HOST_NAME in [.hosts](#setting-hosts-file) file
+- registering YOUR_HOST_NAME in [hosts](#setting-hosts-file) file
 - creating a virtual host on your [Apache2](#configuring-apache2) / [NGINX](#configuring-nginx) web server to perform bootstrapping
 - setting [development environment](#setting-development-environment)
 
 After you're all done, simply restart web server and go to http://YOUR_HOST_NAME and follow steps described there.
 
-### Setting .hosts file
+### Setting hosts file
 
-Now you will need a virtual host that makes sure all requests to YOUR_HOST_NAME point to YOUR_WEB_ROOT/YOUR_PROJECT_NAME, so first open .hosts file (/etc/hosts @ Unix, C:\Windows\System32\drivers\etc\hosts @ Windows) and add this line:
+Now you will need a virtual host that makes sure all requests to YOUR_HOST_NAME point to YOUR_WEB_ROOT/YOUR_PROJECT_NAME, so first open **hosts** file (/etc/hosts @ Unix, C:\Windows\System32\drivers\etc\hosts @ Windows) and add this line:
 
 ```console
 127.0.0.1 YOUR_HOST_NAME
@@ -89,7 +88,7 @@ Now you will need a virtual host that makes sure all requests to YOUR_HOST_NAME 
 
 ### Configuring Apache2
 
-If you're using **Apache2**, after you've made sure *mod_rewrite* and *mod_env* are enabled, open general vhosts configuration file or create a separate vhost file then write:
+After you've made sure *mod_rewrite* and *mod_env* are enabled, open general vhosts configuration file or create a separate vhost file (eg: */etc/apache2/sites_available/YOUR_HOST_NAME.conf* @ Linux) then write:
 
 ```console
 <VirtualHost *:80>
@@ -99,34 +98,29 @@ If you're using **Apache2**, after you've made sure *mod_rewrite* and *mod_env* 
     DocumentRoot YOUR_WEB_ROOT/YOUR_PROJECT_NAME
     # delegates rerouting to htaccess file above
     <Directory YOUR_WEB_ROOT/YOUR_PROJECT_NAME>
-        AllowOverride All
+        AllowOverride None
         Require all granted
+		# informs Apache2 web server you are going to reroute requests
+		RewriteEngine on
+		# turns off directory listing
+		Options -Indexes
+		# makes 404 responses to public (images, js, css) files handled by web server
+		ErrorDocument 404 default
+		# lets web server allow Authorization request header
+		RewriteRule .? - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+		# redirects all requests, except those pointing to public files, to bootstrap
+		RewriteCond %{REQUEST_URI} !^/public
+		RewriteCond %{REQUEST_URI} !^/favicon.ico
+		RewriteRule ^(.*)$ index.php
     </Directory>
 </VirtualHost>
 ```
 
-This enables **.htaccess** in project root, which has following lines:
-
-```console
-# informs Apache2 web server you are going to reroute requests
-RewriteEngine on
-# turns off directory listing
-Options -Indexes
-# makes 404 responses to public (images, js, css) files handled by web server
-ErrorDocument 404 default
-# lets web server allow Authorization request header
-RewriteRule .? - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
-# redirects all requests, except those pointing to public files, to bootstrap
-RewriteCond %{REQUEST_URI} !^/public
-RewriteCond %{REQUEST_URI} !^/favicon.ico
-RewriteRule ^(.*)$ index.php
-```
-
-If you have no control on web server and .htaccess is disabled, sysadmins should put above lines in virtualhost.
+Now enable specific virtualhost (eg: *a2ensite /etc/apache2/sites_available/YOUR_HOST_NAME.conf* @ Linux), if any, then restart web server.
 
 ### Configuring NGINX
 
-If you're using **NGINX**, open general vhosts configuration file or create a separate vhost file then write:
+Open general vhosts configuration file or create a separate vhost file (eg: */etc/nginx/sites_available/YOUR_HOST_NAME.conf* @ Linux) then write:
 
 ```console
 server {
@@ -161,22 +155,24 @@ server {
 }
 ```
 
+Now enable specific virtualhost (eg: *ln -s /etc/nginx/sites-available/YOUR_HOST_NAME.conf /etc/nginx/sites-enabled/* @ Linux), if any, then restart web server.
+
 ### Setting Development Environment
 
 Development environment is a **mandatory** string value that uniquely identifies a machine against others running the same project. It must be set on web server directly, so framework's job is just to retrieve it.
 
-To set development environment in **Apache2**, open *.htaccess* file and append this line:
+To set development environment in **Apache2**, open virtualhost file above and append this line:
 
 ```console
 SetEnv ENVIRONMENT local
 ```
 
-To set development environment in **NGINX**, edit PHP-FPM configuration file (eg: /etc/php/7.2/fpm/php-fpm.conf) then append this line:
+To set development environment in **NGINX**, edit PHP-FPM configuration file (eg: /etc/php/7.2/fpm/php-fpm.conf @ Linux) and append this line:
 
 ```console
 env[ENVIRONMENT] = local
 ```
-Above directives set your development environment as *local* (your personal workstation).
+Above directives set your development environment as *local* (your personal workstation). After they are done, restart web server!
 
 ## Configuration
 
@@ -259,7 +255,6 @@ Event listeners will be *run* in the order they are set once respective lifecycl
 
 Any project using this framework will use following file/folder structure:
 
- * [*.htaccess*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/.htaccess): Apache2 configuration file
  * [*composer.json*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/composer.json): framework or your project composer dependencies definitions
  * [*configure.php*](https://github.com/aherne/lucinda-framework/blob/v3.0.0/configure.php): step-by-step console configurer adapting framework to your project needs
  * [*index.php*](#index-php): bootstrap PHP file starting framework
@@ -354,9 +349,9 @@ This file is required to configure [STDOUT MVC API](https://github.com/aherne/ph
 - [*loggers*](https://github.com/aherne/php-logging-api#configuration): stores loggers for [Logging API](https://github.com/aherne/php-logging-api/tree/v3.0.0) per **ENVIRONMENT**
 - [*sql*](https://github.com/aherne/php-sql-data-access-api#configuration): stores SQL database servers to connect to for [SQL Data Access API](https://github.com/aherne/php-sql-data-access-api/tree/v3.0.0) per **ENVIRONMENT**
 - [*nosql*](https://github.com/aherne/php-nosql-data-access-api#configuration): stores NoSQL database servers to connect to for [NoSQL Data Access API](https://github.com/aherne/php-nosql-data-access-api/tree/v3.0.0) per **ENVIRONMENT**
-- [*security*](https://github.com/aherne/php-security-api#security): stores authentication and authorization settings for [Web Security API](https://github.com/aherne/php-security-api/tree/v3.0.0) for
+- [*security*](https://github.com/aherne/php-security-api#security): stores authentication and authorization settings for [Web Security API](https://github.com/aherne/php-security-api/tree/v3.0.0)
 - [*users*](https://github.com/aherne/php-security-api#users): stores list of site users for [Web Security API](https://github.com/aherne/php-security-api/tree/v3.0.0)
-- [*oauth2*](https://github.com/aherne/oauth2client#configuration): stores list of project accounts for [OAuth2 Client API](https://github.com/aherne/oauth2client/tree/v3.0.0) per **ENVIRONMENT**
+- [*oauth2*](https://github.com/aherne/oauth2client#configuration): stores list of project accounts on oauth2 providers for [OAuth2 Client API](https://github.com/aherne/oauth2client/tree/v3.0.0) per **ENVIRONMENT**
 - [*internationalization*](https://github.com/aherne/php-internationalization-api#configuration): stores internationalization and localization settings for [Internationalization API](https://github.com/aherne/php-internationalization-api/tree/v3.0.0)
 - [*headers*](https://github.com/aherne/headers-api#configuration): stores header policies for [HTTP Headers API](https://github.com/aherne/headers-api)
 

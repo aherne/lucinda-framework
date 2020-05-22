@@ -1,5 +1,5 @@
 <?php
-require __DIR__ . '/vendor/autoload.php';
+require("vendor/autoload.php");
 
 // performs environment detection
 $environment = getenv("ENVIRONMENT");

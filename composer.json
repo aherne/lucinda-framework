@@ -30,5 +30,10 @@
     },
     "require-dev": {
         "lucinda/unit-testing": "^1.0"
+    },
+    "scripts": {
+    	"post-create-project-cmd": [
+            "php -r 'mkdir(\"compilations\");chmod(\"compilations\", 0777);'"
+        ]
     }
 }

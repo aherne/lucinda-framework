@@ -41,8 +41,6 @@ class HtmlRenderer extends \Lucinda\STDERR\ViewResolver implements \Lucinda\STDE
             
             // saves stream
             $this->response->setBody($output);
-        } catch (Exception $e) {
-            $this->handle($e);
         } catch (Throwable $e) {
             $this->handle($e);
         }

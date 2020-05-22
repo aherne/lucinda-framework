@@ -1,8 +1,0 @@
-RewriteEngine on
-Options -Indexes
-ErrorDocument 404 default
-RewriteRule .? - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
-RewriteCond %{REQUEST_URI} !^/public
-RewriteCond %{REQUEST_URI} !^/favicon.ico
-RewriteRule ^(.*)$ index.php
-SetEnv ENVIRONMENT local

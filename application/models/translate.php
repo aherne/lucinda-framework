@@ -9,7 +9,7 @@ use Lucinda\Framework\SingletonRepository;
  * @param string[] $parameters Varargs of custom values to replace in translation (placeholders %i, where i is custom value index)
  * @return string Value of translation (if found) or dictionary key (if not found)
  */
-function translate($key, $domain="", ...$parameters)
+function translate(string $key, string $domain="", ...$parameters): string
 {
     try {
         $translation = SingletonRepository::get("translations")->getTranslation($key, $domain);

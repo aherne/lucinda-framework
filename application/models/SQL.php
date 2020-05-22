@@ -8,7 +8,7 @@ use Lucinda\SQL\ConnectionSingleton;
  * @param string[string] $parameters Parameters to bind by key (param name) and value (param value)
  * @return \Lucinda\SQL\StatementResults Object that encapsulates execution results.
  */
-function SQL($query, $parameters=array())
+function SQL(string $query, array $parameters=array()): Lucinda\SQL\StatementResults
 {
     $preparedStatement = ConnectionSingleton::getInstance()->preparedStatement();
     $preparedStatement->prepare($query);
