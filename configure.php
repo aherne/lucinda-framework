@@ -1,22 +1,11 @@
 <?php
-require_once("vendor/lucinda/framework-configurer/src/CommandRunner.php");
-
+require __DIR__ . '/vendor/autoload.php';
 ini_set("display_errors", 1);
 error_reporting(E_ALL);
 try {
     if (sizeof($argv)<2) {
         throw new Exception("Option parameter is missing!");
     }
-    
-    // windows fix: start
-    if (!function_exists("readline")) {
-        function readline($prompt = '')
-        {
-            echo $prompt;
-            return trim(fgets(STDIN));
-        }
-    }
-    // windows fix: end
     
     // runs user-selected option
     $commandRunner = new Lucinda\Configurer\CommandRunner();

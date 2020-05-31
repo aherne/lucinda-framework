@@ -1,20 +1,15 @@
 <?php
-require("vendor/lucinda/framework-engine/src/datasource_detection/NoSQLDataSourceBinder.php");
-
 /**
- * Binds STDOUT MVC with NoSQL Data Access API and contents of 'nosql' subtag of 'servers' tag @ configuration.xml
- * in order to be able to operate with a nosql database (supported: memcache(d), apc(u), redis, couchbase).
- * Sets up and injects a Lucinda\NoSQL\DataSource object that will be used automatically when querying database via
- * Lucinda\NoSQL\ConnectionSingleton or Lucinda\NoSQL\ConnectionFactory.
+ * Sets up NoSQL Data Access API in order to be able to query NoSQL key-value stores (eg: Redis) later on
  */
-class NoSQLDataSourceInjector extends \Lucinda\MVC\STDOUT\ApplicationListener
+class NoSQLDataSourceInjector extends \Lucinda\STDOUT\EventListeners\Application
 {
     /**
      * {@inheritDoc}
-     * @see \Lucinda\MVC\STDOUT\Runnable::run()
+     * @see \Lucinda\STDOUT\Runnable::run()
      */
-    public function run()
+    public function run(): void
     {
-        new Lucinda\Framework\NoSQLDataSourceBinder($this->application->getTag("servers")->nosql, ENVIRONMENT);
+        new Lucinda\NoSQL\Wrapper($this->application->getXML(), ENVIRONMENT);
     }
 }

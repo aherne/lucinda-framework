@@ -1,63 +1,61 @@
 <?php
+use Lucinda\Templating\Wrapper;
+
 /**
- * STDERR MVC error renderer for HTML format.
+ * STDERR MVC view resolver for HTML format using ViewLanguage templating.
  */
-class HtmlRenderer implements \Lucinda\MVC\STDERR\ErrorRenderer, \Lucinda\MVC\STDERR\ErrorHandler
+class HtmlRenderer extends \Lucinda\STDERR\ViewResolver implements \Lucinda\STDERR\ErrorHandler
 {
     /**
-     * @var \Lucinda\MVC\STDERR\ErrorHandler
+     * @var \Lucinda\STDERR\ErrorHandler
      */
     private $defaultErrorHandler;
-
+    
     /**
      * {@inheritDoc}
-     * @see \Lucinda\MVC\STDERR\ErrorRenderer::render()
+     * @see \Lucinda\STDERR\Runnable::run()
      */
-    public function render(Lucinda\MVC\STDERR\Response $response)
+    public function run(): void
     {
-        $viewFile = $response->getView();
-        if ($viewFile) {
-            if (!file_exists($viewFile.".html")) {
-                throw new \Lucinda\MVC\STDERR\Exception("View file not found: ".$viewFile);
-            }
-
-            try {
-                $this->defaultErrorHandler = \Lucinda\MVC\STDERR\PHPException::getErrorHandler();
-
-                // take control of error handling
-                \Lucinda\MVC\STDERR\PHPException::setErrorHandler($this);
-                set_exception_handler(array($this, "handle"));
-
-                // compiles PHP file into output buffer
-                ob_start();
-                $_VIEW = $response->attributes();
-                require($viewFile . ".html");
-                $output = ob_get_contents();
-                ob_end_clean();
-
-                // restores default error handler
-                \Lucinda\MVC\STDERR\PHPException::setErrorHandler($this->defaultErrorHandler);
-                set_exception_handler(array($this->defaultErrorHandler, "handle"));
-
-                // saves stream
-                $response->getOutputStream()->write($output);
-            } catch (Exception $e) {
-                $this->handle($e);
-            } catch (Throwable $e) {
-                $this->handle($e);
-            }
+        if ($this->response->getBody()) {
+            return;
+        }
+        
+        // gets view file
+        try {
+            $this->defaultErrorHandler = \Lucinda\STDERR\PHPException::getErrorHandler();
+            
+            // converts view language to PHP
+            $wrapper = new Wrapper($this->application->getXML());
+            
+            // take control of error handling
+            \Lucinda\STDERR\PHPException::setErrorHandler($this);
+            set_exception_handler(array($this,"handle"));
+            
+            // compiles PHP file into output buffer
+            $output = $wrapper->compile($this->response->view()->getFile(), $this->response->view()->getData());
+            
+            // restores default error handler
+            \Lucinda\STDERR\PHPException::setErrorHandler($this->defaultErrorHandler);
+            set_exception_handler(array($this->defaultErrorHandler, "handle"));
+            
+            // saves stream
+            $this->response->setBody($output);
+        } catch (Throwable $e) {
+            $this->handle($e);
         }
     }
-
+    
     /**
-     * Handles errors by delegating to STDOUT MVC API
-     *
-     * @param \Exception $exception Encapsulates error information.
+     * {@inheritDoc}
+     * @see \Lucinda\STDERR\ErrorHandler::handle()
      */
-    public function handle($exception)
+    public function handle(\Throwable $exception): void
     {
         // close output buffer
-        ob_end_clean();
+        if (ob_get_length()) {
+            ob_end_clean();
+        }
 
         // delegate handling to STDERR MVC API
         $this->defaultErrorHandler->handle($exception);

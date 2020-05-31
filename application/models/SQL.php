@@ -1,4 +1,6 @@
 <?php
+use Lucinda\SQL\ConnectionSingleton;
+
 /**
  * Automates prepared statement execution and results retrieval
  *
@@ -6,9 +8,9 @@
  * @param string[string] $parameters Parameters to bind by key (param name) and value (param value)
  * @return \Lucinda\SQL\StatementResults Object that encapsulates execution results.
  */
-function SQL($query, $parameters=array())
+function SQL(string $query, array $parameters=array()): Lucinda\SQL\StatementResults
 {
-    $preparedStatement = Lucinda\SQL\ConnectionSingleton::getInstance()->createPreparedStatement();
+    $preparedStatement = ConnectionSingleton::getInstance()->preparedStatement();
     $preparedStatement->prepare($query);
     return $preparedStatement->execute($parameters);
 }

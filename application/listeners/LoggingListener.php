@@ -1,22 +1,21 @@
 <?php
-require("vendor/lucinda/framework-engine/src/logging/LoggingBinder.php");
-
 /**
- * Binds STDOUT MVC with Logging API and contents of 'loggers' tag @ configuration.xml based on development environment
- * in order for developers to be able to log a message to a provider (eg: syslog).
- *
- * Sets attributes:
- * - logger: (Lucinda\Framework\MultiLogger) encapsulated logger(s) detected, able to distribute message to all loggers registered
+ * Sets up Logging API to use in logging later on
  */
-class LoggingListener extends \Lucinda\MVC\STDOUT\ApplicationListener
+class LoggingListener extends \Lucinda\STDOUT\EventListeners\Application
 {
     /**
-     * {@inheritDoc}
-     * @see \Lucinda\MVC\STDOUT\Runnable::run()
+     * @var Attributes
      */
-    public function run()
+    protected $attributes;
+    
+    /**
+     * {@inheritDoc}
+     * @see \Lucinda\STDOUT\Runnable::run()
+     */
+    public function run(): void
     {
-        $binder = new Lucinda\Framework\LoggingBinder($this->application->getTag("loggers"), ENVIRONMENT);
-        $this->application->attributes("logger", $binder->getLogger());
+        $wrapper = new Lucinda\Logging\Wrapper($this->application->getXML(), ENVIRONMENT);
+        $this->attributes->setLogger($wrapper->getLogger());
     }
 }

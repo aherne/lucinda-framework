@@ -1,28 +1,47 @@
 <?php
-require("vendor/lucinda/framework-engine/src/security/SecurityBinder.php");
+require("application/models/getRemoteResource.php");
+
+use Lucinda\Framework\RequestBinder;
+use Lucinda\Framework\OAuth2\Binder as OAuth2Binder;
+use Lucinda\Framework\OAuth2\DriverDetector as OAuth2DriverDetector;
+use Lucinda\Framework\SingletonRepository;
 
 /**
- * Binds STDOUT MVC API with Web Security API + OAuth2 Client API and contents of 'security' tag @ configuration.xml
- * in order to be able to perform web security operations (authentication/authorization) to a request.
- *
- * Sets attributes:
- * - user_id: (string|integer) unique user identifier of logged in user read from / written to persistence drivers (eg: session)
- * - csrf: (string) value of synchronizer token to be sent as part of log in form
- * - oauth2: (array[string:OAuth2\Driver]) List of detected oauth2 drivers by driver name.
+ * Binds STDOUT MVC API with Web Security API + OAuth2 Client API for authentication and authorization
  */
-class SecurityListener extends \Lucinda\MVC\STDOUT\RequestListener
+class SecurityListener extends \Lucinda\STDOUT\EventListeners\Request
 {
     /**
-     * {@inheritDoc}
-     * @see \Lucinda\MVC\STDOUT\Runnable::run()
+     * @var Attributes
      */
-    public function run()
+    protected $attributes;
+    
+    /**
+     * {@inheritDoc}
+     * @see \Lucinda\STDOUT\Runnable::run()
+     */
+    public function run(): void
     {
-        $securityFilter = new Lucinda\Framework\SecurityBinder($this->application, $this->request, ENVIRONMENT, false);
-        $this->request->attributes("user_id", $securityFilter->getUserID());
-        $this->request->attributes("csrf", $securityFilter->getCsrfToken());
-        $this->request->attributes("oauth2", $securityFilter->getOAuth2Driver());
-        $this->request->attributes("access_token", $securityFilter->getAccessToken());
-        $this->request->attributes("ip", $securityFilter->getIpAddress());
+        $requestBinder = new RequestBinder($this->request, $this->attributes->getValidPage(), true);
+        $xml = $this->application->getXML();
+        if ($xml->oauth2->{ENVIRONMENT}) {
+            $oauth2Wrapper = new Lucinda\OAuth2\Wrapper($xml, ENVIRONMENT);
+            $oauth2Drivers = $oauth2Wrapper->getDriver();
+            
+            $oauth2Binder = new OAuth2Binder($oauth2Drivers);
+            $securityWrapper = new Lucinda\WebSecurity\Wrapper($xml, $requestBinder->getResult(), $oauth2Binder->getResults());
+            $this->attributes->setUserId($securityWrapper->getUserID());
+            $this->attributes->setCsrfToken($securityWrapper->getCsrfToken());
+            $this->attributes->setAccessToken($securityWrapper->getAccessToken());
+            
+            if ($userID = $securityWrapper->getUserID()) {
+                SingletonRepository::set("oauth2", new OAuth2DriverDetector($xml, $oauth2Drivers, $userID));
+            }
+        } else {
+            $securityWrapper = new Lucinda\WebSecurity\Wrapper($xml, $requestBinder->getResult(), []);
+            $this->attributes->setUserId($securityWrapper->getUserID());
+            $this->attributes->setCsrfToken($securityWrapper->getCsrfToken());
+            $this->attributes->setAccessToken($securityWrapper->getAccessToken());
+        }
     }
 }

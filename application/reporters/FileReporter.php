@@ -1,31 +1,29 @@
 <?php
-require_once(dirname(dirname(__DIR__))."/vendor/lucinda/framework-engine/src/error_reporting/LogReporter.php");
+use Lucinda\Logging\Driver\File\Logger as FileLogger;
+use Lucinda\Logging\Logger;
 
 /**
- * Logs error into file on disk, whose location varies according to development environment.
- * ATTENTION: web server must have write access on folder file is located into!
+ * Logs throwable into file, whose details may vary according to development environment.
  */
-class FileReporter extends \Lucinda\Framework\LogReporter
+class FileReporter extends \Lucinda\Framework\AbstractReporter
 {
     /**
-     * {@inheritDoc}
-     * @see \Lucinda\Framework\LogReporter::getLogger()
+     * @throws Lucinda\STDERR\Exception
+     * @return Logger
      */
-    protected function getLogger(SimpleXMLElement $xml)
+    public function getLogger(): Logger
     {
         $rootFolder = dirname(dirname(__DIR__));
-        require_once($rootFolder."/vendor/lucinda/logging/src/FileLogger.php");
-        
-        $filePath = $rootFolder."/".$xml["path"];
+        $filePath = $rootFolder."/".$this->xml["path"];
         if (!$filePath) {
-            throw new Lucinda\MVC\STDOUT\XMLException("Attribute 'path' is mandatory for 'file' tag");
+            throw new Lucinda\STDERR\Exception("Attribute 'path' is mandatory for 'file' tag");
         }
         
-        $pattern= (string) $xml["format"];
+        $pattern= (string) $this->xml["format"];
         if (!$pattern) {
-            throw new Lucinda\MVC\STDOUT\XMLException("Attribute 'format' is mandatory for 'file' tag");
+            throw new Lucinda\STDERR\Exception("Attribute 'format' is mandatory for 'file' tag");
         }
         
-        return new Lucinda\Logging\FileLogger($filePath, (string) $xml["rotation"], new Lucinda\Logging\LogFormatter($pattern));
+        return new FileLogger($filePath, (string) $this->xml["rotation"], new Lucinda\Logging\LogFormatter($pattern));
     }
 }

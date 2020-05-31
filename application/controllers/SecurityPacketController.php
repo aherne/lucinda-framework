@@ -1,18 +1,14 @@
 <?php
 /**
  * STDERR MVC controller running whenever a Lucinda\Framework\SecurityPacket is thrown during STDOUT phase.
- * Class is open for modification if, for example, developers want to simply redirect to callback page when HTML response format is required
- * instead of showing 401/403/404 views.
  */
-class SecurityPacketController extends \Lucinda\MVC\STDERR\Controller
+class SecurityPacketController extends Lucinda\STDERR\Controller
 {
-    const REDIRECT = true;
-    
     /**
      * {@inheritDoc}
-     * @see \Lucinda\MVC\STDERR\Controller::run()
+     * @see \Lucinda\STDERR\Runnable::run()
      */
-    public function run()
+    public function run(): void
     {
         $this->setResponseStatus();
         $this->setResponseBody();
@@ -21,7 +17,7 @@ class SecurityPacketController extends \Lucinda\MVC\STDERR\Controller
     /**
      * Sets response HTTP status code according to outcome of security validation
      */
-    private function setResponseStatus()
+    private function setResponseStatus(): void
     {
         switch ($this->request->getException()->getStatus()) {
             case "unauthorized":
@@ -44,51 +40,52 @@ class SecurityPacketController extends \Lucinda\MVC\STDERR\Controller
      *
      * @throws Exception If content type of response is other than JSON or HTML.
      */
-    private function setResponseBody()
-    {
-        // gets content type
-        $contentType = $this->response->headers("Content-Type");
-        
+    private function setResponseBody(): void
+    {        
         // gets packet status
         $status = $this->request->getException()->getStatus();
         
         // gets wrapped exception
         $exception = $this->request->getException();
         
+        // gets default format
+        $defaultFormat = $this->application->getDefaultFormat();
+        
         // sets response content
-        if (strpos($contentType, "text/html")===0) {
+        if ($defaultFormat=="html") {
+            $redirect = (string) $this->application->getTag("application")["redirect"];
             $location = $exception->getCallback().($exception->getStatus()!="redirect"?"?status=".$exception->getStatus():"");
-            if (self::REDIRECT) {
+            if ($redirect) {
                 if ($status == "unauthorized") {
                     $location .= "&source=".urlencode($_SERVER["REQUEST_URI"]);
-                } else if ($status == "login_ok" && !empty($_GET["source"])) {
+                } elseif ($status == "login_ok" && !empty($_GET["source"])) {
                     $location = $_GET["source"];
-                } else if ($penalty = $this->request->getException()->getTimePenalty()) {
+                } elseif ($penalty = $this->request->getException()->getTimePenalty()) {
                     $location .= "&wait=".$penalty;
                 }
-                $this->response->redirect($location);
+                $this->response::redirect($location, false, true);
             } else {
                 switch ($status) {
                     case "unauthorized":
-                        $this->response->setView($this->application->getViewsPath()."/401");
+                        $this->response->view()->setFile($this->application->getViewsPath()."/401");
                         break;
                     case "forbidden":
-                        $this->response->setView($this->application->getViewsPath()."/403");
+                        $this->response->view()->setFile($this->application->getViewsPath()."/403");
                         break;
                     case "not_found":
-                        $this->response->setView($this->application->getViewsPath()."/404");
+                        $this->response->view()->setFile($this->application->getViewsPath()."/404");
                         break;
                     default:
-                        $this->response->redirect($location, false, true);
+                        $this->response::redirect($location, false, true);
                         break;
                 }
             }
-        } elseif (strpos($contentType, "application/json")===0) {
-            $this->response->attributes("status", $exception->getStatus());
-            $this->response->attributes("callback", $exception->getCallback());
-            $this->response->attributes("token", $exception->getAccessToken());
         } else {
-            throw new Exception("Unsupported content type!");
+            $view = $this->response->view();
+            $view["status"] = $exception->getStatus();
+            $view["callback"] = $exception->getCallback();
+            $view["token"] = $exception->getAccessToken();
+            $view["penalty"] = $exception->getTimePenalty();
         }
     }
 }
