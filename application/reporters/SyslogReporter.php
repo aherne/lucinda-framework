@@ -1,29 +1,28 @@
 <?php
-require_once(dirname(dirname(__DIR__))."/vendor/lucinda/framework-engine/src/error_reporting/LogReporter.php");
+use Lucinda\Logging\Driver\SysLog\Logger as SysLogger;
+use Lucinda\Logging\Logger;
 
 /**
- * Logs error into a dedicated SYSLOG server, whose details may vary according to development environment.
+ * Logs throwable into a dedicated SYSLOG server, whose details may vary according to development environment.
  */
-class SyslogReporter extends \Lucinda\Framework\LogReporter
+class SyslogReporter extends \Lucinda\Framework\AbstractReporter
 {
     /**
-     * {@inheritDoc}
-     * @see \Lucinda\Framework\LogReporter::getLogger()
+     * @throws Lucinda\STDERR\Exception
+     * @return Logger
      */
-    protected function getLogger(SimpleXMLElement $xml)
+    public function getLogger(): Logger
     {
-        require_once(dirname(dirname(__DIR__))."/vendor/lucinda/logging/src/SysLogger.php");
-        
-        $applicationName = (string) $xml["application"];
+        $applicationName = (string) $this->xml["application"];
         if (!$applicationName) {
-            throw new Lucinda\MVC\STDOUT\XMLException("Attribute 'path' is mandatory for 'syslog' tag");
+            throw new Lucinda\STDERR\Exception("Attribute 'path' is mandatory for 'syslog' tag");
         }
         
-        $pattern= (string) $xml["format"];
+        $pattern= (string) $this->xml["format"];
         if (!$pattern) {
-            throw new Lucinda\MVC\STDOUT\XMLException("Attribute 'format' is mandatory for 'syslog' tag");
+            throw new Lucinda\STDERR\Exception("Attribute 'format' is mandatory for 'syslog' tag");
         }
         
-        return new Lucinda\Logging\SysLogger($applicationName, new Lucinda\Logging\LogFormatter($pattern));
+        return new SysLogger($applicationName, new Lucinda\Logging\LogFormatter($pattern));
     }
 }

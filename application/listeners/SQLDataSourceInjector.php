@@ -1,21 +1,17 @@
 <?php
-require("vendor/lucinda/framework-engine/src/datasource_detection/SQLDataSourceBinder.php");
 require("application/models/SQL.php");
 
 /**
- * Binds STDOUT MVC with SQL Data Access API and contents of 'sql' subtag of 'servers' tag @ configuration.xml
- * in order to be able to operate with a sql database (via PDO).
- * Sets up and injects a Lucinda\SQL\DataSource object that will be used automatically when querying database via
- * Lucinda\SQL\ConnectionSingleton or Lucinda\SQL\ConnectionFactory.
+ * Sets up SQL Data Access API in order to be able to query SQL databases later on
  */
-class SQLDataSourceInjector extends \Lucinda\MVC\STDOUT\ApplicationListener
+class SQLDataSourceInjector extends \Lucinda\STDOUT\EventListeners\Application
 {
     /**
      * {@inheritDoc}
-     * @see \Lucinda\MVC\STDOUT\Runnable::run()
+     * @see \Lucinda\STDOUT\Runnable::run()
      */
-    public function run()
+    public function run(): void
     {
-        new Lucinda\Framework\SQLDataSourceBinder($this->application->getTag("servers")->sql, ENVIRONMENT);
+        new Lucinda\SQL\Wrapper($this->application->getXML(), ENVIRONMENT);
     }
 }

@@ -1,0 +1,240 @@
+<html>
+	<head>
+		<title>Welcome to Lucinda Framework</title>
+		<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet"> 
+		<link href="https://fonts.googleapis.com/css?family=Cinzel" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="/public/default.css"/>
+	</head>
+	<body>
+		<img src="https://www.lucinda-framework.com/cover.png"/>
+		<p>Welcome to Lucinda 3.0! This ultra high performance PHP framework, developed with simplicity and modularity at its foundation, functions as an XML-based contract of completely independent APIs:</p>
+		
+		<ul>
+			<li><a href="https://github.com/aherne/php-servlets-api/tree/v3.0.0" target="_blank" class="api">STDOUT MVC API</a>: handles HTTP requests into responses using MVC paradigm</li>
+			<li><a href="https://github.com/aherne/errors-api/tree/v2.0.0" target="_blank" class="api">STDERR MVC API</a>: handles errors or uncaught exceptions into reports and responses using MVC paradigm</li>
+			<li><a href="https://github.com/aherne/php-view-language-api/tree/v3.0.0" target="_blank" class="api">View Language API</a>: templates HTML views using a language extending HTML standard, similar to Java's EL & JSTL</li>
+			<li><a href="https://github.com/aherne/php-logging-api/tree/v3.0.0" target="_blank" class="api">Logging API</a>: logs messages to a storage medium</li>
+			<li><a href="https://github.com/aherne/php-sql-data-access-api/tree/v3.0.0" target="_blank" class="api">SQL Data Access API</a>: connects to SQL vendors (eg: MySQL), executes queries and parses results on top of PDO</li>
+			<li><a href="https://github.com/aherne/php-nosql-data-access-api/tree/v3.0.0" target="_blank" class="api">NoSQL Data Access API</a>: connects to NoSQL key-value stores (eg: Redis), executes operations (eg: get) and retrieves results</li>
+			<li><a href="https://github.com/aherne/php-security-api/tree/v3.0.0" target="_blank" class="api">Web Security API</a>: performs authentication and authorization on different combinations</li>
+			<li><a href="https://github.com/aherne/oauth2client/tree/v3.0.0" target="_blank" class="api">OAuth2 Client API</a>: communicates with OAuth2 Providers (eg: Facebook) in order to retrieve remote resources owned by client</li>
+			<li><a href="https://github.com/aherne/headers-api" target="_blank" class="api">HTTP Headers API</a>: encapsulates HTTP Request/Response headers according to ISO standards and applies Cache/CORS validation when demanded</li>
+			<li><a href="https://github.com/aherne/php-internationalization-api/tree/v3.0.0" target="_blank" class="api">Internationalization API</a>: makes it possible for HTML views to be translated automatically to client's locale</li>
+		</ul>
+		<p>First two are an absolute necessity, so they have been installed already! The rest, however, can either be <a href="https://github.com/aherne/lucinda-framework/tree/v3.0.0#manual-configuration" target="_blank">bound manually</a> or using the <strong><a href="#configurer">step-by-step configurer</a></strong> below.</p>
+		<h2>Project Structure</h2>
+		
+		<p>Any project using this framework will use following file/folder structure:</p>
+		
+		<ul>
+			<li><em>.htaccess</em>: Apache2 configuration file redirecting all requests to <em>index.php</em> file, except those pointing to <em>public</em>, and sets development <span>ENVIRONMENT</span> to <i>local</i>.</li>
+			<li><em>composer.json</em>: framework or your project composer dependencies definitions</li>
+			<li><em>configure.php</em>: step-by-step console configurer adapting framework to your project needs</li>
+			<li><em>index.php</em>: bootstrap PHP file that makes framework sole handler of HTTP requests and errors/uncaught exceptions</li>
+			<li><em>stderr.xml</em>: configures <a href="https://github.com/aherne/errors-api/tree/v2.0.0" target="_blank" class="api">STDERR MVC API</a> to manage exception-response flow. Framework knows of following tags already:
+				<ul>
+					<li><a href="https://github.com/aherne/errors-api#application" target="_blank" class="xml">application</a>: (added by default) stores application settings for <a href="https://github.com/aherne/errors-api/tree/v2.0.0" target="_blank" class="api">STDERR MVC API</a></li>
+					<li><a href="https://github.com/aherne/errors-api#exceptions" target="_blank" class="xml">exceptions</a>: (added by default) stores routes for <a href="https://github.com/aherne/errors-api/tree/v2.0.0" target="_blank" class="api">STDERR MVC API</a>, each mapping an exception thrown by APIs employed by framework</li>
+					<li><a href="https://github.com/aherne/errors-api#resolvers" target="_blank" class="xml">resolvers</a>: (added by default) stores view resolver definitions for <a href="https://github.com/aherne/errors-api/tree/v2.0.0" target="_blank" class="api">STDERR MVC API</a></li>
+					<li><a href="https://github.com/aherne/errors-api#reporters" target="_blank" class="xml">reporters</a>: stores reporters for <a href="https://github.com/aherne/errors-api/tree/v2.0.0" target="_blank" class="api">STDERR MVC API</a> per <span>ENVIRONMENT</span>, binding to <a href="https://github.com/aherne/php-logging-api/tree/v3.0.0" target="_blank" class="api">Logging API</a></li>
+				</ul>
+			</li>
+			<li><em>stdout.xml</em>: configures <a href="https://github.com/aherne/php-servlets-api/tree/v3.0.0" target="_blank" class="api">STDOUT MVC API</a> to manage request-response flow. Framework knows of following tags already:
+			
+				<ul>
+					<li><a href="https://github.com/aherne/php-servlets-api#application" target="_blank" class="xml">application</a>: (added by default) stores application settings for <a href="https://github.com/aherne/php-servlets-api/tree/v3.0.0" target="_blank" class="api">STDOUT MVC API</a></li>
+					<li><a href="https://github.com/aherne/php-servlets-api#routes" target="_blank" class="xml">routes</a>: (added by default) stores routes for <a href="https://github.com/aherne/php-servlets-api/tree/v3.0.0" target="_blank" class="api">STDOUT MVC API</a>, <a href="https://github.com/aherne/php-security-api/tree/v3.0.0" target="_blank" class="api">Web Security API</a> or <a href="https://github.com/aherne/headers-api" target="_blank" class="api">HTTP Headers API</a>, each mapping a request URI</li>
+					<li><a href="https://github.com/aherne/php-servlets-api#formats" target="_blank" class="xml">formats</a>: (added by default) stores view resolver definitions for <a href="https://github.com/aherne/php-servlets-api/tree/v3.0.0" target="_blank" class="api">STDOUT MVC API</a></li>
+					<li><a href="https://github.com/aherne/php-servlets-api#session" target="_blank" class="xml">session</a>: stores rules to create session with for <a href="https://github.com/aherne/php-servlets-api/tree/v3.0.0" target="_blank" class="api">STDOUT MVC API</a></li>
+					<li><a href="https://github.com/aherne/php-servlets-api#cookies" target="_blank" class="xml">cookies</a>: stores rules to create cookies with for <a href="https://github.com/aherne/php-servlets-api/tree/v3.0.0" target="_blank" class="api">STDOUT MVC API</a></li>
+					<li><a href="https://github.com/aherne/php-view-language-api#configuration" target="_blank" class="xml">templating</a>: stores html templating settings for <a href="https://github.com/aherne/php-view-language-api/tree/v3.0.0" target="_blank" class="api">View Language API</a></li>
+					<li><a href="https://github.com/aherne/php-logging-api#configuration" target="_blank" class="xml">loggers</a>: stores loggers for <a href="https://github.com/aherne/php-logging-api/tree/v3.0.0" target="_blank" class="api">Logging API</a> per <span>ENVIRONMENT</span></li>
+					<li><a href="https://github.com/aherne/php-sql-data-access-api#configuration" target="_blank" class="xml">sql</a>: stores SQL database servers to connect to for <a href="https://github.com/aherne/php-sql-data-access-api/tree/v3.0.0" target="_blank" class="api">SQL Data Access API</a> per <span>ENVIRONMENT</span></li>
+					<li><a href="https://github.com/aherne/php-nosql-data-access-api#configuration" target="_blank" class="xml">nosql</a>: stores NoSQL database servers to connect to for <a href="https://github.com/aherne/php-nosql-data-access-api/tree/v3.0.0" target="_blank" class="api">NoSQL Data Access API</a> per <span>ENVIRONMENT</span></li>
+					<li><a href="https://github.com/aherne/php-security-api#security" target="_blank" class="xml">security</a>: stores authentication and authorization settings for <a href="https://github.com/aherne/php-security-api/tree/v3.0.0" target="_blank" class="api">Web Security API</a></li>
+					<li><a href="https://github.com/aherne/php-security-api#users" target="_blank" class="xml">users</a>: stores list of site users for <a href="https://github.com/aherne/php-security-api/tree/v3.0.0" target="_blank" class="api">Web Security API</a></li>
+					<li><a href="https://github.com/aherne/oauth2client#configuration" target="_blank" class="xml">oauth2</a>: stores list of project accounts for <a href="https://github.com/aherne/oauth2client/tree/v3.0.0" target="_blank" class="api">OAuth2 Client API</a> per <span>ENVIRONMENT</span></li>
+					<li><a href="https://github.com/aherne/php-internationalization-api#configuration" target="_blank" class="xml">internationalization</a>: stores internationalization and localization settings for <a href="https://github.com/aherne/php-internationalization-api/tree/v3.0.0" target="_blank" class="api">Internationalization API</a></li>
+					<li><a href="https://github.com/aherne/headers-api#configuration" target="_blank" class="xml">headers</a>: stores header policies for <a href="https://github.com/aherne/headers-api" target="_blank" class="api">HTTP Headers API</a></li>
+				</ul>
+			</li>
+			<li><em>application</em>: contains your non-static project files (php, html), with following files/folders inside:
+			<ul>
+				<li><em>cacheables</em>: contains <a href="https://github.com/aherne/headers-api/blob/master/src/Cacheable.php" target="_blank">\Lucinda\Headers\Cacheable</a> implementations, detected based on <a href="https://github.com/aherne/headers-api#configuration" target="_blank" class="xml">headers</a> tag @ <strong>stdout.xml</strong>, used to generate ETag/LastModified values for responses. Framework comes with following pre-installed:
+					<ul>
+						<li><a href="https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/cacheables/DateCacheable.php" target="_blank" class="php">DateCacheable</a>: an <a href="https://github.com/aherne/lucinda-framework-engine/tree/v2.0.0/#AbstractCacheable" target="_blank" class="php engine">Lucinda\Framework\AbstractCacheable</a> binding <a href="https://github.com/aherne/headers-api" target="_blank" class="api">HTTP Headers API</a>, <a href="https://github.com/aherne/php-servlets-api/tree/v3.0.0" target="_blank" class="api">STDOUT MVC API</a> and <a href="https://github.com/aherne/php-nosql-data-access-api/tree/v3.0.0" target="_blank" class="api">NoSQL Data Access API</a> to calculate LastModified representation of response.<br/><small>Requires: <a href="https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/HttpHeadersListener.php" target="_blank" class="php">HttpHeadersListener</a> + <a href="https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/NoSQLDataSourceInjector.php" target="_blank" class="php">NoSQLDataSourceInjector</a></small></li>
+						<li><a href="https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/cacheables/EtagCacheable.php" target="_blank" class="php">EtagCacheable</a>: an <a href="https://github.com/aherne/lucinda-framework-engine/tree/v2.0.0/#AbstractCacheable" target="_blank" class="php engine">Lucinda\Framework\AbstractCacheable</a> binding <a href="https://github.com/aherne/headers-api" target="_blank" class="api">HTTP Headers API</a> and <a href="https://github.com/aherne/php-servlets-api/tree/v3.0.0" target="_blank" class="api">STDOUT MVC API</a> to calculate ETag representation of response.<br/><small>Requires: <a href="https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/HttpHeadersListener.php" target="_blank" class="php">HttpHeadersListener</a></small></li>
+					</ul>
+				</li>
+				<li><em>controllers</em>: contains <a href="https://github.com/aherne/php-servlets-api/tree/v3.0.0#abstract-class-controller" target="_blank">\Lucinda\STDOUT\Controller</a> (or <a href="https://github.com/aherne/lucinda-framework-engine/tree/v2.0.0/#RestController" target="_blank" class="php engine">Lucinda\Framework\RestController</a>, if your project is RESTful) implementations mapping requests to responses, detected based on <a href="https://github.com/aherne/php-servlets-api#routes" target="_blank" class="xml">routes</a> tag @ <strong>stdout.xml</strong>, or <a href="https://github.com/aherne/errors-api/tree/v2.0.0#abstract-class-controller" target="_blank">\Lucinda\STDERR\Controller</a> implementations mapping exceptions to responses, detected based on <a href="https://github.com/aherne/errors-api#exceptions" target="_blank" class="xml">exceptions</a> tag @ <strong>stderr.xml</strong>. Framework comes with following pre-installed:
+					<ul>
+						<li><a href="https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/controllers/ErrorsController.php" target="_blank" class="php">ErrorsController</a>: default <a href="https://github.com/aherne/errors-api/tree/v2.0.0#abstract-class-controller" target="_blank">\Lucinda\STDERR\Controller</a> used whenever handled exception isn't covered individually by an &lt;exception&gt; tag. </li>
+						<li><a href="https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/controllers/SecurityPacketController.php" target="_blank" class="php">SecurityPacketController</a>: special <a href="https://github.com/aherne/errors-api/tree/v2.0.0#abstract-class-controller" target="_blank">\Lucinda\STDERR\Controller</a> that handles <a href="https://github.com/aherne/php-security-api/tree/v3.0.0#handling-securitypacket" target="_blank">Lucinda\WebSecurity\SecurityPacket</a>, thrown by <a href="https://github.com/aherne/php-security-api/tree/v3.0.0" target="_blank" class="api">Web Security API</a> when authentication/authorization reached a point requiring redirection<br/><small>Requires: <a href="https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/SecurityListener.php" target="_blank" class="php">SecurityListener</a></small></li>
+					</ul>
+				</li>
+				<li><em>handlers</em>: contains <a href="https://www.php.net/manual/en/class.sessionhandlerinterface.php" target="_blank">\SessionHandlerInterface</a> implementations, detected based on <a href="https://github.com/aherne/php-servlets-api#session" target="_blank" class="xml">session</a> tag @ <strong>stdout.xml</strong>
+					<ul>
+						<li><a href="https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/handlers/NoSQLSessionHandler.php" target="_blank" class="php">NoSQLSessionHandler</a>: uses <a href="https://github.com/aherne/php-nosql-data-access-api/tree/v3.0.0" target="_blank" class="api">NoSQL Data Access API</a> to handle sessions into database, useful to maintain state in distributed projects.<br/><small>Requires: <a href="https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/NoSQLDataSourceInjector.php" target="_blank" class="php">NoSQLDataSourceInjector</a></small></li>
+					</ul>
+				</li>
+				<li><em>listeners</em>: contains <a href="https://github.com/aherne/php-servlets-api/tree/v3.0.0" target="_blank" class="api">STDOUT MVC API</a> <a href="https://github.com/aherne/php-servlets-api/tree/v3.0.0#binding-events">event listeners</a>, able to bind logic to application lifecycle events. Framework comes with following pre-installed (only <a href="https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/ErrorListener.php" target="_blank" class="php">ErrorListener</a> ran by default):
+					<ul>
+						<li><a href="https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/LoggingListener.php" target="_blank" class="php">LoggingListener</a>: integrates <a href="https://github.com/aherne/php-logging-api/tree/v3.0.0" target="_blank" class="api">Logging API</a> based on <a href="https://github.com/aherne/php-logging-api#configuration" target="_blank" class="xml">loggers</a> tag @ <strong>stdout.xml</strong> in order to be able to log messages later on</li>
+						<li><a href="https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/SQLDataSourceInjector.php" target="_blank" class="php">SQLDataSourceInjector</a>: integrates <a href="https://github.com/aherne/php-sql-data-access-api/tree/v3.0.0" target="_blank" class="api">SQL Data Access API</a> based on <a href="https://github.com/aherne/php-sql-data-access-api#configuration" target="_blank" class="xml">sql</a> tag @ <strong>stdout.xml</strong> in order to be able to query sql databases later on</li>
+						<li><a href="https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/NoSQLDataSourceInjector.php" target="_blank" class="php">NoSQLDataSourceInjector</a>: integrates <a href="https://github.com/aherne/php-nosql-data-access-api/tree/v3.0.0" target="_blank" class="api">NoSQL Data Access API</a> based on <a href="https://github.com/aherne/php-nosql-data-access-api#configuration" target="_blank" class="xml">nosql</a> tag @ <strong>stdout.xml</strong> in order to be able to query key-value stores later on</li>
+						<li><a href="https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/ErrorListener.php" target="_blank" class="php">ErrorListener</a>: sets up <a href="https://github.com/aherne/errors-api/tree/v2.0.0" target="_blank" class="api">STDERR MVC API</a> to use response format of route requested</li>
+						<li><a href="https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/SecurityListener.php" target="_blank" class="php">SecurityListener</a>: integrates <a href="https://github.com/aherne/php-security-api/tree/v3.0.0" target="_blank" class="api">Web Security API</a> based on <a href="https://github.com/aherne/php-security-api#security" target="_blank" class="xml">security</a>+<a href="https://github.com/aherne/php-security-api#users" target="_blank" class="xml">users</a>+<a href="https://github.com/aherne/php-servlets-api#routes" target="_blank" class="xml">routes</a> tags @ <strong>stdout.xml</strong> & <a href="https://github.com/aherne/oauth2client/tree/v3.0.0" target="_blank" class="api">OAuth2 Client API</a> based on <a href="https://github.com/aherne/oauth2client#configuration" target="_blank" class="xml">oauth2</a> tag @ <strong>stdout.xml</strong> in order to be able to authenticate and authorize requests</li>
+						<li><a href="https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/LocalizationListener.php" target="_blank" class="php">LocalizationListener</a>: integrates <a href="https://github.com/aherne/php-internationalization-api/tree/v3.0.0" target="_blank" class="api">Internationalization API</a> based on <a href="https://github.com/aherne/php-internationalization-api#configuration" target="_blank" class="xml">internationalization</a> tag @ <strong>stdout.xml</strong> in order to be able to automatically translate response into client locale</li>
+						<li><a href="https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/HttpHeadersListener.php" target="_blank" class="php">HttpHeadersListener</a>: integrates <a href="https://github.com/aherne/headers-api" target="_blank" class="api">HTTP Headers API</a> based on <a href="https://github.com/aherne/headers-api#configuration" target="_blank" class="xml">headers</a> tag @ <strong>stdout.xml</strong> in order to be able to read and write HTTP headers and apply cache/cors validation later on</li>
+						<li><a href="https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/HttpCorsListener.php" target="_blank" class="php">HttpCorsListener</a>: performs <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS" target="_blank">CORS validation</a> of current resource in case an OPTIONS request is received and immediately sends response back to client browser.<br/><small>Requires <a href="https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/HttpHeadersListener.php" target="_blank" class="php">HttpHeadersListener</a></small></li>
+						<li><a href="https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/HttpCachingListener.php" target="_blank" class="php">HttpCachingListener</a>: performs <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching" target="_blank">HTTP caching validation</a> of response based on client request headers, sets headers and updates response accordingly.<br/><small>Requires <a href="https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/HttpHeadersListener.php" target="_blank" class="php">HttpHeadersListener</a></small></li>
+					</ul>
+				</li>
+				<li><em>loggers</em>: contains <a href="https://github.com/aherne/php-logging-api/tree/v3.0.0#logging" target="_blank">\Lucinda\Logging\Logger</a> implementations, detected based on <a href="https://github.com/aherne/php-logging-api#configuration" target="_blank" class="xml">loggers</a> tag @ <strong>stdout.xml</strong>, each able to log messages to a particular storage medium. Framework comes with following pre-installed:
+					<ul>
+						<li><a href="https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/loggers/FileLogger.php" target="_blank" class="php">FileLogger</a>: logs messages into files.<br/><small>Requires: <a href="https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/LoggingListener.php" target="_blank" class="php">LoggingListener</a></small></li>
+						<li><a href="https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/loggers/SyslogLogger.php" target="_blank" class="php">SyslogLogger</a>: logs messages using syslog.<br/><small>Requires: <a href="https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/LoggingListener.php" target="_blank" class="php">LoggingListener</a></small></li>
+					</ul>
+				</li>
+				<li><em>models</em>: contains your project's PHP business logic. Framework comes with following pre-installed:
+					<ul>
+						<li><a href="https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/models/Attributes.php" target="_blank" class="php">Attributes</a>: a <a href="https://github.com/aherne/php-servlets-api/tree/v3.0.0#configuring-shared-variables" target="_blank">Lucinda\STDOUT\Attributes</a> implementation holding variables to transport across request-response handling, adding support for attributes set by event listeners above. <strong>Developers are expected to add their own here!</strong></li>
+						<li><a href="https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/models/EmergencyHandler.php" target="_blank" class="php">EmergencyHandler</a>: a <a href="https://github.com/aherne/errors-api/blob/v2.0.0/src/ErrorHandler.php" target="_blank">Lucinda\STDERR\ErrorHandler</a> to be used when errors are encountered as <a href="https://github.com/aherne/errors-api/tree/v2.0.0" target="_blank" class="api">STDERR MVC API</a> is handling.</li>
+						<li><a href="https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/models/getRemoteResource.php" target="_blank" class="php">getRemoteResource</a>: a procedural function that makes it extremely easy to retrieve a resource from an OAuth2 provider.<br/><small>Requires: <a href="https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/SecurityListener.php" target="_blank" class="php">SecurityListener</a></small></li>
+						<li><a href="https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/models/SQL.php" target="_blank" class="php">SQL</a>: a procedural function that makes it extremely easy to query an SQL server using prepared statements and handle results.<br/><small>Requires: <a href="https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/SQLDataSourceInjector.php" target="_blank" class="php">SQLDataSourceInjector</a></small></li>
+						<li><a href="https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/models/translate.php" target="_blank" class="php">translate</a>: a procedural function that makes it extremely easy to automatically translate sections in views by keyword.<br/><small>Requires: <a href="https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/LocalizationListener.php" target="_blank" class="php">LocalizationListener</a></small></li>
+						<li><em>dao</em>: contains data access objects, detected based on <a href="https://github.com/aherne/php-security-api#security" target="_blank" class="xml">security</a> tag @ <strong>stdout.xml</strong>, encapsulating operations with SQL/NoSQL databases 
+							<ul>
+								<li><a href="https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/models/dao/NoSQLLoginThrottler.php" target="_blank" class="php">NoSQLLoginThrottler</a>: a <a href="https://github.com/aherne/lucinda-framework-engine/tree/v2.0.0/#AbstractLoginThrottler" target="_blank" class="php engine">Lucinda\Framework\AbstractLoginThrottler</a> bound to <a href="https://github.com/aherne/php-nosql-data-access-api/tree/v3.0.0" target="_blank" class="api">NoSQL Data Access API</a>, using a NoSQL server to store failed login attempts.<br/><small>Requires: <a href="https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/SecurityListener.php" target="_blank" class="php">SecurityListener</a> + <a href="https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/NoSQLDataSourceInjector.php" target="_blank" class="php">NoSQLDataSourceInjector</a></small></li>
+								<li><a href="https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/models/dao/SQLLoginThrottler.php" target="_blank" class="php">SQLLoginThrottler</a>: a <a href="https://github.com/aherne/lucinda-framework-engine/tree/v2.0.0/#AbstractLoginThrottler" target="_blank" class="php engine">Lucinda\Framework\AbstractLoginThrottler</a> bound to <a href="https://github.com/aherne/php-sql-data-access-api/tree/v3.0.0" target="_blank" class="api">SQL Data Access API</a>, using a SQL table to store failed login attempts.<br/><small>Requires: <a href="https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/SecurityListener.php" target="_blank" class="php">SecurityListener</a> + <a href="https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/listeners/SQLDataSourceInjector.php" target="_blank" class="php">SQLDataSourceInjector</a></small></li>
+							</ul>
+						</li>
+					</ul>
+				</li>
+				<li><em>renderers</em>: contains <a href="https://github.com/aherne/errors-api/tree/v2.0.0#abstract-class-viewresolver" target="_blank">\Lucinda\STDERR\ViewResolver</a> implementations, detected based on <a href="https://github.com/aherne/errors-api#resolvers" target="_blank" class="xml">resolvers</a> tag @ <strong>stderr.xml</strong>, providing support for outputting normal responses in chosen display formats. Framework comes with following pre-installed:
+					<ul>
+						<li><a href="https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/renderers/HtmlRenderer.php" target="_blank" class="php">HtmlRenderer</a>: resolves response for handled exception in <i>html</i> format, using <a href="https://github.com/aherne/php-view-language-api/tree/v3.0.0" target="_blank" class="api">View Language API</a> templating</li>
+						<li><a href="https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/renderers/JsonRenderer.php" target="_blank" class="php">JsonRenderer</a>: resolves response for handled exception in <i>json</i> format, using <a href="https://github.com/aherne/lucinda-framework-engine/tree/v2.0.0/#Json" target="_blank" class="php engine">Lucinda\Framework\Json</a> class</li>
+					</ul>
+				</li>
+				<li><em>reporters</em>: contains <a href="https://github.com/aherne/errors-api/tree/v2.0.0#abstract-class-reporter" target="_blank">\Lucinda\STDERR\Reporter</a> implementations, detected based on <a href="https://github.com/aherne/errors-api#reporters" target="_blank" class="xml">reporters</a> tag @ <strong>stderr.xml</strong>, each able to report errors to a particular storage medium. Framework comes with following pre-installed:
+					<ul>
+						<li><a href="https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/reporters/FileReporter.php" target="_blank" class="php">FileReporter</a>: a <a href="https://github.com/aherne/lucinda-framework-engine/tree/v2.0.0/#AbstractReporter" target="_blank" class="php engine">Lucinda\Framework\AbstractReporter</a> binding <a href="https://github.com/aherne/errors-api/tree/v2.0.0" target="_blank" class="api">STDERR MVC API</a> to <a href="https://github.com/aherne/php-logging-api/tree/v3.0.0" target="_blank" class="api">Logging API</a> in order to report errors to files</li>
+						<li><a href="https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/reporters/SyslogReporter.php" target="_blank" class="php">SyslogReporter</a>: a <a href="https://github.com/aherne/lucinda-framework-engine/tree/v2.0.0/#AbstractReporter" target="_blank" class="php engine">Lucinda\Framework\AbstractReporter</a> binding <a href="https://github.com/aherne/errors-api/tree/v2.0.0" target="_blank" class="api">STDERR MVC API</a> to <a href="https://github.com/aherne/php-logging-api/tree/v3.0.0" target="_blank" class="api">Logging API</a> in order to report errors to syslog</li>
+					</ul>
+				</li>
+				<li><em>resolvers</em>: contains <a href="https://github.com/aherne/php-servlets-api/tree/v3.0.0#abstract-class-viewresolver" target="_blank">\Lucinda\STDOUT\ViewResolver</a> implementations, detected based on <a href="https://github.com/aherne/php-servlets-api#formats" target="_blank" class="xml">formats</a> tag @ <strong>stdout.xml</strong>, providing support for outputting error responses in chosen display formats. Framework comes with following pre-installed:
+					<ul>
+						<li><a href="https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/resolvers/HtmlResolver.php" target="_blank" class="php">HtmlResolver</a>: resolves response for handled request in <i>html</i> format, using <a href="https://github.com/aherne/php-view-language-api/tree/v3.0.0" target="_blank" class="api">View Language API</a> templating</li>
+						<li><a href="https://github.com/aherne/lucinda-framework/blob/v3.0.0/application/resolvers/JsonResolver.php" target="_blank" class="php">JsonResolver</a>: resolves response for handled request in <i>json</i> format, using <a href="https://github.com/aherne/lucinda-framework-engine/tree/v2.0.0/#Json" target="_blank" class="php engine">Lucinda\Framework\Json</a> class</li>
+					</ul>
+				</li>
+				<li><em>tags</em>: contains <a href="https://github.com/aherne/php-view-language-api/tree/v3.0.0" target="_blank" class="api">View Language API</a> <a href="https://www.lucinda-framework.com/view-language/tags" target="_blank">tag libraries</a>, useful in breaking up HTML templates into reusable parts that extend HTML standard</li>
+				<li><em>views</em>: contains <a href="https://github.com/aherne/php-view-language-api/tree/v3.0.0" target="_blank" class="api">View Language API</a> templates (themselves to be broken into sub-templates or tags)</li>
+			</ul>
+			</li>
+			<li><em>compilations</em>: contains <a href="https://github.com/aherne/php-view-language-api/tree/v3.0.0" target="_blank" class="api">View Language API</a> <a href="https://github.com/aherne/php-view-language-api/tree/v3.0.0#compilation" target="_blank">compilations</a> of templated views into PHP</li>
+			<li><em>public</em>: contains your static project files (images, js, css)</li>
+			<li><em>vendor</em>: contains APIs pulled based on <em>composer.json</em> above via composer update</li>
+		</ul>
+		
+		<h2 id="configurer">Console Configurer</h2>
+		<p>To easily integrate APIs other than absolute minimal (STDOUT/STDERR MVC APIs), go to project root and run in console/terminal:</p>
+		<code>php configure.php project</code>
+		<p>A step-by-step installer will configure your project based on following options:</p>
+		<ol>
+			<li><i class="red">isREST</i>: whether your project is a RESTful web service API. Default: 0 (no)</li>
+			<li><i class="red">logging</i>: whether your project will support logging (excluding errors). Default: 1 (yes)</li>
+			<li><i class="red">headers</i>: whether your project will require validation by HTTP headers. Default: 1 (yes)
+				<ol>
+					<li><i class="red">caching</i>: whether your project will be able to cache response via HTTP headers through <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching" target="_blank">HTTP caching validation</a>. Default: 1 (yes)
+						<ol>
+							<li><i class="red">no_cache</i>: whether or not HTTP caching should be disabled by default and allowed on a route basis only. Default: 0 (no)</li>
+							<li><i class="red">expiration</i>: how many seconds you want response to be served from browser cache without any server round-trip. Default: 0</li>
+						</ol>
+					</li>
+					<li><i class="red">cors</i>: whether your project will be able to answer OPTIONS requests for <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS" target="_blank">CORS validation</a>. Default: 0 (no)
+						<ol>
+							<li><i class="red">allow_credentials</i>: whether or not credentials are allowed in CORS requests. Default: 1 (yes)</li>
+							<li><i class="red">max_age</i>: duration in seconds CORS responses will be cached by client browser. Default: 0</li>
+							<li><i class="red">allowed_request_headers</i>: (optional) request headers that are by default allowed in your site, separated by comma</li>
+							<li><i class="red">allowed_response_headers</i>: (optional) response headers that are by default exposed by your site, separated by comma</li>
+						</ol>
+					</li>
+				</ol>
+			</li>
+			<li><i class="red">internationalization</i>: whether your project is expected to be automatically displayed into multiple languages.  Default: 0 (no)
+				<ol>
+					<li><i class="red">defaultLocale</i>: default locale your site will be using, following iso language and country code standard. Default: en_US</li>
+					<li><i class="red">detectionMethod</i>: method by which locale will be detected by. Available options (choose index number):
+						<ul>
+							<li>by value of <em>Accept-Language</em> request header</li>
+							<li>by value of <em>locale</em> querystring parameter. Recommended if <i class="red">isREST</i>=1!</li>
+							<li>by value of <em>locale</em> querystring parameter remembered into session. Recommended if <i class="red">isREST</i>=0!</li>
+						</ul>
+					</li>
+				</ol>
+			</li>
+			<li><i class="red">sqlServer</i>: whether your project will work with SQL databases.  Default: 1 (yes)
+				<ol>
+					<li><i class="red">driver</i>: the SQL vendor you will be using. Available options (choose index number):
+						<ul>
+							<li>mysql (default)</li>
+						</ul>
+						<small>Other popular vendors (MS SQL, PostgreSQL, Oracle) will be supported in the near future!</small>
+					</li>
+					<li><i class="red">host</i>: ip address of server host. Default: 127.0.0.1 (localhost)</li>
+					<li><i class="red">port</i>: (optional) server port. If not filled, default is used!</li>
+					<li><i class="red">user</i>: user name to connect to server with</li>
+					<li><i class="red">password</i>: user password to connect to server with</li>
+					<li><i class="red">schema</i>: schema your app will be installed into</li>					
+				</ol>
+			</li>
+			<li><i class="red">nosqlServer</i>: whether your project will work with key-value store NoSQL databases.  Default: 0 (no)
+				<ol>
+					<li><i class="red">driver</i>: the NoSQL vendor you will be using. Available options (choose index number):
+						<ul>
+							<li>redis (default)</li>
+							<li>memcache/memcached</li>
+							<li>couchbase</li>
+							<li>apc/apcu</li>
+						</ul>
+						<small>Other popular vendors (DynamoDB, MongoDB, CosmosDB) will be supported in the near future!</small>
+					</li>
+					<li><i class="red">host</i>: (skipped if apc/apcu) ip address of server host. Default: 127.0.0.1 (localhost)</li>
+					<li><i class="red">port</i>: (skipped if apc/apcu, optional otherwise) server port. If not filled, default is used!</li>
+					<li><i class="red">user</i>: (skipped if not couchbase) user name to connect to server with</li>
+					<li><i class="red">password</i>: (skipped if not couchbase) user password to connect to server with</li>
+					<li><i class="red">bucket</i>: (skipped if not couchbase) bucket your app will be installed into</li>			
+					<li><i class="red">bucket_password</i>: (skipped if not couchbase, optional otherwise) password to connect to bucket with</li>					
+				</ol>
+			</li>
+			<li><i class="red">security</i>: whether your project will have resources requiring authentication and authorization.  Default: 0 (no)
+				<ol>			
+					<li><i class="red">isCMS</i>: whether your project is a CMS, requiring authentication and authorization for all resources except login. Default: 0 (no)</li>
+					<li><i class="red">persistenceDrivers</i>: mediums in which logged in state will be persisted into. Available options (chosen automatically):
+						<ul>
+							<li><i class="red">session & remember me cookie</i>: (chosen if <i class="red">isREST</i>=0) logged in user id will be saved to session and, if ticked, remember me cookie as well</li>
+							<li><i class="red">synchronizer token</i>: (chosen if <i class="red">isREST</i>=1) logged in user id will be packed into an expiring renewable token to be sent back as header in order to keep state</li>
+						</ul>					
+					</li>		
+					<li><i class="red">authenticationMethod</i>: method by which user is allowed to authenticate with. Available options:
+						<ul>
+							<li><i class="red">database</i>: (default) standard form login using <em>csrf</em> token to fight against CSRF attacks where credentials are checked in database tables
+							</li>
+							<li><i class="red">database+oauth2</i>: same as above, only also able to login via OAuth2 providers. OAuth2 login will only work once your project is reachable from world-wide-web and <a href="https://github.com/aherne/oauth2client#configuration" target="_blank" class="xml">oauth2</a> tag @ <strong>stdout.xml</strong> is filled for that <span>ENVIRONMENT</span>!
+							</li>
+							<li><i class="red">xml</i>: standard form login using <em>csrf</em> token to fight against CSRF attacks where credentials are checked in <a href="https://github.com/aherne/php-security-api#users" target="_blank" class="xml">users</a> tag @ <strong>stdout.xml</strong>. Not recommended, unless your site will always have same users!</li>
+						</ul>					
+					</li>
+					<li><i class="red">authorizationMethod</i>: method by which user rights are checked for each resource (page) called. Available options (chosen automatically):
+						<ul>
+							<li><i class="red">database</i>: (chosen if <i class="red">isCMS</i>=1) rights will be verified in database tables</li>
+							<li><i class="red">xml</i>: (chosen if <i class="red">isCMS</i>=0) rights will be verified in <a href="https://github.com/aherne/php-security-api#routes" target="_blank" class="xml">routes</a> tag @ <strong>stdout.xml</strong></li>
+						</ul>					
+					</li>	
+				</ol>
+			</li>
+		</ol>
+	</body>
+</html>

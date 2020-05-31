@@ -1,18 +1,18 @@
 <?php
-require_once("application/models/json/Json.php");
+use Lucinda\Framework\Json;
 
 /**
- * View resolver for JSON response format
+ * STDOUT MVC view resolver for JSON format.
  */
-class JsonResolver extends \Lucinda\MVC\STDOUT\ViewResolver
+class JsonResolver extends \Lucinda\STDOUT\ViewResolver
 {
     /**
      * {@inheritDoc}
-     * @see \Lucinda\MVC\STDOUT\ViewResolver::getContent()
+     * @see \Lucinda\STDOUT\Runnable::run()
      */
-    public function getContent()
+    public function run(): void
     {
         $json = new Json();
-        return $json->encode(array("status"=>"ok","body"=>$this->response->attributes()));
+        $this->response->setBody($json->encode(array("status"=>"ok","body"=>$this->response->view()->getData())));
     }
 }

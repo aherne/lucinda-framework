@@ -1,18 +1,18 @@
 <?php
-require_once(dirname(__DIR__)."/models/json/Json.php");
+use Lucinda\Framework\Json;
 
 /**
- * STDERR MVC error renderer for JSON format.
+ * STDERR MVC view resolver for JSON format.
  */
-class JsonRenderer implements \Lucinda\MVC\STDERR\ErrorRenderer
+class JsonRenderer extends \Lucinda\STDERR\ViewResolver
 {
     /**
      * {@inheritDoc}
-     * @see \Lucinda\MVC\STDERR\ErrorRenderer::render()
+     * @see \Lucinda\STDERR\Runnable::run()
      */
-    public function render(Lucinda\MVC\STDERR\Response $response)
+    public function run(): void
     {
         $json = new Json();
-        $response->getOutputStream()->write($json->encode(array("status"=>"error","body"=>$response->attributes())));
+        $this->response->setBody($json->encode(array("status"=>"error","body"=>$this->response->view()->getData())));
     }
 }

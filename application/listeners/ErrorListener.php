@@ -1,18 +1,18 @@
 <?php
 /**
- * Binds STDERR MVC with Logging API in order to reporter errors to loggers in same content type as current page
+ * Sets up STDERR MVC API to use response format of route requested
  */
-class ErrorListener extends \Lucinda\MVC\STDOUT\RequestListener
+class ErrorListener extends \Lucinda\STDOUT\EventListeners\Request
 {
     /**
      * {@inheritDoc}
-     * @see \Lucinda\MVC\STDOUT\Runnable::run()
+     * @see \Lucinda\STDOUT\Runnable::run()
      */
-    public function run()
+    public function run(): void
     {
-        $handler = \Lucinda\MVC\STDERR\PHPException::getErrorHandler();
-        if ($handler instanceof \Lucinda\MVC\STDERR\FrontController) {
-            $handler->setDisplayFormat($this->request->getValidator()->getFormat());
+        $handler = \Lucinda\STDERR\PHPException::getErrorHandler();
+        if ($handler instanceof \Lucinda\STDERR\FrontController) {
+            $handler->setDisplayFormat($this->attributes->getValidFormat());
         }
     }
 }
