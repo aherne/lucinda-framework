@@ -8,11 +8,13 @@ if (!$environment) {
 }
 define("ENVIRONMENT", $environment);
 
-// takes control of STDERR
+// handles STDERR flow
+require("vendor/lucinda/errors-mvc/loader.php"); // preloads classes always required in handling
 require("application/models/EmergencyHandler.php");
 new Lucinda\STDERR\FrontController("stderr.xml", ENVIRONMENT, __DIR__, new EmergencyHandler());
 
-// takes control of STDOUT
+// handles STDOUT flow
+require("vendor/lucinda/mvc/loader.php"); // preloads classes always required in handling
 require("application/models/Attributes.php");
 $object = new Lucinda\STDOUT\FrontController("stdout.xml", new Attributes(__DIR__."/application/listeners"));
 $object->addEventListener(Lucinda\STDOUT\EventType::REQUEST, "ErrorListener");
