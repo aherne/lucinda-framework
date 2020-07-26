@@ -31,6 +31,9 @@
     "require-dev": {
         "lucinda/unit-testing": "^1.0"
     },
+    "autoload": {
+        "files": ["vendor/lucinda/errors-mvc/loader.php", "vendor/lucinda/mvc/loader.php"]
+    },
     "scripts": {
     	"post-create-project-cmd": [
             "php -r 'mkdir(\"compilations\");chmod(\"compilations\", 0777);'"
