@@ -23,7 +23,7 @@ class HttpCachingListener extends Lucinda\STDOUT\EventListeners\Response
         }
         $cacheableFinder = new CacheableFinder($this->application, $this->request, $this->response);
         $httpStatus = $validator->validateCache($cacheableFinder->getResult(), $this->request->getMethod());
-        if ($httpStatus!=200) {
+        if (!in_array($httpStatus, [200,412])) {
             $this->response->setBody("");
         }
         $this->response->setStatus($httpStatus);
