@@ -2,7 +2,7 @@
 /**
  * STDERR MVC error renderer for HTML format.
  */
-class HtmlRenderer implements \Lucinda\MVC\STDERR\ErrorRenderer, \Lucinda\MVC\STDERR\ErrorHandler
+class HtmlRenderer extends \Lucinda\MVC\STDERR\ErrorRenderer implements \Lucinda\MVC\STDERR\ErrorHandler
 {
     /**
      * @var \Lucinda\MVC\STDERR\ErrorHandler

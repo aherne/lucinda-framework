@@ -4,7 +4,7 @@ require_once(dirname(__DIR__)."/models/json/Json.php");
 /**
  * STDERR MVC error renderer for JSON format.
  */
-class JsonRenderer implements \Lucinda\MVC\STDERR\ErrorRenderer
+class JsonRenderer extends \Lucinda\MVC\STDERR\ErrorRenderer
 {
     /**
      * {@inheritDoc}

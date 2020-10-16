@@ -4,7 +4,7 @@ require_once(dirname(dirname(__DIR__))."/vendor/lucinda/framework-engine/src/vie
 /**
  * STDERR MVC error renderer for HTML format using ViewLanguage templating.
  */
-class ViewLanguageRenderer implements \Lucinda\MVC\STDERR\ErrorRenderer, \Lucinda\MVC\STDERR\ErrorHandler
+class ViewLanguageRenderer extends \Lucinda\MVC\STDERR\ViewRenderer implements \Lucinda\MVC\STDERR\ErrorHandler
 {
     /**
      * @var \Lucinda\MVC\STDERR\ErrorHandler
@@ -20,7 +20,7 @@ class ViewLanguageRenderer implements \Lucinda\MVC\STDERR\ErrorRenderer, \Lucind
         if ($response->getOutputStream()->isEmpty()) {
 
             // gets simplexml application object
-            $application = simplexml_load_file(dirname(dirname(__DIR__))."/stderr.xml")->application;
+            $application = $this->application->getTag("application");
 
             // gets view file
             $viewFile = $response->getView();
@@ -60,7 +60,7 @@ class ViewLanguageRenderer implements \Lucinda\MVC\STDERR\ErrorRenderer, \Lucind
     }
 
     /**
-     * Handles errors by delegating to STDOUT MVC API
+     * Handles errors by delegating to default handler
      *
      * @param \Exception $exception Encapsulates error information.
      */
