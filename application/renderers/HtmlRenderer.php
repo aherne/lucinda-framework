@@ -26,7 +26,8 @@ class HtmlRenderer extends \Lucinda\STDERR\ViewResolver implements \Lucinda\STDE
             $this->defaultErrorHandler = \Lucinda\STDERR\PHPException::getErrorHandler();
             
             // converts view language to PHP
-            $wrapper = new Wrapper($this->application->getXML());
+            $parents = $this->application->getTag("templating")->xpath("..");
+            $wrapper = new Wrapper($parents[0]??new SimpleXMLElement("<xml></xml>"));
             
             // take control of error handling
             \Lucinda\STDERR\PHPException::setErrorHandler($this);

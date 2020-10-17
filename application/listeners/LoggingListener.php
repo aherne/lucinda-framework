@@ -1,4 +1,6 @@
 <?php
+require_once("application/models/getParentNode.php");
+
 /**
  * Sets up Logging API to use in logging later on
  */
@@ -15,7 +17,7 @@ class LoggingListener extends \Lucinda\STDOUT\EventListeners\Application
      */
     public function run(): void
     {
-        $wrapper = new Lucinda\Logging\Wrapper($this->application->getXML(), ENVIRONMENT);
+        $wrapper = new Lucinda\Logging\Wrapper(getParentNode($this->application, "loggers"), ENVIRONMENT);
         $this->attributes->setLogger($wrapper->getLogger());
     }
 }

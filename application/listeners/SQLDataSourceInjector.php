@@ -1,5 +1,6 @@
 <?php
 require("application/models/SQL.php");
+require_once("application/models/getParentNode.php");
 
 /**
  * Sets up SQL Data Access API in order to be able to query SQL databases later on
@@ -12,6 +13,6 @@ class SQLDataSourceInjector extends \Lucinda\STDOUT\EventListeners\Application
      */
     public function run(): void
     {
-        new Lucinda\SQL\Wrapper($this->application->getXML(), ENVIRONMENT);
+        new Lucinda\SQL\Wrapper(getParentNode($this->application, "sql"), ENVIRONMENT);
     }
 }
