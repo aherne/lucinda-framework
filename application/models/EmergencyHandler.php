@@ -5,16 +5,51 @@
  */
 class EmergencyHandler implements \Lucinda\STDERR\ErrorHandler
 {
+    const XML_FILE_NAME = "stderr.xml";
+    
     /**
      * {@inheritDoc}
      * @see \Lucinda\STDERR\ErrorHandler::handle()
      */
     public function handle(\Throwable $exception): void
     {
-        $xml = simplexml_load_file(dirname(dirname(__DIR__))."/stderr.xml");
-        $displayErrors = (string) $xml->application->display_errors->{ENVIRONMENT};
-        $defaultFormat = (string) $xml->application["default_format"];
-        
+        $application = $this->getApplicationTag();
+        $displayErrors = (string) $application->display_errors->{ENVIRONMENT};
+        $defaultFormat = (string) $application["default_format"];
+        $this->render($exception, $defaultFormat, $displayErrors);
+    }
+    
+    /**
+     * Gets object pointing to <application> XML tag
+     * 
+     * @return SimpleXMLElement
+     */
+    private function getApplicationTag(): SimpleXMLElement
+    {
+        $xml = simplexml_load_file(dirname(dirname(__DIR__))."/".self::XML_FILE_NAME);
+        if (!file_exists($xml)) {
+            die("XML file not found: ".self::XML_FILE_NAME);
+        }
+        $application = simplexml_load_file($xml)->application;
+        if ($referencedXML = (string) $application["ref"]) {
+            $referencedXMLLocation = dirname(dirname(__DIR__))."/".$referencedXML.".xml";
+            if (!file_exists($referencedXMLLocation)) {
+                die("XML file not found: ".$referencedXML.".xml");
+            }
+            $application = simplexml_load_file($referencedXMLLocation)->application;
+        }
+        return $application;
+    }
+    
+    /**
+     * Renders response back to caller 
+     * 
+     * @param \Throwable $exception
+     * @param string $defaultFormat
+     * @param string $displayErrors
+     */
+    private function render(\Throwable $exception, string $defaultFormat, string $displayErrors): void
+    {
         if ($defaultFormat=="html") {
             $response = new \Lucinda\STDERR\Response("text/html", dirname(__DIR__)."/views/".($displayErrors?"debug":"500").".html");
             $response->setStatus(500);
