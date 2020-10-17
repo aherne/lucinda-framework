@@ -1,4 +1,6 @@
 <?php
+require_once("application/models/getParentNode.php");
+
 use Lucinda\Templating\Wrapper;
 
 /**
@@ -26,8 +28,7 @@ class HtmlRenderer extends \Lucinda\STDERR\ViewResolver implements \Lucinda\STDE
             $this->defaultErrorHandler = \Lucinda\STDERR\PHPException::getErrorHandler();
             
             // converts view language to PHP
-            $parents = $this->application->getTag("templating")->xpath("..");
-            $wrapper = new Wrapper($parents[0]??new SimpleXMLElement("<xml></xml>"));
+            $wrapper = new Wrapper(getParentNode($this->application, "templating"));
             
             // take control of error handling
             \Lucinda\STDERR\PHPException::setErrorHandler($this);
