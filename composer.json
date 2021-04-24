@@ -33,7 +33,7 @@
         "lucinda/unit-testing": "^1.0"
     },
     "autoload": {
-        "files": ["vendor/lucinda/errors-mvc/loader.php", "vendor/lucinda/mvc/loader.php"]
+        "files": ["vendor/lucinda/abstract_mvc/loader.php", "vendor/lucinda/errors-mvc/loader.php", "vendor/lucinda/mvc/loader.php"]
     },
     "scripts": {
     	"post-create-project-cmd": [
