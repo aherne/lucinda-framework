@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE xml>
 <xml>
-  <application version="0.0.1" default_format="html" default_page="index">
-    <paths controllers="application/controllers" resolvers="application/resolvers" views="application/views"/>
-  </application>
-  <formats>
-    <format name="html" content_type="text/html" class="HtmlResolver" charset="UTF-8"/>
-    <format name="json" content_type="application/json" class="JsonResolver" charset="UTF-8"/>
-  </formats>
-  <templating compilations_path="compilations" tags_path="application/tags" templates_path="application/views" templates_extension="html"/>
-  <routes>
-    <route url="index" view="index"/>
-  </routes>
+    <application version="0.0.1" default_format="html" default_route="index">
+        <paths controllers="application/controllers" resolvers="application/resolvers" views="application/views"/>
+    </application>
+    <resolvers>
+        <resolver format="html" content_type="text/html" class="HtmlResolver" charset="UTF-8"/>
+        <resolver format="json" content_type="application/json" class="JsonResolver" charset="UTF-8"/>
+    </resolvers>
+    <templating compilations_path="compilations" tags_path="application/tags" templates_path="application/views" templates_extension="html"/>
+    <routes>
+        <route id="index" view="index"/>
+    </routes>
 </xml>

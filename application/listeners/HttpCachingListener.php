@@ -13,7 +13,7 @@ class HttpCachingListener extends Lucinda\STDOUT\EventListeners\Response
     
     /**
      * {@inheritDoc}
-     * @see \Lucinda\STDOUT\Runnable::run()
+     * @see \Lucinda\MVC\Runnable::run()
      */
     public function run(): void
     {

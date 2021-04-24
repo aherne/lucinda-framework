@@ -15,12 +15,12 @@ class FileLogger extends \Lucinda\Logging\AbstractLoggerWrapper
     {
         $filePath = (string) $xml["path"];
         if (!$filePath) {
-            throw new Lucinda\STDOUT\XMLException("Attribute 'path' is mandatory for 'file' tag");
+            throw new Lucinda\MVC\ConfigurationException("Attribute 'path' is mandatory for 'file' tag");
         }
         
         $pattern= (string) $xml["format"];
         if (!$pattern) {
-            throw new Lucinda\STDOUT\XMLException("Attribute 'format' is mandatory for 'file' tag");
+            throw new Lucinda\MVC\ConfigurationException("Attribute 'format' is mandatory for 'file' tag");
         }
         
         return new FileLoggerDriver($filePath, (string) $xml["rotation"], new Lucinda\Logging\LogFormatter($pattern));
