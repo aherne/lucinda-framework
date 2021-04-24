@@ -2,17 +2,21 @@
 use Lucinda\Framework\Json;
 
 /**
- * STDOUT MVC view resolver for JSON format.
+ * MVC view resolver for JSON format.
  */
-class JsonResolver extends \Lucinda\STDOUT\ViewResolver
+class JsonResolver extends \Lucinda\MVC\ViewResolver
 {
     /**
      * {@inheritDoc}
-     * @see \Lucinda\STDOUT\Runnable::run()
+     * @see \Lucinda\MVC\Runnable::run()
      */
     public function run(): void
     {
+        // see who triggered resolver (tested to have zero performance impact)
+        $isError = (strpos(str_replace("\\", "/", debug_backtrace()[0]["file"]), "vendor/lucinda/errors-mvc/")!==false);
+        
+        // resolves response in json format
         $json = new Json();
-        $this->response->setBody($json->encode(array("status"=>"ok","body"=>$this->response->view()->getData())));
+        $this->response->setBody($json->encode(array("status"=>(!$isError?"ok":"error"),"body"=>$this->response->view()->getData())));
     }
 }

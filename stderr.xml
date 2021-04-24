@@ -1,27 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE xml>
 <xml>
-  <application version="0.0.1" default_format="html">
+  <application version="0.0.1" default_format="html" default_route="default">
     <paths controllers="application/controllers" resolvers="application/renderers" reporters="application/reporters" views="application/views"/>
-    <display_errors>
-      <local>1</local>
-    </display_errors>
   </application>
+  <display_errors>
+    <local>1</local>
+  </display_errors>
   <resolvers>
-    <resolver format="html" content_type="text/html" class="HtmlRenderer" charset="UTF-8"/>
-    <resolver format="json" content_type="application/json" class="JsonRenderer" charset="UTF-8"/>
+    <resolver format="html" content_type="text/html" class="HtmlResolver" charset="UTF-8"/>
+    <resolver format="json" content_type="application/json" class="JsonResolver" charset="UTF-8"/>
   </resolvers>
   <templating compilations_path="compilations" tags_path="application/tags" templates_path="application/views" templates_extension="html"/>
-  <exceptions controller="ErrorsController" error_type="LOGICAL" http_status="500">
-    <exception class="Lucinda\STDERR\ConfigurationException" error_type="LOGICAL" controller="ErrorsController" http_status="500"/>
-    <exception class="Lucinda\STDERR\PHPException" error_type="SYNTAX" controller="ErrorsController" http_status="500"/>
-    <exception class="Lucinda\Framework\Json\Exception" error_type="SYNTAX" controller="ErrorsController" http_status="500"/>
-    <exception class="Lucinda\STDOUT\ConfigurationException" error_type="LOGICAL" controller="ErrorsController" http_status="500"/>
-    <exception class="Lucinda\STDOUT\MethodNotAllowedException" error_type="CLIENT" view="405" http_status="405"/>
-    <exception class="Lucinda\STDOUT\PathNotFoundException" error_type="CLIENT" view="404" http_status="404"/>
-    <exception class="Lucinda\STDOUT\Request\UploadedFiles\Exception" error_type="CLIENT" controller="ErrorsController" http_status="500"/>
-    <exception class="Lucinda\STDOUT\ValidationFailedException" error_type="CLIENT" view="400" http_status="400"/>
-    <exception class="Lucinda\Templating\ConfigurationException" error_type="LOGICAL" controller="ErrorsController" http_status="500"/>
-    <exception class="Lucinda\Templating\ViewException" error_type="SYNTAX" controller="ErrorsController" http_status="500"/>
-  </exceptions>
+  <routes>
+    <route id="default" controller="ErrorsController" error_type="LOGICAL" http_status="500"/>
+    <route id="Lucinda\STDERR\ConfigurationException" error_type="LOGICAL" controller="ErrorsController" http_status="500"/>
+    <route id="Lucinda\STDERR\PHPException" error_type="SYNTAX" controller="ErrorsController" http_status="500"/>
+    <route id="Lucinda\Framework\Json\Exception" error_type="SYNTAX" controller="ErrorsController" http_status="500"/>
+    <route id="Lucinda\STDOUT\ConfigurationException" error_type="LOGICAL" controller="ErrorsController" http_status="500"/>
+    <route id="Lucinda\STDOUT\MethodNotAllowedException" error_type="CLIENT" view="405" http_status="405"/>
+    <route id="Lucinda\STDOUT\PathNotFoundException" error_type="CLIENT" view="404" http_status="404"/>
+    <route id="Lucinda\STDOUT\Request\UploadedFiles\Exception" error_type="CLIENT" controller="ErrorsController" http_status="500"/>
+    <route id="Lucinda\STDOUT\ValidationFailedException" error_type="CLIENT" view="400" http_status="400"/>
+    <route id="Lucinda\Templating\ConfigurationException" error_type="LOGICAL" controller="ErrorsController" http_status="500"/>
+    <route id="Lucinda\Templating\ViewException" error_type="SYNTAX" controller="ErrorsController" http_status="500"/>
+  </routes>
 </xml>
