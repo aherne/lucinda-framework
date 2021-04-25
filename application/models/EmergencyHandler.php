@@ -20,7 +20,7 @@ class EmergencyHandler implements \Lucinda\STDERR\ErrorHandler
             $defaultFormat = $application->getDefaultFormat();
             $displayErrors = $application->getDisplayErrors();
             if ($defaultFormat=="html") {
-                $response = new \Lucinda\STDERR\Response("text/html", dirname(__DIR__)."/views/".($displayErrors?"debug":"500").".html");
+                $response = new \Lucinda\MVC\Response("text/html", dirname(__DIR__)."/views/".($displayErrors?"debug":"500").".html");
                 $response->setStatus(500);
                 $contents = file_get_contents($response->view()->getFile());
                 if ($displayErrors) {
@@ -51,7 +51,7 @@ class EmergencyHandler implements \Lucinda\STDERR\ErrorHandler
                         "trace"=>$exception->getTraceAsString()
                     ];
                 }
-                $response = new \Lucinda\STDERR\Response("application/json", "");
+                $response = new \Lucinda\MVC\Response("application/json", "");
                 $response->setBody(json_encode(["status"=>"error", "body"=>$body]));
                 $response->setStatus(500);
                 $response->commit();

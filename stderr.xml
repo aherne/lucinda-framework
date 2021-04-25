@@ -2,7 +2,7 @@
 <!DOCTYPE xml>
 <xml>
   <application version="0.0.1" default_format="html" default_route="default">
-    <paths controllers="application/controllers" resolvers="application/renderers" reporters="application/reporters" views="application/views"/>
+    <paths controllers="application/controllers" resolvers="application/resolvers" reporters="application/reporters" views="application/views"/>
   </application>
   <display_errors>
     <local>1</local>
@@ -14,10 +14,9 @@
   <templating compilations_path="compilations" tags_path="application/tags" templates_path="application/views" templates_extension="html"/>
   <routes>
     <route id="default" controller="ErrorsController" error_type="LOGICAL" http_status="500"/>
-    <route id="Lucinda\STDERR\ConfigurationException" error_type="LOGICAL" controller="ErrorsController" http_status="500"/>
+    <route id="Lucinda\MVC\ConfigurationException" error_type="LOGICAL" controller="ErrorsController" http_status="500"/>
     <route id="Lucinda\STDERR\PHPException" error_type="SYNTAX" controller="ErrorsController" http_status="500"/>
     <route id="Lucinda\Framework\Json\Exception" error_type="SYNTAX" controller="ErrorsController" http_status="500"/>
-    <route id="Lucinda\STDOUT\ConfigurationException" error_type="LOGICAL" controller="ErrorsController" http_status="500"/>
     <route id="Lucinda\STDOUT\MethodNotAllowedException" error_type="CLIENT" view="405" http_status="405"/>
     <route id="Lucinda\STDOUT\PathNotFoundException" error_type="CLIENT" view="404" http_status="404"/>
     <route id="Lucinda\STDOUT\Request\UploadedFiles\Exception" error_type="CLIENT" controller="ErrorsController" http_status="500"/>
