@@ -8,19 +8,19 @@ use Lucinda\Logging\Logger;
 class SyslogReporter extends \Lucinda\Framework\AbstractReporter
 {
     /**
-     * @throws Lucinda\STDERR\Exception
-     * @return Logger
+     * {@inheritDoc}
+     * @see \Lucinda\Framework\AbstractReporter::getLogger()
      */
     public function getLogger(): Logger
     {
         $applicationName = (string) $this->xml["application"];
         if (!$applicationName) {
-            throw new Lucinda\STDERR\Exception("Attribute 'path' is mandatory for 'syslog' tag");
+            throw new Lucinda\MVC\ConfigurationException("Attribute 'path' is mandatory for 'syslog' tag");
         }
         
         $pattern= (string) $this->xml["format"];
         if (!$pattern) {
-            throw new Lucinda\STDERR\Exception("Attribute 'format' is mandatory for 'syslog' tag");
+            throw new Lucinda\MVC\ConfigurationException("Attribute 'format' is mandatory for 'syslog' tag");
         }
         
         return new SysLogger($applicationName, new Lucinda\Logging\LogFormatter($pattern));

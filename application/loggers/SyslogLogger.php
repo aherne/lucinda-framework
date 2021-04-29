@@ -15,12 +15,12 @@ class SyslogLogger extends \Lucinda\Logging\AbstractLoggerWrapper
     {
         $applicationName = (string) $xml["application"];
         if (!$applicationName) {
-            throw new Lucinda\STDOUT\XMLException("Attribute 'path' is mandatory for 'syslog' tag");
+            throw new Lucinda\MVC\ConfigurationException("Attribute 'path' is mandatory for 'syslog' tag");
         }
         
         $pattern= (string) $xml["format"];
         if (!$pattern) {
-            throw new Lucinda\STDOUT\XMLException("Attribute 'format' is mandatory for 'syslog' tag");
+            throw new Lucinda\MVC\ConfigurationException("Attribute 'format' is mandatory for 'syslog' tag");
         }
         
         return new SysLoggerDriver($applicationName, new Lucinda\Logging\LogFormatter($pattern));

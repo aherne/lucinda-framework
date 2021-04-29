@@ -19,7 +19,7 @@ class SecurityListener extends \Lucinda\STDOUT\EventListeners\Request
     
     /**
      * {@inheritDoc}
-     * @see \Lucinda\STDOUT\Runnable::run()
+     * @see \Lucinda\MVC\Runnable::run()
      */
     public function run(): void
     {        

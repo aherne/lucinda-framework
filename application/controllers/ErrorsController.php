@@ -6,7 +6,7 @@ class ErrorsController extends Lucinda\STDERR\Controller
 {
     /**
      * {@inheritDoc}
-     * @see \Lucinda\STDERR\Runnable::run()
+     * @see \Lucinda\MVC\Runnable::run()
      */
     public function run(): void
     {
