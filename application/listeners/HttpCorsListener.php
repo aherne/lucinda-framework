@@ -1,5 +1,5 @@
 <?php
-use Lucinda\STDOUT\Response;
+use Lucinda\MVC\Response;
 
 /**
  * Performs CORS validation of HTTP request headers for OPTIONS request and sends response accordingly
@@ -13,7 +13,7 @@ class HttpCorsListener extends \Lucinda\STDOUT\EventListeners\Request
     
     /**
      * {@inheritDoc}
-     * @see \Lucinda\STDOUT\Runnable::run()
+     * @see \Lucinda\MVC\Runnable::run()
      */
     public function run(): void
     {

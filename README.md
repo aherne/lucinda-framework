@@ -8,8 +8,9 @@ APIs that take part in this dance are:
 
 | API | Description |
 | --- | --- |
-| [STDOUT MVC API](https://github.com/aherne/php-servlets-api) | handles HTTP requests into responses using MVC paradigm |
-| [STDERR MVC API](https://github.com/aherne/errors-api) | handles errors or uncaught exceptions into reports and responses using MVC paradigm |
+| [Abstract MVC API](https://github.com/aherne/mvc) | handles any type of requests into responses using MVC paradigm |
+| [STDOUT MVC API](https://github.com/aherne/php-servlets-api) | handles HTTP requests into responses on top of [Abstract MVC API](https://github.com/aherne/mvc) |
+| [STDERR MVC API](https://github.com/aherne/errors-api) | handles errors or uncaught exceptions into reports and responses on top of [Abstract MVC API](https://github.com/aherne/mvc) |
 | [View Language API](https://github.com/aherne/php-view-language-api) | templates HTML views using a language extending HTML standard, similar to Java's EL & JSTL |
 | [Logging API](https://github.com/aherne/php-logging-api) | logs messages/exceptions to a storage medium |
 | [SQL Data Access API](https://github.com/aherne/php-sql-data-access-api) | connects to SQL vendors (eg: MySQL), executes queries and parses results on top of PDO |

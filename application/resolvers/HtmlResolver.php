@@ -4,9 +4,9 @@ require_once("application/models/getParentNode.php");
 use Lucinda\Templating\Wrapper;
 
 /**
- * STDOUT MVC view resolver for HTML format using ViewLanguage templating.
+ * MVC view resolver for HTML format using ViewLanguage templating.
  */
-class HtmlResolver extends \Lucinda\STDOUT\ViewResolver implements \Lucinda\STDERR\ErrorHandler
+class HtmlResolver extends \Lucinda\MVC\ViewResolver implements \Lucinda\STDERR\ErrorHandler
 {
     /**
      * @var \Lucinda\STDERR\ErrorHandler
@@ -15,7 +15,7 @@ class HtmlResolver extends \Lucinda\STDOUT\ViewResolver implements \Lucinda\STDE
     
     /**
      * {@inheritDoc}
-     * @see \Lucinda\STDOUT\Runnable::run()
+     * @see \Lucinda\MVC\Runnable::run()
      */
     public function run(): void
     {
