@@ -2,13 +2,13 @@
 <!DOCTYPE xml>
 <xml>
     <application version="0.0.1" default_format="html" default_route="index">
-        <paths controllers="application/controllers" resolvers="application/resolvers" views="application/views"/>
+        <paths views="templates/views"/>
     </application>
     <resolvers>
-        <resolver format="html" content_type="text/html" class="HtmlResolver" charset="UTF-8"/>
-        <resolver format="json" content_type="application/json" class="JsonResolver" charset="UTF-8"/>
+	    <resolver format="html" content_type="text/html" class="Lucinda\Project\ViewResolvers\Html" charset="UTF-8"/>
+	    <resolver format="json" content_type="application/json" class="Lucinda\Project\ViewResolvers\Json" charset="UTF-8"/>
     </resolvers>
-    <templating compilations_path="compilations" tags_path="application/tags" templates_path="application/views" templates_extension="html"/>
+  	<templating compilations_path="compilations" tags_path="templates/tags" templates_path="templates/views" templates_extension="html"/>
     <routes>
         <route id="index" view="index"/>
     </routes>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xml>
+<xml>
+  <unit_tests>
+    <unit_test>
+      <sources path="src" namespace="Lucinda\Project\"/>
+      <tests path="tests" namespace="Test\Lucinda\Project\"/>
+    </unit_test>
+  </unit_tests>
+</xml>
