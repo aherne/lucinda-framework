@@ -1,9 +1,9 @@
 <?php
 namespace Lucinda\Project\EventListeners;
 
-use Lucinda\UnitTest\Validator\URL\Request;
 use Lucinda\Internationalization\Wrapper;
 use Lucinda\Framework\SingletonRepository;
+use Lucinda\STDOUT\EventListeners\Request;
 
 require_once(dirname(__DIR__, 2)."/helpers/translate.php");
 require_once(dirname(__DIR__, 2)."/helpers/getParentNode.php");
