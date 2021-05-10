@@ -27,7 +27,7 @@ class HttpCors extends Request
         }
         
         // perform CORS validation
-        $validator->validateCors($this->request->getServer()->getName());
+        $validator->validateCors($this->request->getProtocol()."://".$this->request->getServer()->getName());
         
         // send response immediately
         $response = new Response("application/json", "");
