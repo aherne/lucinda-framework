@@ -49,6 +49,6 @@ class LocalizationTest
         $event = new Localization($attributes, $application, $request, $session, $cookies);
         $event->run();
         
-        return new Result(SingletonRepository::get("translations") instanceof Reader);
+        return new Result(\translate("welcome", "", "Lucian") == "Welcome to my site, Lucian!");
     }
 }
