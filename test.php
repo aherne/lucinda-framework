@@ -1,5 +1,6 @@
 <?php
 require __DIR__ . '/vendor/autoload.php';
+ini_set("display_errors",1);
 /**
  * mysql> create database test;
  * mysql> create user test@localhost identified by 'me';
