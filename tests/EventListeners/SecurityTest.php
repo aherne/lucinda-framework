@@ -160,7 +160,6 @@ class SecurityTest
 //             $event->run();
 //             $results[] = new Result(false, $type.": bad authorization code");
 //         } catch (OAuth2Exception $e) {
-//             var_dump(posix_isatty(STDERR));die();
 //             $results[] = new Result(true, $type.": bad authorization code");
 //         }
         
