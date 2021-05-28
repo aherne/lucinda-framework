@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE xml>
 <xml>
-    <application version="0.0.1" default_format="html" default_route="index">
-        <paths views="templates/views"/>
-    </application>
+    <application version="0.0.1" default_format="html" default_route="index"/>
     <resolvers>
 	    <resolver format="html" content_type="text/html" class="Lucinda\Project\ViewResolvers\Html" charset="UTF-8"/>
 	    <resolver format="json" content_type="application/json" class="Lucinda\Project\ViewResolvers\Json" charset="UTF-8"/>
