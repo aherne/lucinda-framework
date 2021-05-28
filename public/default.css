@@ -1,84 +1,9 @@
-.status {
-	color: red;
-	font-weight: bold;
+body {
+	text-align: center;
 }
 
-.panel {
-	background-color: #EEEEEE;
-	padding-top: 5px;
-	padding-bottom: 5px;
-}
-
-p, li, span {
-    font-family: Montserrat;
-   	line-height: 1.5em;
-   	font-size: 14px;
-   }
-h2, h3, h4 {
-   	font-family: Cinzel;
-}
-h2 {
-    color: #24339F;
-    border-bottom: 1px dotted #24339F;
-}
-code {
-	color: blue;
-}
-
-i.red {
-	color:red;
-}
-code {
-    font-family: Courier New;
-    border: 1px solid #CCCCCC;
-    text-align: left;
-    white-space: pre-wrap;
-    display: inline-block;
-    width: 100%;
-    font-size: 14px;
-    padding: 10px;
-    background-color: #DDDDDD;
-    line-height: 20px;
-    box-sizing: border-box;
-    color: black;
-}
-
-.xml {
-	background-color: #006600;
-   	padding: 0px 5px 0px 5px;
-    text-decoration: none;
-    border-radius: 4px;
-   	color: #EEEEEE;
-}
-
-.php {
-	background-color: #ababff;
-   	padding: 0px 5px 0px 5px;
-    text-decoration: none;
-    border-radius: 4px;
-   	color: #EEEEEE;
-}
-
-.php.engine {
-	background-color: #8585ff;
-}
-
-.api {
-    background-color: #0083a0;
-    padding: 0px 5px 0px 5px;
-    text-decoration: none;
-    border-radius: 4px;
-    color: white;
-}
-
-span {
-	background-color: #333333;
-   	padding: 0px 5px 0px 5px;
-    text-decoration: none;
-    border-radius: 4px;
-   	color: #EEEEEE;
-}
-
-em {
-	text-decoration:underline;
+a {
+	text-decoration: none;
+	padding: 5px 10px 5px 10px;
+	background-color: #e0e1f0;
 }
