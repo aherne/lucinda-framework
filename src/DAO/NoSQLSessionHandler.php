@@ -1,5 +1,5 @@
 <?php
-namespace Lucinda\Project\SessionHandlers;
+namespace Lucinda\Project\DAO;
 
 use Lucinda\NoSQL\ConnectionSingleton;
 use Lucinda\NoSQL\OperationFailedException;
@@ -7,7 +7,7 @@ use Lucinda\NoSQL\OperationFailedException;
 /**
  * Session handler for distributed projects that works with NoSQL key value stores (eg: Redis) instead of disk
  */
-class NoSQL implements \SessionHandlerInterface
+class NoSQLSessionHandler implements \SessionHandlerInterface
 {
     /**
      * {@inheritDoc}

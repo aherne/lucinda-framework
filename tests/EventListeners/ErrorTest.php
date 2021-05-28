@@ -55,7 +55,7 @@ class ErrorTest
         ob_start();
         $frontController->handle(new \Exception("Hello!"));
         $body = ob_get_contents();
-        ob_end_clean();        
+        ob_end_clean();
         
         if ($val = json_decode($body, true)) {
             return new Result(!empty($val["body"]["message"]) && $val["body"]["message"]=="Hello!");

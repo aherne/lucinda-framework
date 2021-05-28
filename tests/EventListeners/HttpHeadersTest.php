@@ -12,7 +12,7 @@ use Lucinda\UnitTest\Result;
 class HttpHeadersTest
 {
     public function run()
-    {        
+    {
         $_SERVER = [
             'HTTP_HOST' => 'www.test.local',
             'HTTP_USER_AGENT' => 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:74.0) Gecko/20100101 Firefox/74.0',
