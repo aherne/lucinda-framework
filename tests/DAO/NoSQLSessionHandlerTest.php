@@ -1,14 +1,14 @@
 <?php
-namespace Test\Lucinda\Project\SessionHandlers;
+namespace Test\Lucinda\Project\DAO;
 
 use Lucinda\NoSQL\Wrapper;
-use Lucinda\Project\SessionHandlers\NoSQL;
+use Lucinda\Project\DAO\NoSQLSessionHandler;
 use Lucinda\UnitTest\Result;
 use Lucinda\STDOUT\Application;
 
 require_once(dirname(__DIR__, 2)."/helpers/getParentNode.php");
 
-class NoSQLTest
+class NoSQLSessionHandlerTest
 {
     const SESSION_ID = "asdfghj";
     
@@ -18,7 +18,7 @@ class NoSQLTest
     {
         $application = new Application(dirname(__DIR__)."/mocks/stdout.xml");
         new Wrapper(\getParentNode($application, "nosql"), ENVIRONMENT);
-        $this->object = new NoSQL();
+        $this->object = new NoSQLSessionHandler();
     }
     
     public function open()

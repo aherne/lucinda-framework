@@ -20,6 +20,6 @@ class SQLDataSourceTest
             return new Result(\SQL("SELECT CURDATE()")->toValue() == date("Y-m-d"));
         } catch (\Throwable $e) {
             return new Result(false, $e->getMessage());
-        }        
+        }
     }
 }

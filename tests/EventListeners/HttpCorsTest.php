@@ -53,7 +53,7 @@ class HttpCorsTest
         return new Result(
             isset($headersToSend["Access-Control-Allow-Origin"]) && $headersToSend["Access-Control-Allow-Origin"]=="http://www.example.com",
             "HttpCors exits on success, so not testable directly"
-            );
+        );
     }
     
     private function testWithoutExit(Attributes $attributes, Request $request)

@@ -13,7 +13,11 @@ use Lucinda\STDOUT\Cookies;
 
 class SecurityTest
 {
-    private $application, $request, $cookies, $session, $attributes;
+    private $application;
+    private $request;
+    private $cookies;
+    private $session;
+    private $attributes;
     
     public function __construct()
     {
@@ -36,7 +40,6 @@ class SecurityTest
         }
         
         return $results;
-        
     }
     
     private function testNormal(string $name): array
@@ -219,7 +222,7 @@ class SecurityTest
     }
     
     private function setRequest(string $uri, string $method="GET", array $parameters=[], string $accessToken=""): void
-    {        
+    {
         $_SERVER = [
             'HTTP_HOST' => 'www.test.local',
             'HTTP_USER_AGENT' => 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:74.0) Gecko/20100101 Firefox/74.0',
@@ -254,7 +257,7 @@ class SecurityTest
             if ($method=="GET") {
                 $_GET = $parameters;
             }
-        }      
+        }
         $this->attributes->setValidPage($uri);
         $this->request = new Request();
     }
