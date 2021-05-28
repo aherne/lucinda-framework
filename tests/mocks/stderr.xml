@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE xml>
 <xml>
-  <application version="0.0.1" default_format="html" default_route="default">
-    <paths views="tests/mocks/views"/>
-  </application>
+  <application version="0.0.1" default_format="html" default_route="default"/>
   <display_errors>
     <local>1</local>
   </display_errors>
