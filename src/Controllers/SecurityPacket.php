@@ -67,15 +67,16 @@ class SecurityPacket extends Controller
                 }
                 $this->response::redirect($location, false, true);
             } else {
+                $viewsPath = (string) $this->application->getTag("templating")["templates_path"];
                 switch ($status) {
                     case "unauthorized":
-                        $this->response->view()->setFile($this->application->getViewsPath()."/401");
+                        $this->response->view()->setFile($viewsPath."/401");
                         break;
                     case "forbidden":
-                        $this->response->view()->setFile($this->application->getViewsPath()."/403");
+                        $this->response->view()->setFile($viewsPath."/403");
                         break;
                     case "not_found":
-                        $this->response->view()->setFile($this->application->getViewsPath()."/404");
+                        $this->response->view()->setFile($viewsPath."/404");
                         break;
                     default:
                         $this->response::redirect($location, false, true);

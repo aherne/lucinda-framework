@@ -48,7 +48,8 @@ class Error extends Controller
             $view["trace"] = $exception->getTraceAsString();
         }
         if (strpos($contentType, "text/html")===0) {
-            $view->setFile($this->application->getViewsPath()."/".($displayErrors?"debug":"500"));
+            $viewsPath = (string) $this->application->getTag("templating")["templates_path"];
+            $view->setFile($viewsPath."/".($displayErrors?"debug":"500"));
         }
     }
 }
