@@ -9,7 +9,7 @@
     <resolver format="html" content_type="text/html" class="Lucinda\Project\ViewResolvers\Html" charset="UTF-8"/>
     <resolver format="json" content_type="application/json" class="Lucinda\Project\ViewResolvers\Json" charset="UTF-8"/>
   </resolvers>
-  <templating compilations_path="compilations" tags_path="templates/tags" templates_path="templates/views" templates_extension="html"/>
+  <templating compilations_path="compilations" tags_path="tests/mocks/tags" templates_path="tests/mocks/views" templates_extension="html"/>
   <routes>
     <route id="default" controller="Lucinda\Project\Controllers\Error" error_type="LOGICAL" http_status="500"/>
     <route id="Lucinda\MVC\ConfigurationException" error_type="LOGICAL" controller="Lucinda\Project\Controllers\Error" http_status="500"/>
@@ -21,5 +21,12 @@
     <route id="Lucinda\STDOUT\ValidationFailedException" error_type="CLIENT" view="400" http_status="400"/>
     <route id="Lucinda\Templating\ConfigurationException" error_type="LOGICAL" controller="Lucinda\Project\Controllers\Error" http_status="500"/>
     <route id="Lucinda\Templating\ViewException" error_type="SYNTAX" controller="Lucinda\Project\Controllers\Error" http_status="500"/>
+    <route id="Lucinda\WebSecurity\SecurityPacket" error_type="NONE" controller="Lucinda\Project\Controllers\SecurityPacketController"/>
   </routes>
+  <reporters>
+	<local>
+		<reporter class="Lucinda\Project\ErrorReporters\File" path="messages" format="%d %v %e %f %l %m %u %i %a" rotation="Y-m-d"/>
+		<reporter class="Lucinda\Project\ErrorReporters\SysLog" application="unittest" format="%v %e %f %l %m %u %i %a"/>
+	</local>
+  </reporters>
 </xml>
