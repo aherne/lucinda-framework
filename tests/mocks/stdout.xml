@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xml>
+<xml>
+    <application version="0.0.1" default_format="html" default_route="index"/>
+    <resolvers>
+	    <resolver format="html" content_type="text/html" class="Lucinda\Project\ViewResolvers\Html" charset="UTF-8"/>
+	    <resolver format="json" content_type="application/json" class="Lucinda\Project\ViewResolvers\Json" charset="UTF-8"/>
+    </resolvers>
+  	<templating compilations_path="compilations" tags_path="tests/mocks/tags" templates_path="tests/mocks/views" templates_extension="html"/>
+    <routes>
+        <route id="index" view="index"/>
+        <route id="test/html" controller="Lucinda\Project\Controllers\Test" view="test"/>
+		<route id="test/json" controller="Lucinda\Project\Controllers\Test" format="json"/>
+    </routes>
+    <headers cacheable="Lucinda\Project\Cacheables\Etag" cache_expiration="10" allow_credentials="1" cors_max_age="5" allowed_request_headers="X-Custom-Header, Upgrade-Insecure-Requests" allowed_response_headers="Content-Length, X-Kuma-Revision"/>
+    <loggers>
+    	<local>
+    		<logger class="Lucinda\Project\Loggers\File" path="messages" format="%d %v %e %f %l %m %u %i %a" rotation="Y-m-d"/>
+    		<logger class="Lucinda\Project\Loggers\SysLog" application="unittest" format="%v %e %f %l %m %u %i %a"/>
+    	</local>
+    </loggers>
+    <nosql>
+    	<local>
+    		<server driver="redis" host="127.0.0.1"/>
+    	</local>
+    </nosql>
+    <sql>
+    	<local>
+    		<server driver="mysql" host="127.0.0.1" port="3306" username="test" password="me" schema="test"/>
+    	</local>
+    </sql>
+    <internationalization method="header" folder="tests/mocks/locales" locale="en_US"/>
+</xml>

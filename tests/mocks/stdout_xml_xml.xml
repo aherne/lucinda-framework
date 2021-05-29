@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xml>
+<xml>
+    <application version="0.0.1" default_format="html" default_route="index">
+        <paths views="templates/views"/>
+    </application>
+    <resolvers>
+	    <resolver format="html" content_type="text/html" class="Lucinda\Project\ViewResolvers\Html" charset="UTF-8"/>
+	    <resolver format="json" content_type="application/json" class="Lucinda\Project\ViewResolvers\Json" charset="UTF-8"/>
+    </resolvers>
+    <routes>
+        <route id="index" controller="Lucinda\Project\Controllers\Homepage" view="index" roles="USER"/>
+        <route id="login" controller="Lucinda\Project\Controllers\Login" view="login" roles="GUEST,USER"/>
+        <route id="logout" roles="USER,ADMINISTRATOR"/>
+        <route id="administration" controller="Lucinda\Project\Controllers\Administration" view="admin" roles="ADMINISTRATOR"/>
+    </routes>
+    <security>
+        <csrf secret="]OE^=bW%jaAx^b1"/>
+        <persistence>
+            <synchronizer_token secret="x??/t?VzQCc!dio"/>
+        </persistence>
+        <authentication>
+            <form throttler="Test\Lucinda\Project\mocks\Authentication\MockLoginThrottler"/>
+        </authentication>
+        <authorization>
+            <by_route/>
+        </authorization>
+    </security>
+    <users roles="GUEST">
+        <user id="1" username="test" password="$2y$10$Ok9/D/ZeJNgX91rZkNn0qOQ/.3TMr2085vpfxyM7S7EDxijwCzmuO" roles="USER"/>
+    </users>
+</xml>
