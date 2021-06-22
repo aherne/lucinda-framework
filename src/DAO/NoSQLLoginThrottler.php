@@ -10,10 +10,10 @@ use Lucinda\NoSQL\ConnectionSingleton;
  */
 class NoSQLLoginThrottler extends AbstractLoginThrottler
 {
-    const EXPIRATION = 3600;
+    public const EXPIRATION = 3600;
     private $key;
     private $connection;
-   
+
     /**
      * Registers variables, calculates key to search for, and checks current throttling status for request.
      *
@@ -27,7 +27,7 @@ class NoSQLLoginThrottler extends AbstractLoginThrottler
         $this->connection = ConnectionSingleton::getInstance();
         parent::__construct($request, $userName);
     }
-    
+
     /**
      * {@inheritDoc}
      * @see \Lucinda\WebSecurity\Authentication\Form\LoginThrottler::setCurrentStatus()
@@ -40,13 +40,13 @@ class NoSQLLoginThrottler extends AbstractLoginThrottler
                 $this->connection->delete($this->key);
                 return;
             }
-            
+
             $row = json_decode($value, true);
             $this->attempts = $row["attempts"];
             $this->penaltyExpiration = $row["penalty_expiration"];
         }
     }
-    
+
     /**
      * {@inheritDoc}
      * @see \Lucinda\Framework\AbstractLoginThrottler::persist()

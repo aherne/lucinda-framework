@@ -11,5 +11,5 @@ use Lucinda\Framework\SingletonRepository;
 function getRemoteResource(string $url, array $fields=[]): array
 {
     $wrapper = SingletonRepository::get("oauth2");
-    return ($wrapper->getDriver()?$wrapper->getDriver()->getResource($wrapper->getAccessToken(), $url, $fields):[]);
+    return ($wrapper->getDriver() ? $wrapper->getDriver()->getResource($wrapper->getAccessToken(), $url, $fields) : []);
 }

@@ -10,12 +10,12 @@ use Lucinda\NoSQL\OperationFailedException;
 class NoSQLSessionHandler implements \SessionHandlerInterface
 {
     private $connection;
-    
+
     public function __construct()
     {
         $this->connection = ConnectionSingleton::getInstance();
     }
-    
+
     /**
      * {@inheritDoc}
      * @see \SessionHandlerInterface::write()
@@ -29,7 +29,7 @@ class NoSQLSessionHandler implements \SessionHandlerInterface
             return false;
         }
     }
-    
+
     /**
      * {@inheritDoc}
      * @see \SessionHandlerInterface::read()
@@ -73,7 +73,7 @@ class NoSQLSessionHandler implements \SessionHandlerInterface
     {
         return true;
     }
-    
+
     /**
      * {@inheritDoc}
      * @see \SessionHandlerInterface::open()

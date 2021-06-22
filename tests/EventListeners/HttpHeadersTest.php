@@ -37,17 +37,17 @@ class HttpHeadersTest
             'SCRIPT_FILENAME' => '/var/www/html/documentation/index.php',
             'QUERY_STRING' =>'asd=fgh'
         ];
-        
+
         $attributes = new Attributes();
         $attributes->setValidPage("index");
         $application = new Application(dirname(__DIR__)."/mocks/stdout.xml");
         $request = new Request();
         $session = new Session();
         $cookies = new Cookies();
-        
+
         $event = new HttpHeaders($attributes, $application, $request, $session, $cookies);
         $event->run();
-        
+
         return new Result($attributes->getHeaders()->getRequest()->getHost()=="www.test.local");
     }
 }

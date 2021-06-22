@@ -22,12 +22,12 @@ class SysLog extends AbstractLoggerWrapper
         if (!$applicationName) {
             throw new ConfigurationException("Attribute 'path' is mandatory for 'syslog' tag");
         }
-        
+
         $pattern= (string) $xml["format"];
         if (!$pattern) {
             throw new ConfigurationException("Attribute 'format' is mandatory for 'syslog' tag");
         }
-        
+
         return new SysLoggerDriver($applicationName, new LogFormatter($pattern));
     }
 }

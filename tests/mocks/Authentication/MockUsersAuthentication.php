@@ -8,13 +8,13 @@ class MockUsersAuthentication implements UserAuthenticationDAO, UserRoles
 {
     public function login(string $username, string $password)
     {
-        return ($username=="test" && $password=="me"?1:null);
+        return ($username=="test" && $password=="me" ? 1 : null);
     }
-    
+
     public function logout($userID): void
     {
     }
-    
+
     public function getRoles($userID): array
     {
         if ($userID) {

@@ -23,7 +23,7 @@ class Security extends Request
      * @var Attributes
      */
     protected $attributes;
-    
+
     /**
      * {@inheritDoc}
      * @see \Lucinda\MVC\Runnable::run()
@@ -35,13 +35,13 @@ class Security extends Request
         if ($this->application->getTag("oauth2")->{ENVIRONMENT}) {
             $oauth2Wrapper = new OAuth2Wrapper($this->application->getTag("oauth2")->xpath("..")[0], ENVIRONMENT);
             $oauth2Drivers = $oauth2Wrapper->getDriver();
-            
+
             $oauth2Binder = new OAuth2Binder($oauth2Drivers);
             $securityWrapper = new SecurityWrapper($securityTagRoot, $requestBinder->getResult(), $oauth2Binder->getResults());
             $this->attributes->setUserId($securityWrapper->getUserID());
             $this->attributes->setCsrfToken($securityWrapper->getCsrfToken());
             $this->attributes->setAccessToken($securityWrapper->getAccessToken());
-            
+
             if ($userID = $securityWrapper->getUserID()) {
                 SingletonRepository::set("oauth2", new OAuth2DriverDetector($securityTagRoot, $oauth2Drivers, $userID));
             }

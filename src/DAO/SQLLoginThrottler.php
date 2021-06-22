@@ -2,12 +2,10 @@
 namespace Lucinda\Project\DAO;
 
 use Lucinda\Framework\AbstractLoginThrottler;
-use Lucinda\WebSecurity\Request;
-use Lucinda\WebSecurity\Authentication\Form\LoginThrottler;
 
 /**
  * Login throttler that uses a "user_logins" SQL table (created beforehand) to check logins history. Create table statement if MySQL:
- * 
+ *
     CREATE TABLE user_logins (
     id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     ip VARCHAR(45) NOT NULL,
@@ -22,9 +20,9 @@ use Lucinda\WebSecurity\Authentication\Form\LoginThrottler;
  */
 class SQLLoginThrottler extends AbstractLoginThrottler
 {
-    const TABLE_NAME = "user_logins";
+    public const TABLE_NAME = "user_logins";
     private $found;
-    
+
     /**
      * {@inheritDoc}
      * @see \Lucinda\WebSecurity\Authentication\Form\LoginThrottler::setCurrentStatus()
@@ -41,7 +39,7 @@ class SQLLoginThrottler extends AbstractLoginThrottler
             $this->found = true;
         }
     }
-    
+
     /**
      * {@inheritDoc}
      * @see \Lucinda\Framework\AbstractLoginThrottler::persist()
