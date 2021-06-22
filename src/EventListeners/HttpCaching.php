@@ -14,7 +14,7 @@ class HttpCaching extends Response
      * @var Attributes
      */
     protected $attributes;
-    
+
     /**
      * {@inheritDoc}
      * @see \Lucinda\MVC\Runnable::run()

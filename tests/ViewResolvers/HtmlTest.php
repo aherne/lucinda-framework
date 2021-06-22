@@ -11,7 +11,7 @@ use Lucinda\UnitTest\Result;
 class HtmlTest
 {
     private $handler;
-    
+
     public function __construct()
     {
         PHPException::setErrorHandler(new EmergencyHandler());
@@ -22,19 +22,19 @@ class HtmlTest
         $application = new Application(dirname(__DIR__)."/mocks/stdout.xml");
         $response = new Response("text/html", "test");
         $response->view()["test"] = "world";
-        
+
         $html = new Html($application, $response);
         $html->run();
-        
+
         return new Result($response->getBody()=="Hello, world!");
     }
-        
+
 
     public function handle()
     {
         $application = new Application(dirname(__DIR__)."/mocks/stdout.xml");
         $response = new Response("text/html", "test-bugged");
-        
+
         ob_start();
         $html = new Html($application, $response);
         $html->run();

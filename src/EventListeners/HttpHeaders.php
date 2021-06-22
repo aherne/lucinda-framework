@@ -16,7 +16,7 @@ class HttpHeaders extends Request
      * @var Attributes
      */
     protected $attributes;
-    
+
     /**
      * {@inheritDoc}
      * @see \Lucinda\MVC\Runnable::run()

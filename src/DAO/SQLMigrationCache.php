@@ -6,7 +6,7 @@ use Lucinda\Migration\Status;
 
 /**
  * Saves migration progress in a "migrations" SQL table (created beforehand). Create table statement if MySQL:
- *         
+ *
     CREATE TABLE migrations
     (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -19,20 +19,20 @@ use Lucinda\Migration\Status;
  *
  */
 class SQLMigrationCache implements \Lucinda\Migration\Cache
-{    
-    const TABLE_NAME = "migrations";
+{
+    public const TABLE_NAME = "migrations";
     private $connection;
-    
+
     /**
      * Sets table name
-     * 
+     *
      * @param string $tableName
      */
     public function __construct()
     {
         $this->connection = ConnectionSingleton::getInstance();
     }
-    
+
     /**
      * {@inheritDoc}
      * @see \Lucinda\Migration\Cache::exists()
@@ -42,7 +42,7 @@ class SQLMigrationCache implements \Lucinda\Migration\Cache
         // assumes table was already created
         return true;
     }
-    
+
     /**
      * {@inheritDoc}
      * @see \Lucinda\Migration\Cache::create()
@@ -51,31 +51,15 @@ class SQLMigrationCache implements \Lucinda\Migration\Cache
     {
         // assumes table was already created
     }
-    
-    /**
-     * {@inheritDoc}
-     * @see \Lucinda\Migration\Cache::read()
-     */
-    public function read(): array
-    {
-        $resultSet = $this->connection->statement()->execute("
-        SELECT class_name, is_successful 
-        FROM ".self::TABLE_NAME);
-        $output = [];
-        while ($row = $resultSet->toRow()) {
-            $output[$row["class_name"]] = ($row["is_successful"]?Status::PASSED:Status::FAILED);
-        }
-        return $output;
-    }
-    
+
     /**
      * {@inheritDoc}
      * @see \Lucinda\Migration\Cache::add()
      */
     public function add(string $className, int $statusCode): void
     {
-        $isSuccessful = ($statusCode==\Lucinda\Migration\Status::PASSED?1:0);
-        
+        $isSuccessful = ($statusCode==\Lucinda\Migration\Status::PASSED ? 1 : 0);
+
         $resultSet = $this->connection->statement()->execute("
         UPDATE ".self::TABLE_NAME." 
         SET is_successful=".$isSuccessful.", date='".date("Y-m-d H:i:s")."' 
@@ -86,7 +70,23 @@ class SQLMigrationCache implements \Lucinda\Migration\Cache
             (".$isSuccessful.", '".$className."')");
         }
     }
-    
+
+    /**
+     * {@inheritDoc}
+     * @see \Lucinda\Migration\Cache::read()
+     */
+    public function read(): array
+    {
+        $resultSet = $this->connection->statement()->execute("
+        SELECT class_name, is_successful
+        FROM ".self::TABLE_NAME);
+        $output = [];
+        while ($row = $resultSet->toRow()) {
+            $output[$row["class_name"]] = ($row["is_successful"] ? Status::PASSED : Status::FAILED);
+        }
+        return $output;
+    }
+
     /**
      * {@inheritDoc}
      * @see \Lucinda\Migration\Cache::remove()

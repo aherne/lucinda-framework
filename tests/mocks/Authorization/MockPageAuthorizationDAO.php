@@ -22,7 +22,7 @@ class MockPageAuthorizationDAO extends PageAuthorizationDAO
                 break;
         }
     }
-    
+
     public function isPublic(): bool
     {
         switch ($this->pageID) {

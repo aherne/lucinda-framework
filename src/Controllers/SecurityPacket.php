@@ -17,7 +17,7 @@ class SecurityPacket extends Controller
         $this->setResponseStatus();
         $this->setResponseBody();
     }
-    
+
     /**
      * Sets response HTTP status code according to outcome of security validation
      */
@@ -38,7 +38,7 @@ class SecurityPacket extends Controller
                 break;
         }
     }
-    
+
     /**
      * Sets response body from view file or stream.
      */
@@ -46,17 +46,17 @@ class SecurityPacket extends Controller
     {
         // gets packet status
         $status = $this->request->getException()->getStatus();
-        
+
         // gets wrapped exception
         $exception = $this->request->getException();
-        
+
         // gets default format
         $defaultFormat = $this->application->getDefaultFormat();
-        
+
         // sets response content
         if ($defaultFormat=="html") {
             $redirect = (string) $this->application->getTag("application")["redirect"];
-            $location = $exception->getCallback().($exception->getStatus()!="redirect"?"?status=".$exception->getStatus():"");
+            $location = $exception->getCallback().($exception->getStatus()!="redirect" ? "?status=".$exception->getStatus() : "");
             if ($redirect) {
                 if ($status == "unauthorized") {
                     $location .= "&source=".urlencode($_SERVER["REQUEST_URI"]);

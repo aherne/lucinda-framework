@@ -3,7 +3,7 @@ namespace Lucinda\Project\DAO;
 
 /**
  * Session handler for that relies on a "sessions" SQL table (created beforehand). Create table statement if MySQL:
- *         
+ *
     CREATE TABLE sessions
     (
     id VARCHAR(50) NOT NULL,
@@ -11,44 +11,44 @@ namespace Lucinda\Project\DAO;
     date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     expires INT UNSIGNED NOT NULL DEFAULT 0,
     PRIMARY KEY(id),
-    UNIQUE(class_name)
+    KEY(expires)
     ) Engine=INNODB
  *
  */
 class SQLSessionHandler implements \SessionHandlerInterface
 {
-    const TABLE_NAME = "sessions";
-        
+    public const TABLE_NAME = "sessions";
+
     /**
      * {@inheritDoc}
      * @see \SessionHandlerInterface::write()
      */
-    public function write(string $session_id, string $session_data)
-    {        
+    public function write($session_id, $session_data)
+    {
         $expiration = ini_get('session.gc_maxlifetime');
         SQL("
         INSERT INTO ".self::TABLE_NAME." (id, value, expires) VALUES
         (:id, :value, :expires)", [":id"=>$session_id, ":value"=>$session_data, ":expires"=>time()+$expiration]);
         return true;
     }
-    
+
     /**
      * {@inheritDoc}
      * @see \SessionHandlerInterface::read()
      */
-    public function read(string $session_id)
+    public function read($session_id)
     {
         $value = SQL("
         SELECT value FROM ".self::TABLE_NAME." 
         WHERE id = :id AND expires > :current_time", [":id"=>$session_id, ":current_time"=>time()])->toValue();
-        return ($value?$value:"");
+        return ($value ? $value : "");
     }
 
     /**
      * {@inheritDoc}
      * @see \SessionHandlerInterface::destroy()
      */
-    public function destroy(string $session_id)
+    public function destroy($session_id)
     {
         $affectedRows = SQL("
         DELETE FROM ".self::TABLE_NAME." 
@@ -60,11 +60,11 @@ class SQLSessionHandler implements \SessionHandlerInterface
      * {@inheritDoc}
      * @see \SessionHandlerInterface::open()
      */
-    public function open(string $save_path, string $session_name)
+    public function open($save_path, $session_name)
     {
         return true;
     }
-    
+
     /**
      * {@inheritDoc}
      * @see \SessionHandlerInterface::close()
@@ -73,13 +73,16 @@ class SQLSessionHandler implements \SessionHandlerInterface
     {
         return true;
     }
-    
+
     /**
      * {@inheritDoc}
      * @see \SessionHandlerInterface::gc()
      */
-    public function gc(int $maxlifetime)
+    public function gc($maxlifetime)
     {
+        SQL("
+        DELETE FROM ".self::TABLE_NAME."
+        WHERE expires < :current_time", [":current_time"=>time()])->getAffectedRows();
         return true;
     }
 }

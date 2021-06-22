@@ -23,12 +23,12 @@ class File extends AbstractReporter
         if (!$filePath) {
             throw new ConfigurationException("Attribute 'path' is mandatory for 'file' tag");
         }
-        
+
         $pattern= (string) $this->xml["format"];
         if (!$pattern) {
             throw new ConfigurationException("Attribute 'format' is mandatory for 'file' tag");
         }
-        
+
         return new FileLogger($filePath, (string) $this->xml["rotation"], new LogFormatter($pattern));
     }
 }

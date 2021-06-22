@@ -16,9 +16,9 @@ class Json extends ViewResolver
     {
         // see who triggered resolver (tested to have zero performance impact)
         $isError = (strpos(str_replace("\\", "/", debug_backtrace()[0]["file"]), "vendor/lucinda/errors-mvc/")!==false);
-        
+
         // resolves response in json format
         $json = new \Lucinda\Framework\Json();
-        $this->response->setBody($json->encode(array("status"=>(!$isError?"ok":"error"),"body"=>$this->response->view()->getData())));
+        $this->response->setBody($json->encode(array("status"=>(!$isError ? "ok" : "error"),"body"=>$this->response->view()->getData())));
     }
 }

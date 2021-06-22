@@ -10,7 +10,7 @@ use Lucinda\NoSQL\ConnectionSingleton;
 class Date extends AbstractCacheable
 {
     const EXPIRATION = 24*60*60;
-    
+
     /**
      * {@inheritDoc}
      * @see \Lucinda\Framework\AbstractCacheable::setTime()
@@ -34,7 +34,7 @@ class Date extends AbstractCacheable
 
         $this->last_modified_time =  $modifiedTime;
     }
-    
+
     /**
      * {@inheritDoc}
      * @see \Lucinda\Framework\AbstractCacheable::setEtag()

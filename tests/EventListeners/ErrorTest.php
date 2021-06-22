@@ -16,7 +16,7 @@ class ErrorTest
     public function run()
     {
         $frontController = new FrontController(dirname(__DIR__)."/mocks/stderr.xml", ENVIRONMENT, dirname(__DIR__, 2), new EmergencyHandler());
-        
+
         $_SERVER = [
             'HTTP_HOST' => 'www.test.local',
             'HTTP_USER_AGENT' => 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:74.0) Gecko/20100101 Firefox/74.0',
@@ -41,22 +41,22 @@ class ErrorTest
             'SCRIPT_FILENAME' => '/var/www/html/documentation/index.php',
             'QUERY_STRING' =>'asd=fgh'
         ];
-        
+
         $attributes = new Attributes();
         $attributes->setValidFormat("json");
         $application = new Application(dirname(__DIR__, 2)."/stdout.xml");
         $request = new Request();
         $session = new Session();
         $cookies = new Cookies();
-        
+
         $event = new Error($attributes, $application, $request, $session, $cookies);
         $event->run();
-        
+
         ob_start();
         $frontController->handle(new \Exception("Hello!"));
         $body = ob_get_contents();
         ob_end_clean();
-        
+
         if ($val = json_decode($body, true)) {
             return new Result(!empty($val["body"]["message"]) && $val["body"]["message"]=="Hello!");
         } else {

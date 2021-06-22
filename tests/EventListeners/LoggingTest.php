@@ -12,10 +12,10 @@ class LoggingTest
     {
         $attributes = new Attributes();
         $application = new Application(dirname(__DIR__)."/mocks/stdout.xml");
-        
+
         $event = new Logging($attributes, $application);
         $event->run();
-        
-        return new Result($attributes->getLogger()?true:false);
+
+        return new Result($attributes->getLogger() ? true : false);
     }
 }
