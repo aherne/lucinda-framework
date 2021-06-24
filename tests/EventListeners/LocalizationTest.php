@@ -39,16 +39,16 @@ class LocalizationTest
             'SCRIPT_FILENAME' => '/var/www/html/documentation/index.php',
             'QUERY_STRING' =>'asd=fgh'
         ];
-        
+
         $attributes = new Attributes();
         $application = new Application(dirname(__DIR__)."/mocks/stdout.xml");
         $request = new Request();
         $session = new Session();
         $cookies = new Cookies();
-        
+
         $event = new Localization($attributes, $application, $request, $session, $cookies);
         $event->run();
-        
+
         return new Result(\translate("welcome", "", "Lucian") == "Welcome to my site, Lucian!");
     }
 }

@@ -16,7 +16,7 @@ class Logging extends Application
      * @var Attributes
      */
     protected $attributes;
-    
+
     /**
      * {@inheritDoc}
      * @see \Lucinda\MVC\Runnable::run()

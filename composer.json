@@ -37,7 +37,7 @@
     	"files": ["vendor/lucinda/abstract_mvc/loader.php", "vendor/lucinda/errors-mvc/loader.php", "vendor/lucinda/mvc/loader.php"],      
     	"psr-4": {
     	    "Lucinda\\Project\\": "src/",
-            "Test\\Lucinda\\Project\\": "tests/"
+          "Test\\Lucinda\\Project\\": "tests/"
     	}
     },
     "scripts": {

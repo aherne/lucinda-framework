@@ -9,6 +9,13 @@ use Lucinda\NoSQL\OperationFailedException;
  */
 class NoSQLSessionHandler implements \SessionHandlerInterface
 {
+    private $connection;
+
+    public function __construct()
+    {
+        $this->connection = ConnectionSingleton::getInstance();
+    }
+
     /**
      * {@inheritDoc}
      * @see \SessionHandlerInterface::write()
@@ -16,22 +23,22 @@ class NoSQLSessionHandler implements \SessionHandlerInterface
     public function write($session_id, $session_data)
     {
         try {
-            ConnectionSingleton::getInstance()->set($session_id, $session_data, ini_get('session.gc_maxlifetime'));
+            $this->connection->set($session_id, $session_data, ini_get('session.gc_maxlifetime'));
             return true;
         } catch (OperationFailedException $e) {
             return false;
         }
     }
-    
+
     /**
      * {@inheritDoc}
      * @see \SessionHandlerInterface::read()
      */
     public function read($session_id)
     {
-        if (ConnectionSingleton::getInstance()->contains($session_id)) {
+        if ($this->connection->contains($session_id)) {
             try {
-                return ConnectionSingleton::getInstance()->get($session_id);
+                return $this->connection->get($session_id);
             } catch (OperationFailedException $e) {
                 return "";
             }
@@ -46,9 +53,9 @@ class NoSQLSessionHandler implements \SessionHandlerInterface
      */
     public function destroy($session_id)
     {
-        if (ConnectionSingleton::getInstance()->contains($session_id)) {
+        if ($this->connection->contains($session_id)) {
             try {
-                ConnectionSingleton::getInstance()->delete($session_id);
+                $this->connection->delete($session_id);
                 return true;
             } catch (OperationFailedException $e) {
                 return false;
@@ -66,7 +73,7 @@ class NoSQLSessionHandler implements \SessionHandlerInterface
     {
         return true;
     }
-    
+
     /**
      * {@inheritDoc}
      * @see \SessionHandlerInterface::open()

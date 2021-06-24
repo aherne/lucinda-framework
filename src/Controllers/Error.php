@@ -36,7 +36,7 @@ class Error extends Controller
 
         // gets content type
         $contentType = $this->response->headers("Content-Type");
-        
+
         // sets view
         $view = $this->response->view();
         $exception = $this->request->getException();
@@ -49,7 +49,7 @@ class Error extends Controller
         }
         if (strpos($contentType, "text/html")===0) {
             $viewsPath = (string) $this->application->getTag("templating")["templates_path"];
-            $view->setFile($viewsPath."/".($displayErrors?"debug":"500"));
+            $view->setFile($viewsPath."/".($displayErrors ? "debug" : "500"));
         }
     }
 }

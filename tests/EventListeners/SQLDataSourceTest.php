@@ -12,10 +12,10 @@ class SQLDataSourceTest
     {
         $attributes = new Attributes();
         $application = new Application(dirname(__DIR__)."/mocks/stdout.xml");
-        
+
         $event = new SQLDataSource($attributes, $application);
         $event->run();
-        
+
         try {
             return new Result(\SQL("SELECT CURDATE()")->toValue() == date("Y-m-d"));
         } catch (\Throwable $e) {

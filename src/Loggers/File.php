@@ -22,12 +22,12 @@ class File extends AbstractLoggerWrapper
         if (!$filePath) {
             throw new ConfigurationException("Attribute 'path' is mandatory for 'file' tag");
         }
-        
+
         $pattern= (string) $xml["format"];
         if (!$pattern) {
             throw new ConfigurationException("Attribute 'format' is mandatory for 'file' tag");
         }
-        
+
         return new FileLoggerDriver($filePath, (string) $xml["rotation"], new LogFormatter($pattern));
     }
 }

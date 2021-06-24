@@ -18,14 +18,14 @@ class SecurityTest
     private $cookies;
     private $session;
     private $attributes;
-    
+
     public function __construct()
     {
         $this->attributes = new Attributes();
         $this->session = new Session();
         $this->cookies = new Cookies();
     }
-    
+
     public function run()
     {
         $results = [];
@@ -33,20 +33,20 @@ class SecurityTest
         foreach ($combinations as $name) {
             $results = array_merge($results, $this->testNormal($name));
         }
-        
+
         $combinations = ["oauth2_dao", "oauth2_xml"];
         foreach ($combinations as $name) {
             $results = array_merge($results, $this->testOAuth2($name));
         }
-        
+
         return $results;
     }
-    
+
     private function testNormal(string $name): array
     {
         $type = strtoupper(str_replace("_", " Authentication + ", $name)." Authorization");
         $results = [];
-        
+
         $application = new Application(dirname(__DIR__)."/mocks/stdout_".$name.".xml");
         try {
             $this->setRequest("asdf");
@@ -56,13 +56,13 @@ class SecurityTest
         } catch (SecurityPacket $packet) {
             $results[] = new Result($packet->getStatus()=="not_found", $type.": check not found page");
         }
-        
+
         $this->setRequest("login");
         $event = new Security($this->attributes, $application, $this->request, $this->session, $this->cookies);
         $event->run();
         $results[] = new Result($this->attributes->getUserID()==null, $type.": check found page");
         $csrfToken = $this->attributes->getCsrfToken();
-        
+
         try {
             $this->setRequest("login", "POST", ["username"=>"test", "password"=>"me1", "csrf"=>$csrfToken]);
             $event = new Security($this->attributes, $application, $this->request, $this->session, $this->cookies);
@@ -71,7 +71,7 @@ class SecurityTest
         } catch (SecurityPacket $packet) {
             $results[] = new Result($packet->getStatus()=="login_failed", $type.": check login failure");
         }
-        
+
         $accessToken = "";
         try {
             $this->setRequest("login", "POST", ["username"=>"test", "password"=>"me", "csrf"=>$csrfToken]);
@@ -82,12 +82,12 @@ class SecurityTest
             $accessToken = $packet->getAccessToken();
             $results[] = new Result($packet->getStatus()=="login_ok", $type.": check login success");
         }
-        
+
         $this->setRequest("index", "GET", [], $accessToken);
         $event = new Security($this->attributes, $application, $this->request, $this->session, $this->cookies);
         $event->run();
         $results[] = new Result($this->attributes->getUserID()==1, $type.": check logged in user access to authorized page");
-        
+
         try {
             $this->setRequest("administration", "GET", [], $accessToken);
             $event = new Security($this->attributes, $application, $this->request, $this->session, $this->cookies);
@@ -96,7 +96,7 @@ class SecurityTest
         } catch (SecurityPacket $packet) {
             $results[] = new Result($packet->getStatus()=="forbidden", $type.": check logged in user access to forbidden page");
         }
-        
+
         try {
             $this->setRequest("logout", "GET", [], $accessToken);
             $event = new Security($this->attributes, $application, $this->request, $this->session, $this->cookies);
@@ -105,7 +105,7 @@ class SecurityTest
         } catch (SecurityPacket $packet) {
             $results[] = new Result($packet->getStatus()=="logout_ok", $type.": check logout success");
         }
-        
+
         try {
             $this->setRequest("logout");
             $event = new Security($this->attributes, $application, $this->request, $this->session, $this->cookies);
@@ -114,7 +114,7 @@ class SecurityTest
         } catch (SecurityPacket $packet) {
             $results[] = new Result($packet->getStatus()=="logout_failed", $type.": check logout failure");
         }
-        
+
         try {
             $this->setRequest("index");
             $event = new Security($this->attributes, $application, $this->request, $this->session, $this->cookies);
@@ -123,15 +123,15 @@ class SecurityTest
         } catch (SecurityPacket $packet) {
             $results[] = new Result($packet->getStatus()=="unauthorized", $type.": check guest user access to page requiring login");
         }
-        
+
         return $results;
     }
-    
+
     private function testOAuth2(string $name): array
     {
         $type = strtoupper(str_replace("_", " Authentication + ", $name)." Authorization");
         $results = [];
-        
+
         $application = new Application(dirname(__DIR__)."/mocks/stdout_".$name.".xml");
         try {
             $this->setRequest("asdf");
@@ -141,13 +141,13 @@ class SecurityTest
         } catch (SecurityPacket $packet) {
             $results[] = new Result($packet->getStatus()=="not_found", $type.": check not found page");
         }
-        
+
         $this->setRequest("login");
         $event = new Security($this->attributes, $application, $this->request, $this->session, $this->cookies);
         $event->run();
         $results[] = new Result($this->attributes->getUserID()==null, $type.": check found page");
         $csrfToken = $this->attributes->getCsrfToken();
-        
+
         try {
             $this->setRequest("login/facebook");
             $event = new Security($this->attributes, $application, $this->request, $this->session, $this->cookies);
@@ -156,7 +156,7 @@ class SecurityTest
         } catch (SecurityPacket $packet) {
             $results[] = new Result($packet->getStatus()=="redirect" && strpos($packet->getCallback(), "https://www.facebook.com/v2.8/dialog/oauth")===0, $type.": good authorization code");
         }
-                
+
 //         try {
 //             $this->setRequest("login/facebook", "GET", ["error"=>"asdfgi"]);
 //             $event = new Security($this->attributes, $application, $this->request, $this->session, $this->cookies);
@@ -165,7 +165,7 @@ class SecurityTest
 //         } catch (OAuth2Exception $e) {
 //             $results[] = new Result(true, $type.": bad authorization code");
 //         }
-        
+
 //         $accessToken = "";
 //         try {
 //             $this->setRequest("login/facebook", "GET", ["code"=>"qwerty", "state"=>$csrfToken]);
@@ -176,12 +176,12 @@ class SecurityTest
 //             $accessToken = $packet->getAccessToken();
 //             $results[] = new Result($packet->getStatus()=="login_ok", $type.": a2ccess token");
 //         }
-        
+
 //         $this->setRequest("index", "GET", [], $accessToken);
 //         $event = new Security($this->attributes, $application, $this->request, $this->session, $this->cookies);
 //         $event->run();
 //         $results[] = new Result($this->attributes->getUserID()==1, $type.": check logged in user access to authorized page");
-        
+
 //         try {
 //             $this->setRequest("administration", "GET", [], $accessToken);
 //             $event = new Security($this->attributes, $application, $this->request, $this->session, $this->cookies);
@@ -190,7 +190,7 @@ class SecurityTest
 //         } catch (SecurityPacket $packet) {
 //             $results[] = new Result($packet->getStatus()=="forbidden", $type.": check logged in user access to forbidden page");
 //         }
-        
+
 //         try {
 //             $this->setRequest("logout", "GET", [], $accessToken);
 //             $event = new Security($this->attributes, $application, $this->request, $this->session, $this->cookies);
@@ -199,7 +199,7 @@ class SecurityTest
 //         } catch (SecurityPacket $packet) {
 //             $results[] = new Result($packet->getStatus()=="logout_ok", $type.": check logout success");
 //         }
-        
+
 //         try {
 //             $this->setRequest("logout");
 //             $event = new Security($this->attributes, $application, $this->request, $this->session, $this->cookies);
@@ -208,7 +208,7 @@ class SecurityTest
 //         } catch (SecurityPacket $packet) {
 //             $results[] = new Result($packet->getStatus()=="logout_failed", $type.": check logout failure");
 //         }
-        
+
 //         try {
 //             $this->setRequest("index");
 //             $event = new Security($this->attributes, $application, $this->request, $this->session, $this->cookies);
@@ -217,10 +217,10 @@ class SecurityTest
 //         } catch (SecurityPacket $packet) {
 //             $results[] = new Result($packet->getStatus()=="unauthorized", $type.": check guest user access to page requiring login");
 //         }
-        
+
         return $results;
     }
-    
+
     private function setRequest(string $uri, string $method="GET", array $parameters=[], string $accessToken=""): void
     {
         $_SERVER = [
@@ -245,7 +245,7 @@ class SecurityTest
             'REQUEST_METHOD' => $method,
             'DOCUMENT_ROOT' => '/var/www/html/documentation',
             'SCRIPT_FILENAME' => '/var/www/html/documentation/index.php',
-            'QUERY_STRING' =>($method=="GET" && $parameters?http_build_query($parameters):"")
+            'QUERY_STRING' =>($method=="GET" && $parameters ? http_build_query($parameters) : "")
         ];
         if ($accessToken) {
             $_SERVER["HTTP_AUTHORIZATION"] = "Bearer ".$accessToken;

@@ -8,7 +8,7 @@ class AttributesTest
 {
     private $xml;
     private $attributes;
-    
+
     public function __construct()
     {
         $this->attributes = new Attributes();
@@ -21,13 +21,13 @@ class AttributesTest
         $this->attributes->setHeaders($wrapper);
         return new Result(true, "tested via getHeaders");
     }
-        
+
 
     public function getHeaders()
     {
         return new Result($this->attributes->getHeaders() instanceof \Lucinda\Headers\Wrapper);
     }
-        
+
 
     public function setLogger()
     {
@@ -35,46 +35,46 @@ class AttributesTest
         $this->attributes->setLogger($wrapper->getLogger());
         return new Result(true, "tested via getLogger");
     }
-        
+
 
     public function getLogger()
     {
         return new Result($this->attributes->getLogger() instanceof \Lucinda\Logging\MultiLogger);
     }
-        
+
 
     public function setUserId()
     {
         $this->attributes->setUserId(123);
         return new Result(true, "tested via getUserId");
     }
-        
+
 
     public function getUserId()
     {
         return new Result($this->attributes->getUserId()==123);
     }
-        
+
 
     public function setCsrfToken()
     {
         $this->attributes->setCsrfToken("asdfghjkl");
         return new Result(true, "tested via getCsrfToken");
     }
-        
+
 
     public function getCsrfToken()
     {
         return new Result($this->attributes->getCsrfToken()=="asdfghjkl");
     }
-        
+
 
     public function setAccessToken()
     {
         $this->attributes->setAccessToken("qwertyuio");
         return new Result(true, "tested via getAccessToken");
     }
-        
+
 
     public function getAccessToken()
     {

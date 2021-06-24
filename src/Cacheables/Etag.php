@@ -15,7 +15,7 @@ class Etag extends AbstractCacheable
     protected function setTime(): void
     {
     }
-    
+
     /**
      * {@inheritDoc}
      * @see \Lucinda\Framework\AbstractCacheable::setEtag()
