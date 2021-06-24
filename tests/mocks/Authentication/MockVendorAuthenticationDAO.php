@@ -8,7 +8,7 @@ use Lucinda\WebSecurity\Authorization\UserRoles;
 class MockVendorAuthenticationDAO implements VendorAuthenticationDAO, UserRoles
 {
     private $accounts = [];
-        
+
     public function login(UserInformation $userInformation, string $vendorName, string $accessToken)
     {
         if ($vendorName!="Facebook") {
@@ -20,7 +20,7 @@ class MockVendorAuthenticationDAO implements VendorAuthenticationDAO, UserRoles
         ];
         return 1;
     }
-    
+
     public function logout($userID): void
     {
         if (isset($this->accounts[$userID])) {
@@ -29,7 +29,7 @@ class MockVendorAuthenticationDAO implements VendorAuthenticationDAO, UserRoles
             }
         }
     }
-    
+
     public function getRoles($userID): array
     {
         if ($userID) {

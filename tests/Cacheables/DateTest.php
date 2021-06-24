@@ -36,20 +36,20 @@ class DateTest
             'SCRIPT_FILENAME' => '/var/www/html/documentation/index.php',
             'QUERY_STRING' =>'asd=fgh'
         ];
-        
+
         $application = new Application(dirname(__DIR__)."/mocks/stdout.xml");
         new Wrapper(\getParentNode($application, "nosql"), ENVIRONMENT);
-        
+
         $request = new \Lucinda\STDOUT\Request();
         $response = new \Lucinda\MVC\Response("text/plain", "");
         $response->setBody("asdfg");
-        
+
         $cacheable = new Date($request, $response);
         $try1 = $cacheable->getTime();
-        
+
         $cacheable = new Date($request, $response);
         $try2 = $cacheable->getTime();
-                        
+
         return new Result($try1 && ($try1 == $try2));
     }
 }

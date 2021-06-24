@@ -15,14 +15,14 @@ class SecurityPacketTest
         $exception = new \Lucinda\WebSecurity\SecurityPacket();
         $exception->setCallback("login");
         $exception->setStatus(ResultStatus::NOT_FOUND);
-        
+
         $application = new Application(dirname(__DIR__)."/mocks/stderr.xml", ENVIRONMENT);
         $request = new Request($application->routes()['Lucinda\WebSecurity\SecurityPacket'], $exception);
         $response = new Response($application->resolvers()[$application->getDefaultFormat()]->getContentType(), "");
-        
+
         $controller = new SecurityPacket($application, $request, $response);
         $controller->run();
-        
+
         return new Result($response->view()->getFile() == "tests/mocks/views/404");
     }
 }

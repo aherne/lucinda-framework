@@ -14,7 +14,7 @@ class HttpCors extends Request
      * @var Attributes
      */
     protected $attributes;
-    
+
     /**
      * {@inheritDoc}
      * @see \Lucinda\MVC\Runnable::run()
@@ -25,10 +25,10 @@ class HttpCors extends Request
         if ($validator===null || $this->request->getMethod()!="OPTIONS") {
             return;
         }
-        
+
         // perform CORS validation
         $validator->validateCors($this->request->getProtocol()."://".$this->request->getServer()->getName());
-        
+
         // send response immediately
         $response = new Response("application/json", "");
         $headers = $validator->getResponse()->toArray();

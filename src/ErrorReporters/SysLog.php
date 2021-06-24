@@ -22,12 +22,12 @@ class SysLog extends AbstractReporter
         if (!$applicationName) {
             throw new ConfigurationException("Attribute 'path' is mandatory for 'syslog' tag");
         }
-        
+
         $pattern= (string) $this->xml["format"];
         if (!$pattern) {
             throw new ConfigurationException("Attribute 'format' is mandatory for 'syslog' tag");
         }
-        
+
         return new SysLogger($applicationName, new LogFormatter($pattern));
     }
 }

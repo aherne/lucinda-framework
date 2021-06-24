@@ -11,7 +11,7 @@ class Attributes extends \Lucinda\STDOUT\Attributes
     private $userID;
     private $csrfToken;
     private $accessToken;
-    
+
     /**
      * Sets pointer to query HTTP headers with
      *
@@ -21,7 +21,7 @@ class Attributes extends \Lucinda\STDOUT\Attributes
     {
         $this->headers = $wrapper;
     }
-    
+
     /**
      * Gets pointer to query HTTP headers with
      *
@@ -31,7 +31,7 @@ class Attributes extends \Lucinda\STDOUT\Attributes
     {
         return $this->headers;
     }
-    
+
     /**
      * Sets pointer to log messages with
      *
@@ -41,7 +41,7 @@ class Attributes extends \Lucinda\STDOUT\Attributes
     {
         $this->logger = $logger;
     }
-    
+
     /**
      * Gets pointer to log messages with
      *
@@ -51,7 +51,7 @@ class Attributes extends \Lucinda\STDOUT\Attributes
     {
         return $this->logger;
     }
-    
+
     /**
      * Sets logged in user id
      *
@@ -61,7 +61,7 @@ class Attributes extends \Lucinda\STDOUT\Attributes
     {
         $this->userID = $userID;
     }
-    
+
     /**
      * Gets logged in user id
      *
@@ -71,7 +71,7 @@ class Attributes extends \Lucinda\STDOUT\Attributes
     {
         return $this->userID;
     }
-    
+
     /**
      * Sets token to sign logins with in order to fight Cross-Site-Requests-Forgery
      *
@@ -81,7 +81,7 @@ class Attributes extends \Lucinda\STDOUT\Attributes
     {
         $this->csrfToken = $token;
     }
-    
+
     /**
      * Gets token to sign logins with in order to fight Cross-Site-Requests-Forgery
      *
@@ -91,7 +91,7 @@ class Attributes extends \Lucinda\STDOUT\Attributes
     {
         return $this->csrfToken;
     }
-    
+
     /**
      * Sets token to be presented by client for stateless authentication as header:
      * Authorization Bearer VALUE
@@ -102,7 +102,7 @@ class Attributes extends \Lucinda\STDOUT\Attributes
     {
         $this->accessToken = $token;
     }
-    
+
     /**
      * Gets token to be presented by client for stateless authentication as header:
      * Authorization Bearer VALUE

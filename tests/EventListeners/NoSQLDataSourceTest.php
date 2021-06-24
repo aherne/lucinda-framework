@@ -13,10 +13,10 @@ class NoSQLDataSourceTest
     {
         $attributes = new Attributes();
         $application = new Application(dirname(__DIR__)."/mocks/stdout.xml");
-        
+
         $event = new NoSQLDataSource($attributes, $application);
         $event->run();
-        
+
         try {
             $driver = ConnectionSingleton::getInstance();
             $driver->set("test", "me");
