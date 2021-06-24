@@ -28,7 +28,7 @@
         "lucinda/errors-mvc": "~2.0",
         "lucinda/headers": "~1.0",
         "lucinda/abstract_mvc": "~1.0",
-        "lucinda/migrations": "~1.0"
+        "lucinda/migrations": "^1.0"
     },
     "require-dev": {
         "lucinda/unit-testing": "^1.0"
@@ -37,7 +37,7 @@
     	"files": ["vendor/lucinda/abstract_mvc/loader.php", "vendor/lucinda/errors-mvc/loader.php", "vendor/lucinda/mvc/loader.php"],      
     	"psr-4": {
     	    "Lucinda\\Project\\": "src/",
-    	    "Test\\Lucinda\\Project\\": "tests/"
+          "Test\\Lucinda\\Project\\": "tests/"
     	}
     },
     "scripts": {
