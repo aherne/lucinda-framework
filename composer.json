@@ -28,6 +28,7 @@
         "lucinda/errors-mvc": "~2.0",
         "lucinda/headers": "~1.0",
         "lucinda/abstract_mvc": "~1.0",
+        "lucinda/console-mvc": "~1.0",
         "lucinda/migrations": "^1.0"
     },
     "require-dev": {
