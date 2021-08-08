@@ -1,44 +1,44 @@
 <?php
 namespace Test\Lucinda\Project\ViewResolvers;
-
-use Lucinda\STDOUT\Application;
+    
+use Lucinda\Project\ViewResolvers\Console;
 use Lucinda\MVC\Response;
-use Lucinda\Project\ViewResolvers\Html;
+use Lucinda\ConsoleSTDOUT\Application;
 use Lucinda\STDERR\PHPException;
-use Lucinda\Project\EmergencyHandler;
 use Lucinda\UnitTest\Result;
+use Lucinda\Project\EmergencyHandler;
 
-class HtmlTest
+class ConsoleTest
 {
     public function __construct()
     {
         PHPException::setErrorHandler(new EmergencyHandler());
     }
-
+    
     public function run()
     {
         $application = new Application(dirname(__DIR__)."/mocks/stdout.xml");
-        $response = new Response("text/html", "test");
+        $response = new Response("text/plain", "test");
         $response->view()["test"] = "world";
-
-        $html = new Html($application, $response);
+        
+        $html = new Console($application, $response);
         $html->run();
-
-        return new Result($response->getBody()=="<div>Hello, world!</div>");
+        
+        return new Result($response->getBody()=="Hello, world!\n");
     }
-
-
+    
+    
     public function handle()
     {
         $application = new Application(dirname(__DIR__)."/mocks/stdout.xml");
-        $response = new Response("text/html", "test-bugged");
-
+        $response = new Response("text/plain", "test-bugged");
+        
         ob_start();
-        $html = new Html($application, $response);
+        $html = new Console($application, $response);
         $html->run();
         $body = ob_get_contents();
         ob_end_clean();
-
+        
         return new Result(strpos($body, "User tag not found: foo/bar"));
     }
 }
