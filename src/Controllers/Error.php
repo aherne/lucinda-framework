@@ -50,6 +50,9 @@ class Error extends Controller
         if (strpos($contentType, "text/html")===0) {
             $viewsPath = (string) $this->application->getTag("templating")["templates_path"];
             $view->setFile($viewsPath."/".($displayErrors ? "debug" : "500"));
+        } else if (strpos($contentType, "text/plain")===0) {
+            $viewsPath = (string) $this->application->getTag("templating")["templates_path"];
+            $view->setFile($viewsPath."/debug-console");
         }
     }
 }

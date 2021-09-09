@@ -2,16 +2,12 @@
 require __DIR__ . '/vendor/autoload.php';
 
 /**
- * DB for tests:
- *
- * mysql> create database test;
- * mysql> create user test@localhost identified by 'me';
- * mysql> grant all on test.* to test@localhost;
+ * Before running tests you need to:
+ * @see https://www.lucinda-framework.com/tutorials/unit-testing#setting_database
  */
 try {
     define("ENVIRONMENT", (getenv("ENVIRONMENT") ? getenv("ENVIRONMENT") : "local"));
     new Lucinda\UnitTest\ConsoleController("unit-tests.xml", ENVIRONMENT);
 } catch (Exception $e) {
     var_dump($e);
-    echo $e->getMessage();
 }

@@ -44,7 +44,7 @@ class ErrorTest
 
         $attributes = new Attributes();
         $attributes->setValidFormat("json");
-        $application = new Application(dirname(__DIR__, 2)."/stdout.xml");
+        $application = new Application(dirname(__DIR__)."/mocks/stdout.xml");
         $request = new Request();
         $session = new Session();
         $cookies = new Cookies();

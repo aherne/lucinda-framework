@@ -4,6 +4,7 @@ namespace Lucinda\Project;
 use Lucinda\STDERR\Application;
 use Lucinda\STDERR\ErrorHandler;
 use Lucinda\MVC\Response;
+use Lucinda\Console\Wrapper;
 
 /**
  * Handles errors inside STDERR MVC API. Developers may need to modify this class if XML_FILE_NAME is different or
@@ -23,7 +24,9 @@ class EmergencyHandler implements ErrorHandler
             $application = new Application(dirname(__DIR__)."/".self::XML_FILE_NAME, ENVIRONMENT);
             $defaultFormat = $application->getDefaultFormat();
             $displayErrors = $application->getDisplayErrors();
-            if ($defaultFormat=="html") {
+            if (PHP_SAPI === 'cli') {
+                $this->console($exception);
+            } else if ($defaultFormat=="html") {
                 $this->html($exception, $displayErrors);
             } else if ($defaultFormat=="json") {
                 $this->json($exception, $displayErrors);
@@ -33,6 +36,37 @@ class EmergencyHandler implements ErrorHandler
         } catch (\Throwable $e) {
             die("STDERR could not render response: ".$e->getMessage());
         }
+    }
+    
+    /**
+     * Renders response in text format for console
+     *
+     * @param \Throwable $exception
+     */
+    private function console(\Throwable $exception): void
+    {
+        $response = new Response("text/plain", dirname(__DIR__)."/templates/views/debug-console.html");
+        $response->setStatus(500);
+        $contents = file_get_contents($response->view()->getFile());
+        $contents = str_replace([
+            '${data.class}',
+            '${data.message}',
+            '${data.file}',
+            '${data.line}',
+            '${data.trace}'
+        ], [
+            get_class($exception),
+            $exception->getMessage(),
+            $exception->getFile(),
+            $exception->getLine(),
+            $exception->getTraceAsString()
+        ], $contents);
+        try {
+            $wrapper = new Wrapper($contents);
+            $contents = $wrapper->getBody();
+        } catch (\Throwable $t) {}
+        $response->setBody($contents);
+        $response->commit();
     }
     
     /**

@@ -13,6 +13,6 @@ class EmergencyHandlerTest
         $emergencyHandler->handle(new \Exception("Hello!"));
         $contents = ob_get_contents();
         ob_end_clean();
-        return new Result(strpos($contents, "<p>Hello!</p>")!==false);
+        return new Result(strpos($contents, "Hello!")!==false);
     }
 }

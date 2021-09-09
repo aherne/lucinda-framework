@@ -5,12 +5,14 @@
     <resolvers>
 	    <resolver format="html" content_type="text/html" class="Lucinda\Project\ViewResolvers\Html" charset="UTF-8"/>
 	    <resolver format="json" content_type="application/json" class="Lucinda\Project\ViewResolvers\Json" charset="UTF-8"/>
+	    <resolver format="console" content_type="text/plain" class="Lucinda\Project\ViewResolvers\Console" charset="UTF-8"/>
     </resolvers>
   	<templating compilations_path="compilations" tags_path="tests/mocks/tags" templates_path="tests/mocks/views" templates_extension="html"/>
     <routes>
         <route id="index" view="index"/>
         <route id="test/html" controller="Lucinda\Project\Controllers\Test" view="test"/>
 		<route id="test/json" controller="Lucinda\Project\Controllers\Test" format="json"/>
+    	<route id="test/console" controller="Lucinda\Project\Controllers\Test" format="test-console"/>
     </routes>
     <headers cacheable="Lucinda\Project\Cacheables\Etag" cache_expiration="10" allow_credentials="1" cors_max_age="5" allowed_request_headers="X-Custom-Header, Upgrade-Insecure-Requests" allowed_response_headers="Content-Length, X-Kuma-Revision"/>
     <loggers>
