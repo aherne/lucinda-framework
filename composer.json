@@ -37,13 +37,14 @@
     "autoload": {
     	"files": ["vendor/lucinda/abstract_mvc/loader.php", "vendor/lucinda/errors-mvc/loader.php", "vendor/lucinda/mvc/loader.php"],      
     	"psr-4": {
-    	    "Lucinda\\Project\\": "src/",
+          "Lucinda\\Project\\": "src/",
           "Test\\Lucinda\\Project\\": "tests/"
     	}
     },
     "scripts": {
     	"post-create-project-cmd": [
-            "php -r 'mkdir(\"compilations\");chmod(\"compilations\", 0777);'"
+            "php -r 'mkdir(\"compilations\");chmod(\"compilations\", 0777);'",
+            "php -r 'mkdir(\"compilations/checksums\");chmod(\"compilations/checksums\", 0777);'"
         ]
     }
 }
