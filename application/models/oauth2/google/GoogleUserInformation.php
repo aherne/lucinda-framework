@@ -12,7 +12,7 @@ class GoogleUserInformation extends \Lucinda\Framework\AbstractUserInformation
     public function __construct($info)
     {
         $this->id = $info["id"];
-        $this->name = $info["displayName"];
-        $this->email = (!empty($info["emails"][0]["value"])?$info["emails"][0]["value"]:"");
+        $this->name = $info["name"];
+        $this->email = $info["email"];
     }
 }
