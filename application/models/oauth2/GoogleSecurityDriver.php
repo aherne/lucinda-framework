@@ -7,8 +7,8 @@ require_once("GoogleUserInformation.php");
  */
 class GoogleSecurityDriver extends AbstractSecurityDriver implements OAuth2Driver {
 	// login-related constants
-	const SCOPES = array("https://www.googleapis.com/auth/plus.login","https://www.googleapis.com/auth/plus.profile.emails.read");
-	const RESOURCE_URL = "https://www.googleapis.com/plus/v1/people/me";
+	const SCOPES = array("https://www.googleapis.com/auth/userinfo.email","https://www.googleapis.com/auth/userinfo.profile");
+	const RESOURCE_URL = "https://www.googleapis.com/oauth2/v1/userinfo";
 
 	/**
 	 * {@inheritDoc}
