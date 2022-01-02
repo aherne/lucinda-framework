@@ -16,6 +16,7 @@
         "php": "^8.1",
         "ext-simplexml": "*",    
         "lucinda/framework-engine": "~3.0",
+        "lucinda/framework-configurer": "~3.0",
         "lucinda/logging": "~4.0",
         "lucinda/nosql-data-access": "~4.0",
         "lucinda/oauth2-client": "~3.0",
