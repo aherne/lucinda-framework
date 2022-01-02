@@ -46,7 +46,7 @@ class EmergencyHandler implements ErrorHandler
     private function console(\Throwable $exception): void
     {
         $response = new Response("text/plain", dirname(__DIR__)."/templates/views/debug-console.html");
-        $response->setStatus(500);
+        $response->setStatus(Response\HttpStatus::INTERNAL_SERVER_ERROR);
         $contents = file_get_contents($response->view()->getFile());
         $contents = str_replace([
             '${data.class}',

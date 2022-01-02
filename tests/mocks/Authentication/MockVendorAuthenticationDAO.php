@@ -9,10 +9,10 @@ class MockVendorAuthenticationDAO implements VendorAuthenticationDAO, UserRoles
 {
     private $accounts = [];
 
-    public function login(UserInformation $userInformation, string $vendorName, string $accessToken)
+    public function login(UserInformation $userInformation, string $vendorName, string $accessToken): int|string|null
     {
         if ($vendorName!="Facebook") {
-            return;
+            return null;
         }
         $this->accounts[1][$vendorName] = [
             "info"=>$userInformation,

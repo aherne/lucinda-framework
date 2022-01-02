@@ -21,7 +21,8 @@ use Lucinda\Framework\AbstractLoginThrottler;
 class SQLLoginThrottler extends AbstractLoginThrottler
 {
     public const TABLE_NAME = "user_logins";
-    private $found;
+
+    private bool $found = false;
 
     /**
      * {@inheritDoc}
@@ -42,7 +43,7 @@ class SQLLoginThrottler extends AbstractLoginThrottler
 
     /**
      * {@inheritDoc}
-     * @see \Lucinda\Framework\AbstractLoginThrottler::persist()
+     * @see \Lucinda\WebSecurity\Authentication\Form\LoginThrottler::persist()
      */
     protected function persist(): void
     {

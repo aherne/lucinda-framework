@@ -2,6 +2,7 @@
 namespace Lucinda\Project\DAO;
 
 use Lucinda\NoSQL\ConnectionSingleton;
+use Lucinda\NoSQL\Driver;
 use Lucinda\NoSQL\OperationFailedException;
 
 /**
@@ -9,8 +10,11 @@ use Lucinda\NoSQL\OperationFailedException;
  */
 class NoSQLSessionHandler implements \SessionHandlerInterface
 {
-    private $connection;
+    private Driver $connection;
 
+    /**
+     * Sets up DB connection
+     */
     public function __construct()
     {
         $this->connection = ConnectionSingleton::getInstance();
@@ -20,7 +24,7 @@ class NoSQLSessionHandler implements \SessionHandlerInterface
      * {@inheritDoc}
      * @see \SessionHandlerInterface::write()
      */
-    public function write($session_id, $session_data)
+    public function write(string $session_id, string $session_data): bool
     {
         try {
             $this->connection->set($session_id, $session_data, ini_get('session.gc_maxlifetime'));
@@ -34,16 +38,16 @@ class NoSQLSessionHandler implements \SessionHandlerInterface
      * {@inheritDoc}
      * @see \SessionHandlerInterface::read()
      */
-    public function read($session_id)
+    public function read(string $session_id): string|false
     {
         if ($this->connection->contains($session_id)) {
             try {
                 return $this->connection->get($session_id);
             } catch (OperationFailedException $e) {
-                return "";
+                return false;
             }
         } else {
-            return "";
+            return false;
         }
     }
 
@@ -51,7 +55,7 @@ class NoSQLSessionHandler implements \SessionHandlerInterface
      * {@inheritDoc}
      * @see \SessionHandlerInterface::destroy()
      */
-    public function destroy($session_id)
+    public function destroy(string $session_id): bool
     {
         if ($this->connection->contains($session_id)) {
             try {
@@ -69,16 +73,16 @@ class NoSQLSessionHandler implements \SessionHandlerInterface
      * {@inheritDoc}
      * @see \SessionHandlerInterface::gc()
      */
-    public function gc($maxlifetime)
+    public function gc(int $maxlifetime): int|false
     {
-        return true;
+        return 1;
     }
 
     /**
      * {@inheritDoc}
      * @see \SessionHandlerInterface::open()
      */
-    public function open($save_path, $session_name)
+    public function open(string $save_path, string $session_name): bool
     {
         return true;
     }
@@ -87,7 +91,7 @@ class NoSQLSessionHandler implements \SessionHandlerInterface
      * {@inheritDoc}
      * @see \SessionHandlerInterface::close()
      */
-    public function close()
+    public function close(): bool
     {
         return true;
     }

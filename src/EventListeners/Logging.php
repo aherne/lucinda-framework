@@ -1,6 +1,7 @@
 <?php
 namespace Lucinda\Project\EventListeners;
 
+use Lucinda\Logging\ConfigurationException;
 use Lucinda\STDOUT\EventListeners\Application;
 use Lucinda\Project\Attributes;
 use Lucinda\Logging\Wrapper;
@@ -15,10 +16,12 @@ class Logging extends Application
     /**
      * @var Attributes
      */
-    protected $attributes;
+    protected \Lucinda\STDOUT\Attributes $attributes;
 
     /**
      * {@inheritDoc}
+     * @throws ConfigurationException
+     * @throws \Lucinda\MVC\ConfigurationException
      * @see \Lucinda\MVC\Runnable::run()
      */
     public function run(): void

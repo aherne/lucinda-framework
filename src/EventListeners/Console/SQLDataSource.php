@@ -14,6 +14,8 @@ class SQLDataSource extends Application
 {
     /**
      * {@inheritDoc}
+     * @throws \Lucinda\SQL\ConfigurationException
+     * @throws \Lucinda\MVC\ConfigurationException
      * @see \Lucinda\MVC\Runnable::run()
      */
     public function run(): void

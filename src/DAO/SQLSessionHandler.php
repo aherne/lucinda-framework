@@ -23,7 +23,7 @@ class SQLSessionHandler implements \SessionHandlerInterface
      * {@inheritDoc}
      * @see \SessionHandlerInterface::write()
      */
-    public function write($session_id, $session_data)
+    public function write(string $session_id, string $session_data): bool
     {
         $expiration = ini_get('session.gc_maxlifetime');
         SQL("
@@ -36,7 +36,7 @@ class SQLSessionHandler implements \SessionHandlerInterface
      * {@inheritDoc}
      * @see \SessionHandlerInterface::read()
      */
-    public function read($session_id)
+    public function read(string $session_id): string|false
     {
         $value = SQL("
         SELECT value FROM ".self::TABLE_NAME." 
@@ -48,7 +48,7 @@ class SQLSessionHandler implements \SessionHandlerInterface
      * {@inheritDoc}
      * @see \SessionHandlerInterface::destroy()
      */
-    public function destroy($session_id)
+    public function destroy(string $session_id): bool
     {
         $affectedRows = SQL("
         DELETE FROM ".self::TABLE_NAME." 
@@ -60,7 +60,7 @@ class SQLSessionHandler implements \SessionHandlerInterface
      * {@inheritDoc}
      * @see \SessionHandlerInterface::open()
      */
-    public function open($save_path, $session_name)
+    public function open(string $save_path, string $session_name): bool
     {
         return true;
     }
@@ -69,7 +69,7 @@ class SQLSessionHandler implements \SessionHandlerInterface
      * {@inheritDoc}
      * @see \SessionHandlerInterface::close()
      */
-    public function close()
+    public function close(): bool
     {
         return true;
     }
@@ -78,7 +78,7 @@ class SQLSessionHandler implements \SessionHandlerInterface
      * {@inheritDoc}
      * @see \SessionHandlerInterface::gc()
      */
-    public function gc($maxlifetime)
+    public function gc(int $maxlifetime): int|false
     {
         SQL("
         DELETE FROM ".self::TABLE_NAME."

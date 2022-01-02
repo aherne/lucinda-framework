@@ -5,6 +5,7 @@
  * @param Lucinda\MVC\Application $application
  * @param string $tagName
  * @return SimpleXMLElement
+ * @throws \Lucinda\MVC\ConfigurationException
  */
 function getParentNode(Lucinda\MVC\Application $application, string $tagName): SimpleXMLElement
 {

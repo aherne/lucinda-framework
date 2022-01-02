@@ -14,9 +14,9 @@ require_once(dirname(__DIR__, 2)."/helpers/getParentNode.php");
 class Html extends ViewResolver implements ErrorHandler
 {
     /**
-     * @var \Lucinda\STDERR\ErrorHandler
+     * @var ErrorHandler
      */
-    private $defaultErrorHandler;
+    private ErrorHandler $defaultErrorHandler;
 
     /**
      * {@inheritDoc}

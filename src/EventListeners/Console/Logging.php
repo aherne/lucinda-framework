@@ -2,6 +2,7 @@
 namespace Lucinda\Project\EventListeners\Console;
 
 use Lucinda\ConsoleSTDOUT\EventListeners\Application;
+use Lucinda\Logging\ConfigurationException;
 use Lucinda\Project\ConsoleAttributes;
 use Lucinda\Logging\Wrapper;
 
@@ -15,10 +16,12 @@ class Logging extends Application
     /**
      * @var ConsoleAttributes
      */
-    protected $attributes;
+    protected \Lucinda\ConsoleSTDOUT\Attributes $attributes;
 
     /**
      * {@inheritDoc}
+     * @throws ConfigurationException
+     * @throws \Lucinda\MVC\ConfigurationException
      * @see \Lucinda\MVC\Runnable::run()
      */
     public function run(): void
