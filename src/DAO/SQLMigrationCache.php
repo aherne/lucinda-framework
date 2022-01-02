@@ -1,6 +1,7 @@
 <?php
 namespace Lucinda\Project\DAO;
 
+use Lucinda\SQL\Connection;
 use Lucinda\SQL\ConnectionSingleton;
 use Lucinda\Migration\Status;
 
@@ -21,12 +22,10 @@ use Lucinda\Migration\Status;
 class SQLMigrationCache implements \Lucinda\Migration\Cache
 {
     public const TABLE_NAME = "migrations";
-    private $connection;
+    private Connection $connection;
 
     /**
      * Sets table name
-     *
-     * @param string $tableName
      */
     public function __construct()
     {
@@ -56,7 +55,7 @@ class SQLMigrationCache implements \Lucinda\Migration\Cache
      * {@inheritDoc}
      * @see \Lucinda\Migration\Cache::add()
      */
-    public function add(string $className, int $statusCode): void
+    public function add(string $className, Status $statusCode): void
     {
         $isSuccessful = ($statusCode==\Lucinda\Migration\Status::PASSED ? 1 : 0);
 

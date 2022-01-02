@@ -1,6 +1,7 @@
 <?php
 namespace Lucinda\Project\EventListeners;
 
+use Lucinda\NoSQL\ConfigurationException;
 use Lucinda\STDOUT\EventListeners\Application;
 use Lucinda\NoSQL\Wrapper;
 
@@ -13,6 +14,8 @@ class NoSQLDataSource extends Application
 {
     /**
      * {@inheritDoc}
+     * @throws ConfigurationException
+     * @throws \Lucinda\MVC\ConfigurationException
      * @see \Lucinda\MVC\Runnable::run()
      */
     public function run(): void

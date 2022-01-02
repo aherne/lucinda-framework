@@ -2,6 +2,7 @@
 namespace Lucinda\Project\EventListeners\Console;
 
 use Lucinda\ConsoleSTDOUT\EventListeners\Application;
+use Lucinda\NoSQL\ConfigurationException;
 use Lucinda\NoSQL\Wrapper;
 
 require_once(dirname(__DIR__, 3)."/helpers/getParentNode.php");
@@ -13,6 +14,8 @@ class NoSQLDataSource extends Application
 {
     /**
      * {@inheritDoc}
+     * @throws ConfigurationException
+     * @throws \Lucinda\MVC\ConfigurationException
      * @see \Lucinda\MVC\Runnable::run()
      */
     public function run(): void

@@ -13,26 +13,25 @@
         }
     ],
     "require": {
-        "php": "^7.1",
+        "php": "^8.1",
         "ext-simplexml": "*",    
-        "lucinda/framework-engine": "~2.0",      	
-        "lucinda/framework-configurer":"~2.0",   	
-        "lucinda/logging": "~3.0",
-        "lucinda/nosql-data-access": "~3.0",
-        "lucinda/oauth2-client": "~2.0",
-        "lucinda/security": "~3.0",
-        "lucinda/mvc": "~3.0",
-        "lucinda/sql-data-access": "~3.0",
-        "lucinda/view-language": "~3.0",
-        "lucinda/internationalization": "~3.0",
-        "lucinda/errors-mvc": "~2.0",
-        "lucinda/headers": "~1.0",
-        "lucinda/abstract_mvc": "~1.0",
-        "lucinda/console-mvc": "~1.0",
-        "lucinda/migrations": "^1.0"
+        "lucinda/framework-engine": "~3.0",
+        "lucinda/logging": "~4.0",
+        "lucinda/nosql-data-access": "~4.0",
+        "lucinda/oauth2-client": "~3.0",
+        "lucinda/security": "~4.0",
+        "lucinda/mvc": "~4.0",
+        "lucinda/sql-data-access": "~4.0",
+        "lucinda/view-language": "~4.0",
+        "lucinda/internationalization": "~4.0",
+        "lucinda/errors-mvc": "~3.0",
+        "lucinda/headers": "~2.0",
+        "lucinda/abstract_mvc": "~2.0",
+        "lucinda/console-mvc": "~2.0",
+        "lucinda/migrations": "^2.0"
     },
     "require-dev": {
-        "lucinda/unit-testing": "^1.0"
+        "lucinda/unit-testing": "^2.0"
     },
     "autoload": {
     	"files": ["vendor/lucinda/abstract_mvc/loader.php", "vendor/lucinda/errors-mvc/loader.php", "vendor/lucinda/mvc/loader.php"],      

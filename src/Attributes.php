@@ -1,23 +1,26 @@
 <?php
 namespace Lucinda\Project;
 
+use Lucinda\Headers\Wrapper;
+use Lucinda\Logging\Logger;
+
 /**
  * Implements \Lucinda\STDOUT\Attributes set by Lucinda Framework 3.0 event listeners. Developers can add more!
  */
 class Attributes extends \Lucinda\STDOUT\Attributes
 {
-    private $headers;
-    private $logger;
-    private $userID;
-    private $csrfToken;
-    private $accessToken;
+    private ?Wrapper $headers = null;
+    private ?Logger $logger = null;
+    private string|int|null $userID = null;
+    private ?string $csrfToken = null;
+    private ?string $accessToken = null;
 
     /**
      * Sets pointer to query HTTP headers with
      *
-     * @param \Lucinda\Headers\Wrapper $wrapper
+     * @param Wrapper $wrapper
      */
-    public function setHeaders(\Lucinda\Headers\Wrapper $wrapper): void
+    public function setHeaders(Wrapper $wrapper): void
     {
         $this->headers = $wrapper;
     }
@@ -25,9 +28,9 @@ class Attributes extends \Lucinda\STDOUT\Attributes
     /**
      * Gets pointer to query HTTP headers with
      *
-     * @return \Lucinda\Headers\Wrapper|NULL
+     * @return Wrapper|NULL
      */
-    public function getHeaders(): ?\Lucinda\Headers\Wrapper
+    public function getHeaders(): ?Wrapper
     {
         return $this->headers;
     }
@@ -35,9 +38,9 @@ class Attributes extends \Lucinda\STDOUT\Attributes
     /**
      * Sets pointer to log messages with
      *
-     * @param \Lucinda\Logging\Logger $logger
+     * @param Logger $logger
      */
-    public function setLogger(\Lucinda\Logging\Logger $logger): void
+    public function setLogger(Logger $logger): void
     {
         $this->logger = $logger;
     }
@@ -45,9 +48,9 @@ class Attributes extends \Lucinda\STDOUT\Attributes
     /**
      * Gets pointer to log messages with
      *
-     * @return \Lucinda\Logging\Logger|NULL
+     * @return Logger|NULL
      */
-    public function getLogger(): ?\Lucinda\Logging\Logger
+    public function getLogger(): ?Logger
     {
         return $this->logger;
     }
@@ -55,9 +58,9 @@ class Attributes extends \Lucinda\STDOUT\Attributes
     /**
      * Sets logged in user id
      *
-     * @param string|integer $userID
+     * @param int|string|null $userID
      */
-    public function setUserId($userID): void
+    public function setUserId(int|string|null $userID): void
     {
         $this->userID = $userID;
     }
@@ -65,9 +68,9 @@ class Attributes extends \Lucinda\STDOUT\Attributes
     /**
      * Gets logged in user id
      *
-     * @return string|integer
+     * @return string|integer|null
      */
-    public function getUserId()
+    public function getUserId(): int|string|null
     {
         return $this->userID;
     }

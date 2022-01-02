@@ -10,12 +10,13 @@ class Json extends ViewResolver
 {
     /**
      * {@inheritDoc}
+     * @throws \JsonException
      * @see \Lucinda\MVC\Runnable::run()
      */
     public function run(): void
     {
         // see who triggered resolver (tested to have zero performance impact)
-        $isError = (strpos(str_replace("\\", "/", debug_backtrace()[0]["file"]), "vendor/lucinda/errors-mvc/")!==false);
+        $isError = str_contains(str_replace("\\", "/", debug_backtrace()[0]["file"]), "vendor/lucinda/errors-mvc/");
 
         // resolves response in json format
         $json = new \Lucinda\Framework\Json();

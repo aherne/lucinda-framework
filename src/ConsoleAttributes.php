@@ -1,19 +1,21 @@
 <?php
 namespace Lucinda\Project;
 
+use Lucinda\Logging\Logger;
+
 /**
  * Implements \Lucinda\ConsoleSTDOUT\Attributes set by Lucinda Framework 3.0 event listeners. Developers can add more!
  */
 class ConsoleAttributes extends \Lucinda\ConsoleSTDOUT\Attributes
 {
-    private $logger;
+    private ?Logger $logger = null;
     
     /**
      * Sets pointer to log messages with
      *
-     * @param \Lucinda\Logging\Logger $logger
+     * @param Logger $logger
      */
-    public function setLogger(\Lucinda\Logging\Logger $logger): void
+    public function setLogger(Logger $logger): void
     {
         $this->logger = $logger;
     }
@@ -21,9 +23,9 @@ class ConsoleAttributes extends \Lucinda\ConsoleSTDOUT\Attributes
     /**
      * Gets pointer to log messages with
      *
-     * @return \Lucinda\Logging\Logger|NULL
+     * @return Logger|NULL
      */
-    public function getLogger(): ?\Lucinda\Logging\Logger
+    public function getLogger(): ?Logger
     {
         return $this->logger;
     }

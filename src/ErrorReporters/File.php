@@ -18,7 +18,7 @@ class File extends AbstractReporter
      */
     public function getLogger(): Logger
     {
-        $rootFolder = dirname(dirname(__DIR__));
+        $rootFolder = dirname(__DIR__, 2);
         $filePath = $rootFolder."/".$this->xml["path"];
         if (!$filePath) {
             throw new ConfigurationException("Attribute 'path' is mandatory for 'file' tag");
@@ -29,6 +29,6 @@ class File extends AbstractReporter
             throw new ConfigurationException("Attribute 'format' is mandatory for 'file' tag");
         }
 
-        return new FileLogger($filePath, (string) $this->xml["rotation"], new LogFormatter($pattern));
+        return new FileLogger($filePath, new LogFormatter($pattern), (string) $this->xml["rotation"]);
     }
 }

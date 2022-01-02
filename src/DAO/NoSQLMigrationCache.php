@@ -3,14 +3,15 @@ namespace Lucinda\Project\DAO;
 
 use Lucinda\NoSQL\ConnectionSingleton;
 use Lucinda\Migration\Status;
+use Lucinda\NoSQL\Driver;
 
 /**
  * Saves migration progress in an NoSQL key-value store
  */
 class NoSQLMigrationCache implements \Lucinda\Migration\Cache
 {
-    private $keyName;
-    private $connection;
+    private string $keyName;
+    private Driver $connection;
 
     /**
      * Sets key name
@@ -45,7 +46,7 @@ class NoSQLMigrationCache implements \Lucinda\Migration\Cache
      * {@inheritDoc}
      * @see \Lucinda\Migration\Cache::add()
      */
-    public function add(string $className, int $statusCode): void
+    public function add(string $className, Status $statusCode): void
     {
         $isSuccessful = ($statusCode==Status::PASSED);
         $items = json_decode($this->connection->get($this->keyName), true);

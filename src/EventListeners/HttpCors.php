@@ -4,6 +4,7 @@ namespace Lucinda\Project\EventListeners;
 use Lucinda\MVC\Response;
 use Lucinda\Project\Attributes;
 use Lucinda\STDOUT\EventListeners\Request;
+use Lucinda\STDOUT\Request\Method;
 
 /**
  * Performs CORS validation of HTTP request headers for OPTIONS request and sends response accordingly
@@ -13,16 +14,17 @@ class HttpCors extends Request
     /**
      * @var Attributes
      */
-    protected $attributes;
+    protected \Lucinda\STDOUT\Attributes $attributes;
 
     /**
      * {@inheritDoc}
+     * @throws \Lucinda\Headers\UserException
      * @see \Lucinda\MVC\Runnable::run()
      */
     public function run(): void
     {
         $validator = $this->attributes->getHeaders();
-        if ($validator===null || $this->request->getMethod()!="OPTIONS") {
+        if ($validator===null || $this->request->getMethod()!=Method::OPTIONS) {
             return;
         }
 

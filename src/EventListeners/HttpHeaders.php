@@ -15,10 +15,11 @@ class HttpHeaders extends Request
     /**
      * @var Attributes
      */
-    protected $attributes;
+    protected \Lucinda\STDOUT\Attributes $attributes;
 
     /**
      * {@inheritDoc}
+     * @throws \Lucinda\MVC\ConfigurationException
      * @see \Lucinda\MVC\Runnable::run()
      */
     public function run(): void

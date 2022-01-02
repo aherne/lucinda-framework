@@ -1,6 +1,7 @@
 <?php
 namespace Lucinda\Project\EventListeners;
 
+use Lucinda\Internationalization\ConfigurationException;
 use Lucinda\Internationalization\Wrapper;
 use Lucinda\Framework\SingletonRepository;
 use Lucinda\STDOUT\EventListeners\Request;
@@ -15,6 +16,8 @@ class Localization extends Request
 {
     /**
      * {@inheritDoc}
+     * @throws ConfigurationException
+     * @throws \Lucinda\MVC\ConfigurationException
      * @see \Lucinda\MVC\Runnable::run()
      */
     public function run(): void

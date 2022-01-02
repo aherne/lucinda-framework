@@ -1,6 +1,7 @@
 <?php
 namespace Lucinda\Project\EventListeners;
 
+use Lucinda\SQL\ConfigurationException;
 use Lucinda\STDOUT\EventListeners\Application;
 use Lucinda\SQL\Wrapper;
 
@@ -14,6 +15,8 @@ class SQLDataSource extends Application
 {
     /**
      * {@inheritDoc}
+     * @throws ConfigurationException
+     * @throws \Lucinda\MVC\ConfigurationException
      * @see \Lucinda\MVC\Runnable::run()
      */
     public function run(): void

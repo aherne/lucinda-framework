@@ -1,6 +1,6 @@
 # Lucinda Framework
 
-Lucinda Framework 3.0 is an ultra high performance web application skeleton developed with simplicity and modularity at its foundation. In order to fulfil these goals, it functions as an XML-based contract of completely independent APIs, each designed for a particular aspect of a web application's logic:
+Lucinda Framework 4.0 is an ultra high performance web application skeleton developed with simplicity and modularity at its foundation. In order to fulfil these goals, it functions as an XML-based contract of 24 completely independent APIs, each designed for a particular aspect of a web application's logic:
 
 ![diagram](https://www.lucinda-framework.com/lucinda-framework.svg)
 
@@ -28,7 +28,7 @@ Framework logic thus becomes strictly one of integrating all above functionaliti
 | [Framework Engine API](https://github.com/aherne/lucinda-framework-engine) | contains  "fixed" part of framework logic, from binding classes required in APIs "conversation as well to general purpose classes. All logic inside is owned by framework, so open for composer update but not open for change by developers. |
 | [Framework Configurer API](https://github.com/aherne/lucinda-framework-configurer) | contains console step-by-step configurer as well as files going to be copied on developers' project once process completes. All logic inside is owned by framework, as in above, but choices of configuration are in developer's hands. |
 
-As its composing APIs, framework itself is PHP 7.1+ and PSR4 autoload compliant, using unit testing (for engine) as well as functional testing (for skeleton and configurer) to insure stability.
+As its composing APIs, framework itself is PHP 8.1+ and PSR4 autoload compliant, using unit testing (for engine) as well as functional testing (for skeleton and configurer) to insure stability.
 
 Thanks to its modular and harmonic design, it's both extremely easy to use (as [tutorials](https://www.lucinda-framework.com/tutorials) show) and exceptionally fast (as [benchmarks](https://www.lucinda-framework.com/benchmarks) show: **75 times faster than Laravel** using factory settings for both). To learn more, go to:
 

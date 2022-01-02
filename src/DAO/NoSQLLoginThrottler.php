@@ -1,6 +1,7 @@
 <?php
 namespace Lucinda\Project\DAO;
 
+use Lucinda\NoSQL\Driver;
 use Lucinda\WebSecurity\Request;
 use Lucinda\Framework\AbstractLoginThrottler;
 use Lucinda\NoSQL\ConnectionSingleton;
@@ -11,14 +12,14 @@ use Lucinda\NoSQL\ConnectionSingleton;
 class NoSQLLoginThrottler extends AbstractLoginThrottler
 {
     public const EXPIRATION = 3600;
-    private $key;
-    private $connection;
+
+    private string $key;
+    private Driver $connection;
 
     /**
      * Registers variables, calculates key to search for, and checks current throttling status for request.
      *
-     * @param \Lucinda\STDOUT\Request $request
-     * @param string $ipAddress IP address detected from client.
+     * @param Request $request
      * @param string $userName Username client tries to login with.
      */
     public function __construct(Request $request, string $userName)
@@ -49,7 +50,7 @@ class NoSQLLoginThrottler extends AbstractLoginThrottler
 
     /**
      * {@inheritDoc}
-     * @see \Lucinda\Framework\AbstractLoginThrottler::persist()
+     * @see \Lucinda\WebSecurity\Authentication\Form\LoginThrottler::persist()
      */
     protected function persist(): void
     {
