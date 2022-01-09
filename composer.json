@@ -1,7 +1,7 @@
 {
     "name": "lucinda/framework",
     "type": "project",
-    "description": "Lucinda Framework 3.0: High performance, component-based PHP application skeleton",
+    "description": "Lucinda Framework 4.0: High performance, component-based PHP application skeleton",
     "keywords": ["mvc","templating","errors","logging","security","oauth2","sql","nosql","caching","fast","simple","light weight","internationalization","localization","i18n"],
     "homepage": "https://www.lucinda-framework.com",
     "license": "MIT",
