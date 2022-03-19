@@ -21,6 +21,7 @@ class EmergencyHandler implements ErrorHandler
     public function handle(\Throwable $exception): void
     {
         try {
+            chdir(dirname(__DIR__));
             $application = new Application(dirname(__DIR__)."/".self::XML_FILE_NAME, ENVIRONMENT);
             $defaultFormat = $application->getDefaultFormat();
             $displayErrors = $application->getDisplayErrors();
