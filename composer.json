@@ -43,8 +43,7 @@
     },
     "scripts": {
     	"post-create-project-cmd": [
-            "php -r 'mkdir(\"compilations\");chmod(\"compilations\", 0777);'",
-            "php -r 'mkdir(\"compilations/checksums\");chmod(\"compilations/checksums\", 0777);'"
+            "php configure.php create-folders"
         ]
     }
 }
