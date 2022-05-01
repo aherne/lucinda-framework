@@ -79,7 +79,7 @@ class EmergencyHandler implements ErrorHandler
     private function html(\Throwable $exception, bool $displayErrors): void
     {
         $response = new Response("text/html", dirname(__DIR__)."/templates/views/".($displayErrors ? "debug" : "500").".html");
-        $response->setStatus(500);
+        $response->setStatus(Response\HttpStatus::INTERNAL_SERVER_ERROR);
         $contents = file_get_contents($response->view()->getFile());
         if ($displayErrors) {
             $contents = str_replace([

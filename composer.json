@@ -40,5 +40,10 @@
           "Lucinda\\Project\\": "src/",
           "Test\\Lucinda\\Project\\": "tests/"
     	}
+    },
+    "scripts": {
+        "post-create-project-cmd": [
+            "php configure.php create-folders"
+        ]
     }
 }
