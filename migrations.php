@@ -13,10 +13,13 @@ if (!file_exists($folder)) {
 
 // configures cache
 $cache = null;
-$application = new Lucinda\STDOUT\Application("stdout.xml");
+$xml = simplexml_load_file("stdout.xml");
 if (CACHE_TYPE == "sql") {
     // configures sql data source
-    new Lucinda\SQL\Wrapper($application->getTag("sql")->xpath(".."), ENVIRONMENT);
+    if ($ref = (string) $xml->sql["ref"]) {
+        $xml = simplexml_load_file($ref.".xml");
+    }
+    new Lucinda\SQL\Wrapper($xml, ENVIRONMENT);
 
     // sets cache
     $cache = new Lucinda\Project\DAO\SqlMigrationCache();
@@ -25,7 +28,10 @@ if (CACHE_TYPE == "sql") {
     require("helpers/SQL.php");
 } else {
     // configures nosql data source
-    new Lucinda\NoSQL\Wrapper($application->getTag("nosql")->xpath(".."), ENVIRONMENT);
+    if ($ref = (string) $xml->nosql["ref"]) {
+        $xml = simplexml_load_file($ref.".xml");
+    }
+    new Lucinda\NoSQL\Wrapper($xml, ENVIRONMENT);
 
     // sets cache
     $cache = new Lucinda\Project\DAO\NoSqlMigrationCache();
