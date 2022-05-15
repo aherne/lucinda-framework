@@ -1,4 +1,5 @@
 <?php
+
 namespace Lucinda\Project\DAO;
 
 use Lucinda\SQL\Connection;
@@ -6,18 +7,7 @@ use Lucinda\SQL\ConnectionSingleton;
 use Lucinda\Migration\Status;
 
 /**
- * Saves migration progress in a "migrations" SQL table (created beforehand). Create table statement if MySQL:
- *
-    CREATE TABLE migrations
-    (
-    id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    class_name VARCHAR(255) NOT NULL,
-    is_successful BOOLEAN NOT NULL DEFAULT TRUE,
-    date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY(id),
-    UNIQUE(class_name)
-    ) Engine=INNODB
- *
+ * Saves migration progress in a "migrations" SQL table (created beforehand)
  */
 class SQLMigrationCache implements \Lucinda\Migration\Cache
 {

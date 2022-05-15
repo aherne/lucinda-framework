@@ -1,4 +1,5 @@
 <?php
+
 namespace Lucinda\Project\DAO;
 
 use Lucinda\NoSQL\ConnectionSingleton;
@@ -24,10 +25,10 @@ class NoSQLSessionHandler implements \SessionHandlerInterface
      * {@inheritDoc}
      * @see \SessionHandlerInterface::write()
      */
-    public function write(string $session_id, string $session_data): bool
+    public function write(string $sessionID, string $sessionData): bool
     {
         try {
-            $this->connection->set($session_id, $session_data, ini_get('session.gc_maxlifetime'));
+            $this->connection->set($sessionID, $sessionData, (int) ini_get('session.gc_maxlifetime'));
             return true;
         } catch (OperationFailedException $e) {
             return false;
@@ -38,11 +39,11 @@ class NoSQLSessionHandler implements \SessionHandlerInterface
      * {@inheritDoc}
      * @see \SessionHandlerInterface::read()
      */
-    public function read(string $session_id): string|false
+    public function read(string $sessionID): string|false
     {
-        if ($this->connection->contains($session_id)) {
+        if ($this->connection->contains($sessionID)) {
             try {
-                return $this->connection->get($session_id);
+                return $this->connection->get($sessionID);
             } catch (OperationFailedException $e) {
                 return false;
             }
@@ -55,11 +56,11 @@ class NoSQLSessionHandler implements \SessionHandlerInterface
      * {@inheritDoc}
      * @see \SessionHandlerInterface::destroy()
      */
-    public function destroy(string $session_id): bool
+    public function destroy(string $sessionID): bool
     {
-        if ($this->connection->contains($session_id)) {
+        if ($this->connection->contains($sessionID)) {
             try {
-                $this->connection->delete($session_id);
+                $this->connection->delete($sessionID);
                 return true;
             } catch (OperationFailedException $e) {
                 return false;
@@ -82,7 +83,7 @@ class NoSQLSessionHandler implements \SessionHandlerInterface
      * {@inheritDoc}
      * @see \SessionHandlerInterface::open()
      */
-    public function open(string $save_path, string $session_name): bool
+    public function open(string $savePath, string $sessionName): bool
     {
         return true;
     }

@@ -1,4 +1,5 @@
 <?php
+
 namespace Lucinda\Project\Controllers;
 
 use Lucinda\MVC\Response\HttpStatus;
@@ -51,7 +52,7 @@ class Error extends Controller
         if (str_starts_with($contentType, "text/html")) {
             $viewsPath = (string) $this->application->getTag("templating")["templates_path"];
             $view->setFile($viewsPath."/".($displayErrors ? "debug" : "500"));
-        } else if (str_starts_with($contentType, "text/plain")) {
+        } elseif (str_starts_with($contentType, "text/plain")) {
             $viewsPath = (string) $this->application->getTag("templating")["templates_path"];
             $view->setFile($viewsPath."/debug-console");
         }

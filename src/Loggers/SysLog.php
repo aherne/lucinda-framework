@@ -1,4 +1,5 @@
 <?php
+
 namespace Lucinda\Project\Loggers;
 
 use Lucinda\Logging\Logger;

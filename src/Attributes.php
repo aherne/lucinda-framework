@@ -1,7 +1,9 @@
 <?php
+
 namespace Lucinda\Project;
 
-use Lucinda\Headers\Wrapper;
+use Lucinda\Headers\Wrapper as HeadersWrapper;
+use Lucinda\Framework\OAuth2\DriverDetector as OAuth2Driver;
 use Lucinda\Logging\Logger;
 
 /**
@@ -9,7 +11,8 @@ use Lucinda\Logging\Logger;
  */
 class Attributes extends \Lucinda\STDOUT\Attributes
 {
-    private ?Wrapper $headers = null;
+    private ?HeadersWrapper $headers = null;
+    private ?OAuth2Driver $oauth2Driver = null;
     private ?Logger $logger = null;
     private string|int|null $userID = null;
     private ?string $csrfToken = null;
@@ -18,9 +21,9 @@ class Attributes extends \Lucinda\STDOUT\Attributes
     /**
      * Sets pointer to query HTTP headers with
      *
-     * @param Wrapper $wrapper
+     * @param HeadersWrapper $wrapper
      */
-    public function setHeaders(Wrapper $wrapper): void
+    public function setHeaders(HeadersWrapper $wrapper): void
     {
         $this->headers = $wrapper;
     }
@@ -28,9 +31,9 @@ class Attributes extends \Lucinda\STDOUT\Attributes
     /**
      * Gets pointer to query HTTP headers with
      *
-     * @return Wrapper|NULL
+     * @return HeadersWrapper|NULL
      */
-    public function getHeaders(): ?Wrapper
+    public function getHeaders(): ?HeadersWrapper
     {
         return $this->headers;
     }
@@ -115,5 +118,26 @@ class Attributes extends \Lucinda\STDOUT\Attributes
     public function getAccessToken(): ?string
     {
         return $this->accessToken;
+    }
+
+    /**
+     * Sets driver to query OAuth2 resources with
+     *
+     * @param OAuth2Driver $driver
+     * @return void
+     */
+    public function setOAuth2Driver(OAuth2Driver $driver): void
+    {
+        $this->oauth2Driver = $driver;
+    }
+
+    /**
+     * Gets driver to query OAuth2 resources with
+     *
+     * @return OAuth2Driver|null
+     */
+    public function getOAuth2Driver(): ?OAuth2Driver
+    {
+        return $this->oauth2Driver;
     }
 }

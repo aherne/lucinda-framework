@@ -1,4 +1,5 @@
 <?php
+
 namespace Test\Lucinda\Project\EventListeners;
 
 use Lucinda\WebSecurity\Authentication\OAuth2\Exception as OAuth2Exception;
@@ -13,7 +14,6 @@ use Lucinda\STDOUT\Cookies;
 
 class SecurityTest
 {
-    private $application;
     private $request;
     private $cookies;
     private $session;

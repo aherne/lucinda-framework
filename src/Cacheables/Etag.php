@@ -1,4 +1,5 @@
 <?php
+
 namespace Lucinda\Project\Cacheables;
 
 use Lucinda\Framework\AbstractCacheable;

@@ -1,4 +1,5 @@
 <?php
+
 namespace Test\Lucinda\Project\ErrorReporters;
 
 use Lucinda\STDERR\Application;

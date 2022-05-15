@@ -1,4 +1,5 @@
 <?php
+
 namespace Test\Lucinda\Project\EventListeners;
 
 use Lucinda\STDERR\FrontController;

@@ -1,4 +1,5 @@
 <?php
+
 namespace Lucinda\Project\Controllers;
 
 use Lucinda\MVC\ConfigurationException;
@@ -11,7 +12,7 @@ use Lucinda\STDERR\Controller;
 class SecurityPacket extends Controller
 {
     /**
-     * @var SecurityPacket
+     * @var \Lucinda\WebSecurity\SecurityPacket
      */
     private \Throwable $exception;
 
@@ -76,8 +77,27 @@ class SecurityPacket extends Controller
      */
     private function html(string $status): void
     {
+        if ($redirect = $this->getRedirectURL($status)) {
+            $this->response::redirect($redirect, false, true);
+        } else {
+            $this->response->view()->setFile($this->getViewPath($status));
+        }
+    }
+
+    /**
+     * Gets redirection link, if any
+     *
+     * @param string $status
+     * @return string|null
+     * @throws ConfigurationException
+     */
+    private function getRedirectURL(string $status): ?string
+    {
         $redirect = (string) $this->application->getTag("application")["redirect"];
-        $location = $this->exception->getCallback().($this->exception->getStatus()!="redirect" ? "?status=".$this->exception->getStatus() : "");
+        $location = $this->exception->getCallback();
+        if ($this->exception->getStatus()!="redirect") {
+            $location .= "?status=".$this->exception->getStatus();
+        }
         if ($redirect) {
             if ($status == "unauthorized") {
                 $location .= "&source=".urlencode($_SERVER["REQUEST_URI"]);
@@ -86,23 +106,33 @@ class SecurityPacket extends Controller
             } elseif ($penalty = $this->exception->getTimePenalty()) {
                 $location .= "&wait=".$penalty;
             }
-            $this->response::redirect($location, false, true);
+            return $location;
         } else {
-            $viewsPath = (string) $this->application->getTag("templating")["templates_path"];
-            switch ($status) {
-                case "unauthorized":
-                    $this->response->view()->setFile($viewsPath."/401");
-                    break;
-                case "forbidden":
-                    $this->response->view()->setFile($viewsPath."/403");
-                    break;
-                case "not_found":
-                    $this->response->view()->setFile($viewsPath."/404");
-                    break;
-                default:
-                    $this->response::redirect($location, false, true);
-                    break;
+            if (!in_array($status, ["unauthorized", "forbidden", "not_found"])) {
+                return $location;
+            } else {
+                return null;
             }
+        }
+    }
+
+    /**
+     * Gets absolute path to http-status specific view
+     *
+     * @param string $status
+     * @return string
+     * @throws ConfigurationException
+     */
+    private function getViewPath(string $status): string
+    {
+        $viewsPath = (string) $this->application->getTag("templating")["templates_path"];
+        switch ($status) {
+            case "unauthorized":
+                return $viewsPath."/401";
+            case "forbidden":
+                return $viewsPath."/403";
+            default:
+                return $viewsPath."/404";
         }
     }
 
