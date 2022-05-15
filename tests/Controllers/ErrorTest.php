@@ -1,4 +1,5 @@
 <?php
+
 namespace Test\Lucinda\Project\Controllers;
 
 use Lucinda\Project\Controllers\Error;

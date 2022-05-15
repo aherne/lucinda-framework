@@ -1,4 +1,5 @@
 <?php
+
 namespace Lucinda\Project;
 
 use Lucinda\Logging\Logger;
@@ -9,7 +10,7 @@ use Lucinda\Logging\Logger;
 class ConsoleAttributes extends \Lucinda\ConsoleSTDOUT\Attributes
 {
     private ?Logger $logger = null;
-    
+
     /**
      * Sets pointer to log messages with
      *
@@ -19,7 +20,7 @@ class ConsoleAttributes extends \Lucinda\ConsoleSTDOUT\Attributes
     {
         $this->logger = $logger;
     }
-    
+
     /**
      * Gets pointer to log messages with
      *

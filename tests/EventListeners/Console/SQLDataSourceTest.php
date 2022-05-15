@@ -1,4 +1,5 @@
 <?php
+
 namespace Test\Lucinda\Project\EventListeners\Console;
 
 use Lucinda\Project\EventListeners\Console\SQLDataSource;

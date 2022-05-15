@@ -1,4 +1,5 @@
 <?php
+
 namespace Test\Lucinda\Project\mocks\Authentication;
 
 use Lucinda\WebSecurity\Authentication\Form\LoginThrottler;

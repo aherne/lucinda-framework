@@ -1,4 +1,5 @@
 <?php
+
 namespace Lucinda\Project;
 
 use Lucinda\STDERR\Application;
@@ -22,14 +23,17 @@ class EmergencyHandler implements ErrorHandler
     {
         try {
             chdir(dirname(__DIR__));
-            $application = new Application(dirname(__DIR__)."/".self::XML_FILE_NAME, ENVIRONMENT);
+            $application = new Application(
+                dirname(__DIR__)."/".self::XML_FILE_NAME,
+                ENVIRONMENT
+            );
             $defaultFormat = $application->getDefaultFormat();
             $displayErrors = $application->getDisplayErrors();
             if (PHP_SAPI === 'cli') {
                 $this->console($exception);
-            } else if ($defaultFormat=="html") {
+            } elseif ($defaultFormat=="html") {
                 $this->html($exception, $displayErrors);
-            } else if ($defaultFormat=="json") {
+            } elseif ($defaultFormat=="json") {
                 $this->json($exception, $displayErrors);
             } else {
                 die("Format not supported: ".$defaultFormat);
@@ -38,7 +42,7 @@ class EmergencyHandler implements ErrorHandler
             die("STDERR could not render response: ".$e->getMessage());
         }
     }
-    
+
     /**
      * Renders response in text format for console
      *
@@ -46,9 +50,12 @@ class EmergencyHandler implements ErrorHandler
      */
     private function console(\Throwable $exception): void
     {
-        $response = new Response("text/plain", dirname(__DIR__)."/templates/views/debug-console.html");
+        $response = new Response(
+            "text/plain",
+            dirname(__DIR__)."/templates/views/debug-console.html"
+        );
         $response->setStatus(Response\HttpStatus::INTERNAL_SERVER_ERROR);
-        $contents = file_get_contents($response->view()->getFile());
+        $contents = (string) file_get_contents($response->view()->getFile());
         $contents = str_replace([
             '${data.class}',
             '${data.message}',
@@ -65,20 +72,25 @@ class EmergencyHandler implements ErrorHandler
         try {
             $wrapper = new Wrapper($contents);
             $contents = $wrapper->getBody();
-        } catch (\Throwable $t) {}
-        $response->setBody($contents);
-        $response->commit();
+            $response->setBody($contents);
+            $response->commit();
+        } catch (\Throwable $t) {
+            die($t->getMessage());
+        }
     }
-    
+
     /**
      * Renders response in HTML format
-     * 
+     *
      * @param \Throwable $exception
      * @param bool $displayErrors
      */
     private function html(\Throwable $exception, bool $displayErrors): void
     {
-        $response = new Response("text/html", dirname(__DIR__)."/templates/views/".($displayErrors ? "debug" : "500").".html");
+        $response = new Response(
+            "text/html",
+            dirname(__DIR__)."/templates/views/".($displayErrors ? "debug" : "500").".html"
+        );
         $response->setStatus(Response\HttpStatus::INTERNAL_SERVER_ERROR);
         $contents = file_get_contents($response->view()->getFile());
         if ($displayErrors) {
@@ -99,10 +111,10 @@ class EmergencyHandler implements ErrorHandler
         $response->setBody($contents);
         $response->commit();
     }
-    
+
     /**
      * Renders response in JSON format
-     * 
+     *
      * @param \Throwable $exception
      * @param bool $displayErrors
      */
@@ -120,7 +132,7 @@ class EmergencyHandler implements ErrorHandler
         }
         $response = new Response("application/json", "");
         $response->setBody(json_encode(["status"=>"error", "body"=>$body]));
-        $response->setStatus(500);
+        $response->setStatus(Response\HttpStatus::INTERNAL_SERVER_ERROR);
         $response->commit();
     }
 }

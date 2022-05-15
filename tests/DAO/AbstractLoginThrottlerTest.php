@@ -1,4 +1,5 @@
 <?php
+
 namespace Test\Lucinda\Project\DAO;
 
 use Lucinda\UnitTest\Result;

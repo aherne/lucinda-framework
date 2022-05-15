@@ -1,4 +1,5 @@
 <?php
+
 namespace Lucinda\Project\DAO;
 
 use Lucinda\NoSQL\Driver;
@@ -24,7 +25,10 @@ class NoSQLLoginThrottler extends AbstractLoginThrottler
      */
     public function __construct(Request $request, string $userName)
     {
-        $this->key = "logins__".sha1(json_encode(array("ip"=>$request->getIpAddress(), "username"=>$userName)));
+        $this->key = "logins__".sha1((string) json_encode([
+            "ip"=>$request->getIpAddress(),
+            "username"=>$userName
+            ]));
         $this->connection = ConnectionSingleton::getInstance();
         parent::__construct($request, $userName);
     }

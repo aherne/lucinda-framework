@@ -1,4 +1,5 @@
 <?php
+
 namespace Lucinda\Project\Cacheables;
 
 use Lucinda\Framework\AbstractCacheable;
@@ -9,7 +10,7 @@ use Lucinda\NoSQL\ConnectionSingleton;
  */
 class Date extends AbstractCacheable
 {
-    const EXPIRATION = 24*60*60;
+    public const EXPIRATION = 24*60*60;
 
     /**
      * {@inheritDoc}

@@ -1,12 +1,11 @@
 <?php
+
 namespace Lucinda\Project\EventListeners\Console;
 
 use Lucinda\ConsoleSTDOUT\EventListeners\Application;
 use Lucinda\Logging\ConfigurationException;
 use Lucinda\Project\ConsoleAttributes;
 use Lucinda\Logging\Wrapper;
-
-require_once(dirname(__DIR__, 3)."/helpers/getParentNode.php");
 
 /**
  * Sets up Logging API to use in logging later on
@@ -26,7 +25,7 @@ class Logging extends Application
      */
     public function run(): void
     {
-        $wrapper = new Wrapper(\getParentNode($this->application, "loggers"), ENVIRONMENT);
+        $wrapper = new Wrapper($this->application->getXML(), ENVIRONMENT);
         $this->attributes->setLogger($wrapper->getLogger());
     }
 }

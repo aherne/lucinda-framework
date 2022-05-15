@@ -1,4 +1,5 @@
 <?php
+
 namespace Test\Lucinda\Project\ViewResolvers;
 
 use Lucinda\STDOUT\Application;

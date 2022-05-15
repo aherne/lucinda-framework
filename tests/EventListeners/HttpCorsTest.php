@@ -1,4 +1,5 @@
 <?php
+
 namespace Test\Lucinda\Project\EventListeners;
 
 use Lucinda\Project\EventListeners\HttpHeaders;
@@ -65,7 +66,7 @@ class HttpCorsTest
         }
 
         // perform CORS validation
-        $validator->validateCors($request->getProtocol()."://".$request->getServer()->getName());
+        $validator->validateCors($request->getProtocol()->value."://".$request->getServer()->getName());
         return $validator->getResponse()->toArray();
     }
 }

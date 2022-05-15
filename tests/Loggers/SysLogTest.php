@@ -1,4 +1,5 @@
 <?php
+
 namespace Test\Lucinda\Project\Loggers;
 
 use Lucinda\Project\Loggers\SysLog;

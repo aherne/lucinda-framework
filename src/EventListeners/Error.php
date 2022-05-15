@@ -1,4 +1,5 @@
 <?php
+
 namespace Lucinda\Project\EventListeners;
 
 use Lucinda\STDERR\PHPException;

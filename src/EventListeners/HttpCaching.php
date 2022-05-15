@@ -1,4 +1,5 @@
 <?php
+
 namespace Lucinda\Project\EventListeners;
 
 use Lucinda\Framework\CacheableFinder;
@@ -39,14 +40,14 @@ class HttpCaching extends Response
 
         $cases = HttpStatus::cases();
         foreach ($cases as $case) {
-            if (str_starts_with($case->value, $httpStatus)) {
+            if (str_starts_with($case->value, (string) $httpStatus)) {
                 $this->response->setStatus($case);
                 break;
             }
         }
 
         $headers = $validator->getResponse()->toArray();
-        foreach ($headers as $name=>$value) {
+        foreach ($headers as $name => $value) {
             $this->response->headers($name, $value);
         }
     }

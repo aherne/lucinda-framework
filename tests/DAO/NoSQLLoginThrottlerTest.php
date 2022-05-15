@@ -1,13 +1,11 @@
 <?php
+
 namespace Test\Lucinda\Project\DAO;
 
 use Lucinda\NoSQL\ConnectionSingleton;
 
 class NoSQLLoginThrottlerTest extends AbstractLoginThrottlerTest
 {
-    private $request;
-    private $throttler;
-
     public function __construct()
     {
         parent::__construct();

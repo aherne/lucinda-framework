@@ -1,4 +1,5 @@
 <?php
+
 namespace Test\Lucinda\Project\mocks\Authentication;
 
 use Lucinda\WebSecurity\Authentication\OAuth2\UserInformation;
@@ -16,7 +17,7 @@ class MockUserInformation implements UserInformation
         $this->email = $info["email"];
     }
 
-    public function getId()
+    public function getId(): int|string
     {
         return $this->id;
     }

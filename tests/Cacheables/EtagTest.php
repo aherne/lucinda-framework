@@ -1,12 +1,11 @@
 <?php
+
 namespace Test\Lucinda\Project\Cacheables;
 
 use Lucinda\Project\Cacheables\Etag;
 use Lucinda\NoSQL\Wrapper;
 use Lucinda\STDOUT\Application;
 use Lucinda\UnitTest\Result;
-
-require_once(dirname(__DIR__, 2)."/helpers/getParentNode.php");
 
 class EtagTest
 {
@@ -38,7 +37,7 @@ class EtagTest
         ];
 
         $application = new Application(dirname(__DIR__)."/mocks/stdout.xml");
-        new Wrapper(\getParentNode($application, "nosql"), ENVIRONMENT);
+        new Wrapper($application->getXML(), ENVIRONMENT);
 
         $request = new \Lucinda\STDOUT\Request();
         $response = new \Lucinda\MVC\Response("text/plain", "");

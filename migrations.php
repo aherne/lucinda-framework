@@ -1,5 +1,6 @@
 <?php
-require(__DIR__."/vendor/autoload.php");
+
+require __DIR__."/vendor/autoload.php";
 
 // defines development environment and cache type
 define("ENVIRONMENT", (getenv("ENVIRONMENT") ? getenv("ENVIRONMENT") : "local"));
@@ -22,7 +23,7 @@ if (CACHE_TYPE == "sql") {
     new Lucinda\SQL\Wrapper($xml, ENVIRONMENT);
 
     // sets cache
-    $cache = new Lucinda\Project\DAO\SqlMigrationCache();
+    $cache = new Lucinda\Project\DAO\SQLMigrationCache();
 
     // loads SQL helper
     require("helpers/SQL.php");
@@ -34,9 +35,9 @@ if (CACHE_TYPE == "sql") {
     new Lucinda\NoSQL\Wrapper($xml, ENVIRONMENT);
 
     // sets cache
-    $cache = new Lucinda\Project\DAO\NoSqlMigrationCache();
+    $cache = new Lucinda\Project\DAO\NoSQLMigrationCache();
 }
 
 // run migrations based on console input
 $executor = new Lucinda\Migration\ConsoleExecutor($folder, $cache);
-$executor->execute((isset($argv[1]) ? $argv[1] : "migrate"), (isset($argv[2]) ? $argv[2] : ""));
+$executor->execute(($argv[1] ?? "migrate"), ($argv[2] ?? ""));

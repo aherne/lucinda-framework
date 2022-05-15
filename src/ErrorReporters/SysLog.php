@@ -1,4 +1,5 @@
 <?php
+
 namespace Lucinda\Project\ErrorReporters;
 
 use Lucinda\Logging\Driver\SysLog\Logger as SysLogger;

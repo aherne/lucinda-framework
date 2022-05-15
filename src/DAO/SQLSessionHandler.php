@@ -1,19 +1,9 @@
 <?php
+
 namespace Lucinda\Project\DAO;
 
 /**
- * Session handler for that relies on a "sessions" SQL table (created beforehand). Create table statement if MySQL:
- *
-    CREATE TABLE sessions
-    (
-    id VARCHAR(50) NOT NULL,
-    value BLOB NOT NULL,
-    date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    expires INT UNSIGNED NOT NULL DEFAULT 0,
-    PRIMARY KEY(id),
-    KEY(expires)
-    ) Engine=INNODB
- *
+ * Session handler for that relies on a "sessions" SQL table (created beforehand).
  */
 class SQLSessionHandler implements \SessionHandlerInterface
 {
@@ -23,12 +13,12 @@ class SQLSessionHandler implements \SessionHandlerInterface
      * {@inheritDoc}
      * @see \SessionHandlerInterface::write()
      */
-    public function write(string $session_id, string $session_data): bool
+    public function write(string $sessionID, string $sessionData): bool
     {
         $expiration = ini_get('session.gc_maxlifetime');
         SQL("
         INSERT INTO ".self::TABLE_NAME." (id, value, expires) VALUES
-        (:id, :value, :expires)", [":id"=>$session_id, ":value"=>$session_data, ":expires"=>time()+$expiration]);
+        (:id, :value, :expires)", [":id"=>$sessionID, ":value"=>$sessionData, ":expires"=>time()+$expiration]);
         return true;
     }
 
@@ -36,11 +26,11 @@ class SQLSessionHandler implements \SessionHandlerInterface
      * {@inheritDoc}
      * @see \SessionHandlerInterface::read()
      */
-    public function read(string $session_id): string|false
+    public function read(string $sessionID): string|false
     {
         $value = SQL("
         SELECT value FROM ".self::TABLE_NAME." 
-        WHERE id = :id AND expires > :current_time", [":id"=>$session_id, ":current_time"=>time()])->toValue();
+        WHERE id = :id AND expires > :current_time", [":id"=>$sessionID, ":current_time"=>time()])->toValue();
         return ($value ? $value : "");
     }
 
@@ -48,11 +38,11 @@ class SQLSessionHandler implements \SessionHandlerInterface
      * {@inheritDoc}
      * @see \SessionHandlerInterface::destroy()
      */
-    public function destroy(string $session_id): bool
+    public function destroy(string $sessionID): bool
     {
         $affectedRows = SQL("
         DELETE FROM ".self::TABLE_NAME." 
-        WHERE id = :id", [":id"=>$session_id])->getAffectedRows();
+        WHERE id = :id", [":id"=>$sessionID])->getAffectedRows();
         return ($affectedRows>0);
     }
 
@@ -60,7 +50,7 @@ class SQLSessionHandler implements \SessionHandlerInterface
      * {@inheritDoc}
      * @see \SessionHandlerInterface::open()
      */
-    public function open(string $save_path, string $session_name): bool
+    public function open(string $savePath, string $sessionName): bool
     {
         return true;
     }
@@ -80,9 +70,10 @@ class SQLSessionHandler implements \SessionHandlerInterface
      */
     public function gc(int $maxlifetime): int|false
     {
-        SQL("
+        $affectedRows = (int) SQL("
         DELETE FROM ".self::TABLE_NAME."
         WHERE expires < :current_time", [":current_time"=>time()])->getAffectedRows();
-        return true;
+        var_dump($affectedRows);
+        return $affectedRows;
     }
 }
