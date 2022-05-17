@@ -4,6 +4,7 @@ namespace Lucinda\Project\Controllers;
 
 use Lucinda\MVC\ConfigurationException;
 use Lucinda\MVC\Response\HttpStatus;
+use Lucinda\MVC\Response\Redirect;
 use Lucinda\STDERR\Controller;
 
 /**
@@ -78,7 +79,10 @@ class SecurityPacket extends Controller
     private function html(string $status): void
     {
         if ($redirect = $this->getRedirectURL($status)) {
-            $this->response::redirect($redirect, false, true);
+            $object = new Redirect($redirect);
+            $object->setPermanent(false);
+            $object->setPreventCaching(true);
+            $object->run();
         } else {
             $this->response->view()->setFile($this->getViewPath($status));
         }
