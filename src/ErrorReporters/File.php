@@ -8,6 +8,8 @@ use Lucinda\Framework\AbstractReporter;
 use Lucinda\MVC\ConfigurationException;
 use Lucinda\Logging\LogFormatter;
 
+require_once dirname(__DIR__, 2)."/helpers/getRequestInformation.php";
+
 /**
  * Logs throwable into file, whose details may vary according to development environment.
  */
@@ -31,6 +33,10 @@ class File extends AbstractReporter
             throw new ConfigurationException("Attribute 'format' is mandatory for 'file' tag");
         }
 
-        return new FileLogger($rootFolder."/".$filePath, new LogFormatter($pattern), (string) $this->xml["rotation"]);
+        return new FileLogger(
+            $rootFolder."/".$filePath,
+            new LogFormatter($pattern, getRequestInformation()),
+            (string) $this->xml["rotation"]
+        );
     }
 }
