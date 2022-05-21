@@ -2,15 +2,16 @@
 
 namespace Lucinda\Project\EventListeners\Console;
 
-use Lucinda\ConsoleSTDOUT\EventListeners\Application;
+use Lucinda\ConsoleSTDOUT\EventListeners\Request as RequestListener;
 use Lucinda\Logging\ConfigurationException;
+use Lucinda\Logging\RequestInformation;
 use Lucinda\Project\ConsoleAttributes;
 use Lucinda\Logging\Wrapper;
 
 /**
  * Sets up Logging API to use in logging later on
  */
-class Logging extends Application
+class Logging extends RequestListener
 {
     /**
      * @var ConsoleAttributes
@@ -20,12 +21,14 @@ class Logging extends Application
     /**
      * {@inheritDoc}
      * @throws ConfigurationException
-     * @throws \Lucinda\MVC\ConfigurationException
      * @see \Lucinda\MVC\Runnable::run()
      */
     public function run(): void
     {
-        $wrapper = new Wrapper($this->application->getXML(), ENVIRONMENT);
+        $requestInformation = new RequestInformation();
+        $requestInformation->setUri($this->request->getRoute());
+
+        $wrapper = new Wrapper($this->application->getXML(), $requestInformation, ENVIRONMENT);
         $this->attributes->setLogger($wrapper->getLogger());
     }
 }

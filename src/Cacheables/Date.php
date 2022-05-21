@@ -33,7 +33,7 @@ class Date extends AbstractCacheable
             $connection->set($etag, $modifiedTime, self::EXPIRATION);
         }
 
-        $this->last_modified_time =  $modifiedTime;
+        $this->lastModifiedTime =  $modifiedTime;
     }
 
     /**

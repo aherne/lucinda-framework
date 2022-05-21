@@ -29,6 +29,10 @@ class File extends AbstractLoggerWrapper
             throw new ConfigurationException("Attribute 'format' is mandatory for 'file' tag");
         }
 
-        return new FileLoggerDriver($filePath, new LogFormatter($pattern), (string) $xml["rotation"]);
+        return new FileLoggerDriver(
+            $filePath,
+            new LogFormatter($pattern, $this->requestInformation),
+            (string) $xml["rotation"]
+        );
     }
 }

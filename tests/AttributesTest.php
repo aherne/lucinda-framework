@@ -2,6 +2,7 @@
 
 namespace Test\Lucinda\Project;
 
+use Lucinda\Logging\RequestInformation;
 use Lucinda\OAuth2\Wrapper;
 use Lucinda\Project\Attributes;
 use Lucinda\UnitTest\Result;
@@ -34,7 +35,7 @@ class AttributesTest
 
     public function setLogger()
     {
-        $wrapper = new \Lucinda\Logging\Wrapper($this->xml, ENVIRONMENT);
+        $wrapper = new \Lucinda\Logging\Wrapper($this->xml, new RequestInformation(), ENVIRONMENT);
         $this->attributes->setLogger($wrapper->getLogger());
         return new Result(true, "tested via getLogger");
     }

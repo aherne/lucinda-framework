@@ -29,6 +29,9 @@ class SysLog extends AbstractLoggerWrapper
             throw new ConfigurationException("Attribute 'format' is mandatory for 'syslog' tag");
         }
 
-        return new SysLoggerDriver($applicationName, new LogFormatter($pattern));
+        return new SysLoggerDriver(
+            $applicationName,
+            new LogFormatter($pattern, $this->requestInformation)
+        );
     }
 }
