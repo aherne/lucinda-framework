@@ -6,6 +6,8 @@ use Lucinda\MVC\ConfigurationException;
 use Lucinda\MVC\Response\HttpStatus;
 use Lucinda\MVC\Response\Redirect;
 use Lucinda\STDERR\Controller;
+use Lucinda\STDOUT\Request;
+use Lucinda\STDOUT\Request\URI;
 
 /**
  * STDERR MVC controller running whenever a Lucinda\Framework\SecurityPacket is thrown during STDOUT phase.
@@ -102,11 +104,12 @@ class SecurityPacket extends Controller
         if ($this->exception->getStatus()!="redirect") {
             $location .= "?status=".$this->exception->getStatus();
         }
+        $uri = new Request();
         if ($redirect) {
             if ($status == "unauthorized") {
-                $location .= "&source=".urlencode($_SERVER["REQUEST_URI"]);
-            } elseif ($status == "login_ok" && !empty($_GET["source"])) {
-                $location = $_GET["source"];
+                $location .= "&source=".urlencode($uri->getURI()->getPage());
+            } elseif ($status == "login_ok" && $uri->parameters("source")) {
+                $location = $uri->parameters("source");
             } elseif ($penalty = $this->exception->getTimePenalty()) {
                 $location .= "&wait=".$penalty;
             }
