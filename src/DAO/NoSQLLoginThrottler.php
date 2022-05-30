@@ -5,13 +5,13 @@ namespace Lucinda\Project\DAO;
 use Lucinda\NoSQL\Driver;
 use Lucinda\WebSecurity\Request;
 use Lucinda\Framework\AbstractLoginThrottler;
-use Lucinda\NoSQL\ConnectionSingleton;
 
 /**
  * Extension of BasicLoginThrottler that uses a NoSQL database as storage medium
  */
 class NoSQLLoginThrottler extends AbstractLoginThrottler
 {
+    public const DRIVER_NAME = "";
     public const EXPIRATION = 3600;
 
     private string $key;
@@ -29,7 +29,7 @@ class NoSQLLoginThrottler extends AbstractLoginThrottler
             "ip"=>$request->getIpAddress(),
             "username"=>$userName
             ]));
-        $this->connection = ConnectionSingleton::getInstance();
+        $this->connection = \NoSQL(self::DRIVER_NAME);
         parent::__construct($request, $userName);
     }
 

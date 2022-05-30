@@ -2,7 +2,6 @@
 
 namespace Lucinda\Project\DAO;
 
-use Lucinda\NoSQL\ConnectionSingleton;
 use Lucinda\NoSQL\Driver;
 use Lucinda\NoSQL\OperationFailedException;
 
@@ -11,6 +10,7 @@ use Lucinda\NoSQL\OperationFailedException;
  */
 class NoSQLSessionHandler implements \SessionHandlerInterface
 {
+    public const DRIVER_NAME = "";
     private Driver $connection;
 
     /**
@@ -18,7 +18,7 @@ class NoSQLSessionHandler implements \SessionHandlerInterface
      */
     public function __construct()
     {
-        $this->connection = ConnectionSingleton::getInstance();
+        $this->connection = \NoSQL(self::DRIVER_NAME);
     }
 
     /**

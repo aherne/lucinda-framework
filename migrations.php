@@ -1,6 +1,8 @@
 <?php
 
 require __DIR__."/vendor/autoload.php";
+require __DIR__."/helpers/SQL.php";
+require __DIR__."/helpers/NoSQL.php";
 
 // defines development environment and cache type
 define("ENVIRONMENT", (getenv("ENVIRONMENT") ? getenv("ENVIRONMENT") : "local"));
