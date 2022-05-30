@@ -1,8 +1,6 @@
 <?php
 
 require __DIR__."/vendor/autoload.php";
-require __DIR__."/helpers/SQL.php";
-require __DIR__."/helpers/NoSQL.php";
 
 // defines development environment and cache type
 define("ENVIRONMENT", (getenv("ENVIRONMENT") ? getenv("ENVIRONMENT") : "local"));
@@ -18,6 +16,8 @@ if (!file_exists($folder)) {
 $cache = null;
 $xml = simplexml_load_file("stdout.xml");
 if (CACHE_TYPE == "sql") {
+    require __DIR__."/helpers/SQL.php";
+
     // configures sql data source
     if ($ref = (string) $xml->sql["ref"]) {
         $xml = simplexml_load_file($ref.".xml");
@@ -26,10 +26,9 @@ if (CACHE_TYPE == "sql") {
 
     // sets cache
     $cache = new Lucinda\Project\DAO\SQLMigrationCache();
-
-    // loads SQL helper
-    require("helpers/SQL.php");
 } else {
+    require __DIR__."/helpers/NoSQL.php";
+
     // configures nosql data source
     if ($ref = (string) $xml->nosql["ref"]) {
         $xml = simplexml_load_file($ref.".xml");
