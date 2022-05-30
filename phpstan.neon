@@ -6,3 +6,4 @@ parameters:
 	ignoreErrors:
 		- '#Constant ENVIRONMENT not found.#'
 		- '#Function SQL not found.#'
+		- '#Function NoSQL not found.#'

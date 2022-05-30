@@ -7,6 +7,8 @@ use Lucinda\NoSQL\Wrapper;
 use Lucinda\STDOUT\Application;
 use Lucinda\UnitTest\Result;
 
+require_once dirname(__DIR__, 2)."/helpers/NoSQL.php";
+
 class DateTest
 {
     public function getTime()

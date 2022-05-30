@@ -2,7 +2,6 @@
 
 namespace Lucinda\Project\DAO;
 
-use Lucinda\NoSQL\ConnectionSingleton;
 use Lucinda\Migration\Status;
 use Lucinda\NoSQL\Driver;
 
@@ -11,6 +10,7 @@ use Lucinda\NoSQL\Driver;
  */
 class NoSQLMigrationCache implements \Lucinda\Migration\Cache
 {
+    public const DRIVER_NAME = "";
     private string $keyName;
     private Driver $connection;
 
@@ -22,7 +22,7 @@ class NoSQLMigrationCache implements \Lucinda\Migration\Cache
     public function __construct(string $keyName = "migrations")
     {
         $this->keyName = $keyName;
-        $this->connection = ConnectionSingleton::getInstance();
+        $this->connection = \NoSQL(self::DRIVER_NAME);
     }
 
     /**
