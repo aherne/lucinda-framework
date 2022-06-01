@@ -21,9 +21,9 @@ class SQLLoginThrottler extends AbstractLoginThrottler
     protected function setCurrentStatus(): void
     {
         $row = \SQL("
-        SELECT attempts, penalty_expiration 
-        FROM ".self::TABLE_NAME." 
-        WHERE ip=:ip AND username=:username
+            SELECT attempts, penalty_expiration 
+            FROM ".self::TABLE_NAME." 
+            WHERE ip=:ip AND username=:username
         ", [
             ":ip"=>$this->request->getIpAddress(),
             ":username"=>$this->userName
@@ -43,8 +43,9 @@ class SQLLoginThrottler extends AbstractLoginThrottler
     {
         if (!$this->found) {
             \SQL("
-            INSERT INTO ".self::TABLE_NAME." (ip, username, attempts, penalty_expiration) 
-            VALUES (:ip, :username, :attempts, :penalty_expiration)", [
+                INSERT INTO ".self::TABLE_NAME." (ip, username, attempts, penalty_expiration) 
+                VALUES (:ip, :username, :attempts, :penalty_expiration)
+            ", [
                 ":ip"=>$this->request->getIpAddress(),
                 ":username"=>$this->userName,
                 ":attempts"=>$this->attempts,
@@ -52,14 +53,15 @@ class SQLLoginThrottler extends AbstractLoginThrottler
             ], self::DRIVER_NAME);
         } else {
             \SQL("
-            UPDATE ".self::TABLE_NAME." 
-            SET attempts=:attempts, penalty_expiration=:penalty_expiration 
-            WHERE ip=:ip AND username=:username", [
+                UPDATE ".self::TABLE_NAME." 
+                SET attempts=:attempts, penalty_expiration=:penalty_expiration 
+                WHERE ip=:ip AND username=:username
+            ", [
                 ":ip"=>$this->request->getIpAddress(),
                 ":username"=>$this->userName,
                 ":attempts"=>$this->attempts,
                 ":penalty_expiration"=>$this->penaltyExpiration
-            ]);
+            ], self::DRIVER_NAME);
         }
     }
 }
