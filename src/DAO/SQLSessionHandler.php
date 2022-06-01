@@ -7,6 +7,7 @@ namespace Lucinda\Project\DAO;
  */
 class SQLSessionHandler implements \SessionHandlerInterface
 {
+    public const DRIVER_NAME = "";
     public const TABLE_NAME = "sessions";
 
     /**
@@ -17,8 +18,13 @@ class SQLSessionHandler implements \SessionHandlerInterface
     {
         $expiration = ini_get('session.gc_maxlifetime');
         SQL("
-        INSERT INTO ".self::TABLE_NAME." (id, value, expires) VALUES
-        (:id, :value, :expires)", [":id"=>$sessionID, ":value"=>$sessionData, ":expires"=>time()+$expiration]);
+            INSERT INTO ".self::TABLE_NAME." (id, value, expires) VALUES
+            (:id, :value, :expires)
+        ", [
+            ":id"=>$sessionID,
+            ":value"=>$sessionData,
+            ":expires"=>time()+$expiration
+        ], self::DRIVER_NAME);
         return true;
     }
 
@@ -29,8 +35,12 @@ class SQLSessionHandler implements \SessionHandlerInterface
     public function read(string $sessionID): string|false
     {
         $value = SQL("
-        SELECT value FROM ".self::TABLE_NAME." 
-        WHERE id = :id AND expires > :current_time", [":id"=>$sessionID, ":current_time"=>time()])->toValue();
+            SELECT value FROM ".self::TABLE_NAME." 
+            WHERE id = :id AND expires > :current_time
+        ", [
+            ":id"=>$sessionID,
+            ":current_time"=>time()
+        ], self::DRIVER_NAME)->toValue();
         return ($value ? $value : "");
     }
 
@@ -41,8 +51,11 @@ class SQLSessionHandler implements \SessionHandlerInterface
     public function destroy(string $sessionID): bool
     {
         $affectedRows = SQL("
-        DELETE FROM ".self::TABLE_NAME." 
-        WHERE id = :id", [":id"=>$sessionID])->getAffectedRows();
+            DELETE FROM ".self::TABLE_NAME." 
+            WHERE id = :id
+        ", [
+            ":id"=>$sessionID
+        ], self::DRIVER_NAME)->getAffectedRows();
         return ($affectedRows>0);
     }
 
@@ -70,10 +83,11 @@ class SQLSessionHandler implements \SessionHandlerInterface
      */
     public function gc(int $maxlifetime): int|false
     {
-        $affectedRows = (int) SQL("
-        DELETE FROM ".self::TABLE_NAME."
-        WHERE expires < :current_time", [":current_time"=>time()])->getAffectedRows();
-        var_dump($affectedRows);
-        return $affectedRows;
+        return (int) SQL("
+            DELETE FROM ".self::TABLE_NAME."
+            WHERE expires < :current_time
+        ", [
+            ":current_time"=>time()
+        ], self::DRIVER_NAME)->getAffectedRows();
     }
 }

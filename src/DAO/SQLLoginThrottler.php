@@ -9,6 +9,7 @@ use Lucinda\Framework\AbstractLoginThrottler;
  */
 class SQLLoginThrottler extends AbstractLoginThrottler
 {
+    public const DRIVER_NAME = "";
     public const TABLE_NAME = "user_logins";
 
     private bool $found = false;
@@ -26,7 +27,7 @@ class SQLLoginThrottler extends AbstractLoginThrottler
         ", [
             ":ip"=>$this->request->getIpAddress(),
             ":username"=>$this->userName
-        ])->toRow();
+        ], self::DRIVER_NAME)->toRow();
         if (!empty($row)) {
             $this->attempts = $row["attempts"];
             $this->penaltyExpiration = $row["penalty_expiration"];
@@ -48,7 +49,7 @@ class SQLLoginThrottler extends AbstractLoginThrottler
                 ":username"=>$this->userName,
                 ":attempts"=>$this->attempts,
                 ":penalty_expiration"=>$this->penaltyExpiration
-            ]);
+            ], self::DRIVER_NAME);
         } else {
             \SQL("
             UPDATE ".self::TABLE_NAME." 
