@@ -14,7 +14,7 @@ class Translator
     /**
      * Sets driver that will perform translation
      *
-     * @param Reader $reader
+     * @param  Reader $reader
      * @return void
      */
     public static function set(Reader $reader): void

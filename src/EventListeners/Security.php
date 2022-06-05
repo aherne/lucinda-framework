@@ -22,11 +22,12 @@ class Security extends Request
 
     /**
      * {@inheritDoc}
+     *
      * @throws \Lucinda\OAuth2\Client\Exception
      * @throws \Lucinda\WebSecurity\ConfigurationException
      * @throws \Lucinda\MVC\ConfigurationException
      * @throws \Lucinda\WebSecurity\Token\EncryptionException
-     * @see \Lucinda\MVC\Runnable::run()
+     * @see    \Lucinda\MVC\Runnable::run()
      */
     public function run(): void
     {

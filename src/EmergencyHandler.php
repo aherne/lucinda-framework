@@ -17,6 +17,7 @@ class EmergencyHandler implements ErrorHandler
 
     /**
      * {@inheritDoc}
+     *
      * @see \Lucinda\STDERR\ErrorHandler::handle()
      */
     public function handle(\Throwable $exception): void
@@ -56,19 +57,23 @@ class EmergencyHandler implements ErrorHandler
         );
         $response->setStatus(Response\HttpStatus::INTERNAL_SERVER_ERROR);
         $contents = (string) file_get_contents($response->view()->getFile());
-        $contents = str_replace([
+        $contents = str_replace(
+            [
             '${data.class}',
             '${data.message}',
             '${data.file}',
             '${data.line}',
             '${data.trace}'
-        ], [
+            ],
+            [
             get_class($exception),
             $exception->getMessage(),
             $exception->getFile(),
             $exception->getLine(),
             $exception->getTraceAsString()
-        ], $contents);
+            ],
+            $contents
+        );
         try {
             $wrapper = new Wrapper($contents);
             $contents = $wrapper->getBody();
@@ -83,7 +88,7 @@ class EmergencyHandler implements ErrorHandler
      * Renders response in HTML format
      *
      * @param \Throwable $exception
-     * @param bool $displayErrors
+     * @param bool       $displayErrors
      */
     private function html(\Throwable $exception, bool $displayErrors): void
     {
@@ -94,19 +99,23 @@ class EmergencyHandler implements ErrorHandler
         $response->setStatus(Response\HttpStatus::INTERNAL_SERVER_ERROR);
         $contents = file_get_contents($response->view()->getFile());
         if ($displayErrors) {
-            $contents = str_replace([
+            $contents = str_replace(
+                [
                 '${data.class}',
                 '${nl2br(${data.message})}',
                 '${data.file}',
                 '${data.line}',
                 '${nl2br(${data.trace})}'
-            ], [
+                ],
+                [
                 get_class($exception),
                 str_replace("\\n", "<br/>", $exception->getMessage()),
                 $exception->getFile(),
                 $exception->getLine(),
                 str_replace("\\n", "<br/>", $exception->getTraceAsString())
-            ], $contents);
+                ],
+                $contents
+            );
         }
         $response->setBody($contents);
         $response->commit();
@@ -116,7 +125,7 @@ class EmergencyHandler implements ErrorHandler
      * Renders response in JSON format
      *
      * @param \Throwable $exception
-     * @param bool $displayErrors
+     * @param bool       $displayErrors
      */
     private function json(\Throwable $exception, bool $displayErrors): void
     {

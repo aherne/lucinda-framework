@@ -12,55 +12,71 @@ class SQLSessionHandler implements \SessionHandlerInterface
 
     /**
      * {@inheritDoc}
+     *
      * @see \SessionHandlerInterface::write()
      */
     public function write(string $sessionID, string $sessionData): bool
     {
         $expiration = ini_get('session.gc_maxlifetime');
-        SQL("
+        SQL(
+            "
             INSERT INTO ".self::TABLE_NAME." (id, value, expires) VALUES
             (:id, :value, :expires)
-        ", [
+        ",
+            [
             ":id"=>$sessionID,
             ":value"=>$sessionData,
             ":expires"=>time()+$expiration
-        ], self::DRIVER_NAME);
+            ],
+            self::DRIVER_NAME
+        );
         return true;
     }
 
     /**
      * {@inheritDoc}
+     *
      * @see \SessionHandlerInterface::read()
      */
     public function read(string $sessionID): string|false
     {
-        $value = SQL("
+        $value = SQL(
+            "
             SELECT value FROM ".self::TABLE_NAME." 
             WHERE id = :id AND expires > :current_time
-        ", [
+        ",
+            [
             ":id"=>$sessionID,
             ":current_time"=>time()
-        ], self::DRIVER_NAME)->toValue();
+            ],
+            self::DRIVER_NAME
+        )->toValue();
         return ($value ? $value : "");
     }
 
     /**
      * {@inheritDoc}
+     *
      * @see \SessionHandlerInterface::destroy()
      */
     public function destroy(string $sessionID): bool
     {
-        $affectedRows = SQL("
+        $affectedRows = SQL(
+            "
             DELETE FROM ".self::TABLE_NAME." 
             WHERE id = :id
-        ", [
+        ",
+            [
             ":id"=>$sessionID
-        ], self::DRIVER_NAME)->getAffectedRows();
+            ],
+            self::DRIVER_NAME
+        )->getAffectedRows();
         return ($affectedRows>0);
     }
 
     /**
      * {@inheritDoc}
+     *
      * @see \SessionHandlerInterface::open()
      */
     public function open(string $savePath, string $sessionName): bool
@@ -70,6 +86,7 @@ class SQLSessionHandler implements \SessionHandlerInterface
 
     /**
      * {@inheritDoc}
+     *
      * @see \SessionHandlerInterface::close()
      */
     public function close(): bool
@@ -79,15 +96,20 @@ class SQLSessionHandler implements \SessionHandlerInterface
 
     /**
      * {@inheritDoc}
+     *
      * @see \SessionHandlerInterface::gc()
      */
     public function gc(int $maxlifetime): int|false
     {
-        return (int) SQL("
+        return (int) SQL(
+            "
             DELETE FROM ".self::TABLE_NAME."
             WHERE expires < :current_time
-        ", [
+        ",
+            [
             ":current_time"=>time()
-        ], self::DRIVER_NAME)->getAffectedRows();
+            ],
+            self::DRIVER_NAME
+        )->getAffectedRows();
     }
 }

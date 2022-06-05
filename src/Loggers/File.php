@@ -15,6 +15,7 @@ class File extends AbstractLoggerWrapper
 {
     /**
      * {@inheritDoc}
+     *
      * @see \Lucinda\Logging\AbstractLoggerWrapper::setLogger()
      */
     protected function setLogger(\SimpleXMLElement $xml): Logger

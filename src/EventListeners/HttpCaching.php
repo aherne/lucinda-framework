@@ -21,8 +21,9 @@ class HttpCaching extends Response
 
     /**
      * {@inheritDoc}
+     *
      * @throws ConfigurationException
-     * @see \Lucinda\MVC\Runnable::run()
+     * @see    \Lucinda\MVC\Runnable::run()
      */
     public function run(): void
     {

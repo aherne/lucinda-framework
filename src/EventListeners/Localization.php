@@ -17,9 +17,10 @@ class Localization extends Request
 {
     /**
      * {@inheritDoc}
+     *
      * @throws ConfigurationException
      * @throws \Lucinda\MVC\ConfigurationException
-     * @see \Lucinda\MVC\Runnable::run()
+     * @see    \Lucinda\MVC\Runnable::run()
      */
     public function run(): void
     {

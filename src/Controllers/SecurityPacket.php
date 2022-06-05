@@ -21,8 +21,9 @@ class SecurityPacket extends Controller
 
     /**
      * {@inheritDoc}
+     *
      * @throws ConfigurationException
-     * @see \Lucinda\MVC\Runnable::run()
+     * @see    \Lucinda\MVC\Runnable::run()
      */
     public function run(): void
     {
@@ -37,23 +38,24 @@ class SecurityPacket extends Controller
     private function setResponseStatus(): void
     {
         switch ($this->exception->getStatus()) {
-            case "unauthorized":
-                $this->response->setStatus(HttpStatus::UNAUTHORIZED);
-                break;
-            case "forbidden":
-                $this->response->setStatus(HttpStatus::FORBIDDEN);
-                break;
-            case "not_found":
-                $this->response->setStatus(HttpStatus::NOT_FOUND);
-                break;
-            default:
-                $this->response->setStatus(HttpStatus::OK);
-                break;
+        case "unauthorized":
+            $this->response->setStatus(HttpStatus::UNAUTHORIZED);
+            break;
+        case "forbidden":
+            $this->response->setStatus(HttpStatus::FORBIDDEN);
+            break;
+        case "not_found":
+            $this->response->setStatus(HttpStatus::NOT_FOUND);
+            break;
+        default:
+            $this->response->setStatus(HttpStatus::OK);
+            break;
         }
     }
 
     /**
      * Sets response body from view file or stream.
+     *
      * @throws ConfigurationException
      */
     private function setResponseBody(): void
@@ -75,7 +77,7 @@ class SecurityPacket extends Controller
     /**
      * Sets up HTML response
      *
-     * @param string $status
+     * @param  string $status
      * @throws ConfigurationException
      */
     private function html(string $status): void
@@ -93,7 +95,7 @@ class SecurityPacket extends Controller
     /**
      * Gets redirection link, if any
      *
-     * @param string $status
+     * @param  string $status
      * @return string|null
      * @throws ConfigurationException
      */
@@ -126,7 +128,7 @@ class SecurityPacket extends Controller
     /**
      * Gets absolute path to http-status specific view
      *
-     * @param string $status
+     * @param  string $status
      * @return string
      * @throws ConfigurationException
      */
@@ -134,12 +136,12 @@ class SecurityPacket extends Controller
     {
         $viewsPath = (string) $this->application->getTag("templating")["templates_path"];
         switch ($status) {
-            case "unauthorized":
-                return $viewsPath."/401";
-            case "forbidden":
-                return $viewsPath."/403";
-            default:
-                return $viewsPath."/404";
+        case "unauthorized":
+            return $viewsPath."/401";
+        case "forbidden":
+            return $viewsPath."/403";
+        default:
+            return $viewsPath."/404";
         }
     }
 

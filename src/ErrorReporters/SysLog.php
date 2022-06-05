@@ -16,6 +16,7 @@ class SysLog extends AbstractReporter
 {
     /**
      * {@inheritDoc}
+     *
      * @see \Lucinda\Framework\AbstractReporter::getLogger()
      */
     public function getLogger(): Logger

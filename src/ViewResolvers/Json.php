@@ -12,8 +12,9 @@ class Json extends ViewResolver
 {
     /**
      * {@inheritDoc}
+     *
      * @throws \JsonException
-     * @see \Lucinda\MVC\Runnable::run()
+     * @see    \Lucinda\MVC\Runnable::run()
      */
     public function run(): void
     {
@@ -22,9 +23,13 @@ class Json extends ViewResolver
 
         // resolves response in json format
         $json = new JsonConverter();
-        $this->response->setBody($json->encode([
-            "status"=>(!$isError ? "ok" : "error"),
-            "body"=>$this->response->view()->getData()
-        ]));
+        $this->response->setBody(
+            $json->encode(
+                [
+                "status"=>(!$isError ? "ok" : "error"),
+                "body"=>$this->response->view()->getData()
+                ]
+            )
+        );
     }
 }

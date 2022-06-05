@@ -13,6 +13,7 @@ class Error extends Application
 {
     /**
      * {@inheritDoc}
+     *
      * @see \Lucinda\MVC\Runnable::run()
      */
     public function run(): void
