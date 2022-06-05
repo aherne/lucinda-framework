@@ -14,6 +14,7 @@ class Date extends AbstractCacheable
 
     /**
      * {@inheritDoc}
+     *
      * @see \Lucinda\Framework\AbstractCacheable::setTime()
      */
     protected function setTime(): void
@@ -38,6 +39,7 @@ class Date extends AbstractCacheable
 
     /**
      * {@inheritDoc}
+     *
      * @see \Lucinda\Framework\AbstractCacheable::setEtag()
      */
     protected function setEtag(): void

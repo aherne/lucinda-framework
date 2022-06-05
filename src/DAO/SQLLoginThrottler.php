@@ -16,18 +16,23 @@ class SQLLoginThrottler extends AbstractLoginThrottler
 
     /**
      * {@inheritDoc}
+     *
      * @see \Lucinda\WebSecurity\Authentication\Form\LoginThrottler::setCurrentStatus()
      */
     protected function setCurrentStatus(): void
     {
-        $row = \SQL("
+        $row = \SQL(
+            "
             SELECT attempts, penalty_expiration 
             FROM ".self::TABLE_NAME." 
             WHERE ip=:ip AND username=:username
-        ", [
+        ",
+            [
             ":ip"=>$this->request->getIpAddress(),
             ":username"=>$this->userName
-        ], self::DRIVER_NAME)->toRow();
+            ],
+            self::DRIVER_NAME
+        )->toRow();
         if (!empty($row)) {
             $this->attempts = $row["attempts"];
             $this->penaltyExpiration = $row["penalty_expiration"];
@@ -37,31 +42,40 @@ class SQLLoginThrottler extends AbstractLoginThrottler
 
     /**
      * {@inheritDoc}
+     *
      * @see \Lucinda\WebSecurity\Authentication\Form\LoginThrottler::persist()
      */
     protected function persist(): void
     {
         if (!$this->found) {
-            \SQL("
+            \SQL(
+                "
                 INSERT INTO ".self::TABLE_NAME." (ip, username, attempts, penalty_expiration) 
                 VALUES (:ip, :username, :attempts, :penalty_expiration)
-            ", [
+            ",
+                [
                 ":ip"=>$this->request->getIpAddress(),
                 ":username"=>$this->userName,
                 ":attempts"=>$this->attempts,
                 ":penalty_expiration"=>$this->penaltyExpiration
-            ], self::DRIVER_NAME);
+                ],
+                self::DRIVER_NAME
+            );
         } else {
-            \SQL("
+            \SQL(
+                "
                 UPDATE ".self::TABLE_NAME." 
                 SET attempts=:attempts, penalty_expiration=:penalty_expiration 
                 WHERE ip=:ip AND username=:username
-            ", [
+            ",
+                [
                 ":ip"=>$this->request->getIpAddress(),
                 ":username"=>$this->userName,
                 ":attempts"=>$this->attempts,
                 ":penalty_expiration"=>$this->penaltyExpiration
-            ], self::DRIVER_NAME);
+                ],
+                self::DRIVER_NAME
+            );
         }
     }
 }

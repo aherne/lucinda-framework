@@ -23,6 +23,7 @@ class NoSQLSessionHandler implements \SessionHandlerInterface
 
     /**
      * {@inheritDoc}
+     *
      * @see \SessionHandlerInterface::write()
      */
     public function write(string $sessionID, string $sessionData): bool
@@ -37,6 +38,7 @@ class NoSQLSessionHandler implements \SessionHandlerInterface
 
     /**
      * {@inheritDoc}
+     *
      * @see \SessionHandlerInterface::read()
      */
     public function read(string $sessionID): string|false
@@ -54,6 +56,7 @@ class NoSQLSessionHandler implements \SessionHandlerInterface
 
     /**
      * {@inheritDoc}
+     *
      * @see \SessionHandlerInterface::destroy()
      */
     public function destroy(string $sessionID): bool
@@ -72,6 +75,7 @@ class NoSQLSessionHandler implements \SessionHandlerInterface
 
     /**
      * {@inheritDoc}
+     *
      * @see \SessionHandlerInterface::gc()
      */
     public function gc(int $maxlifetime): int|false
@@ -81,6 +85,7 @@ class NoSQLSessionHandler implements \SessionHandlerInterface
 
     /**
      * {@inheritDoc}
+     *
      * @see \SessionHandlerInterface::open()
      */
     public function open(string $savePath, string $sessionName): bool
@@ -90,6 +95,7 @@ class NoSQLSessionHandler implements \SessionHandlerInterface
 
     /**
      * {@inheritDoc}
+     *
      * @see \SessionHandlerInterface::close()
      */
     public function close(): bool

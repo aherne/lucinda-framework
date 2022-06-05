@@ -123,7 +123,7 @@ class Attributes extends \Lucinda\STDOUT\Attributes
     /**
      * Sets driver to query OAuth2 resources with
      *
-     * @param OAuth2Driver $driver
+     * @param  OAuth2Driver $driver
      * @return void
      */
     public function setOAuth2Driver(OAuth2Driver $driver): void

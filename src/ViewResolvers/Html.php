@@ -19,6 +19,7 @@ class Html extends ViewResolver implements ErrorHandler
 
     /**
      * {@inheritDoc}
+     *
      * @see \Lucinda\MVC\Runnable::run()
      */
     public function run(): void
@@ -54,6 +55,7 @@ class Html extends ViewResolver implements ErrorHandler
 
     /**
      * {@inheritDoc}
+     *
      * @see \Lucinda\STDERR\ErrorHandler::handle()
      */
     public function handle(\Throwable $exception): void

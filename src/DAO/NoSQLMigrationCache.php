@@ -27,6 +27,7 @@ class NoSQLMigrationCache implements \Lucinda\Migration\Cache
 
     /**
      * {@inheritDoc}
+     *
      * @see \Lucinda\Migration\Cache::exists()
      */
     public function exists(): bool
@@ -36,6 +37,7 @@ class NoSQLMigrationCache implements \Lucinda\Migration\Cache
 
     /**
      * {@inheritDoc}
+     *
      * @see \Lucinda\Migration\Cache::create()
      */
     public function create(): void
@@ -45,6 +47,7 @@ class NoSQLMigrationCache implements \Lucinda\Migration\Cache
 
     /**
      * {@inheritDoc}
+     *
      * @see \Lucinda\Migration\Cache::add()
      */
     public function add(string $className, Status $statusCode): void
@@ -60,6 +63,7 @@ class NoSQLMigrationCache implements \Lucinda\Migration\Cache
 
     /**
      * {@inheritDoc}
+     *
      * @see \Lucinda\Migration\Cache::read()
      */
     public function read(): array
@@ -74,6 +78,7 @@ class NoSQLMigrationCache implements \Lucinda\Migration\Cache
 
     /**
      * {@inheritDoc}
+     *
      * @see \Lucinda\Migration\Cache::remove()
      */
     public function remove(string $className): void

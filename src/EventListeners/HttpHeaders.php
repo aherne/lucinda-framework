@@ -18,8 +18,9 @@ class HttpHeaders extends Request
 
     /**
      * {@inheritDoc}
+     *
      * @throws \Lucinda\MVC\ConfigurationException
-     * @see \Lucinda\MVC\Runnable::run()
+     * @see    \Lucinda\MVC\Runnable::run()
      */
     public function run(): void
     {

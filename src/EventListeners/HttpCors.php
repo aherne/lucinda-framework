@@ -19,8 +19,9 @@ class HttpCors extends Request
 
     /**
      * {@inheritDoc}
+     *
      * @throws \Lucinda\Headers\UserException
-     * @see \Lucinda\MVC\Runnable::run()
+     * @see    \Lucinda\MVC\Runnable::run()
      */
     public function run(): void
     {
