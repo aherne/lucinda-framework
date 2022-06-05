@@ -1,11 +1,12 @@
 <?php
+
 use Lucinda\NoSQL\Driver;
 use Lucinda\NoSQL\ConnectionFactory;
 
 /**
  * Automates retrieval for a key-value store driver
  *
- * @param string $serverName
+ * @param  string $serverName
  * @return Driver
  * @throws \Lucinda\NoSQL\ConnectionException
  */
