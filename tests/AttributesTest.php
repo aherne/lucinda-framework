@@ -89,11 +89,13 @@ class AttributesTest
     {
         $xml = simplexml_load_file(__DIR__."/mocks/stdout_oauth2_dao.xml");
         $oauth2Wrapper = new Wrapper($xml, "local");
-        $this->attributes->setOAuth2Driver(new DriverDetector(
-            $xml,
-            $oauth2Wrapper->getDriver(),
-            1
-        ));
+        $this->attributes->setOAuth2Driver(
+            new DriverDetector(
+                $xml,
+                $oauth2Wrapper->getDriver(),
+                1
+            )
+        );
         return new Result(true, "tested via getOAuth2Driver");
     }
 

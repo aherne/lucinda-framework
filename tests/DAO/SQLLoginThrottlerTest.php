@@ -5,7 +5,7 @@ namespace Test\Lucinda\Project\DAO;
 use Lucinda\SQL\Wrapper;
 use Lucinda\STDOUT\Application;
 
-require_once(dirname(__DIR__, 2)."/helpers/SQL.php");
+require_once dirname(__DIR__, 2)."/helpers/SQL.php";
 
 class SQLLoginThrottlerTest extends AbstractLoginThrottlerTest
 {
