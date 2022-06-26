@@ -34,34 +34,16 @@ class HttpCaching extends Response
 
         $cacheableFinder = new CacheableFinder($this->application, $this->request, $this->response);
         $httpStatus = $validator->validateCache($cacheableFinder->getResult(), $this->request->getMethod());
-        $completeHttpStatus = $this->getCompleteStatus($httpStatus);
 
-        if (!in_array($completeHttpStatus, [HttpStatus::OK, HttpStatus::PRECONDITION_FAILED])) {
+        if (!in_array($httpStatus, [200, 412])) {
             $this->response->setBody("");
         }
 
-        $this->response->setStatus($completeHttpStatus);
+        $this->response->setStatus($httpStatus);
 
         $headers = $validator->getResponse()->toArray();
         foreach ($headers as $name => $value) {
             $this->response->headers($name, $value);
-        }
-    }
-
-    /**
-     * Detects complete HTTP status based on status code
-     *
-     * @param int $httpStatus
-     * @return HttpStatus
-     */
-    private function getCompleteStatus(int $httpStatus): string
-    {
-        $reflectionClass = new \ReflectionClass(HttpStatus::class);
-        $constants = $reflectionClass->getConstants();
-        foreach ($constants as $constant) {
-            if (strpos($constant, $httpStatus." ")===0) {
-                return $constant;
-            }
         }
     }
 }
