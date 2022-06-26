@@ -1,6 +1,8 @@
 <?php
+
 namespace Test\Lucinda\Project\EventListeners\Console;
 
+use Lucinda\ConsoleSTDOUT\Request;
 use Lucinda\Project\EventListeners\Console\Logging;
 use Lucinda\Project\ConsoleAttributes;
 use Lucinda\ConsoleSTDOUT\Application;
@@ -12,10 +14,10 @@ class LoggingTest
     {
         $attributes = new ConsoleAttributes();
         $application = new Application(dirname(__DIR__, 2)."/mocks/stdout.xml");
-
-        $event = new Logging($attributes, $application);
+        $_SERVER["argv"] = ["test", "me"];
+        $event = new Logging($attributes, $application, new Request());
         $event->run();
 
-        return new Result($attributes->getLogger() ? true : false);
+        return new Result((bool)$attributes->getLogger());
     }
 }

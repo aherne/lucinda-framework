@@ -14,7 +14,8 @@
     ],
     "require": {
         "php": "^7.1|^8.0",
-        "ext-simplexml": "*",    
+        "ext-simplexml": "*",
+        "ext-json": "*",
         "lucinda/framework-engine": "~2.0",      	
         "lucinda/framework-configurer":"~2.0",   	
         "lucinda/logging": "~3.0",

@@ -1,25 +1,27 @@
 <?php
+
 namespace Lucinda\Project\Cacheables;
 
 use Lucinda\Framework\AbstractCacheable;
-use Lucinda\NoSQL\ConnectionSingleton;
 
 /**
  * CacheableDriver that generates an ETAG based on host, response body & headers.
  */
 class Date extends AbstractCacheable
 {
-    const EXPIRATION = 24*60*60;
+    public const DRIVER_NAME = "";
+    public const EXPIRATION = 24*60*60;
 
     /**
      * {@inheritDoc}
+     *
      * @see \Lucinda\Framework\AbstractCacheable::setTime()
      */
     protected function setTime(): void
     {
         // generates etag
         $etag = sha1($this->request->getServer()->getName()."#".$this->response->getBody());
-        $connection = ConnectionSingleton::getInstance();
+        $connection = \NoSQL(self::DRIVER_NAME);
 
         $modifiedTime = 0;
         if ($connection->contains($etag)) {
@@ -37,6 +39,7 @@ class Date extends AbstractCacheable
 
     /**
      * {@inheritDoc}
+     *
      * @see \Lucinda\Framework\AbstractCacheable::setEtag()
      */
     protected function setEtag(): void

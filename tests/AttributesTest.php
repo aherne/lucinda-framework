@@ -1,8 +1,12 @@
 <?php
+
 namespace Test\Lucinda\Project;
 
+use Lucinda\Logging\RequestInformation;
+use Lucinda\OAuth2\Wrapper;
 use Lucinda\Project\Attributes;
 use Lucinda\UnitTest\Result;
+use Lucinda\Framework\OAuth2\DriverDetector;
 
 class AttributesTest
 {
@@ -31,7 +35,7 @@ class AttributesTest
 
     public function setLogger()
     {
-        $wrapper = new \Lucinda\Logging\Wrapper($this->xml, ENVIRONMENT);
+        $wrapper = new \Lucinda\Logging\Wrapper($this->xml, new RequestInformation(), ENVIRONMENT);
         $this->attributes->setLogger($wrapper->getLogger());
         return new Result(true, "tested via getLogger");
     }
@@ -79,5 +83,24 @@ class AttributesTest
     public function getAccessToken()
     {
         return new Result($this->attributes->getAccessToken()=="qwertyuio");
+    }
+
+    public function setOAuth2Driver()
+    {
+        $xml = simplexml_load_file(__DIR__."/mocks/stdout_oauth2_dao.xml");
+        $oauth2Wrapper = new Wrapper($xml, "local");
+        $this->attributes->setOAuth2Driver(
+            new DriverDetector(
+                $xml,
+                $oauth2Wrapper->getDriver(),
+                1
+            )
+        );
+        return new Result(true, "tested via getOAuth2Driver");
+    }
+
+    public function getOAuth2Driver()
+    {
+        return new Result($this->attributes->getOAuth2Driver() instanceof DriverDetector);
     }
 }

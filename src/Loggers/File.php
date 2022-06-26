@@ -1,4 +1,5 @@
 <?php
+
 namespace Lucinda\Project\Loggers;
 
 use Lucinda\Logging\Logger;
@@ -14,6 +15,7 @@ class File extends AbstractLoggerWrapper
 {
     /**
      * {@inheritDoc}
+     *
      * @see \Lucinda\Logging\AbstractLoggerWrapper::setLogger()
      */
     protected function setLogger(\SimpleXMLElement $xml): Logger
@@ -28,6 +30,10 @@ class File extends AbstractLoggerWrapper
             throw new ConfigurationException("Attribute 'format' is mandatory for 'file' tag");
         }
 
-        return new FileLoggerDriver($filePath, (string) $xml["rotation"], new LogFormatter($pattern));
+        return new FileLoggerDriver(
+            $filePath,
+            new LogFormatter($pattern, $this->requestInformation),
+            (string) $xml["rotation"]
+        );
     }
 }

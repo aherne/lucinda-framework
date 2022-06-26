@@ -1,16 +1,17 @@
 <?php
+
 namespace Lucinda\Project\EventListeners;
 
-use Lucinda\STDOUT\EventListeners\Application;
+use Lucinda\Logging\ConfigurationException;
+use Lucinda\Logging\RequestInformation;
+use Lucinda\STDOUT\EventListeners\Request as RequestListener;
 use Lucinda\Project\Attributes;
 use Lucinda\Logging\Wrapper;
-
-require_once(dirname(__DIR__, 2)."/helpers/getParentNode.php");
 
 /**
  * Sets up Logging API to use in logging later on
  */
-class Logging extends Application
+class Logging extends RequestListener
 {
     /**
      * @var Attributes
@@ -19,11 +20,18 @@ class Logging extends Application
 
     /**
      * {@inheritDoc}
-     * @see \Lucinda\MVC\Runnable::run()
+     *
+     * @throws ConfigurationException
+     * @see    \Lucinda\MVC\Runnable::run()
      */
     public function run(): void
     {
-        $wrapper = new Wrapper(\getParentNode($this->application, "loggers"), ENVIRONMENT);
+        $requestInformation = new RequestInformation();
+        $requestInformation->setUri($this->request->getURI()->getPage());
+        $requestInformation->setUserAgent($this->request->headers("User-Agent"));
+        $requestInformation->setIpAddress($this->request->getClient()->getIP());
+
+        $wrapper = new Wrapper($this->application->getXML(), $requestInformation, ENVIRONMENT);
         $this->attributes->setLogger($wrapper->getLogger());
     }
 }

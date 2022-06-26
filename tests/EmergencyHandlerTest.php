@@ -1,4 +1,5 @@
 <?php
+
 namespace Test\Lucinda\Project;
 
 use Lucinda\Project\EmergencyHandler;

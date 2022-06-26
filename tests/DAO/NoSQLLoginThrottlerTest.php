@@ -1,12 +1,10 @@
 <?php
-namespace Test\Lucinda\Project\DAO;
 
-use Lucinda\NoSQL\ConnectionSingleton;
+namespace Test\Lucinda\Project\DAO;
 
 class NoSQLLoginThrottlerTest extends AbstractLoginThrottlerTest
 {
-    private $request;
-    private $throttler;
+    public const DRIVER_NAME = "";
 
     public function __construct()
     {
@@ -21,7 +19,7 @@ class NoSQLLoginThrottlerTest extends AbstractLoginThrottlerTest
     protected function cleanup()
     {
         $key = "logins__".sha1(json_encode(array("ip"=>self::USER_IP, "username"=>self::USER_NAME)));
-        $driver = ConnectionSingleton::getInstance();
+        $driver = \NoSQL(self::DRIVER_NAME);
         if ($driver->contains($key)) {
             $driver->delete($key);
         }

@@ -1,14 +1,16 @@
 <?php
+
 namespace Test\Lucinda\Project\EventListeners\Console;
 
 use Lucinda\Project\EventListeners\Console\NoSQLDataSource;
 use Lucinda\Project\ConsoleAttributes;
 use Lucinda\ConsoleSTDOUT\Application;
 use Lucinda\UnitTest\Result;
-use Lucinda\NoSQL\ConnectionSingleton;
 
 class NoSQLDataSourceTest
 {
+    public const DRIVER_NAME = "";
+
     public function run()
     {
         $attributes = new ConsoleAttributes();
@@ -18,7 +20,7 @@ class NoSQLDataSourceTest
         $event->run();
 
         try {
-            $driver = ConnectionSingleton::getInstance();
+            $driver = \NoSQL(self::DRIVER_NAME);
             $driver->set("test", "me");
             $val = $driver->get("test");
             $driver->delete("test");

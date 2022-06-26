@@ -1,4 +1,5 @@
 <?php
+
 namespace Test\Lucinda\Project\mocks\Authorization;
 
 use Lucinda\WebSecurity\Authorization\DAO\PageAuthorizationDAO;
