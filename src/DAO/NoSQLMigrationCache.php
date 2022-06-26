@@ -1,14 +1,16 @@
 <?php
+
 namespace Lucinda\Project\DAO;
 
-use Lucinda\NoSQL\ConnectionSingleton;
 use Lucinda\Migration\Status;
+use Lucinda\NoSQL\Driver;
 
 /**
  * Saves migration progress in an NoSQL key-value store
  */
 class NoSQLMigrationCache implements \Lucinda\Migration\Cache
 {
+    public const DRIVER_NAME = "";
     private $keyName;
     private $connection;
 
@@ -20,11 +22,12 @@ class NoSQLMigrationCache implements \Lucinda\Migration\Cache
     public function __construct(string $keyName = "migrations")
     {
         $this->keyName = $keyName;
-        $this->connection = ConnectionSingleton::getInstance();
+        $this->connection = \NoSQL(self::DRIVER_NAME);
     }
 
     /**
      * {@inheritDoc}
+     *
      * @see \Lucinda\Migration\Cache::exists()
      */
     public function exists(): bool
@@ -34,6 +37,7 @@ class NoSQLMigrationCache implements \Lucinda\Migration\Cache
 
     /**
      * {@inheritDoc}
+     *
      * @see \Lucinda\Migration\Cache::create()
      */
     public function create(): void
@@ -43,6 +47,7 @@ class NoSQLMigrationCache implements \Lucinda\Migration\Cache
 
     /**
      * {@inheritDoc}
+     *
      * @see \Lucinda\Migration\Cache::add()
      */
     public function add(string $className, int $statusCode): void
@@ -58,6 +63,7 @@ class NoSQLMigrationCache implements \Lucinda\Migration\Cache
 
     /**
      * {@inheritDoc}
+     *
      * @see \Lucinda\Migration\Cache::read()
      */
     public function read(): array
@@ -72,6 +78,7 @@ class NoSQLMigrationCache implements \Lucinda\Migration\Cache
 
     /**
      * {@inheritDoc}
+     *
      * @see \Lucinda\Migration\Cache::remove()
      */
     public function remove(string $className): void

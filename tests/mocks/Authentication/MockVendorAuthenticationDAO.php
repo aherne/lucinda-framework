@@ -1,18 +1,20 @@
 <?php
+
 namespace Test\Lucinda\Project\mocks\Authentication;
 
+use Lucinda\Framework\OAuth2\UserDAO;
 use Lucinda\WebSecurity\Authentication\OAuth2\UserInformation;
 use Lucinda\WebSecurity\Authentication\OAuth2\VendorAuthenticationDAO;
 use Lucinda\WebSecurity\Authorization\UserRoles;
 
-class MockVendorAuthenticationDAO implements VendorAuthenticationDAO, UserRoles
+class MockVendorAuthenticationDAO implements VendorAuthenticationDAO, UserRoles, UserDAO
 {
     private $accounts = [];
 
-    public function login(UserInformation $userInformation, string $vendorName, string $accessToken)
+    public function login(UserInformation $userInformation, string $vendorName, string $accessToken): int|string|null
     {
         if ($vendorName!="Facebook") {
-            return;
+            return null;
         }
         $this->accounts[1][$vendorName] = [
             "info"=>$userInformation,
@@ -37,5 +39,15 @@ class MockVendorAuthenticationDAO implements VendorAuthenticationDAO, UserRoles
         } else {
             return ["GUEST"];
         }
+    }
+
+    public function getAccessToken($userID): ?string
+    {
+        return "querty";
+    }
+
+    public function getVendor($userID): ?string
+    {
+        return "facebook";
     }
 }

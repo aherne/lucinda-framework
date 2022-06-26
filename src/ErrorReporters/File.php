@@ -1,6 +1,8 @@
 <?php
+
 namespace Lucinda\Project\ErrorReporters;
 
+use Lucinda\Framework\LoggingRequestInformation;
 use Lucinda\Logging\Driver\File\Logger as FileLogger;
 use Lucinda\Logging\Logger;
 use Lucinda\Framework\AbstractReporter;
@@ -14,12 +16,14 @@ class File extends AbstractReporter
 {
     /**
      * {@inheritDoc}
+     *
      * @see \Lucinda\Framework\AbstractReporter::getLogger()
      */
     public function getLogger(): Logger
     {
-        $rootFolder = dirname(dirname(__DIR__));
-        $filePath = $rootFolder."/".$this->xml["path"];
+        $rootFolder = dirname(__DIR__, 2);
+
+        $filePath =  (string) $this->xml["path"];
         if (!$filePath) {
             throw new ConfigurationException("Attribute 'path' is mandatory for 'file' tag");
         }
@@ -29,6 +33,11 @@ class File extends AbstractReporter
             throw new ConfigurationException("Attribute 'format' is mandatory for 'file' tag");
         }
 
-        return new FileLogger($filePath, (string) $this->xml["rotation"], new LogFormatter($pattern));
+        $loggingRequestInfo = new LoggingRequestInformation();
+        return new FileLogger(
+            $rootFolder."/".$filePath,
+            new LogFormatter($pattern, $loggingRequestInfo->getRequestInformation()),
+            (string) $this->xml["rotation"]
+        );
     }
 }

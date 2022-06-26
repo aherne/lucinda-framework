@@ -1,6 +1,8 @@
 <?php
+
 namespace Lucinda\Project\ErrorReporters;
 
+use Lucinda\Framework\LoggingRequestInformation;
 use Lucinda\Logging\Driver\SysLog\Logger as SysLogger;
 use Lucinda\Logging\Logger;
 use Lucinda\Framework\AbstractReporter;
@@ -14,6 +16,7 @@ class SysLog extends AbstractReporter
 {
     /**
      * {@inheritDoc}
+     *
      * @see \Lucinda\Framework\AbstractReporter::getLogger()
      */
     public function getLogger(): Logger
@@ -28,6 +31,10 @@ class SysLog extends AbstractReporter
             throw new ConfigurationException("Attribute 'format' is mandatory for 'syslog' tag");
         }
 
-        return new SysLogger($applicationName, new LogFormatter($pattern));
+        $loggingRequestInfo = new LoggingRequestInformation();
+        return new SysLogger(
+            $applicationName,
+            new LogFormatter($pattern, $loggingRequestInfo->getRequestInformation())
+        );
     }
 }

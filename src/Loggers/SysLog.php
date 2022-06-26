@@ -1,4 +1,5 @@
 <?php
+
 namespace Lucinda\Project\Loggers;
 
 use Lucinda\Logging\Logger;
@@ -14,6 +15,7 @@ class SysLog extends AbstractLoggerWrapper
 {
     /**
      * {@inheritDoc}
+     *
      * @see \Lucinda\Logging\AbstractLoggerWrapper::setLogger()
      */
     protected function setLogger(\SimpleXMLElement $xml): Logger
@@ -28,6 +30,9 @@ class SysLog extends AbstractLoggerWrapper
             throw new ConfigurationException("Attribute 'format' is mandatory for 'syslog' tag");
         }
 
-        return new SysLoggerDriver($applicationName, new LogFormatter($pattern));
+        return new SysLoggerDriver(
+            $applicationName,
+            new LogFormatter($pattern, $this->requestInformation)
+        );
     }
 }

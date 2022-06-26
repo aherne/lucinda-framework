@@ -1,4 +1,5 @@
 <?php
+
 namespace Lucinda\Project\EventListeners;
 
 use Lucinda\STDERR\PHPException;
@@ -12,6 +13,7 @@ class Error extends Request
 {
     /**
      * {@inheritDoc}
+     *
      * @see \Lucinda\MVC\Runnable::run()
      */
     public function run(): void

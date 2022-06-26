@@ -1,4 +1,5 @@
 <?php
+
 namespace Test\Lucinda\Project\mocks\Authentication;
 
 use Lucinda\WebSecurity\Authentication\DAO\UserAuthenticationDAO;
@@ -6,7 +7,7 @@ use Lucinda\WebSecurity\Authorization\UserRoles;
 
 class MockUsersAuthentication implements UserAuthenticationDAO, UserRoles
 {
-    public function login(string $username, string $password)
+    public function login(string $username, string $password): int|string|null
     {
         return ($username=="test" && $password=="me" ? 1 : null);
     }

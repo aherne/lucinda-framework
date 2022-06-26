@@ -1,4 +1,5 @@
 <?php
+
 namespace Lucinda\Project\ViewResolvers;
 
 use Lucinda\Templating\Wrapper;
@@ -6,20 +7,19 @@ use Lucinda\MVC\ViewResolver;
 use Lucinda\STDERR\ErrorHandler;
 use Lucinda\STDERR\PHPException;
 
-require_once(dirname(__DIR__, 2)."/helpers/getParentNode.php");
-
 /**
  * MVC view resolver for HTML format using ViewLanguage templating.
  */
 class Html extends ViewResolver implements ErrorHandler
 {
     /**
-     * @var \Lucinda\STDERR\ErrorHandler
+     * @var ErrorHandler
      */
-    private $defaultErrorHandler;
+    private ErrorHandler $defaultErrorHandler;
 
     /**
      * {@inheritDoc}
+     *
      * @see \Lucinda\MVC\Runnable::run()
      */
     public function run(): void
@@ -33,7 +33,7 @@ class Html extends ViewResolver implements ErrorHandler
             $this->defaultErrorHandler = PHPException::getErrorHandler();
 
             // converts view language to PHP
-            $wrapper = new Wrapper(\getParentNode($this->application, "templating"));
+            $wrapper = new Wrapper($this->application->getXML());
 
             // take control of error handling
             PHPException::setErrorHandler($this);
@@ -55,6 +55,7 @@ class Html extends ViewResolver implements ErrorHandler
 
     /**
      * {@inheritDoc}
+     *
      * @see \Lucinda\STDERR\ErrorHandler::handle()
      */
     public function handle(\Throwable $exception): void

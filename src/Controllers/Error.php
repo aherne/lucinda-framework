@@ -1,6 +1,8 @@
 <?php
+
 namespace Lucinda\Project\Controllers;
 
+use Lucinda\MVC\Response\HttpStatus;
 use Lucinda\STDERR\Controller;
 
 /**
@@ -10,6 +12,7 @@ class Error extends Controller
 {
     /**
      * {@inheritDoc}
+     *
      * @see \Lucinda\MVC\Runnable::run()
      */
     public function run(): void
@@ -23,7 +26,7 @@ class Error extends Controller
      */
     private function setResponseStatus(): void
     {
-        $this->response->setStatus(500);
+        $this->response->setStatus(HttpStatus::INTERNAL_SERVER_ERROR);
     }
 
     /**
@@ -50,7 +53,7 @@ class Error extends Controller
         if (strpos($contentType, "text/html")===0) {
             $viewsPath = (string) $this->application->getTag("templating")["templates_path"];
             $view->setFile($viewsPath."/".($displayErrors ? "debug" : "500"));
-        } else if (strpos($contentType, "text/plain")===0) {
+        } elseif (strpos($contentType, "text/plain")===0) {
             $viewsPath = (string) $this->application->getTag("templating")["templates_path"];
             $view->setFile($viewsPath."/debug-console");
         }

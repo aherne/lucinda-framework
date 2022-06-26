@@ -1,35 +1,45 @@
 <?php
+
 namespace Lucinda\Project\DAO;
 
+use Lucinda\NoSQL\Driver;
 use Lucinda\WebSecurity\Request;
 use Lucinda\Framework\AbstractLoginThrottler;
-use Lucinda\NoSQL\ConnectionSingleton;
 
 /**
  * Extension of BasicLoginThrottler that uses a NoSQL database as storage medium
  */
 class NoSQLLoginThrottler extends AbstractLoginThrottler
 {
+    public const DRIVER_NAME = "";
     public const EXPIRATION = 3600;
+
     private $key;
     private $connection;
 
     /**
      * Registers variables, calculates key to search for, and checks current throttling status for request.
      *
-     * @param \Lucinda\STDOUT\Request $request
-     * @param string $ipAddress IP address detected from client.
-     * @param string $userName Username client tries to login with.
+     * @param Request $request
+     * @param string  $userName Username client tries to login with.
      */
     public function __construct(Request $request, string $userName)
     {
-        $this->key = "logins__".sha1(json_encode(array("ip"=>$request->getIpAddress(), "username"=>$userName)));
-        $this->connection = ConnectionSingleton::getInstance();
+        $this->key = "logins__".sha1(
+            (string) json_encode(
+                [
+                "ip"=>$request->getIpAddress(),
+                "username"=>$userName
+                ]
+            )
+        );
+        $this->connection = \NoSQL(self::DRIVER_NAME);
         parent::__construct($request, $userName);
     }
 
     /**
      * {@inheritDoc}
+     *
      * @see \Lucinda\WebSecurity\Authentication\Form\LoginThrottler::setCurrentStatus()
      */
     protected function setCurrentStatus(): void
@@ -49,13 +59,20 @@ class NoSQLLoginThrottler extends AbstractLoginThrottler
 
     /**
      * {@inheritDoc}
-     * @see \Lucinda\Framework\AbstractLoginThrottler::persist()
+     *
+     * @see \Lucinda\WebSecurity\Authentication\Form\LoginThrottler::persist()
      */
     protected function persist(): void
     {
-        $this->connection->set($this->key, json_encode(array(
-            "attempts"=>$this->attempts,
-            "penalty_expiration"=>$this->penaltyExpiration
-        ), self::EXPIRATION));
+        $this->connection->set(
+            $this->key,
+            json_encode(
+                array(
+                "attempts"=>$this->attempts,
+                "penalty_expiration"=>$this->penaltyExpiration
+                ),
+                self::EXPIRATION
+            )
+        );
     }
 }

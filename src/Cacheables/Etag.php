@@ -1,4 +1,5 @@
 <?php
+
 namespace Lucinda\Project\Cacheables;
 
 use Lucinda\Framework\AbstractCacheable;
@@ -10,6 +11,7 @@ class Etag extends AbstractCacheable
 {
     /**
      * {@inheritDoc}
+     *
      * @see \Lucinda\Framework\AbstractCacheable::setTime()
      */
     protected function setTime(): void
@@ -18,6 +20,7 @@ class Etag extends AbstractCacheable
 
     /**
      * {@inheritDoc}
+     *
      * @see \Lucinda\Framework\AbstractCacheable::setEtag()
      */
     protected function setEtag(): void
