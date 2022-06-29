@@ -15,7 +15,7 @@ class Html extends ViewResolver implements ErrorHandler
     /**
      * @var ErrorHandler
      */
-    private ErrorHandler $defaultErrorHandler;
+    private $defaultErrorHandler;
 
     /**
      * {@inheritDoc}

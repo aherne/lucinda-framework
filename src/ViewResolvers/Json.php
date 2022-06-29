@@ -19,7 +19,8 @@ class Json extends ViewResolver
     public function run(): void
     {
         // see who triggered resolver (tested to have zero performance impact)
-        $isError = str_contains(str_replace("\\", "/", debug_backtrace()[0]["file"]), "vendor/lucinda/errors-mvc/");
+        $haystack = str_replace("\\", "/", debug_backtrace()[0]["file"]);
+        $isError = strpos($haystack, "vendor/lucinda/errors-mvc/")!==false;
 
         // resolves response in json format
         $json = new JsonConverter();

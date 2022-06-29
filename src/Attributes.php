@@ -11,12 +11,12 @@ use Lucinda\Logging\Logger;
  */
 class Attributes extends \Lucinda\STDOUT\Attributes
 {
-    private ?HeadersWrapper $headers = null;
-    private ?OAuth2Driver $oauth2Driver = null;
-    private ?Logger $logger = null;
-    private string|int|null $userID = null;
-    private ?string $csrfToken = null;
-    private ?string $accessToken = null;
+    private $headers = null;
+    private $oauth2Driver = null;
+    private $logger = null;
+    private $userID = null;
+    private $csrfToken = null;
+    private $accessToken = null;
 
     /**
      * Sets pointer to query HTTP headers with

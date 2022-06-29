@@ -9,7 +9,7 @@ use Lucinda\Logging\Logger;
  */
 class ConsoleAttributes extends \Lucinda\ConsoleSTDOUT\Attributes
 {
-    private ?Logger $logger = null;
+    private $logger = null;
 
     /**
      * Sets pointer to log messages with
