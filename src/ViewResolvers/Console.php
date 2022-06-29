@@ -16,7 +16,7 @@ class Console extends ViewResolver implements ErrorHandler
     /**
      * @var ErrorHandler
      */
-    private ErrorHandler $defaultErrorHandler;
+    private $defaultErrorHandler;
 
     /**
      * {@inheritDoc}

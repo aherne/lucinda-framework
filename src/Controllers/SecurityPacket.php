@@ -17,7 +17,7 @@ class SecurityPacket extends Controller
     /**
      * @var \Lucinda\WebSecurity\SecurityPacket
      */
-    private \Throwable $exception;
+    private $exception;
 
     /**
      * {@inheritDoc}

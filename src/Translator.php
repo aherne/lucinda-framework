@@ -9,7 +9,7 @@ use Lucinda\Internationalization\Reader;
  */
 class Translator
 {
-    private static Reader $reader;
+    private static $reader;
 
     /**
      * Sets driver that will perform translation
