@@ -31,7 +31,11 @@ class Logging extends RequestListener
         $requestInformation->setUserAgent($this->request->headers("User-Agent"));
         $requestInformation->setIpAddress($this->request->getClient()->getIP());
 
-        $wrapper = new Wrapper($this->application->getXML(), $requestInformation, ENVIRONMENT);
+        $wrapper = new Wrapper(
+            $this->application->getTag("loggers")->xpath("..")[0],
+            $requestInformation,
+            ENVIRONMENT
+        );
         $this->attributes->setLogger($wrapper->getLogger());
     }
 }
