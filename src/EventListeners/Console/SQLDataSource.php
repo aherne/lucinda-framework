@@ -21,6 +21,9 @@ class SQLDataSource extends Application
      */
     public function run(): void
     {
-        new Wrapper($this->application->getXML(), ENVIRONMENT);
+        new Wrapper(
+            $this->application->getTag("sql")->xpath("..")[0],
+            ENVIRONMENT
+        );
     }
 }
