@@ -34,7 +34,10 @@ class Security extends Request
         $securityTagRoot = $this->application->getXML();
         $requestBinder = new RequestBinder($this->request, $this->attributes->getValidPage());
         if ($this->application->getTag("oauth2")->{ENVIRONMENT}) {
-            $oauth2Wrapper = new OAuth2Wrapper($this->application->getTag("oauth2")->xpath("..")[0], ENVIRONMENT);
+            $oauth2Wrapper = new OAuth2Wrapper(
+                $this->application->getTag("oauth2")->xpath("..")[0],
+                ENVIRONMENT
+            );
             $oauth2Drivers = $oauth2Wrapper->getDriver();
 
             $oauth2Binder = new OAuth2Binder($oauth2Drivers);

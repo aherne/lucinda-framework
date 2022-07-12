@@ -25,7 +25,7 @@ class Localization extends Request
     public function run(): void
     {
         $wrapper = new Wrapper(
-            $this->application->getXML(),
+            $this->application->getTag("internationalization")->xpath("..")[0],
             $this->request->parameters(),
             $this->request->headers()
         );
