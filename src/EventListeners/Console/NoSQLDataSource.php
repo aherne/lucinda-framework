@@ -22,6 +22,9 @@ class NoSQLDataSource extends Application
      */
     public function run(): void
     {
-        new Wrapper($this->application->getXML(), ENVIRONMENT);
+        new Wrapper(
+            $this->application->getTag("nosql")->xpath("..")[0],
+            ENVIRONMENT
+        );
     }
 }

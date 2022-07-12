@@ -25,7 +25,7 @@ class HttpHeaders extends Request
     public function run(): void
     {
         $wrapper = new Wrapper(
-            $this->application->getXML(),
+            $this->application->getTag("headers")->xpath("..")[0],
             $this->attributes->getValidPage(),
             $this->request->headers()
         );
