@@ -33,7 +33,7 @@ class Html extends ViewResolver implements ErrorHandler
             $this->defaultErrorHandler = PHPException::getErrorHandler();
 
             // converts view language to PHP
-            $wrapper = new Wrapper($this->application->getXML());
+            $wrapper = new Wrapper($this->application->getTag("templating")->xpath("..")[0]);
 
             // take control of error handling
             PHPException::setErrorHandler($this);
