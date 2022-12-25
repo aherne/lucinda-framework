@@ -37,20 +37,13 @@ class SecurityPacket extends Controller
      */
     private function setResponseStatus(): void
     {
-        switch ($this->exception->getStatus()) {
-        case "unauthorized":
-            $this->response->setStatus(HttpStatus::UNAUTHORIZED);
-            break;
-        case "forbidden":
-            $this->response->setStatus(HttpStatus::FORBIDDEN);
-            break;
-        case "not_found":
-            $this->response->setStatus(HttpStatus::NOT_FOUND);
-            break;
-        default:
-            $this->response->setStatus(HttpStatus::OK);
-            break;
-        }
+        $httpStatusCode = match ($this->exception->getStatus()) {
+            "unauthorized"=>HttpStatus::UNAUTHORIZED,
+            "forbidden"=>HttpStatus::FORBIDDEN,
+            "not_found"=>HttpStatus::NOT_FOUND,
+            default=>HttpStatus::OK,
+        };
+        $this->response->setStatus($httpStatusCode);
     }
 
     /**
@@ -135,14 +128,11 @@ class SecurityPacket extends Controller
     private function getViewPath(string $status): string
     {
         $viewsPath = (string) $this->application->getTag("templating")["templates_path"];
-        switch ($status) {
-        case "unauthorized":
-            return $viewsPath."/401";
-        case "forbidden":
-            return $viewsPath."/403";
-        default:
-            return $viewsPath."/404";
-        }
+        return match ($status) {
+            "unauthorized" => $viewsPath . "/401",
+            "forbidden" => $viewsPath . "/403",
+            default => $viewsPath . "/404",
+        };
     }
 
     /**
