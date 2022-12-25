@@ -31,7 +31,7 @@ class NoSQLSessionHandler implements \SessionHandlerInterface
         try {
             $this->connection->set($sessionID, $sessionData, (int) ini_get('session.gc_maxlifetime'));
             return true;
-        } catch (OperationFailedException $e) {
+        } catch (OperationFailedException) {
             return false;
         }
     }
@@ -46,7 +46,7 @@ class NoSQLSessionHandler implements \SessionHandlerInterface
         if ($this->connection->contains($sessionID)) {
             try {
                 return $this->connection->get($sessionID);
-            } catch (OperationFailedException $e) {
+            } catch (OperationFailedException) {
                 return false;
             }
         } else {
@@ -65,7 +65,7 @@ class NoSQLSessionHandler implements \SessionHandlerInterface
             try {
                 $this->connection->delete($sessionID);
                 return true;
-            } catch (OperationFailedException $e) {
+            } catch (OperationFailedException) {
                 return false;
             }
         } else {
