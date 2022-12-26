@@ -7,7 +7,7 @@ use Lucinda\Internationalization\Reader;
 /**
  * Static wrapper of Lucinda\Internationalization\Reader required by translate function to operate
  */
-class Translator
+final class Translator
 {
     private static Reader $reader;
 
