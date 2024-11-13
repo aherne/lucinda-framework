@@ -67,7 +67,9 @@ class ViewLanguageRenderer extends \Lucinda\MVC\STDERR\ErrorRenderer implements 
     public function handle($exception)
     {
         // close output buffer
-        ob_end_clean();
+        if (ob_get_level() > 0) {
+             ob_end_clean();
+        }
 
         // delegate handling to STDERR MVC API
         $this->defaultErrorHandler->handle($exception);
