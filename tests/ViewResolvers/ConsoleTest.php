@@ -25,7 +25,10 @@ class ConsoleTest
         $html = new Console($application, $response);
         $html->run();
 
-        return new Result($response->getBody()=="Hello, world!");
+        return new Result($response->getBody()=="
+Hello, world!
+
+");
     }
 
 
