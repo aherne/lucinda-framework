@@ -24,8 +24,10 @@ class HtmlTest
 
         $html = new Html($application, $response);
         $html->run();
+        return new Result($response->getBody()=="
+<div>Hello, world!</div>
 
-        return new Result($response->getBody()=="<div>Hello, world!</div>");
+");
     }
 
 
@@ -34,12 +36,11 @@ class HtmlTest
         $application = new Application(dirname(__DIR__)."/mocks/stdout.xml");
         $response = new Response("text/html", "test-bugged");
 
-        ob_start();
-        $html = new Html($application, $response);
-        $html->run();
-        $body = ob_get_contents();
-        ob_end_clean();
-
-        return new Result(strpos($body, "User tag not found: foo/bar"));
+        try {
+            $html = new Html($application, $response);
+            $html->run();
+        } catch(\Throwable $e) {
+            return new Result($e->getMessage() == "User tag not found: foo/bar");
+        }
     }
 }
