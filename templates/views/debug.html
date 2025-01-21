@@ -3,18 +3,22 @@
         <title>Bug Report</title>
     </head>
     <body>
-        <h1>${data.class}</h1>
-        
+        <h1>ERROR REPORT</h1>
+
         <h2>Message</h2>
-        <p>${nl2br(${data.message})}</p>
-        
-        <h2>File</h2>
-        <p>${data.file}</p>
-        
-        <h2>Line</h2>
-        <p>${data.line}</p>
-        
+        ${data.message}
+
+        <:if test="!empty(${data.query})">
+        <h2>Query</h2>
+        ${nl2br(${data.query})}
+        </:if>
+
+        <h2>Details</h2>
+        <strong>Type</strong>: ${data.type}<br/>
+        <strong>File</strong>: ${data.file}<br/>
+        <strong>Line</strong>: ${data.line}
+
         <h2>Trace</h2>
-        <p>${nl2br(${data.trace})}</p>
+        ${nl2br(${data.trace})}
     </body>
 </html>
