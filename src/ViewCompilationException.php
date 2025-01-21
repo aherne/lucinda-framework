@@ -35,9 +35,11 @@ class ViewCompilationException extends \Exception
         }
         fclose($handle);
 
-        foreach ($results["START"] as $file => $versions) {
-            if (!isset($results["END"][$file]) || count($versions) != count($results["END"][$file])) {
-                $this->templateTrace[] = str_replace(dirname(__DIR__, 2), "", $file);
+        if (!empty($results["START"])) {
+            foreach ($results["START"] as $file => $versions) {
+                if (!isset($results["END"][$file]) || count($versions) != count($results["END"][$file])) {
+                    $this->templateTrace[] = str_replace(dirname(__DIR__, 2), "", $file);
+                }
             }
         }
     }
