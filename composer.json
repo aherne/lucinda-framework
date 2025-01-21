@@ -13,7 +13,6 @@
         }
     ],
     "require": {
-        "php": ">=7.1.0 <8.1.0",
         "ext-simplexml": "*",
         "ext-json": "*",
         "lucinda/framework-engine": "~2.0",      	
