@@ -14,7 +14,7 @@ class TemplatingWrapper extends Wrapper  implements ErrorHandler
     /**
      * @var ErrorHandler
      */
-    private ErrorHandler $defaultErrorHandler;
+    private $defaultErrorHandler;
 
     /**
      * Binds compilation file to data, returning final HTML
@@ -61,6 +61,6 @@ class TemplatingWrapper extends Wrapper  implements ErrorHandler
 
         $viewException = new ViewCompilationException($exception->getMessage(),0, $exception);
         $viewException->setTemplateTrace($exception->getFile(), $exception->getLine());
-        $this->defaultErrorHandler->handle($viewException);
+        $this->defaultErrorHandler->handle($viewException->getTemplateTrace()? $viewException: $exception);
     }
 }
