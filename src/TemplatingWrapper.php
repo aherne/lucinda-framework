@@ -6,6 +6,9 @@ use Lucinda\STDERR\ErrorHandler;
 use Lucinda\STDERR\PHPException;
 use Lucinda\Templating\Wrapper;
 
+/**
+ * Binds View Language API to Errors MVC API for error handling
+ */
 class TemplatingWrapper extends Wrapper  implements ErrorHandler
 {
     /**
@@ -14,6 +17,8 @@ class TemplatingWrapper extends Wrapper  implements ErrorHandler
     private ErrorHandler $defaultErrorHandler;
 
     /**
+     * Binds compilation file to data, returning final HTML
+     *
      * @param string $compilationFile
      * @param array $data
      * @return string
@@ -43,8 +48,9 @@ class TemplatingWrapper extends Wrapper  implements ErrorHandler
     }
 
     /**
-     * @param \Throwable $exception
-     * @return void
+     * Handles errors by delegating to registered storage mediums (if any) then output using display method (if any)
+     *
+     * @param \Throwable $exception Encapsulates error information.
      */
     public function handle(\Throwable $exception): void
     {
