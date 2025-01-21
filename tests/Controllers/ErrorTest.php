@@ -14,6 +14,7 @@ class ErrorTest
     {
         $exception = new \Exception("Hello!");
         $application = new Application(dirname(__DIR__)."/mocks/stderr.xml", ENVIRONMENT);
+
         $request = new Request($application->routes()[$application->getDefaultRoute()], $exception);
         $response = new Response($application->resolvers()[$application->getDefaultFormat()]->getContentType(), "");
 
