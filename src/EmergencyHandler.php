@@ -59,7 +59,7 @@ class EmergencyHandler implements ErrorHandler
         $contents = (string) file_get_contents($response->view()->getFile());
         $contents = str_replace(
             [
-            '${data.class}',
+            '${data.type}',
             '${data.message}',
             '${data.file}',
             '${data.line}',
@@ -101,8 +101,8 @@ class EmergencyHandler implements ErrorHandler
         if ($displayErrors) {
             $contents = str_replace(
                 [
-                '${data.class}',
-                '${nl2br(${data.message})}',
+                '${data.type}',
+                '${data.message}',
                 '${data.file}',
                 '${data.line}',
                 '${nl2br(${data.trace})}'
@@ -132,7 +132,7 @@ class EmergencyHandler implements ErrorHandler
         $body = [];
         if ($displayErrors) {
             $body = [
-                "class"=>get_class($exception),
+                "type"=>get_class($exception),
                 "message"=>$exception->getMessage(),
                 "file"=>$exception->getFile(),
                 "line"=>$exception->getLine(),

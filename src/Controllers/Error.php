@@ -63,9 +63,6 @@ class Error extends Controller
     {
         if ($displayErrors) {
             $view["message"] = $exception->getMessage();
-            if ($exception instanceof \Lucinda\SQL\StatementException) {
-                $view["query"] = $exception->getQuery();
-            }
             $view["type"] = get_class($exception);
             if ($exception instanceof ViewCompilationException) {
                 $view["file"] = $exception->getPrevious()->getFile();

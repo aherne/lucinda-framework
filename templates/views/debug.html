@@ -8,11 +8,6 @@
         <h2>Message</h2>
         ${data.message}
 
-        <:if test="!empty(${data.query})">
-        <h2>Query</h2>
-        ${nl2br(${data.query})}
-        </:if>
-
         <h2>Details</h2>
         <strong>Type</strong>: ${data.type}<br/>
         <strong>File</strong>: ${data.file}<br/>
