@@ -12,6 +12,8 @@ use Lucinda\STDERR\Controller;
  */
 class Error extends Controller
 {
+    private bool $displayErrors;
+    
     /**
      * {@inheritDoc}
      *
@@ -19,6 +21,7 @@ class Error extends Controller
      */
     public function run(): void
     {
+        $this->displayErrors = $this->application->getDisplayErrors();
         $this->setResponseStatus();
         $this->setResponseBody();
     }
@@ -39,13 +42,12 @@ class Error extends Controller
         $contentType = $this->response->headers("Content-Type");
         $exception = $this->request->getException();
         $view = $this->response->view();
-        $displayErrors = $this->application->getDisplayErrors();
         if (str_starts_with($contentType, "text/html")) {
-            $this->handleHTML($exception, $view, $displayErrors);
+            $this->handleHTML($exception, $view);
         } elseif (str_starts_with($contentType, "application/json")) {
-            $this->handleJSON($exception, $view, $displayErrors);
+            $this->handleJSON($exception, $view);
         } elseif (str_starts_with($contentType, "text/plain")) {
-            $this->handleConsole($exception, $view, $displayErrors);
+            $this->handleConsole($exception, $view);
         } else {
             throw new \Exception("Unsupported content type!");
         }
@@ -56,12 +58,11 @@ class Error extends Controller
      *
      * @param \Throwable $exception
      * @param View $view
-     * @param bool $displayErrors
      * @return void
      */
-    private function handleHTML(\Throwable $exception, View $view, bool $displayErrors): void
+    private function handleHTML(\Throwable $exception, View $view): void
     {
-        if ($displayErrors) {
+        if ($this->displayErrors) {
             $view["message"] = $exception->getMessage();
             $view["type"] = get_class($exception);
             if ($exception instanceof ViewCompilationException) {
@@ -85,12 +86,11 @@ class Error extends Controller
      *
      * @param \Throwable $exception
      * @param View $view
-     * @param bool $displayErrors
      * @return void
      */
-    private function handleJSON(\Throwable $exception, View $view, bool $displayErrors): void
+    private function handleJSON(\Throwable $exception, View $view): void
     {
-        if ($displayErrors) {
+        if ($this->displayErrors) {
             $view["message"] = $this->request->getException()->getMessage();
             $view["file"] = $this->request->getException()->getFile();
             $view["line"] = $this->request->getException()->getLine();
@@ -107,13 +107,12 @@ class Error extends Controller
      *
      * @param \Throwable $exception
      * @param View $view
-     * @param bool $displayErrors
      * @return void
      * @throws \Lucinda\MVC\ConfigurationException
      */
-    private function handleConsole(\Throwable $exception, View $view, bool $displayErrors): void
+    private function handleConsole(\Throwable $exception, View $view): void
     {
-        if ($displayErrors) {
+        if ($this->displayErrors) {
             $view["message"] = $exception->getMessage();
             if ($exception instanceof \Lucinda\SQL\StatementException) {
                 $view["query"] = $exception->getQuery();
