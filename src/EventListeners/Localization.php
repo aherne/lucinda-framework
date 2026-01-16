@@ -4,7 +4,6 @@ namespace Lucinda\Project\EventListeners;
 
 use Lucinda\Internationalization\ConfigurationException;
 use Lucinda\Internationalization\Wrapper;
-use Lucinda\Framework\SingletonRepository;
 use Lucinda\Project\Translator;
 use Lucinda\STDOUT\EventListeners\Request;
 

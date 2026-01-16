@@ -9,7 +9,6 @@ use Lucinda\STDOUT\Request;
 use Lucinda\STDOUT\Session;
 use Lucinda\STDOUT\Cookies;
 use Lucinda\UnitTest\Result;
-use Lucinda\Framework\SingletonRepository;
 use Lucinda\Internationalization\Reader;
 
 class LocalizationTest
