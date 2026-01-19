@@ -1,6 +1,7 @@
 <?php
 
-use Lucinda\Project\Translator;
+use Lucinda\Framework\ServiceRegistry;
+use Lucinda\Internationalization\Reader;
 
 /**
  * Translates text into preferred or default locale. Like gettext, ignores errors.
@@ -13,7 +14,8 @@ use Lucinda\Project\Translator;
 function translate(string $key, string $domain = "", ...$parameters): string
 {
     try {
-        $translation = Translator::get()->getTranslation($key, $domain);
+        $reader = ServiceRegistry::get(Reader::class);
+        $translation = $reader->getTranslation($key, $domain);
         if (!empty($parameters)) {
             foreach ($parameters as $key => $value) {
                 $translation = str_replace("%".$key, $value, $translation);

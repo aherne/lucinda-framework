@@ -1,7 +1,8 @@
 <?php
 
 use Lucinda\NoSQL\Driver;
-use Lucinda\NoSQL\ConnectionFactory;
+use Lucinda\Framework\ServiceRegistry;
+use Lucinda\Framework\NoSqlDriverProvider;
 
 /**
  * Automates retrieval for a key-value store driver
@@ -12,5 +13,6 @@ use Lucinda\NoSQL\ConnectionFactory;
  */
 function NoSQL(string $serverName = ""): Driver
 {
-    return ConnectionFactory::getInstance($serverName);
+    $provider = ServiceRegistry::get(NoSqlDriverProvider::class);
+    return $provider->getDriver($serverName);
 }

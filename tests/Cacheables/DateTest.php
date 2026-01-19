@@ -3,7 +3,8 @@
 namespace Test\Lucinda\Project\Cacheables;
 
 use Lucinda\Project\Cacheables\Date;
-use Lucinda\NoSQL\Wrapper;
+use Lucinda\Framework\ServiceRegistry;
+use Lucinda\Framework\NoSqlDriverProvider;
 use Lucinda\STDOUT\Application;
 use Lucinda\UnitTest\Result;
 
@@ -16,7 +17,8 @@ class DateTest
         $_SERVER = json_decode(file_get_contents(dirname(__DIR__)."/mocks/SERVER.json"), true);
 
         $application = new Application(dirname(__DIR__)."/mocks/stdout.xml");
-        new Wrapper($application->getXML(), ENVIRONMENT);
+        $provider = new NoSqlDriverProvider($application->getXML(), ENVIRONMENT);
+        ServiceRegistry::set(NoSqlDriverProvider::class, $provider);
 
         $request = new \Lucinda\STDOUT\Request();
         $response = new \Lucinda\MVC\Response("text/plain", "");

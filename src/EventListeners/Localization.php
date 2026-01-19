@@ -4,7 +4,8 @@ namespace Lucinda\Project\EventListeners;
 
 use Lucinda\Internationalization\ConfigurationException;
 use Lucinda\Internationalization\Wrapper;
-use Lucinda\Project\Translator;
+use Lucinda\Internationalization\Reader;
+use Lucinda\Framework\ServiceRegistry;
 use Lucinda\STDOUT\EventListeners\Request;
 
 require_once dirname(__DIR__, 2)."/helpers/translate.php";
@@ -28,6 +29,6 @@ class Localization extends Request
             $this->request->parameters(),
             $this->request->headers()
         );
-        Translator::set($wrapper->getReader());
+        ServiceRegistry::set(Reader::class, $wrapper->getReader());
     }
 }

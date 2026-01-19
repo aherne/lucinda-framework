@@ -2,9 +2,10 @@
 
 namespace Lucinda\Project\EventListeners;
 
+use Lucinda\Framework\ServiceRegistry;
+use Lucinda\Framework\SqlConnectionProvider;
 use Lucinda\SQL\ConfigurationException;
 use Lucinda\STDOUT\EventListeners\Application;
-use Lucinda\SQL\Wrapper;
 
 require_once dirname(__DIR__, 2)."/helpers/SQL.php";
 
@@ -22,6 +23,10 @@ class SQLDataSource extends Application
      */
     public function run(): void
     {
-        new Wrapper($this->application->getTag("sql")->xpath("..")[0], ENVIRONMENT);
+        $provider = new SqlConnectionProvider(
+            $this->application->getTag("sql")->xpath("..")[0],
+            ENVIRONMENT
+        );
+        ServiceRegistry::set(SqlConnectionProvider::class, $provider);
     }
 }

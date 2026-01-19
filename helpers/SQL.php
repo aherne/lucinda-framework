@@ -1,7 +1,8 @@
 <?php
 
-use Lucinda\SQL\ConnectionFactory;
 use Lucinda\SQL\StatementResults;
+use Lucinda\Framework\ServiceRegistry;
+use Lucinda\Framework\SqlConnectionProvider;
 
 /**
  * Automates prepared statement execution and results retrieval
@@ -15,7 +16,8 @@ use Lucinda\SQL\StatementResults;
  */
 function SQL(string $query, array $parameters = array(), string $serverName = ""): StatementResults
 {
-    $preparedStatement = ConnectionFactory::getInstance($serverName)->preparedStatement();
+    $provider = ServiceRegistry::get(SqlConnectionProvider::class);
+    $preparedStatement = $provider->getConnection($serverName)->preparedStatement();
     $preparedStatement->prepare($query);
     return $preparedStatement->execute($parameters);
 }

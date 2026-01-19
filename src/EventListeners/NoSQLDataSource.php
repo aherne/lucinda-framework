@@ -2,9 +2,10 @@
 
 namespace Lucinda\Project\EventListeners;
 
+use Lucinda\Framework\ServiceRegistry;
+use Lucinda\Framework\NoSqlDriverProvider;
 use Lucinda\NoSQL\ConfigurationException;
 use Lucinda\STDOUT\EventListeners\Application;
-use Lucinda\NoSQL\Wrapper;
 
 require_once dirname(__DIR__, 2)."/helpers/NoSQL.php";
 
@@ -22,6 +23,10 @@ class NoSQLDataSource extends Application
      */
     public function run(): void
     {
-        new Wrapper($this->application->getTag("nosql")->xpath("..")[0], ENVIRONMENT);
+        $provider = new NoSqlDriverProvider(
+            $this->application->getTag("nosql")->xpath("..")[0],
+            ENVIRONMENT
+        );
+        ServiceRegistry::set(NoSqlDriverProvider::class, $provider);
     }
 }

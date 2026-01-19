@@ -32,7 +32,7 @@ class AbstractSessionHandlerTest
 
     public function gc()
     {
-        return new Result(true, "Session garbage collection cannot be unit tested!");
+        return new Result(false, "Session garbage collection cannot be unit tested!");
     }
 
     public function close()

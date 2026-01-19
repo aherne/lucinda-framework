@@ -2,7 +2,8 @@
 
 namespace Test\Lucinda\Project\DAO;
 
-use Lucinda\SQL\Wrapper;
+use Lucinda\Framework\ServiceRegistry;
+use Lucinda\Framework\SqlConnectionProvider;
 use Lucinda\STDOUT\Application;
 
 require_once dirname(__DIR__, 2)."/helpers/SQL.php";
@@ -12,7 +13,8 @@ class SQLLoginThrottlerTest extends AbstractLoginThrottlerTest
     public function __construct()
     {
         $application = new Application(dirname(__DIR__)."/mocks/stdout.xml");
-        new Wrapper($application->getXML(), ENVIRONMENT);
+        $provider = new SqlConnectionProvider($application->getXML(), ENVIRONMENT);
+        ServiceRegistry::set(SqlConnectionProvider::class, $provider);
         parent::__construct();
     }
 

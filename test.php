@@ -13,6 +13,7 @@ try {
     } elseif ($e->getMessage()=="Connection refused") {
         echo "Please start Redis server or install it along with its PHP driver! If you're using a different NoSQL vendor, modify 'nosql' tag accordingly in: tests/mocks/stdout.xml\n";
     } else {
+        var_dump($e);
         echo $e->getMessage()."\n";
     }
 }
