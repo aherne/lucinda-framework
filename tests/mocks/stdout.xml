@@ -28,7 +28,7 @@
     </nosql>
     <sql>
     	<local>
-    		<server driver="mysql" host="127.0.0.1" port="3306" username="test" password="me" schema="test"/>
+    		<server driver="mysql" host="127.0.0.1" port="3306" username="test" password="Passw0rd!" schema="test"/>
     	</local>
     </sql>
     <internationalization method="header" folder="tests/mocks/locales" locale="en_US"/>
