@@ -2,32 +2,34 @@
 
 namespace Lucinda\Project\ViewResolvers;
 
-use Lucinda\Project\TemplatingWrapper;
-use Lucinda\MVC\ViewResolver;
+use Lucinda\MVC\Response\ViewResolver;
+use Lucinda\MVC\Response\View;
+use Lucinda\Templating\Wrapper;
 
-/**
- * MVC view resolver for HTML format using ViewLanguage templating.
- */
-class Html extends ViewResolver
+final class Html implements ViewResolver
 {
-    /**
-     * {@inheritDoc}
-     *
-     * @see \Lucinda\MVC\Runnable::run()
-     */
-    public function run(): void
+    const XML_PATH = "xml/templating";
+
+    public function resolve(View $view): string
     {
-        if ($this->response->getBody()) {
-            return;
+        $wrapper = new Wrapper($this->getXML());
+        return $wrapper->compile($view->getFile(), $view->getData());
+    }
+
+    private function getXML(): \SimpleXMLElement
+    {
+        $xmlFile = dirname(__DIR__, 2).DIRECTORY_SEPARATOR.self::XML_PATH.".xml";
+        if (!file_exists($xmlFile)) {
+            throw new \RuntimeException(
+                "XML file not found: ".$xmlFile
+            );
         }
-
-        // converts view language to PHP
-        $wrapper = new TemplatingWrapper($this->application->getTag("templating")->xpath("..")[0]);
-
-        // compiles PHP file into output buffer
-        $output = $wrapper->compile($this->response->view()->getFile(), $this->response->view()->getData());
-
-        // saves stream
-        $this->response->setBody($output);
+        $xml = simplexml_load_file($xmlFile);
+        if ($xml === false) {
+            throw new \RuntimeException(
+                "Templating XML is malformed: ".$xmlFile
+            );
+        }
+        return $xml;
     }
 }

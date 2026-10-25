@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xml>
+<xml>
+    <resolvers>
+	    <resolver format="html" content_type="text/html" class="Lucinda\Project\ViewResolvers\Html" charset="UTF-8"/>
+	    <resolver format="json" content_type="application/json" class="Lucinda\Project\ViewResolvers\Json" charset="UTF-8"/>
+	    <resolver format="console" content_type="text/plain" class="Lucinda\Project\ViewResolvers\Console" charset="UTF-8"/>
+    </resolvers>
+</xml>

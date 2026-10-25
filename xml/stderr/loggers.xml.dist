@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xml>
+<xml>
+    <loggers>
+        <logger
+            class="Lucinda\Logging\Driver\File\Wrapper"
+            path="logs/errors"
+            format="%d %v %e %f %l %m %u %i %a"
+            rotation="Y-m-d"
+        />
+    </loggers>
+</xml>

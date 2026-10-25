@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xml>
+<xml>
+  	<templating compilations_path="compilations" tags_path="templates/tags" templates_path="templates/views" templates_extension="html"/>
+</xml>

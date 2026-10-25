@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xml>
+<xml>
+  <application version="0.0.1" default_format="html" default_route="default"/>
+</xml>

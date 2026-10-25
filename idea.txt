@@ -1,0 +1,8 @@
+This is the skeleton of a highly modular framework ("Lucinda"), where each logical unit is disassembled by the idea
+API=ASPECT OF WEBAPP LOGIC in order to be able to be assembled into other units, used independently, and so on. 
+This way, framework's responsibility is strictly that of an adapter that glues the APIs together. 
+In order to split responsibility between FIXED adapter logic and the one modifiable by the end user, 
+framework logic is divided between:
+- engine: holds the fixed un-movable binding logic
+- skeleton: holds the framework code that will be modifiable by the user
+- configurer: holds a mini-api that allows step-by-step configuration after framework is installed

@@ -7,7 +7,7 @@ use Lucinda\Framework\AbstractCacheable;
 /**
  * CacheableDriver that generates an ETAG based on host, response body & headers.
  */
-class Etag extends AbstractCacheable
+final class Etag extends AbstractCacheable
 {
     /**
      * {@inheritDoc}

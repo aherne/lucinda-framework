@@ -7,7 +7,7 @@ use Lucinda\Framework\AbstractCacheable;
 /**
  * CacheableDriver that generates an ETAG based on host, response body & headers.
  */
-class Date extends AbstractCacheable
+final class Date extends AbstractCacheable
 {
     public const DRIVER_NAME = "";
     public const EXPIRATION = 24*60*60;
