@@ -6,6 +6,7 @@ add controllers (STDERR)
 add DAOs from old skeleton
 implement Bootstrap class in engine API
 add DAOs from configuration API
+Error controller & debug views: add viewlanguage errors support
 Session listener should insure: (assuming security listener is used)
     - The security driver’s SameSite, Secure, HttpOnly, and cookie lifetime settings are skipped.
     - The MVC/PHP session settings govern instead.
