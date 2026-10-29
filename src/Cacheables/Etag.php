@@ -25,6 +25,6 @@ final class Etag extends AbstractCacheable
      */
     protected function setEtag(): void
     {
-        $this->etag = sha1($this->request->getServer()->getName()."#".$this->response->getBody());
+        $this->etag = sha1($this->request->getServer()->getName()."#".$this->response);
     }
 }

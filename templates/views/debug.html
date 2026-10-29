@@ -3,13 +3,17 @@
         <title>Bug Report</title>
     </head>
     <body>
-        <h1>ERROR REPORT</h1>
+        <h1>${data.type}</h1>
 
         <h2>Message</h2>
         ${data.message}
 
+        <:if test="!empty(${data.query})">
+        <h2>Query</h2>
+        ${nl2br(${data.query})}
+        </:if>
+
         <h2>Details</h2>
-        <strong>Type</strong>: ${data.type}<br/>
         <strong>File</strong>: ${data.file}<br/>
         <strong>Line</strong>: ${data.line}
 

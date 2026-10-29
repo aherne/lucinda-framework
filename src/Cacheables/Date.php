@@ -20,7 +20,7 @@ final class Date extends AbstractCacheable
     protected function setTime(): void
     {
         // generates etag
-        $etag = sha1($this->request->getServer()->getName()."#".$this->response->getBody());
+        $etag = sha1($this->request->getServer()->getName()."#".$this->response);
         $connection = \NoSQL(self::DRIVER_NAME);
 
         $modifiedTime = 0;

@@ -3,38 +3,25 @@
 namespace Lucinda\Project\ViewResolvers;
 
 use Lucinda\ConsoleViewLanguage\RenderMode;
-use Lucinda\ConsoleViewLanguage\Wrapper;
-use Lucinda\ConsoleViewLanguage\Exception;
+use Lucinda\ConsoleViewLanguage\Wrapper as ConsoleWrapper;
+use Lucinda\Framework\XmlDetector;
+use Lucinda\Templating\Wrapper as TemplatingWrapper;
 use Lucinda\MVC\Response\View;
 use Lucinda\MVC\Response\ViewResolver;
 
 final class Console implements ViewResolver
 {
+    const XML_PATH = "xml/templating-console";
+
     public function resolve(View $view): string
     {
-        $wrapper = new Wrapper($this->getMarkup($view), RenderMode::ANSI);
-        return $wrapper->getBody();
-    }
+        // template
+        $detector = new XmlDetector(dirname(__DIR__, 2).DIRECTORY_SEPARATOR.self::XML_PATH);
+        $wrapper1 = new TemplatingWrapper($detector->getXML());
+        $output = $wrapper1->compile($view->getFile(), $view->getData());
 
-    private function getMarkup(View $view): string
-    {
-        $file = $view->getFile();
-
-        if ($file === "" || !is_file($file) || !is_readable($file)) {
-            throw new Exception(
-                "Console template is missing or unreadable: ".$file
-            );
-        }
-
-        $data = $view->getData();
-
-        ob_start();
-
-        try {
-            require $file;
-            return (string) ob_get_contents();
-        } finally {
-            ob_end_clean();
-        }
+        // compile console view language
+        $wrapper2 = new ConsoleWrapper($output, RenderMode::ANSI);
+        return $wrapper2->getBody();
     }
 }

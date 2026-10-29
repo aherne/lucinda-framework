@@ -2,6 +2,10 @@
 
 Lucinda Framework 4.0 is an ultra high performance web application skeleton developed with simplicity and modularity at its foundation. In order to fulfil these goals, it functions as an XML-based contract of 24 completely independent APIs, each designed for a particular aspect of a web application's logic:
 
+[API integration](#api-integration) · [OAuth2 state storage](src/README.md)
+
+<a id="api-integration"></a>
+
 ![diagram](https://www.lucinda-framework.com/lucinda-framework.svg)
 
 APIs that take part in this dance are:

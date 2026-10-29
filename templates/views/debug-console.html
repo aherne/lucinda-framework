@@ -1,6 +1,11 @@
 <div style="font-style: bold">Throwable:</div>
 <div>${data.type}</div>
 
+<:if test="!empty(${data.query})">
+<div style="font-style: bold">Query:</div>
+<div>${data.query}</div>
+</:if>
+
 <div style="font-style: bold">Message:</div>
 <div>${data.message}</div>
 
