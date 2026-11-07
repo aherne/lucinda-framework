@@ -1,10 +1,35 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE xml>
+<?xml version="1.0" encoding="UTF-8"?>
 <xml>
+    <!-- ErrorReporter requires loggers-fatal.xml independently of loggers.xml.
+         Used for INTERNAL errors, including failures of the error-handling flow.
+         Prefer destinations that work when application dependencies fail.
+         No environment nesting. Each class is required; multiple entries fan out.
+         Empty loggers disables output. Placeholder format: %d timestamp,
+         %v priority, %e exception class, %f file, %l line, %m message,
+         %u URI, %i client IP, %a user agent. Filtering belongs to PHP code. -->
     <loggers>
-        <logger
-            class="Lucinda\Logging\Driver\ErrorLog\Wrapper"
-            format="%d %v %e %f %l %m %u %i %a"
-        />
+        <!-- PHP error_log needs format; destination configured through PHP ini. -->
+        <logger class="Lucinda\Logging\Driver\ErrorLog\Wrapper"
+                format="%d %v %e %f %l %m %u %i %a"/>
+        <!-- Container/CLI replacement: stream and format required.
+        <logger class="Lucinda\Logging\Driver\Stream\Wrapper" stream="php://stderr" format="%d %v %e %m"/>
+        -->
+        <!-- File: required path without .log and format; optional rotation is a
+             PHP date pattern (empty disables rotation). Directory must exist and
+             be writable; paths are relative to the process working directory.
+        <logger class="Lucinda\Logging\Driver\File\Wrapper" path="logs/fatal"
+                format="%d %v %e %f %l %m" rotation="Y-m-d"/>
+        -->
+        <!-- JSON: required path, optional rotation, no text format.
+        <logger class="Lucinda\Logging\Driver\Json\Wrapper" path="logs/fatal-json" rotation="Y-m-d"/>
+        -->
+        <!-- Syslog: required application identifier and format.
+        <logger class="Lucinda\Logging\Driver\SysLog\Wrapper" application="your-application-fatal" format="%v %e %m"/>
+        -->
+        <!-- Deliberate discard:
+        <logger class="Lucinda\Logging\Driver\Null\Wrapper"/>
+        -->
     </loggers>
+    <!-- Custom wrappers follow AbstractLoggerWrapper; avoid dependencies on the
+         application registry, sessions or SQL for emergency reporting. -->
 </xml>

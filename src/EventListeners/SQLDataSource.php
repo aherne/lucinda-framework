@@ -7,8 +7,6 @@ use Lucinda\Framework\SqlConnectionProvider;
 use Lucinda\Framework\XmlDetector;
 use Lucinda\MVC\EventListener\UnFaceted;
 
-require_once dirname(__DIR__, 2)."/helpers/SQL.php";
-
 /**
  * Sets up SQL Data Access API in order to be able to query SQL databases later on
  */
@@ -19,10 +17,7 @@ class SQLDataSource implements UnFaceted
     public function run(): void
     {
         $xmlDetector = new XmlDetector(dirname(__DIR__, 2).DIRECTORY_SEPARATOR.self::XML_PATH);
-        $provider = new SqlConnectionProvider(
-            $xmlDetector->getXML(),
-            ENVIRONMENT
-        );
+        $provider = new SqlConnectionProvider($xmlDetector->getXML());
         ServiceRegistry::set(SqlConnectionProvider::class, $provider);
     }
 }

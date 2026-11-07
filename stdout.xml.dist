@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xml>
+    <!-- Copy to stdout.xml. All ref paths are relative to this root file and
+         omit .xml. Copy the referenced .xml.dist files to .xml as well.
+         index.php uses this document for BOTH HTTP and CLI requests.
+         ENVIRONMENT is required by index.php but does not select XML sections:
+         these consumers read their settings directly, without environment tags. -->
+    <application ref="xml/stdout/application"/>
+    <resolvers ref="xml/resolvers"/>
+    <templating ref="xml/templating"/>
+    <routes ref="xml/stdout/routes"/>
+    <!-- Optional HTTP session and cookie settings. CLI ignores these sections.
+         Enable session settings when using session authentication; application
+         code must start the shared session before Security runs, or configure
+         auto_start="1" in session.xml.
+    <session ref="xml/stdout/session"/>
+    <cookies ref="xml/stdout/cookies"/>
+    -->
+    <!-- Event listeners are registered in index.php through EventScheduler,
+         not XML. Suggested HTTP order: SQLDataSource / NoSQLDataSource before
+         dependent DAOs; Logging and Localization when needed; HttpHeaders
+         before HttpCors and HttpCaching; Security after session startup.
+         HttpCaching is a RESPONSE transformer. Use Console\Logging for CLI.
+         Each optional listener reads its own xml/stdout/*.xml document. -->
+</xml>

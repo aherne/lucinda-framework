@@ -19,15 +19,15 @@ define("ENVIRONMENT", $environment);
 new Lucinda\STDERR\FrontController(
     __DIR__."/stderr.xml", 
     __DIR__,
-    new ErrorReporter(
+    new ErrorReporter( // Lucinda\Framework\AbstractReporter
         $_SERVER,
         __DIR__."/xml/stderr/loggers",
         __DIR__."/xml/stderr/loggers-fatal"
     ),
-    new FatalErrorResolver(
+    new FatalErrorResolver( //Lucinda\STDERR\FatalErrorResolver
         __DIR__."/xml/stderr/application"
     ),
-    new DisplayErrors());
+    new DisplayErrors()); // Lucinda\STDERR\DisplayErrors
 
 // handles STDOUT flow
 $eventScheduler = new EventScheduler();

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xml>
+    <!-- Optional provider clients. Enable Security::getOAuth2XMLPath() and the
+         matching authentication/oauth2 section in security.xml together.
+         Initialize SQLDataSource first, create oauth2_states, and periodically
+         call OAuth2States::clearExpired(). State consumes require autocommit.
+         Each driver requires name, client_id, client_secret and unique callback.
+         Configure each provider once; ServiceBinder rejects duplicate vendor names.
+         callback is the relative login/callback route, matching security's driver
+         login attribute; register the corresponding absolute redirect URL with
+         the provider. Use exact case for vendor names.
+         Endpoints and scopes are defined in the library's endpoints.json; this
+         XML parser exposes no endpoint/scope override or environment expansion.
+         Replace credential placeholders in private deployment configuration. -->
+    <oauth2>
+        <driver name="Google" client_id="REPLACE_WITH_GOOGLE_CLIENT_ID"
+                client_secret="REPLACE_WITH_GOOGLE_CLIENT_SECRET" callback="login/google"/>
+        <!-- GitHub also REQUIRES application_name (sent as User-Agent).
+        <driver name="GitHub" client_id="REPLACE_WITH_GITHUB_CLIENT_ID"
+                client_secret="REPLACE_WITH_GITHUB_CLIENT_SECRET"
+                callback="login/github" application_name="Your Application"/>
+        -->
+        <!-- Other bundled providers: enable any needed combination and add
+             each to security.xml. Remove Google if it is not used.
+        <driver name="Facebook" client_id="REPLACE_WITH_FACEBOOK_CLIENT_ID"
+                client_secret="REPLACE_WITH_FACEBOOK_CLIENT_SECRET" callback="login/facebook"/>
+        <driver name="LinkedIn" client_id="REPLACE_WITH_LINKEDIN_CLIENT_ID"
+                client_secret="REPLACE_WITH_LINKEDIN_CLIENT_SECRET" callback="login/linkedin"/>
+        <driver name="Microsoft" client_id="REPLACE_WITH_MICROSOFT_CLIENT_ID"
+                client_secret="REPLACE_WITH_MICROSOFT_CLIENT_SECRET" callback="login/microsoft"/>
+        -->
+    </oauth2>
+</xml>

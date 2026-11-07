@@ -37,3 +37,25 @@ As its composing APIs, framework itself is PHP 8.1+ and PSR4 autoload compliant,
 Thanks to its modular and harmonic design, it's both extremely easy to use (as [tutorials](https://www.lucinda-framework.com/tutorials) show) and exceptionally fast (as [benchmarks](https://www.lucinda-framework.com/benchmarks) show: **75 times faster than Laravel** using factory settings for both). To learn more, go to:
 
 **[https://www.lucinda-framework.com](https://www.lucinda-framework.com)**
+
+## Session integration with security
+
+MVC owns session configuration, save-handler registration, cookies, and startup.
+When security uses session persistence, the application must start the injected
+`Lucinda\STDOUT\Session` before running the security listener. The listener passes
+`Lucinda\Framework\Session`, an adapter implementing `Lucinda\WebSecurity\Session`,
+to the security wrapper. Security delegates all session operations through this
+contract and fails explicitly if the adapter is missing or the session is inactive.
+Token-only persistence requires no session.
+
+The security persistence tag contains authentication settings only:
+
+```xml
+<session parameter_name="uid" expiration="1800" />
+```
+
+Configure session cookie attributes and save handlers in MVC's separate `<session>`
+tag. The security `expiration` remains an independent authentication idle timeout.
+Legacy security session attributes `is_http_only`, `is_https_only`, `same_site`, and
+`handler` must move to the session owner; security rejects them. MVC uses
+`headers_only`, `https_only`, `same_site`, and `handler` respectively.

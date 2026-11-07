@@ -3,21 +3,37 @@
         <title>Bug Report</title>
     </head>
     <body>
-        <h1>${data.type}</h1>
+        <h1>${beautify(${data.type})}</h1>
 
         <h2>Message</h2>
-        ${data.message}
-
+        ${beautify(${data.message})}
+        
+        <!-- SQL ERROR -->
         <:if test="!empty(${data.query})">
         <h2>Query</h2>
-        ${nl2br(${data.query})}
+        <pre>${beautify(${data.query})}</pre>
+        </:if>
+
+        <!-- VIEW LANGUAGE ERROR -->
+        <:if test="!empty(${data.template})">
+        <h2>ViewLanguage template</h2>
+        <strong>File</strong>: ${beautify(${data.template.file})}<br/>
+        <strong>Line</strong>: ${data.template.line}
+        </:if>
+        <:if test="!empty(${data.cause})">
+        <h2>Underlying error</h2>
+        <strong>Type</strong>: ${beautify(${data.cause.type})}<br/>
+        <strong>Message</strong>: ${beautify(${data.cause.message})}<br/>
+        <strong>File</strong>: ${beautify(${data.cause.file})}<br/>
+        <strong>Line</strong>: ${data.cause.line}
+        <pre>${beautify(${data.cause.trace})}</pre>
         </:if>
 
         <h2>Details</h2>
-        <strong>File</strong>: ${data.file}<br/>
+        <strong>File</strong>: ${beautify(${data.file})}<br/>
         <strong>Line</strong>: ${data.line}
 
         <h2>Trace</h2>
-        ${nl2br(${data.trace})}
+        ${nl2br(beautify(${data.trace}))}
     </body>
 </html>

@@ -14,7 +14,8 @@
     ],
     "require": {
         "php": "^8.5",
-        "ext-simplexml": "*",    
+        "ext-simplexml": "*",
+        "ext-sodium": "*",
         "lucinda/framework-engine": "~4.0",
         "lucinda/logging": "~5.0",
         "lucinda/nosql-data-access": "~5.0",
@@ -29,7 +30,8 @@
         "lucinda/abstract_mvc": "~3.0",
         "lucinda/console-mvc": "~3.0",
         "lucinda/migrations": "^3.0",
-        "lucinda/console-view": "~1.0"
+        "lucinda/console-view": "~1.0",
+        "lucinda/queries": "^4.0"
     },
     "require-dev": {
         "lucinda/unit-testing": "^2.0"
@@ -41,6 +43,8 @@
     	}
     },
     "scripts": {
+        "check-architecture": "php tools/check-architecture.php",
+        "test-persistence": "php tests/Persistence/run.php",
         "post-create-project-cmd": [
             "php configure.php create-folders"
         ]

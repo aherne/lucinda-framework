@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xml>
+    <!-- Copy to stderr.xml and materialize all referenced .xml.dist files.
+         Paths are relative to this document and omit .xml. index.php installs
+         this error handler before STDOUT for both HTTP and CLI requests. -->
+    <application ref="xml/stderr/application"/>
+    <resolvers ref="xml/resolvers"/>
+    <templating ref="xml/templating"/>
+    <routes ref="xml/stderr/routes"/>
+    <!-- ErrorReporter independently requires xml/stderr/loggers.xml and
+         xml/stderr/loggers-fatal.xml. FatalErrorResolver independently reads
+         xml/stderr/application.xml. DisplayErrors.php controls disclosure of
+         diagnostics; there is no XML flag for it. -->
+</xml>

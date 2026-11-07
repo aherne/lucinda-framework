@@ -1,13 +1,7 @@
-NoSQLDataSource and SQLDataSource should ditch ENVIRONMENT and use dists (update all README files too)
 STDERR API front controller should not just ->run() in controllers without checking interfaces
-move OAuth2State to engine API
-populate XMLs and dists
-add controllers (STDERR)
-add DAOs from old skeleton
+
+populate XMLs and dists (TBD BY AI)
 implement Bootstrap class in engine API
-add DAOs from configuration API
-Error controller & debug views: add viewlanguage errors support
-Session listener should insure: (assuming security listener is used)
-    - The security driver’s SameSite, Secure, HttpOnly, and cookie lifetime settings are skipped.
-    - The MVC/PHP session settings govern instead.
-    - The driver’s authentication expiry check still applies independently.
+add DAOs from old skeleton & configuration API
+add support for FileDB
+add all other libraries to composer.json

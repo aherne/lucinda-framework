@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xml>
+    <!-- Each route requires a unique id and at least one of view/controller.
+         HTTP id is the path relative to the application context; the empty path
+         selects application's default_route. CLI id is the command name.
+         view is a logical template name without folder or extension.
+         controller must implement MVC\Controller\ViewAware or ViewUnaware.
+         format is optional; absent uses runtime/application format selection.
+         method is HTTP-only: GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS, etc.
+         Omit method to allow all methods (also useful for CORS preflight).
+         The CLI parser does not enforce HTTP methods or parameter validators. -->
+    <routes>
+        <route id="index" view="index"/>
+        <!-- Controller-backed HTML: implement the class before enabling.
+        <route id="account" controller="App\Controllers\Account" view="account" method="GET"/>
+        -->
+        <!-- JSON endpoint: controller returns data without selecting a template.
+        <route id="api/profile" controller="App\Controllers\Profile" format="json" method="GET"/>
+        -->
+        <!-- Parameterized HTTP routes use (name), not {name}. Exact ids win;
+             other patterns are checked in declaration order. Path values override
+             request values. Validators implement STDOUT\Validators\ParameterValidator
+             and return null on failure. mandatory defaults to 1; 0 permits absence.
+        <route id="users/(id)" controller="App\Controllers\User" format="json" method="GET">
+            <parameter name="id" validator="App\Validators\PositiveInteger" mandatory="1"/>
+            <parameter name="page" validator="App\Validators\PositiveInteger" mandatory="0"/>
+        </route>
+        -->
+        <!-- CLI command; choose console explicitly when sharing HTTP routes.
+        <route id="maintenance" controller="App\Controllers\Maintenance" format="console"/>
+        -->
+        <!-- XML authorization: enable Security::getRoutesXMLPath() and by_route.
+             RolesDetector requires a NONEMPTY roles attribute on EVERY route in
+             this file, including public routes. Add project-defined public roles
+             and ensure UserRoles DAO/policies give the intended access.
+        <route id="admin" view="admin" roles="administrator,editor"/>
+        -->
+    </routes>
+    <!-- Header policy overrides belong in xml/stdout/headers.xml: HttpHeaders
+         reads that separate document and does not merge this routes file. -->
+</xml>

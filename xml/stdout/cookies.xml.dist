@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xml>
+    <!-- Optional: enable cookies ref in stdout.xml. These are MVC cookie defaults,
+         independent of PHP session-cookie settings and security remember-me options.
+         Every attribute is optional; omission leaves the option unset.
+         path: URL scope; use the application's context path to narrow scope.
+         domain: optional host/domain scope, omitted for host-only cookies.
+         https_only / headers_only: 0 or 1 for Secure / HttpOnly.
+         same_site: Lax, Strict, None. None requires HTTPS in modern browsers.
+         Set https_only="0" for local HTTP only; allow scripting only for cookies
+         whose purpose requires it. Cookie lifetime is set by individual callers. -->
+    <cookies path="/" https_only="1" headers_only="1" same_site="Lax"/>
+    <!-- Example attribute for deliberate cross-subdomain sharing:
+         domain="example.com" -->
+</xml>

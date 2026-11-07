@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xml>
+    <!-- Security reads this document directly (no environment nesting).
+         The referenced Project DAO implementations are supplied. Install db.sql and
+         replace private secrets before enabling the Security listener. Class
+         contracts are validated eagerly. See src/Persistence/README.md for rules.
+         Required sections: persistence, csrf, authentication, authorization.
+         MFA is optional. All numeric durations are seconds; booleans use 0/1.
+         Authentication targets and authorization callbacks are route names
+         WITHOUT a leading slash: the library prefixes the application context.
+         MFA routes are full paths including the context; examples assume /.
+         Define corresponding MVC routes/controllers before enabling security.
+         Browser callbacks redirect; REST callbacks require changing isRestful()
+         in the listener. XML does not select browser/REST behavior. -->
+    <security>
+        <persistence>
+            <!-- Browser sessions: the parameter is the session ENTRY key,
+                 default uid, not the session cookie name. Optional expiration
+                 is a positive authentication idle timeout (absent: unset).
+                 Configure cookie flags, handler and lifetime in session.xml;
+                 those settings are rejected here. Start the shared MVC Session
+                 before Security runs (or use session.xml auto_start="1"). -->
+            <session parameter_name="uid" expiration="1800"/>
+            <!-- Optional remembered browser login; REQUIRES session above.
+                 secret required; parameter_name defaults uid; expiration defaults
+                 86400. Optional cookie flags remain unset if omitted. SameSite:
+                 Lax, Strict, None. Use Secure for HTTPS, None requires Secure.
+            <remember_me parameter_name="remembered_uid" secret="REPLACE_WITH_PRIVATE_REMEMBER_ME_SECRET"
+                         expiration="86400" is_http_only="1" is_https_only="1" same_site="Lax"/>
+            -->
+            <!-- Token/API alternative: REPLACE session (and remember_me) with
+                 this element; token persistence is mutually exclusive with both.
+                 secret required. expiration defaults 3600; regeneration defaults
+                 60 (positive intervals). Listener binds the HTTP bearer token.
+            <synchronizer_token secret="REPLACE_WITH_PRIVATE_TOKEN_SECRET"
+                                expiration="3600" regeneration="60"/>
+            -->
+        </persistence>
+        <!-- Required nonempty secret. expiration optional, positive, default 600.
+             Provision private secrets out of band; XML performs no substitution. -->
+        <csrf secret="REPLACE_WITH_PRIVATE_CSRF_SECRET" expiration="600"/>
+        <authentication>
+            <!-- At least one of form/oauth2 is required; both may coexist.
+                 form dao: WebSecurity\DAO\FormLogin.
+                 throttler: WebSecurity\DAO\Throttler\FormLogin.
+                 Required page is login route; required target_* select callbacks
+                 after success, failure or throttling. Parameter names below are
+                 optional and show defaults. Include the CSRF value in submissions.
+                 Redis alternative: NoSQLLoginThrottler. SQL/Redis default to five
+                 failures per identity/IP in a fixed 900-second window. -->
+            <form dao="Lucinda\Project\DAO\FormLogin" throttler="Lucinda\Project\DAO\SQLLoginThrottler"
+                  page="login" target_success="account" target_failure="login"
+                  target_throttled="login-throttled" parameter_username="username"
+                  parameter_password="password" parameter_remember_me="remember_me" csrf="csrf"/>
+            <!-- OAuth2 login: enable provider loading in getOAuth2XMLPath(),
+                 initialize default SQL connection, and materialize oauth2.xml.
+                 Required provisioning selects DAO contract:
+                 existing_only -> WebSecurity\DAO\OAuth2\Login;
+                 automatic -> WebSecurity\DAO\OAuth2\AutomaticProvisioning;
+                 approval_required -> WebSecurity\DAO\OAuth2\ApprovalProvisioning.
+                 Use Project\DAO\OAuth2AutomaticProvisioning for automatic mode and
+                 Project\DAO\OAuth2ApprovalProvisioning for approval_required.
+                 The latter additionally requires target_pending="approval-pending".
+                 Provider email does not automatically link existing accounts.
+                 state_expiration is required and positive; no implicit default.
+                 Every driver needs name and login; names/callbacks match oauth2.xml.
+            <oauth2 dao="Lucinda\Project\DAO\OAuth2Login" provisioning="existing_only" state_expiration="600"
+                    target_success="account" target_failure="login">
+                <driver name="Google" login="login/google"/>
+                <driver name="GitHub" login="login/github"/>
+                <driver name="Facebook" login="login/facebook"/>
+                <driver name="LinkedIn" login="login/linkedin"/>
+                <driver name="Microsoft" login="login/microsoft"/>
+            </oauth2>
+            -->
+            <!-- Logout is mandatory even in OAuth2-only apps. dao implements
+                 WebSecurity\DAO\Logout. page, target_success, target_failure
+                 required; csrf request field defaults to csrf. -->
+            <logout dao="Lucinda\Project\DAO\Logout" page="logout" target_success="login"
+                    target_failure="logout-failed" csrf="csrf"/>
+        </authentication>
+        <authorization>
+            <!-- Choose EXACTLY ONE of by_dao / by_route.
+                 page_dao implements WebSecurity\DAO\PageAuthorization;
+                 user_dao implements WebSecurity\DAO\UserAuthorization.
+                 Use Project\DAO\RoleAuthorization as user_dao for role-derived grants,
+                 instead of UserAuthorization direct grants. Both enforce methods.
+                 Both callbacks required: forbidden for logged-in users without
+                 access, login for guests who need authentication. -->
+            <by_dao page_dao="Lucinda\Project\DAO\PageAuthorization" user_dao="Lucinda\Project\DAO\UserAuthorization"
+                    logged_in_callback="forbidden" logged_out_callback="login"/>
+            <!-- Route-role alternative: replace by_dao. roles_dao implements
+                 WebSecurity\DAO\UserRoles. Enable getRoutesXMLPath() in Security
+                 and add nonempty roles to EVERY route in that document.
+                 Alternative roles_dao: Project\DAO\SimpleUserRoles returns
+                 GUESTS/MEMBERS without a roles table.
+            <by_route roles_dao="Lucinda\Project\DAO\UserRoles"
+                      logged_in_callback="forbidden" logged_out_callback="login"/>
+            -->
+        </authorization>
+        <!-- Optional MFA: omit entire section to disable. dao implements
+             WebSecurity\DAO\MultiFactorAuthentication; throttler implements
+             WebSecurity\DAO\Throttler\MultiFactorAuthentication.
+             Redis throttler alternative: Project\DAO\NoSQLMultiFactorThrottler.
+             Set MFA_ENCRYPTION_KEY to base64 of 32 random bytes outside source
+             control. Setup secrets expire after 300 seconds by default.
+             All attributes on multi_factor_authentication are REQUIRED.
+             expiration: successful MFA freshness; pending_expiration: pending
+             setup/challenge lifetime; both positive. Routes select setup/challenge
+             forms and callbacks for success, failure, throttling and expiry.
+             Setup/challenge paths must equal context path + '/' + validated route
+             for the listener to publish the MFA form packet instead of redirecting.
+             Current integration needs alignment before enabling MFA: RequestBinder
+             supplies a relative route to the security request, while this listener
+             compares context-prefixed callback paths. TOTP matches request URI to
+             setup_route/challenge_route verbatim. XML alone cannot satisfy both
+             conventions; align the PHP integration first.
+             TOTP is the supported method; issuer required. Other attributes show
+             defaults: code_param=code, period=30 (positive seconds), digits=6
+             (allowed 6/7/8), window=1 (nonnegative steps before/after current).
+        <multi_factor_authentication dao="Lucinda\Project\DAO\MultiFactorAuthentication"
+                throttler="Lucinda\Project\DAO\SQLMultiFactorThrottler" expiration="3600" pending_expiration="300"
+                challenge_route="/mfa/challenge" setup_route="/mfa/setup" success_route="/account"
+                failure_route="/login" throttled_route="/mfa/throttled" expired_route="/login">
+            <totp issuer="Your Application" code_param="code" period="30" digits="6" window="1"/>
+        </multi_factor_authentication>
+        -->
+    </security>
+</xml>

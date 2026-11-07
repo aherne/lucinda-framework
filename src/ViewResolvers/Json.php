@@ -10,6 +10,10 @@ final class Json implements ViewResolver
 {
     public function resolve(View $view): string
     {
+        $boundary = new \Lucinda\Project\Presentation\DataBoundary(
+            $view->getData()
+        );
+        $boundary->validate();
         // see who triggered resolver (tested to have zero performance impact)
         $isError = str_contains(
             str_replace("\\", "/", debug_backtrace()[0]["file"]),

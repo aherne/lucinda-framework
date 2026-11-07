@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xml>
+    <!-- Required default_route is the fallback exception route, not a URL.
+         Required default_format must exist in xml/resolvers.xml. Use json for
+         an API; the error listener overrides the format after route validation,
+         and Console\Error selects console for CLI.
+         FatalErrorResolver also reads default_format: html uses the fixed
+         templates/views/debug-fatal*.html files; other formats produce JSON.
+         views_folder / views_extension are required when template views are used.
+         version is optional application metadata; defaults to empty. -->
+    <application version="0.0.1" default_format="html" default_route="default"
+                 views_folder="templates/views" views_extension="html"/>
+</xml>

@@ -15,6 +15,10 @@ final class Console implements ViewResolver
 
     public function resolve(View $view): string
     {
+        $boundary = new \Lucinda\Project\Presentation\DataBoundary(
+            $view->getData()
+        );
+        $boundary->validate();
         // template
         $detector = new XmlDetector(dirname(__DIR__, 2).DIRECTORY_SEPARATOR.self::XML_PATH);
         $wrapper1 = new TemplatingWrapper($detector->getXML());

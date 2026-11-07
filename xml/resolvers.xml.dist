@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xml>
+    <!-- Shared by STDOUT and STDERR. Each resolver needs a unique format and
+         an autoloadable class implementing Lucinda\MVC\Response\ViewResolver.
+         HTTP additionally requires content_type; omitted charset is empty.
+         Route format overrides the application default in both HTTP and CLI.
+         Use console as the CLI route format or application default. -->
+    <resolvers>
+        <!-- HTML needs xml/templating.xml and the selected template. -->
+        <resolver format="html" content_type="text/html" charset="UTF-8"
+                  class="Lucinda\Project\ViewResolvers\Html"/>
+        <!-- JSON serializes controller data; no template file is needed. -->
+        <resolver format="json" content_type="application/json" charset="UTF-8"
+                  class="Lucinda\Project\ViewResolvers\Json"/>
+        <!-- Console compiles templates using xml/templating-console.xml, then
+             renders console markup as ANSI. No XML render-mode setting exists. -->
+        <resolver format="console" content_type="text/plain" charset="UTF-8"
+                  class="Lucinda\Project\ViewResolvers\Console"/>
+        <!-- Custom format: implement ViewResolver before enabling.
+        <resolver format="csv" content_type="text/csv" charset="UTF-8"
+                  class="App\ViewResolvers\Csv"/>
+        -->
+    </resolvers>
+</xml>

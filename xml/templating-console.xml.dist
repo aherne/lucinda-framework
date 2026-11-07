@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xml>
+    <!-- Console resolver reads this document, independently of templating.xml.
+         Required: compilations_path (writable), templates_extension (no dot).
+         Optional roots: templates_path and tags_path; both default to empty.
+         Paths are relative to the process working directory.
+         Use a separate compilation directory to isolate console configuration.
+         escape_expressions accepts true/1; all other values disable escaping.
+         Keep it false for console markup. RenderMode::ANSI is selected in PHP.
+         Change templates_path/extension if you keep CLI templates separately.
+         As with Html, normalize MVC's extension-bearing View file before passing
+         it to the engine; compile() expects a name without the extension. -->
+    <templating compilations_path="compilations/console" tags_path="templates/tags"
+                templates_path="templates/views" templates_extension="html"
+                escape_expressions="false"/>
+</xml>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xml>
+    <!-- NoSQLDataSource reads nosql/server directly; no environment nesting or
+         variable interpolation. Connections open lazily when persistence is first used.
+         One server always uses the empty lookup name; multiple servers require
+         unique names and an explicitly named persistence executor. Omit nosql entirely when unused. -->
+    <nosql>
+        <!-- Redis requires ext-redis and a reachable server. host is required;
+             port is embedded in host (default 6379). timeout defaults to 0;
+             persistent defaults to 0. Both options are vendor-dependent.
+             This parser exposes no password, username, database or TLS options. -->
+        <server driver="redis" host="127.0.0.1:6379" timeout="0" persistent="0"/>
+        <!-- Memcached replacement: ext-memcached; default port 11211.
+             Multiple host:port pairs form the client's server list.
+        <server driver="memcached" host="127.0.0.1:11211,127.0.0.2:11211" timeout="0" persistent="0"/>
+        -->
+        <!-- APCu replacement: ext-apcu; local shared cache, no connection or
+             host options. Enable apc.enable_cli separately if used from CLI.
+        <server driver="apcu"/>
+        -->
+        <!-- Named caches: replace the single server with both definitions.
+             Select the matching executor in consumers. Atomic NoSQL DAOs and
+             Cacheables\Date require Redis; APCu/Memcached are provider examples
+             for other application-specific adapters, not interchangeable DAOs.
+        <server name="cache" driver="apcu"/>
+        <server name="shared" driver="redis" host="127.0.0.1:6379"/>
+        -->
+        <!-- NoSQL session/throttler/migration DAOs require Redis atomic operations.
+             Set a unique PERSISTENCE_NAMESPACE per application/environment.
+             The installed library also has a Valkey driver, but the framework's
+             NoSqlDriverProvider accepts ONLY redis, memcached and apcu. For a
+             compatible Valkey server use driver="redis"; driver="valkey" is rejected. -->
+    </nosql>
+</xml>

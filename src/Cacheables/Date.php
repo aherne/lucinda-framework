@@ -1,48 +1,18 @@
 <?php
-
 namespace Lucinda\Project\Cacheables;
-
 use Lucinda\Framework\AbstractCacheable;
-
-/**
- * CacheableDriver that generates an ETAG based on host, response body & headers.
- */
+use Lucinda\Project\Persistence\RedisExecutor;
+use Lucinda\Project\Persistence\Redis\RepresentationStore;
+/** Last-Modified time for a rendered representation; requires Redis persistence. */
 final class Date extends AbstractCacheable
 {
-    public const DRIVER_NAME = "";
-    public const EXPIRATION = 24*60*60;
-
-    /**
-     * {@inheritDoc}
-     *
-     * @see \Lucinda\Framework\AbstractCacheable::setTime()
-     */
+    public const EXPIRATION = 86400;
     protected function setTime(): void
     {
-        // generates etag
-        $etag = sha1($this->request->getServer()->getName()."#".$this->response);
-        $connection = \NoSQL(self::DRIVER_NAME);
-
-        $modifiedTime = 0;
-        if ($connection->contains($etag)) {
-            $modifiedTime = $connection->get($etag);
-            if (!$modifiedTime) {
-                $connection->delete($etag);
-            }
-        } else {
-            $modifiedTime = time();
-            $connection->set($etag, $modifiedTime, self::EXPIRATION);
-        }
-
-        $this->lastModifiedTime =  $modifiedTime;
+        $identity = $this->request->getServer()->getName().'#'.$this->response;
+        $executor = new RedisExecutor();
+        $store = new RepresentationStore($executor, self::EXPIRATION);
+        $this->lastModifiedTime = $store->getTime($identity);
     }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @see \Lucinda\Framework\AbstractCacheable::setEtag()
-     */
-    protected function setEtag(): void
-    {
-    }
+    protected function setEtag(): void {}
 }

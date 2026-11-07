@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xml>
+    <!-- SQLDataSource reads sql/server directly: NO environment child tags.
+         Copy to sql.xml and replace credentials before using SQL persistence. No ${ENV}
+         substitution is performed; deploy different private files per environment.
+         A single server uses new SqlExecutor(), even if it has a name.
+         For multiple servers every name must be nonempty and unique; explicitly
+         inject new SqlExecutor(null, "server-name") into the DAO.
+         Connections open lazily and are owned by the executor instance.
+         OAuth2States uses the unnamed default connection and requires autocommit
+         and calls outside application transactions. -->
+    <sql>
+        <!-- Required driver, host, username. Optional password defaults empty;
+             schema/charset default empty, port defaults 0 (driver default).
+             autocommit, persistent and timeout map to PDO options; omit when
+             unsupported by your driver. Error mode is always exception mode.
+             MySQL: install pdo_mysql, use utf8mb4 for full Unicode. -->
+        <server driver="mysql" host="127.0.0.1" port="3306"
+                username="REPLACE_WITH_DB_USER" password="REPLACE_WITH_DB_PASSWORD"
+                schema="REPLACE_WITH_DB_NAME" charset="utf8mb4" autocommit="1"/>
+        <!-- PostgreSQL replacement (pdo_pgsql); omit MySQL charset:
+        <server driver="pgsql" host="127.0.0.1" port="5432"
+                username="REPLACE_WITH_DB_USER" password="REPLACE_WITH_DB_PASSWORD"
+                schema="REPLACE_WITH_DB_NAME"/>
+        -->
+        <!-- SQLite replacement (pdo_sqlite). Current DataSource also requires
+             host and username, even though SQLite does not use them. file is
+             required: use a writable path, or :memory: for process-local storage.
+        <server driver="sqlite" host="localhost" username="sqlite" file="var/application.sqlite"/>
+        -->
+        <!-- Multiple databases: REPLACE the single server with this pair.
+             Existing DAOs using the unnamed connection need adapting first.
+        <server name="main" driver="mysql" host="127.0.0.1" username="REPLACE_WITH_DB_USER"
+                password="REPLACE_WITH_DB_PASSWORD" schema="app" charset="utf8mb4"/>
+        <server name="reporting" driver="pgsql" host="127.0.0.1" username="REPLACE_WITH_REPORT_USER"
+                password="REPLACE_WITH_REPORT_PASSWORD" schema="reports"/>
+        -->
+        <!-- Optional attributes on a server: persistent="0" or "1" (default
+             PDO behavior when omitted); timeout="5" in seconds; autocommit="0"
+             or "1". Transactions must be managed by the application. Other PDO
+             drivers can be named, but only the DSN fields above are exposed. -->
+    </sql>
+    <!-- For applications without SQL, omit the sql section entirely and do not
+         use SQL-backed DAOs. A present sql section must contain at least one server. -->
+</xml>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xml>
+    <!-- id is an exception class name, or the application's default_route for
+         fallback handling. Each route requires id, error_type and at least one
+         of controller/view. Controller implements MVC ViewAware/ViewUnaware.
+         view is a logical name; format optionally overrides the selected format.
+         http_status is optional: a numeric status supported by HttpStatus enum.
+         exit_code is optional (default 1), used for CLI process termination.
+         error_type is one of NONE, LOGICAL, SYNTAX, CLIENT, SERVER, INTERNAL.
+         NONE classifies control-flow exceptions that are not errors.
+         INTERNAL is reserved for failures inside error handling; use normal
+         classifications below for application failures. -->
+    <routes>
+        <route id="default" controller="Lucinda\Project\Controllers\Error" error_type="LOGICAL" http_status="500" exit_code="1"/>
+        <route id="Lucinda\MVC\ConfigurationException" controller="Lucinda\Project\Controllers\Error" error_type="LOGICAL" http_status="500"/>
+        <route id="Lucinda\STDERR\PHPException" controller="Lucinda\Project\Controllers\Error" error_type="SYNTAX" http_status="500"/>
+        <route id="JsonException" controller="Lucinda\Project\Controllers\Error" error_type="SYNTAX" http_status="500"/>
+        <!-- Controller routes work with HTML/JSON/console diagnostic rendering.
+             Replace with view="404" etc. for a custom static HTTP error page,
+             after creating the template and considering JSON/CLI output too. -->
+        <route id="Lucinda\STDOUT\MethodNotAllowedException" controller="Lucinda\Project\Controllers\Error" error_type="CLIENT" http_status="405"/>
+        <route id="Lucinda\STDOUT\PathNotFoundException" controller="Lucinda\Project\Controllers\Error" error_type="CLIENT" http_status="404"/>
+        <route id="Lucinda\STDOUT\Request\UploadedFiles\Exception" controller="Lucinda\Project\Controllers\Error" error_type="CLIENT" http_status="400"/>
+        <route id="Lucinda\STDOUT\Validators\ValidationFailedException" controller="Lucinda\Project\Controllers\Error" error_type="CLIENT" http_status="400"/>
+        <route id="Lucinda\Templating\ConfigurationException" controller="Lucinda\Project\Controllers\Error" error_type="LOGICAL" http_status="500"/>
+        <route id="Lucinda\Templating\ViewException" controller="Lucinda\Project\Controllers\Error" error_type="SYNTAX" http_status="500"/>
+        <route id="Lucinda\ConsoleSTDOUT\RouteNotFoundException" controller="Lucinda\Project\Controllers\Error" error_type="CLIENT" http_status="404" exit_code="2"/>
+        <!-- Application-specific failure, after implementing the exception and view:
+        <route id="App\Exceptions\ServiceUnavailable" view="503" format="html"
+               error_type="SERVER" http_status="503" exit_code="1"/>
+        -->
+    </routes>
+</xml>

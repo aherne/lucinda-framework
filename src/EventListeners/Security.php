@@ -20,7 +20,7 @@ use Lucinda\WebSecurity\Configuration\RolesDetector;
 use Lucinda\WebSecurity\OAuth2State;
 use Lucinda\WebSecurity\Packets\GuestUser;
 use Lucinda\WebSecurity\Request as WebSecurityRequest;
-use Lucinda\Project\OAuth2State as OAuth2StateImplementation;
+use Lucinda\Framework\OAuth2\State as OAuth2StateImplementation;
 use Lucinda\WebSecurity\Packets\LoggedInUser;
 use Lucinda\WebSecurity\Packets\MultiFactor as MultiFactorPacket;
 use Lucinda\WebSecurity\Packets\Security as SecurityPacket;
@@ -56,17 +56,27 @@ final class Security implements MultiFaceted
     private Cookies $cookies;
 
     /**
+     * Shared MVC session adapted for authentication persistence
+     *
+     * The application must start it before security runs when session
+     * persistence is configured; this listener does not start it.
+     */
+    private \Lucinda\STDOUT\Session $session;
+
+    /**
      * Captures the request, resolved route, and browser cookie access
      *
      * @param Request $request Current HTTP request
      * @param ValidatedRequest $validatedRequest Route selected by request validation
      * @param Cookies $cookies Incoming cookies used by OAuth2 state verification
+     * @param \Lucinda\STDOUT\Session $session MVC session, already active when session persistence is configured
      */
-    public function __construct(Request $request, ValidatedRequest $validatedRequest, Cookies $cookies)
+    public function __construct(Request $request, ValidatedRequest $validatedRequest, Cookies $cookies, \Lucinda\STDOUT\Session $session)
     {
         $this->request = $request;
         $this->validatedRequest = $validatedRequest;
         $this->cookies = $cookies;
+        $this->session = $session;
     }
 
     /**
@@ -91,7 +101,8 @@ final class Security implements MultiFaceted
             $this->getRequest(),
             $this->getOAuth2Drivers(),
             $this->getOAuth2State(),
-            $this->getRolesDetector()
+            $this->getRolesDetector(),
+            new \Lucinda\Framework\Session($this->session)
         );
         $packet = $security->getOutcome();
 

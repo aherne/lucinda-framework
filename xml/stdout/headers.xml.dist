@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- HttpCaching currently passes the DOCUMENT ROOT to CacheableFinder, which
+     reads its cacheable ATTRIBUTE. Keep it here, not just on the headers child.
+     Etag needs no storage. Date is an alternative requiring NoSQLDataSource and
+     the default Redis persistence executor; it tracks representation times in that cache. -->
+<xml cacheable="Lucinda\Project\Cacheables\Etag">
+    <!-- HttpHeaders reads headers for defaults and routes for per-route overrides
+         from THIS document, independently of the MVC routes configuration.
+         Every policy attribute is optional. Booleans MUST use 0/1: the parser
+         casts strings, so the text "false" would enable the option.
+         no_cache defaults 0; use 1 for private/user-specific responses.
+         cache_expiration: max-age seconds; omitted means unknown lifetime.
+         allowed_origins: comma-separated absolute origins or *; default empty.
+         allowed_methods: comma-separated uppercase HTTP methods; default empty.
+         allowed_request_headers: CORS request header allowlist; default empty.
+         allowed_response_headers: headers exposed to browser JS; default empty.
+         allow_credentials: 0 by default; enable only for explicit trusted origins.
+         cors_max_age: preflight caching seconds, omitted means no value.
+         Register HttpHeaders before HttpCors (REQUEST) / HttpCaching (RESPONSE).
+         CORS handling here terminates OPTIONS requests; ensure route validation
+         permits OPTIONS before enabling HttpCors. -->
+    <headers no_cache="1" allow_credentials="0"/>
+    <routes>
+        <!-- Public GET cache: enable only if shared caching is appropriate.
+             Each supplied attribute replaces its default, including lists.
+        <route id="catalog" no_cache="0" cache_expiration="300"/>
+        -->
+        <!-- Credentialed browser API: exact origin includes scheme and port.
+             Use id matching the validated route (including (name) placeholders).
+        <route id="api/profile" no_cache="1" allowed_origins="https://app.example.com"
+               allowed_methods="GET,POST,OPTIONS" allow_credentials="1"
+               allowed_request_headers="Authorization,Content-Type,X-CSRF-Token"
+               allowed_response_headers="ETag,Last-Modified" cors_max_age="600"/>
+        -->
+        <!-- Public cross-origin data without cookies:
+        <route id="api/catalog" no_cache="0" cache_expiration="60"
+               allowed_origins="*" allowed_methods="GET,OPTIONS" allow_credentials="0"/>
+        -->
+    </routes>
+    <!-- Set cacheable="Lucinda\Project\Cacheables\Date" on xml for Last-Modified
+         validation, or an application subclass of Framework\AbstractCacheable.
+         There is no XML per-route cacheable class switch in CacheableFinder. -->
+</xml>

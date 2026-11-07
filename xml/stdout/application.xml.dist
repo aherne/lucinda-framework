@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xml>
+    <!-- default_format and default_route are mandatory and must identify an
+         entry in resolvers.xml and routes.xml respectively.
+         version is optional metadata (default empty).
+         views_folder and views_extension are required by MVC when a route or
+         controller selects a template; both default to empty. Extension has no dot.
+         For a JSON-only app, use default_format="json" and controller routes;
+         omit the view settings if no templates are selected.
+         For CLI-only use, select default_format="console" and console templates.
+         index.php shares this document between HTTP and CLI; use route format
+         overrides or separate bootstrap configuration for mixed applications. -->
+    <application version="0.0.1" default_format="html" default_route="index"
+                 views_folder="templates/views" views_extension="html"/>
+</xml>

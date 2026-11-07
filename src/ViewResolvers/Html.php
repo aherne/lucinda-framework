@@ -13,6 +13,10 @@ final class Html implements ViewResolver
 
     public function resolve(View $view): string
     {
+        $boundary = new \Lucinda\Project\Presentation\DataBoundary(
+            $view->getData()
+        );
+        $boundary->validate();
         $detector = new XmlDetector(dirname(__DIR__, 2).DIRECTORY_SEPARATOR.self::XML_PATH);
         $wrapper = new Wrapper($detector->getXML());
         return $wrapper->compile($view->getFile(), $view->getData());

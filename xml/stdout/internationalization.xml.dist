@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xml>
+    <!-- Localization reads this document directly; enable its listener when
+         translations are needed. Required method and locale have no defaults.
+         locale uses ll or ll_CC, e.g. en, en_US, ro_RO.
+         method="header": negotiate Accept-Language with quality weights.
+         method="request": read the locale request parameter.
+         method="session": request locale overrides $_SESSION["locale"], then
+         selected locale is saved there; start a PHP session before the listener.
+         Missing locale input falls back to the configured default.
+         folder defaults to locale; domain to messages; extension to json.
+         Create locale/en_US/messages.json as a JSON object of string values.
+         The default locale directory must exist before enabling the listener.
+         Lookup falls back from preferred locale to language-only to default.
+         A different extension changes the filename, not the JSON file format. -->
+    <internationalization method="header" locale="en_US" folder="locale"
+                          domain="messages" extension="json"/>
+    <!-- Replace method with request for explicit language selectors, or session
+         to remember a selector across requests. Use domain="admin" for a separate
+         default dictionary; translate() can request other domains explicitly. -->
+</xml>

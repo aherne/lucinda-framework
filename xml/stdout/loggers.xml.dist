@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xml>
+    <!-- Used by HTTP Logging and Console\Logging listeners. No environment tags.
+         Multiple logger entries fan out every message to each destination.
+         Empty loggers (or omitted section) disables output. class is required
+         and must provide the AbstractLoggerWrapper constructor/getLogger contract.
+         Text formats: %d timestamp, %v priority, %e exception class, %f file,
+         %l line, %m message, %u URI, %i client IP, %a user agent. Missing request
+         metadata can leave placeholders literal, especially for CLI. -->
+    <loggers>
+        <!-- File: required path (base filename without .log) and format.
+             rotation optional: PHP date pattern, empty disables rotation.
+             Ensure parent directory exists and is writable; daily output is
+             logs/application__YYYY-MM-DD.log. Paths use process working directory. -->
+        <logger class="Lucinda\Logging\Driver\File\Wrapper" path="logs/application"
+                format="%d %v %f %l %m" rotation="Y-m-d"/>
+        <!-- JSON: structured records; path required, rotation optional; no format.
+        <logger class="Lucinda\Logging\Driver\Json\Wrapper" path="logs/application-json" rotation="Y-m-d"/>
+        -->
+        <!-- PHP error_log: required text format; destination comes from PHP ini.
+        <logger class="Lucinda\Logging\Driver\ErrorLog\Wrapper" format="%d %v %m"/>
+        -->
+        <!-- Stream: stream and format required. Use php://stderr for containers
+             and CLI; php://stdout may mix logs with application response output.
+        <logger class="Lucinda\Logging\Driver\Stream\Wrapper" stream="php://stderr" format="%d %v %m"/>
+        -->
+        <!-- Syslog: application identifier and format required; host must support syslog.
+        <logger class="Lucinda\Logging\Driver\SysLog\Wrapper" application="your-application" format="%v %m"/>
+        -->
+        <!-- Null destination: deliberately discard all log messages.
+        <logger class="Lucinda\Logging\Driver\Null\Wrapper"/>
+        -->
+    </loggers>
+    <!-- Severity filtering is controlled by callers, not a logger XML attribute.
+         Custom drivers can expose additional options through their wrapper. -->
+</xml>

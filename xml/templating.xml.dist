@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xml>
+    <!-- Html resolver reads this complete document directly.
+         compilations_path: required writable directory for generated PHP/maps.
+         templates_extension: required file extension without a dot.
+         templates_path: optional template/import root (default empty).
+         tags_path: optional custom tag-library root (default empty).
+         Paths are resolved from the process working directory, normally project root.
+         escape_expressions: true or 1 enables HTML escaping; omitted/false/0
+         disables it. Enable for HTML containing untrusted expression output;
+         review templates that intentionally emit markup before switching it on.
+         Integration note: current MVC ViewDetector supplies a path WITH extension,
+         but Html passes it unchanged to this engine, which appends the extension.
+         Normalize that boundary in PHP before rendering MVC template responses;
+         direct compile() calls should use logical names such as index. -->
+    <templating compilations_path="compilations" tags_path="templates/tags"
+                templates_path="templates/views" templates_extension="html"
+                escape_expressions="true"/>
+</xml>

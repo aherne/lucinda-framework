@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xml>
+    <!-- Optional: enable session ref in stdout.xml. All attributes are optional;
+         omission leaves corresponding PHP settings unchanged.
+         name: session cookie name, distinct from security's session entry key.
+         expired_time: positive server-side lifetime in seconds.
+         expired_on_close: cookie lifetime in seconds; 0 means browser session.
+         https_only / headers_only: 0 or 1 (Secure / HttpOnly).
+         same_site: Lax, Strict, None. None requires Secure in modern browsers.
+         auto_start: 0 or 1; 1 makes MVC explicitly start the shared Session
+         during construction. With 0, start it in application code before Security.
+         Use https_only="0" only for local HTTP development. -->
+    <session name="PHPSESSID" expired_time="1800" expired_on_close="0"
+             https_only="1" headers_only="1" same_site="Lax" auto_start="0"/>
+    <!-- Additional optional attributes on the SAME session element:
+         save_path="/private/sessions": existing writable session storage.
+         referrer_check="example.com": PHP referrer substring check.
+         handler="Lucinda\Project\DAO\LockingSQLSessionHandler":
+         supplied locking MySQL handler. SQLSessionHandler is storage-only.
+         Alternative: Lucinda\Project\DAO\NoSQLSessionHandler (requires Redis).
+         Each is an autoloadable SessionHandlerInterface
+         implementation; initialize its SQL/NoSQL dependencies before use.
+         Cookie options belong here, not security/persistence/session. -->
+</xml>

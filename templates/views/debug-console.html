@@ -1,19 +1,30 @@
-<div style="font-style: bold">Throwable:</div>
+<div>Throwable:</div>
 <div>${data.type}</div>
 
 <:if test="!empty(${data.query})">
-<div style="font-style: bold">Query:</div>
+<div>Query:</div>
 <div>${data.query}</div>
 </:if>
 
-<div style="font-style: bold">Message:</div>
+<div>Message:</div>
 <div>${data.message}</div>
 
-<div style="font-style: bold">File:</div>
+<div>File:</div>
 <div>${data.file}</div>
 
-<div style="font-style: bold">Line:</div>
+<div>Line:</div>
 <div>${data.line}</div>
 
-<div style="font-style: bold">Trace:</div>
+<div>Trace:</div>
 <div>${data.trace}</div>
+<:if test="!empty(${data.template})">
+<div>ViewLanguage template:</div>
+<div>${data.template.file}:${data.template.line}</div>
+</:if>
+
+<:if test="!empty(${data.cause})">
+<div>Underlying error:</div>
+<div>${data.cause.type}: ${data.cause.message}</div>
+<div>${data.cause.file}:${data.cause.line}</div>
+<div>${data.cause.trace}</div>
+</:if>
