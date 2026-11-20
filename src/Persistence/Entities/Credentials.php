@@ -2,6 +2,8 @@
 
 namespace Lucinda\Project\Persistence\Entities;
 
+use Lucinda\Framework\Persistence\Entities\Entity;
+
 /**
  * Credentials selected for one active local account
  *
@@ -9,7 +11,7 @@ namespace Lucinda\Project\Persistence\Entities;
  *
  * @internal
  */
-final readonly class Credentials
+final readonly class Credentials implements Entity
 {
     /** Local account owning the selected credentials */
     private int $userID;

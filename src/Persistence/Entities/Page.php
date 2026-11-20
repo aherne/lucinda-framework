@@ -2,6 +2,8 @@
 
 namespace Lucinda\Project\Persistence\Entities;
 
+use Lucinda\Framework\Persistence\Entities\Entity;
+
 /**
  * Persisted resource identifier and public access policy
  *
@@ -9,7 +11,7 @@ namespace Lucinda\Project\Persistence\Entities;
  *
  * @internal
  */
-final readonly class Page
+final readonly class Page implements Entity
 {
     /** Persisted resource identifier used for permission checks */
     private int $id;

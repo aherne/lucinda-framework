@@ -2,6 +2,8 @@
 
 namespace Lucinda\Project\Persistence\Entities;
 
+use Lucinda\Framework\Persistence\Entities\Entity;
+
 /**
  * Approval decision for one provider identity
  *
@@ -9,7 +11,7 @@ namespace Lucinda\Project\Persistence\Entities;
  *
  * @internal
  */
-final readonly class Approval
+final readonly class Approval implements Entity
 {
     /** Persisted approval decision for the provider identity */
     private string $status;

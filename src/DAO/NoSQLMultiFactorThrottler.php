@@ -2,8 +2,8 @@
 
 namespace Lucinda\Project\DAO;
 
-use Lucinda\Project\Persistence\RedisExecutor;
-use Lucinda\Project\Persistence\Redis\ThrottleStore;
+use Lucinda\Project\Persistence\NoSqlExecutor;
+use Lucinda\Project\Persistence\NoSqlThrottle;
 use Lucinda\WebSecurity\DAO\Throttler\MultiFactorAuthentication as MfaThrottler;
 
 /**
@@ -15,25 +15,22 @@ use Lucinda\WebSecurity\DAO\Throttler\MultiFactorAuthentication as MfaThrottler;
 final class NoSQLMultiFactorThrottler implements MfaThrottler
 {
     /** Failure-window store retained for this authentication scope */
-    private ThrottleStore $store;
+    private NoSqlThrottle $throttle;
 
     /**
      * Captures storage and the failure-window policy
      *
-     * @param RedisExecutor|null $executor Shared persistence executor
+     * @param NoSqlExecutor $executor Shared persistence executor
      * @param int $limit Failures required to block one active window
      * @param int $period Fixed window lifetime in seconds
      * @throws \InvalidArgumentException If the policy is invalid
      */
     public function __construct(
-        ?RedisExecutor $executor = null,
+        NoSqlExecutor $executor,
         int $limit = 5,
         int $period = 900
     ) {
-        if ($executor === null) {
-            $executor = new RedisExecutor();
-        }
-        $this->store = new ThrottleStore($executor, 'mfa', $limit, $period);
+        $this->throttle = new NoSqlThrottle($executor, 'mfa', $limit, $period);
     }
 
     /**
@@ -45,7 +42,7 @@ final class NoSQLMultiFactorThrottler implements MfaThrottler
      */
     public function penalize(int|string $userID, string $ipAddress): void
     {
-        $this->store->penalize((string) $userID, $ipAddress);
+        $this->throttle->penalize((string) $userID, $ipAddress);
     }
 
     /**
@@ -58,6 +55,6 @@ final class NoSQLMultiFactorThrottler implements MfaThrottler
      */
     public function isThrottled(int|string $userID, string $ipAddress): bool
     {
-        return $this->store->blocked((string) $userID, $ipAddress);
+        return $this->throttle->blocked((string) $userID, $ipAddress);
     }
 }

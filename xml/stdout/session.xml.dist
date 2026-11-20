@@ -17,8 +17,10 @@
          referrer_check="example.com": PHP referrer substring check.
          handler="Lucinda\Project\DAO\LockingSQLSessionHandler":
          supplied locking MySQL handler. SQLSessionHandler is storage-only.
-         Alternative: Lucinda\Project\DAO\NoSQLSessionHandler (requires Redis).
+         Alternative: Lucinda\Project\DAO\NoSQLSessionHandler (Redis, Memcached or APCu).
          Each is an autoloadable SessionHandlerInterface
          implementation; initialize its SQL/NoSQL dependencies before use.
+         With auto_start="1", initialize the matching data-source listener before
+         constructing the front controller; scheduled listeners may run later.
          Cookie options belong here, not security/persistence/session. -->
 </xml>

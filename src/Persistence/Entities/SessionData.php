@@ -2,6 +2,8 @@
 
 namespace Lucinda\Project\Persistence\Entities;
 
+use Lucinda\Framework\Persistence\Entities\Entity;
+
 /**
  * Serialized payload of one unexpired session
  *
@@ -9,7 +11,7 @@ namespace Lucinda\Project\Persistence\Entities;
  *
  * @internal
  */
-final readonly class SessionData
+final readonly class SessionData implements Entity
 {
     /** Serialized bytes belonging to the unexpired session */
     private string $payload;

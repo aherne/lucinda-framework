@@ -2,14 +2,14 @@
 
 namespace Lucinda\Project\DAO;
 
-use Lucinda\Project\Persistence\Redis\SessionStore;
-use Lucinda\Project\Persistence\RedisExecutor;
+use Lucinda\Project\Persistence\NoSql\SessionStore;
+use Lucinda\Project\Persistence\NoSqlExecutor;
 
 /**
- * Adapts an owned Redis session store to PHP's session handler lifecycle
+ * Adapts an owned NoSQL session store to PHP's session handler lifecycle
  *
- * The store owns lease acquisition, payload operations and release. Redis TTL
- * provides expiration, and expired leases cannot authorize stale writes.
+ * The store owns lease acquisition, payload operations and release. Logical
+ * deadlines enforce expiration, and expired leases cannot permit stale writes.
  */
 final class NoSQLSessionHandler implements \SessionHandlerInterface
 {
@@ -19,22 +19,19 @@ final class NoSQLSessionHandler implements \SessionHandlerInterface
     /**
      * Captures an executor and creates the session lease owner
      *
-     * @param RedisExecutor|null $executor Injected Redis connection owner
+     * @param NoSqlExecutor $executor Injected NoSQL connection owner
      */
-    public function __construct(?RedisExecutor $executor = null)
+    public function __construct(NoSqlExecutor $executor)
     {
-        if ($executor === null) {
-            $executor = new RedisExecutor();
-        }
         $this->store = new SessionStore($executor);
     }
 
     /**
      * Accepts PHP's session storage initialization request
      *
-     * @param string $savePath PHP session storage path, unused for Redis
+     * @param string $savePath PHP session storage path, unused for NoSQL
      * @param string $sessionName Configured PHP session cookie name
-     * @return bool True because the store connects lazily on first operation
+     * @return bool True because storage was supplied during construction
      */
     public function open(string $savePath, string $sessionName): bool
     {
@@ -45,12 +42,25 @@ final class NoSQLSessionHandler implements \SessionHandlerInterface
      * Releases the lease retained by this PHP session lifecycle
      *
      * @return bool True after lease release has been attempted successfully
-     * @throws \Throwable If Redis cannot perform the release operation
+     * @throws \Throwable If NoSQL cannot perform the release operation
      */
     public function close(): bool
     {
         $this->store->close();
         return true;
+    }
+
+    /**
+     * Extends the active session lease without extending payload retention
+     *
+     * Call before the current lease expires when a request needs more time.
+     * Expired ownership cannot be recovered through renewal.
+     *
+     * @throws \Throwable If ownership was lost or storage access fails
+     */
+    public function renew(): void
+    {
+        $this->store->renew();
     }
 
     /**
@@ -94,9 +104,10 @@ final class NoSQLSessionHandler implements \SessionHandlerInterface
     }
 
     /**
-     * Reports that Redis TTL handles expiration without an explicit scan
+     * Reports that expired records are rejected without an explicit scan
      *
-     * @param int $maxlifetime PHP lifetime argument, unused with Redis TTL
+     * @param int $maxlifetime PHP lifetime argument, superseded by the record's
+     *     stored expiration
      * @return int|false Zero records explicitly deleted by this handler
      */
     public function gc(int $maxlifetime): int|false

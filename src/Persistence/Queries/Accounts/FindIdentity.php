@@ -2,7 +2,7 @@
 
 namespace Lucinda\Project\Persistence\Queries\Accounts;
 
-use Lucinda\Project\Persistence\Queries\Query;
+use Lucinda\Framework\Persistence\Queries\Query;
 use Lucinda\Query\Select;
 
 /**

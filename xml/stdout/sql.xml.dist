@@ -6,7 +6,9 @@
          A single server uses new SqlExecutor(), even if it has a name.
          For multiple servers every name must be nonempty and unique; explicitly
          inject new SqlExecutor(null, "server-name") into the DAO.
-         Connections open lazily and are owned by the executor instance.
+         Run SQLDataSource before SQL-backed persistence. The listener maps this
+         XML and registers the provider; connections open lazily and are shared
+         by executors using the same provider and server name.
          OAuth2States uses the unnamed default connection and requires autocommit
          and calls outside application transactions. -->
     <sql>

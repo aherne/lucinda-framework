@@ -19,16 +19,21 @@
         <server driver="apcu"/>
         -->
         <!-- Named caches: replace the single server with both definitions.
-             Select the matching executor in consumers. Atomic NoSQL DAOs and
-             Cacheables\Date require Redis; APCu/Memcached are provider examples
-             for other application-specific adapters, not interchangeable DAOs.
+             Select the matching server using NoSqlExecutor(null, null, NAME).
+             NoSQL DAOs and Cacheables\Date use the adapter selected by the
+             registered NoSQLDataSource provider.
         <server name="cache" driver="apcu"/>
         <server name="shared" driver="redis" host="127.0.0.1:6379"/>
         -->
-        <!-- NoSQL session/throttler/migration DAOs require Redis atomic operations.
+        <!-- NoSQL session/throttler/migration DAOs support Redis/Valkey, Memcached and APCu.
+             Run NoSQLDataSource before persistence or session startup.
+             Adapters use atomic conditional replacement, not unguarded get/set.
+             APCu shares data only within one cache domain, not across hosts.
+             Session payloads and migration ledgers must fit Memcached's item limit.
              Set a unique PERSISTENCE_NAMESPACE per application/environment.
-             The installed library also has a Valkey driver, but the framework's
-             NoSqlDriverProvider accepts ONLY redis, memcached and apcu. For a
-             compatible Valkey server use driver="redis"; driver="valkey" is rejected. -->
+             driver="valkey" selects the Valkey library driver and the shared
+             Redis-protocol atomic adapter in framework-engine. Ordinary library
+             access remains available through NoSqlDriverProvider::getDriver();
+             project persistence uses its getAtomicDriver() integration instead. -->
     </nosql>
 </xml>

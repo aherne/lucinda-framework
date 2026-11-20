@@ -2,22 +2,49 @@
 
 namespace Lucinda\Project\EventListeners;
 
-use Lucinda\Framework\ServiceRegistry;
 use Lucinda\Framework\NoSqlDriverProvider;
 use Lucinda\Framework\XmlDetector;
-use Lucinda\MVC\EventListener\UnFaceted;
+use Lucinda\MVC\EventListener\Faceted;
+use Lucinda\MVC\Facet;
 
 /**
- * Sets up NoSQL Data Access API in order to be able to query NoSQL key-value stores (eg: Redis) later on
+ * Owns NoSQL XML mapping and registers the application's lazy driver provider
+ *
+ * Executors select isolated adapters from the drivers supplied here. This
+ * listener must run before NoSQL-backed session or security persistence.
  */
-class NoSQLDataSource implements UnFaceted
+class NoSQLDataSource implements Faceted
 {
-    const XML_PATH = "xml/stdout/nosql";
-    
-    public function run(): void
+    public const XML_PATH = 'xml/stdout/nosql';
+
+    /** Explicit configuration supplied by application setup, when applicable */
+    private ?\SimpleXMLElement $xml;
+
+    /**
+     * Captures optional configuration or defers file loading until run
+     *
+     * @param \SimpleXMLElement|null $xml Application XML with a nosql section
+     */
+    public function __construct(?\SimpleXMLElement $xml = null)
     {
-        $xmlDetector = new XmlDetector(dirname(__DIR__, 2).DIRECTORY_SEPARATOR.self::XML_PATH);
-        $provider = new NoSqlDriverProvider($xmlDetector->getXML());
-        ServiceRegistry::set(NoSqlDriverProvider::class, $provider);
+        $this->xml = $xml;
+    }
+
+    /**
+     * Maps NoSQL configuration and registers its connection owner
+     *
+     * @throws \Throwable If configuration mapping or registration fails
+     * @return Facet 
+     */
+    public function run(): Facet
+    {
+        $xml = $this->xml;
+        if ($xml === null) {
+            $path = dirname(__DIR__, 2) . '/' . self::XML_PATH;
+            $detector = new XmlDetector($path);
+            $xml = $detector->getXML();
+        }
+        
+        return new NoSqlDriverProvider($xml);
     }
 }

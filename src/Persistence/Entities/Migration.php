@@ -2,6 +2,7 @@
 
 namespace Lucinda\Project\Persistence\Entities;
 
+use Lucinda\Framework\Persistence\Entities\Entity;
 use Lucinda\Migration\Status;
 
 /**
@@ -11,7 +12,7 @@ use Lucinda\Migration\Status;
  *
  * @internal
  */
-final readonly class Migration
+final readonly class Migration implements Entity
 {
     /** Fully qualified migration class owning this result */
     private string $className;

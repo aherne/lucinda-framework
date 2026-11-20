@@ -2,6 +2,8 @@
 
 namespace Lucinda\Project\Persistence\Entities;
 
+use Lucinda\Framework\Persistence\Entities\Entity;
+
 /**
  * One role assigned to a local account
  *
@@ -9,7 +11,7 @@ namespace Lucinda\Project\Persistence\Entities;
  *
  * @internal
  */
-final readonly class Role
+final readonly class Role implements Entity
 {
     /** Persisted role name compared against route policy */
     private string $name;

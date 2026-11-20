@@ -2,6 +2,8 @@
 
 namespace Lucinda\Project\Persistence\Entities;
 
+use Lucinda\Framework\Persistence\Entities\Entity;
+
 /**
  * Local account resolved from one provider identity
  *
@@ -9,7 +11,7 @@ namespace Lucinda\Project\Persistence\Entities;
  *
  * @internal
  */
-final readonly class Identity
+final readonly class Identity implements Entity
 {
     /** Eligible local account linked to the provider identity */
     private int $userID;

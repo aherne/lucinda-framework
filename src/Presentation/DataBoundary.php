@@ -73,7 +73,11 @@ final class DataBoundary
             return;
         }
         $className = get_class($value);
-        if (str_starts_with($className, 'Lucinda\\Project\\Persistence\\')) {
+        if (
+            str_starts_with($className, 'Lucinda\\Project\\Persistence\\')
+            || str_starts_with($className, 'Lucinda\\Framework\\Persistence\\')
+            || str_starts_with($className, 'Lucinda\\Framework\\NoSQL\\')
+        ) {
             throw new \LogicException(
                 'Persistence objects must not enter presentation data'
             );

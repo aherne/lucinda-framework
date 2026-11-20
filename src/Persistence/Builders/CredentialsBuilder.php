@@ -2,6 +2,7 @@
 
 namespace Lucinda\Project\Persistence\Builders;
 
+use Lucinda\Framework\Persistence\Builders\Builder;
 use Lucinda\Project\Persistence\Entities\Credentials;
 
 /**
@@ -11,21 +12,8 @@ use Lucinda\Project\Persistence\Entities\Credentials;
  *
  * @internal
  */
-final class CredentialsBuilder
+final class CredentialsBuilder extends Builder
 {
-    /** Projection owned by this builder */
-    private Row $row;
-
-    /**
-     * Captures the database row to convert
-     *
-     * @param Row $row Selected record with validated column access
-     */
-    public function __construct(Row $row)
-    {
-        $this->row = $row;
-    }
-
     /**
      * Converts the selected values into the typed persistence entity
      *

@@ -4,14 +4,14 @@ namespace Lucinda\Project\DAO;
 
 use Lucinda\Migration\Cache;
 use Lucinda\Migration\Status;
-use Lucinda\Project\Persistence\Redis\MigrationStore;
-use Lucinda\Project\Persistence\RedisExecutor;
+use Lucinda\Project\Persistence\NoSql\MigrationStore;
+use Lucinda\Project\Persistence\NoSqlExecutor;
 
 /**
- * Adapts the Redis migration ledger to the migration API cache contract
+ * Adapts the NoSQL migration ledger to the migration API cache contract
  *
- * Migration-specific hash layout and status validation belong to its store.
- * The Redis executor contains no migration policy or record interpretation.
+ * Migration-specific record layout and status validation belong to its store.
+ * The NoSQL executor contains no migration policy or record interpretation.
  */
 final class NoSQLMigrationCache implements Cache
 {
@@ -21,21 +21,18 @@ final class NoSQLMigrationCache implements Cache
     /**
      * Captures the executor used by the application's migration ledger
      *
-     * @param RedisExecutor|null $executor Injected Redis connection owner
+     * @param NoSqlExecutor $executor Injected NoSQL connection owner
      */
-    public function __construct(?RedisExecutor $executor = null)
+    public function __construct(NoSqlExecutor $executor)
     {
-        if ($executor === null) {
-            $executor = new RedisExecutor();
-        }
         $this->store = new MigrationStore($executor);
     }
 
     /**
-     * Checks whether Redis contains this application's migration ledger
+     * Checks whether NoSQL contains this application's migration ledger
      *
      * @return bool True when the ledger exists
-     * @throws \Throwable If Redis cannot inspect the ledger
+     * @throws \Throwable If NoSQL cannot inspect the ledger
      */
     public function exists(): bool
     {

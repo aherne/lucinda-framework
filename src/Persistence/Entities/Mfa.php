@@ -2,6 +2,8 @@
 
 namespace Lucinda\Project\Persistence\Entities;
 
+use Lucinda\Framework\Persistence\Entities\Entity;
+
 /**
  * Account policy and optional TOTP enrollment state
  *
@@ -9,7 +11,7 @@ namespace Lucinda\Project\Persistence\Entities;
  *
  * @internal
  */
-final readonly class Mfa
+final readonly class Mfa implements Entity
 {
     /** Whether account policy requires completing MFA */
     private bool $required;
