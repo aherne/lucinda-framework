@@ -2,8 +2,8 @@
 
 namespace Lucinda\Project\DAO;
 
+use Lucinda\SQL\DataType;
 use Lucinda\Project\Persistence\Queries\Permissions\FindPermission;
-use Lucinda\Project\Persistence\SqlExecutor;
 use Lucinda\WebSecurity\DAO\UserAuthorization as AuthorizationContract;
 
 /**
@@ -12,21 +12,9 @@ use Lucinda\WebSecurity\DAO\UserAuthorization as AuthorizationContract;
  * Permission checks include the requested HTTP method. Missing grants deny
  * access, while an explicitly persisted wildcard permits every method.
  */
-final class RoleAuthorization implements AuthorizationContract
+final class RoleAuthorization extends SqlBasedDAO implements
+    AuthorizationContract
 {
-    /** Executor used for this permission strategy */
-    private SqlExecutor $sql;
-
-    /**
-     * Captures an injected executor or a lazily configured SQL connection
-     *
-     * @param SqlExecutor|null $sql Executor sharing the caller's connection
-     */
-    public function __construct(?SqlExecutor $sql = null)
-    {
-        $this->sql = $sql ?? new SqlExecutor();
-    }
-
     /**
      * Checks whether an active account has the requested resource permission
      *
@@ -47,7 +35,7 @@ final class RoleAuthorization implements AuthorizationContract
             $httpRequestMethod,
             true
         );
-        $selection = $this->sql->select($query);
-        return !$selection->isEmpty();
+        $selection = $this->sql->read($query);
+        return $selection->toValue(DataType::INTEGER) !== null;
     }
 }

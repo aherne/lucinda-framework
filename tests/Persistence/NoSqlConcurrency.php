@@ -4,7 +4,7 @@ namespace Test\Lucinda\Project\Persistence;
 
 use Lucinda\Migration\Status;
 use Lucinda\Project\DAO;
-use Lucinda\Project\Persistence\Locking\NoSqlLock;
+use Lucinda\Framework\Persistence\Locking\NoSqlLock;
 use RuntimeException;
 use Throwable;
 

@@ -3,6 +3,8 @@
 namespace Lucinda\Project\Persistence\Queries\Migrations;
 
 use Lucinda\Framework\Persistence\Queries\Query;
+use Lucinda\Framework\Persistence\Queries\Parameters;
+use Lucinda\SQL\DataType;
 use Lucinda\Query\Delete;
 
 /**
@@ -35,7 +37,8 @@ final class DeleteMigration extends Query
     private function setParameters(
         string $class
     ): void {
-        $this->parameters = [':class' => $class];
+        $this->parameters = new Parameters();
+        $this->parameters->set(':class', $class, DataType::STRING);
     }
 
     /**

@@ -10,8 +10,9 @@ use Lucinda\MVC\Facet;
 /**
  * Owns NoSQL XML mapping and registers the application's lazy driver provider
  *
- * Executors select isolated adapters from the drivers supplied here. This
- * listener must run before NoSQL-backed session or security persistence.
+ * Application setup calls getAtomicDriver() on the returned provider and
+ * injects that cached adapter into NoSqlExecutor. The provider creates the
+ * adapter on first access and retains the configured native connection.
  */
 class NoSQLDataSource implements Faceted
 {
@@ -31,10 +32,10 @@ class NoSQLDataSource implements Faceted
     }
 
     /**
-     * Maps NoSQL configuration and registers its connection owner
+     * Maps NoSQL configuration and publishes its lazy driver provider
      *
      * @throws \Throwable If configuration mapping or registration fails
-     * @return Facet 
+     * @return NoSqlDriverProvider Provider used to select atomic adapters
      */
     public function run(): Facet
     {

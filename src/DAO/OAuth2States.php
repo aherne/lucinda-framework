@@ -6,7 +6,6 @@ use Lucinda\Framework\OAuth2\StateStorage;
 use Lucinda\Project\Persistence\Queries\States\ConsumeState;
 use Lucinda\Project\Persistence\Queries\States\DeleteExpiredStates;
 use Lucinda\Project\Persistence\Queries\States\SaveState;
-use Lucinda\Project\Persistence\SqlExecutor;
 
 /**
  * Persists and atomically consumes browser-bound authorization attempts
@@ -14,21 +13,8 @@ use Lucinda\Project\Persistence\SqlExecutor;
  * Only the browser proof hash is persisted. Immediate autocommit and a
  * conditional delete ensure concurrent callbacks cannot accept one state twice.
  */
-final class OAuth2States implements StateStorage
+final class OAuth2States extends SqlBasedDAO implements StateStorage
 {
-    /** Executor used for immediately committed state operations */
-    private SqlExecutor $sql;
-
-    /**
-     * Captures an injected executor or a lazily configured SQL connection
-     *
-     * @param SqlExecutor|null $sql Executor sharing the caller's connection
-     */
-    public function __construct(?SqlExecutor $sql = null)
-    {
-        $this->sql = $sql ?? new SqlExecutor();
-    }
-
     /**
      * Inserts one attempt without replacing a previously stored state
      *

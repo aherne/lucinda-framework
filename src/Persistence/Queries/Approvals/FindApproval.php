@@ -3,6 +3,8 @@
 namespace Lucinda\Project\Persistence\Queries\Approvals;
 
 use Lucinda\Framework\Persistence\Queries\Query;
+use Lucinda\Framework\Persistence\Queries\Parameters;
+use Lucinda\SQL\DataType;
 use Lucinda\Query\Select;
 
 /**
@@ -40,7 +42,9 @@ final class FindApproval extends Query
         string $vendor,
         string $remote
     ): void {
-        $this->parameters = [':vendor' => $vendor, ':remote' => $remote];
+        $this->parameters = new Parameters();
+        $this->parameters->set(':vendor', $vendor, DataType::STRING);
+        $this->parameters->set(':remote', $remote, DataType::STRING);
     }
 
     /**

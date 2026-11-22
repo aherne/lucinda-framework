@@ -10,8 +10,8 @@ use Lucinda\Project\Persistence\Queries\Mfa\EnableEnrollment;
 use Lucinda\Project\Persistence\Queries\Mfa\EnsureEnrollment;
 use Lucinda\Project\Persistence\Queries\Mfa\FindEnrollment;
 use Lucinda\Project\Persistence\Queries\Mfa\SaveSetupSecret;
-use Lucinda\Project\Persistence\SecretBox;
-use Lucinda\Project\Persistence\SqlExecutor;
+use Lucinda\Framework\Persistence\SecretBox;
+use Lucinda\Framework\Persistence\SqlExecutor;
 use Lucinda\WebSecurity\DAO\MultiFactorAuthentication as MfaContract;
 
 /**
@@ -20,11 +20,8 @@ use Lucinda\WebSecurity\DAO\MultiFactorAuthentication as MfaContract;
  * Setup and enrolled secrets remain separate. Conditional writes preserve the
  * verified setup counter when enrollment completes and prevent counter replay.
  */
-final class MultiFactorAuthentication implements MfaContract
+final class MultiFactorAuthentication extends SqlBasedDAO implements MfaContract
 {
-    /** Executor used for account policy and enrollment operations */
-    private SqlExecutor $sql;
-
     /** Encryption instance initialized when secret storage is first used */
     private ?SecretBox $box;
 
@@ -34,20 +31,20 @@ final class MultiFactorAuthentication implements MfaContract
     /**
      * Captures persistence, encryption and pending enrollment policy
      *
-     * @param SqlExecutor|null $sql Executor sharing the caller's connection
+     * @param SqlExecutor $sql Executor sharing the caller's connection
      * @param SecretBox|null $box Encryption instance owning the MFA private key
      * @param int $setupLifetime Positive setup-secret lifetime in seconds
      * @throws \InvalidArgumentException If the setup lifetime is invalid
      */
     public function __construct(
-        ?SqlExecutor $sql = null,
+        SqlExecutor $sql,
         ?SecretBox $box = null,
         int $setupLifetime = 300
     ) {
         if ($setupLifetime < 1) {
             throw new \InvalidArgumentException('Invalid setup lifetime');
         }
-        $this->sql = $sql ?? new SqlExecutor();
+        parent::__construct($sql);
         $this->box = $box;
         $this->setupLifetime = $setupLifetime;
     }
@@ -76,13 +73,13 @@ final class MultiFactorAuthentication implements MfaContract
      */
     private function getEnrollment(int|string $id): Enrollment
     {
-        $selection = $this->sql->select(new FindEnrollment($id));
-        $row = $selection->getFirstRow();
+        $selection = $this->sql->read(new FindEnrollment($id));
+        $row = $selection->toRow();
         if ($row === null) {
             throw new \UnexpectedValueException('Active MFA account not found');
         }
-        $builder = new MfaBuilder($row);
-        return $builder->build();
+        $builder = new MfaBuilder();
+        return $builder->build($row);
     }
 
     /**
@@ -158,7 +155,10 @@ final class MultiFactorAuthentication implements MfaContract
     {
         $this->sql->requireAutocommit();
         $cipher = $this->getBox()->encrypt($secret);
-        $this->sql->write(new EnsureEnrollment($userID));
+        $this->sql->write(new EnsureEnrollment(
+            $this->sql->getVendor(),
+            $userID
+        ));
         $now = time();
         $query = new SaveSetupSecret(
             $userID,

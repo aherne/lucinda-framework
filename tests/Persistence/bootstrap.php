@@ -6,7 +6,7 @@ use Lucinda\WebSecurity\DAO\OAuth2\UserInformation;
 use Test\Lucinda\Project\Persistence\ProviderUser;
 use Test\Lucinda\Project\Persistence\FixtureQuery;
 
-function persistenceTestSql(): \Lucinda\Project\Persistence\SqlExecutor
+function persistenceTestSql(): \Lucinda\Framework\Persistence\SqlExecutor
 {
     $database = getenv('PERSISTENCE_TEST_DATABASE') ?: '';
     if (!preg_match('/^framework_dao_test_[a-z0-9_]+$/D', $database)) {
@@ -17,6 +17,7 @@ function persistenceTestSql(): \Lucinda\Project\Persistence\SqlExecutor
     foreach (
         [
         'driver' => 'mysql',
+        'port' => getenv('PERSISTENCE_TEST_PORT') ?: '3306',
         'host' => getenv('PERSISTENCE_TEST_HOST') ?: 'localhost',
         'username' => getenv('PERSISTENCE_TEST_USER') ?: 'root',
         'password' => getenv('PERSISTENCE_TEST_PASSWORD') ?: '',
@@ -29,10 +30,10 @@ function persistenceTestSql(): \Lucinda\Project\Persistence\SqlExecutor
     }
     $connection = new Lucinda\SQL\Connection();
     $connection->connect(new Lucinda\SQL\DataSource($xml));
-    return new Lucinda\Project\Persistence\SqlExecutor($connection);
+    return new Lucinda\Framework\Persistence\SqlExecutor($connection);
 }
 function persistenceTestInsert(
-    Lucinda\Project\Persistence\SqlExecutor $sql,
+    Lucinda\Framework\Persistence\SqlExecutor $sql,
     string $table,
     array $data
 ): int {
@@ -63,18 +64,18 @@ function persistenceTestUser(string $remote): UserInformation
  *
  * @param string $backend Backend selected by the test runner
  * @param string $prefix Unique namespace used only by these checks
- * @return \Lucinda\Project\Persistence\NoSqlExecutor Isolated executor
+ * @return \Lucinda\Framework\Persistence\NoSqlExecutor Isolated executor
  * @throws RuntimeException If the namespace or backend is invalid
  */
 function persistenceTestNoSql(
     string $backend,
     string $prefix
-): \Lucinda\Project\Persistence\NoSqlExecutor {
+): \Lucinda\Framework\Persistence\NoSqlExecutor {
     if (!str_starts_with($prefix, 'framework-test:')) {
         throw new RuntimeException('NoSQL tests require an isolated namespace');
     }
     $adapter = persistenceTestAtomicDriver($backend);
-    return new \Lucinda\Project\Persistence\NoSqlExecutor($adapter, $prefix);
+    return new \Lucinda\Framework\Persistence\NoSqlExecutor($adapter, $prefix);
 }
 
 /**
@@ -103,7 +104,7 @@ function persistenceTestAtomicDriver(
                 $data = new \Lucinda\NoSQL\Vendor\Redis\DataSource($xml);
             }
             $driver->connect($data);
-            $adapter = new \Lucinda\Framework\NoSQL\RedisAtomicDriver($driver);
+            $adapter = new \Lucinda\Framework\NoSQL\AtomicDriver\RedisAtomicDriver($driver);
             break;
         case 'memcached':
             $xml->addAttribute('host', '127.0.0.1:'
@@ -112,12 +113,12 @@ function persistenceTestAtomicDriver(
             $driver->connect(
                 new \Lucinda\NoSQL\Vendor\Memcached\DataSource($xml)
             );
-            $adapter = new \Lucinda\Framework\NoSQL\MemcachedAtomicDriver(
+            $adapter = new \Lucinda\Framework\NoSQL\AtomicDriver\MemcachedAtomicDriver(
                 $driver
             );
             break;
         case 'apcu':
-            $adapter = new \Lucinda\Framework\NoSQL\APCuAtomicDriver(
+            $adapter = new \Lucinda\Framework\NoSQL\AtomicDriver\APCuAtomicDriver(
                 new \Lucinda\NoSQL\Vendor\APCu\Driver()
             );
             break;

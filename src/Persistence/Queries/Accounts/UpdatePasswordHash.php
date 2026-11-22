@@ -3,6 +3,8 @@
 namespace Lucinda\Project\Persistence\Queries\Accounts;
 
 use Lucinda\Framework\Persistence\Queries\Query;
+use Lucinda\Framework\Persistence\Queries\Parameters;
+use Lucinda\SQL\DataType;
 use Lucinda\Query\Update;
 
 /**
@@ -44,11 +46,10 @@ final class UpdatePasswordHash extends Query
         string $oldHash,
         string $newHash
     ): void {
-        $this->parameters = [
-            ':new' => $newHash,
-            ':id' => $id,
-            ':old' => $oldHash,
-        ];
+        $this->parameters = new Parameters();
+        $this->parameters->set(':new', $newHash, DataType::STRING);
+        $this->parameters->set(':id', $id, DataType::INTEGER);
+        $this->parameters->set(':old', $oldHash, DataType::STRING);
     }
 
     /**

@@ -3,6 +3,8 @@
 namespace Lucinda\Project\Persistence\Queries\Permissions;
 
 use Lucinda\Framework\Persistence\Queries\Query;
+use Lucinda\Framework\Persistence\Queries\Parameters;
+use Lucinda\SQL\DataType;
 use Lucinda\Query\Select;
 
 /**
@@ -56,12 +58,15 @@ final class FindPermission extends Query
         int $page,
         string $method
     ): void {
-        $this->parameters = [
-            ':user' => $user,
-            ':page' => $page,
-            ':method' => strtoupper($method),
-            ':any' => '*',
-        ];
+        $this->parameters = new Parameters();
+        $this->parameters->set(':user', $user, DataType::INTEGER);
+        $this->parameters->set(':page', $page, DataType::INTEGER);
+        $this->parameters->set(
+            ':method',
+            strtoupper($method),
+            DataType::STRING
+        );
+        $this->parameters->set(':any', '*', DataType::STRING);
     }
 
     /**
@@ -113,7 +118,7 @@ final class FindPermission extends Query
         $where = $this->statement->where([
             $this->userColumn => ':user',
             'p.resource_id' => ':page',
-            'u.is_active' => '1',
+            'u.is_active' => 'TRUE',
         ]);
         $where->setIn('p.http_method', [':method', ':any']);
     }

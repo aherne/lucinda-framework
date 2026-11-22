@@ -2,8 +2,8 @@
 
 namespace Lucinda\Project\DAO;
 
-use Lucinda\Project\Persistence\NoSqlExecutor;
-use Lucinda\Project\Persistence\NoSqlThrottle;
+use Lucinda\Framework\Persistence\NoSqlExecutor;
+use Lucinda\Framework\Persistence\NoSqlThrottle;
 use Lucinda\WebSecurity\DAO\Throttler\FormLogin as ThrottlerContract;
 
 /**
@@ -12,7 +12,8 @@ use Lucinda\WebSecurity\DAO\Throttler\FormLogin as ThrottlerContract;
  * The dedicated store owns counter operations for this scope. Each rejected
  * attempt is recorded atomically by subject and canonical client address.
  */
-final class NoSQLLoginThrottler implements ThrottlerContract
+final class NoSQLLoginThrottler extends NoSqlBasedDAO implements
+    ThrottlerContract
 {
     /** Failure-window store retained for this authentication scope */
     private NoSqlThrottle $throttle;
@@ -30,6 +31,7 @@ final class NoSQLLoginThrottler implements ThrottlerContract
         int $limit = 5,
         int $period = 900
     ) {
+        parent::__construct($executor);
         $this->throttle = new NoSqlThrottle($executor, 'form', $limit, $period);
     }
 

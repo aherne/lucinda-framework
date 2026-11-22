@@ -3,25 +3,38 @@
 namespace Lucinda\Project\Persistence\Builders;
 
 use Lucinda\Framework\Persistence\Builders\Builder;
+use Lucinda\Framework\Persistence\Builders\Row;
+use Lucinda\Framework\Persistence\Queries\ValidationException;
 use Lucinda\Project\Persistence\Entities\SessionData;
 
 /**
  * Builds a SessionData entity from its selected database projection
  *
- * The builder owns one row and performs explicit type validation when building.
+ * Each call validates its supplied row and builds an independent entity.
  *
  * @internal
  */
-final class SessionDataBuilder extends Builder
+final class SessionDataBuilder implements Builder
 {
     /**
      * Converts the selected values into the typed persistence entity
      *
+     * @param Row $row Selected projection with typed column access
      * @return SessionData Internal record constructed from this projection
-     * @throws \UnexpectedValueException If required columns are malformed
+     * @throws \Lucinda\Framework\Persistence\Queries\ValidationException
+     *     If required columns are missing or malformed
      */
-    public function build(): SessionData
+    public function build(Row $row): SessionData
     {
-        return new SessionData($this->row->getString('payload'));
+        $payload = $row->getStreamed('payload');
+        if (is_resource($payload)) {
+            $payload = stream_get_contents($payload);
+        }
+        if (!is_string($payload)) {
+            throw new ValidationException(
+                'string', get_debug_type($payload), 'payload'
+            );
+        }
+        return new SessionData($payload);
     }
 }

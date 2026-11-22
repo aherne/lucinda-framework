@@ -2,8 +2,8 @@
 
 require __DIR__ . '/bootstrap.php';
 use Lucinda\Project\DAO;
-use Lucinda\Project\Persistence\Locking\SqlLock;
-use Lucinda\Project\Persistence\Locking\Lock;
+use Lucinda\Framework\Persistence\Locking\SqlLock;
+use Lucinda\Framework\Persistence\Locking\Lock;
 use Test\Lucinda\Project\Persistence\RecordingLock;
 use Test\Lucinda\Project\Persistence\FixtureQuery;
 use Lucinda\Migration\Status;
@@ -12,6 +12,9 @@ use Test\Lucinda\Project\Persistence\SerializedPayload;
 use Lucinda\Project\Persistence\Builders;
 use Lucinda\Project\Persistence\Queries;
 use Lucinda\Framework\Persistence\Builders\Row;
+use Lucinda\Framework\Persistence\Queries\ParametersValidator;
+use Lucinda\SQL\DataType;
+use Lucinda\Framework\Persistence\SqlVendor;
 use Lucinda\Framework\Persistence\Queries\Query;
 use Lucinda\Framework\Persistence\SecretBox;
 use Lucinda\Project\Presentation\DataBoundary;
@@ -89,11 +92,13 @@ function change(string $table, array $where, array $data): Query
     return new FixtureQuery($q, $parameters);
 }
 try {
+    $adapterChecks = new Test\Lucinda\Project\Persistence\QueryAdapterChecks();
+    $count += $adapterChecks->run();
     $rejected = false;
     try {
-        $row = new Row(['user_id' => '1']);
-        $builder = new Builders\CredentialsBuilder($row);
-        $builder->build();
+        $row = new Row(['user_id' => '1'], new ParametersValidator());
+        $builder = new Builders\CredentialsBuilder();
+        $builder->build($row);
     } catch (Throwable) {
         $rejected = true;
     }
@@ -102,21 +107,151 @@ try {
     try {
         $row = new Row([
             'id' => '1',
-            'is_public' => 'false',
-        ]);
-        $builder = new Builders\PageBuilder($row);
-        $builder->build();
+            'is_public' => 'invalid',
+        ], new ParametersValidator());
+        $builder = new Builders\PageBuilder();
+        $builder->build($row);
     } catch (Throwable) {
         $rejected = true;
     }
     check($rejected, 'Text boolean must fail');
-    $entity = (new Builders\CredentialsBuilder(new Row([
+    $entity = (new Builders\CredentialsBuilder())->build(new Row([
         'user_id' => '1',
         'password_hash' => 'secret',
-    ])))->build();
+    ], new ParametersValidator()));
     check(
         $entity->getUserID() === 1 && !($entity instanceof ArrayAccess),
         'Typed non-array entity'
+    );
+    $validator = new ParametersValidator();
+    $stream = fopen('php://memory', 'w+b');
+    fwrite($stream, "streamed\0\xff");
+    rewind($stream);
+    $session = (new Builders\SessionDataBuilder())->build(new Row(
+        ['payload' => $stream], $validator
+    ));
+    check($session->getPayload() === "streamed\0\xff", 'Streamed session bytes');
+    fclose($stream);
+    $builderCases = [
+        [new Builders\ApprovalBuilder(), ['status' => 'pending'],
+            'getStatus', 'pending'],
+        [new Builders\CredentialsBuilder(), ['user_id' => '51',
+            'password_hash' => 'hash'], 'getUserID', 51],
+        [new Builders\IdentityBuilder(), ['user_id' => '23'],
+            'getUserID', 23],
+        [new Builders\PageBuilder(), ['id' => '1', 'is_public' => '0'],
+            'isPublic', false],
+        [new Builders\RoleBuilder(), ['name' => 'EDITORS'],
+            'getName', 'EDITORS'],
+        [new Builders\SessionDataBuilder(), ['payload' => "a\0b"],
+            'getPayload', "a\0b"],
+        [new Builders\MigrationBuilder(), ['class_name' => 'Example',
+            'status_code' => '2'], 'getStatus', Status::FAILED],
+        [new Builders\MfaBuilder(), ['mfa_required' => '1',
+            'account_name' => 'Account', 'secret' => null,
+            'setup_secret' => null, 'setup_expires' => null,
+            'last_counter' => null], 'isRequired', true],
+    ];
+    foreach ($builderCases as [$builder, $values, $getter, $expected]) {
+        $built = $builder->build(new Row($values, $validator));
+        check($built->$getter() === $expected, 'Typed builder projection');
+        check(
+            $builder instanceof
+                Lucinda\Framework\Persistence\Builders\Builder,
+            'Builder implements the engine contract'
+        );
+    }
+    check(
+        $built->getSecret() === null && $built->getSetupSecret() === null
+            && $built->getSetupExpires() === null
+            && $built->getCounter() === null,
+        'Unenrolled MFA fields retain SQL nulls'
+    );
+    $builder = new Builders\IdentityBuilder();
+    $first = $builder->build(new Row(['user_id' => '1'], $validator));
+    $second = $builder->build(new Row(['user_id' => '2'], $validator));
+    check(
+        $first->getUserID() === 1 && $second->getUserID() === 2,
+        'One builder consumes independent rows without retaining state'
+    );
+    $rejected = false;
+    try {
+        (new Builders\MigrationBuilder())->build(new Row([
+            'class_name' => 'Example', 'status_code' => 99,
+        ], $validator));
+    } catch (UnexpectedValueException) {
+        $rejected = true;
+    }
+    check($rejected, 'Unknown migration statuses remain invalid');
+    $queries = [
+        new Queries\Accounts\CreateAccount("O'Reilly", ''),
+        new Queries\Accounts\FindCredentials("O'Reilly"),
+        new Queries\Accounts\FindIdentity('Google', 'remote'),
+        new Queries\Accounts\LinkIdentity(51, 'Google', 'remote'),
+        new Queries\Accounts\UpdatePasswordHash(51, 'old', 'new'),
+        new Queries\Approvals\FindApproval('Google', 'remote'),
+        new Queries\Approvals\RequestApproval(SqlVendor::MySQL, 'Google', 'remote', 'N', ''),
+        new Queries\Mfa\ClearSetupSecret('51'),
+        new Queries\Mfa\ConsumeCounter('51', 23, 100),
+        new Queries\Mfa\EnableEnrollment('51', 'cipher', 100),
+        new Queries\Mfa\EnsureEnrollment(SqlVendor::MySQL, '51'),
+        new Queries\Mfa\FindEnrollment('51'),
+        new Queries\Mfa\SaveSetupSecret('51', 'cipher', 100, 200),
+        new Queries\Migrations\DeleteMigration('Example'),
+        new Queries\Migrations\FindMigrationTable(SqlVendor::MySQL),
+        new Queries\Migrations\ReadMigrations(),
+        new Queries\Migrations\SaveMigration(SqlVendor::MySQL, 'Example', 2),
+        new Queries\Permissions\FindPageById(51),
+        new Queries\Permissions\FindPageByUrl('page'),
+        new Queries\Permissions\FindPermission('51', 23, 'get', false),
+        new Queries\Permissions\FindPermission('51', 23, 'post', true),
+        new Queries\Permissions\FindUserRoles('51'),
+        new Queries\Sessions\DeleteExpiredSessions(100),
+        new Queries\Sessions\DeleteSession('51'),
+        new Queries\Sessions\ReadSession('51', 100),
+        new Queries\Sessions\WriteSession(SqlVendor::MySQL, '51', "a\0b", 200),
+        new Queries\States\ConsumeState('state', 'Google', 'proof', 100),
+        new Queries\States\DeleteExpiredStates(100),
+        new Queries\States\DeleteExpiredStates(100, 'state', 'proof'),
+        new Queries\States\SaveState('state', 'Google', 200, 'proof'),
+    ];
+    foreach ($queries as $operation) {
+        $bindings = $operation->getParameters();
+        preg_match_all('/:[a-z_]+/', $operation->getSql(), $matches);
+        $placeholders = array_unique($matches[0]);
+        check(
+            count($placeholders) === count($bindings),
+            'Every generated placeholder has exactly one binding'
+        );
+        foreach ($placeholders as $name) {
+            check(isset($bindings[$name]), 'Selected binding exists');
+            $binding = $bindings[$name];
+            check(
+                $binding['type'] instanceof DataType
+                    && $validator->validate(
+                        $binding['value'], $binding['type']
+                    ) === $binding['value'],
+                'Parameters carry explicitly typed, normalized values'
+            );
+        }
+    }
+    check(
+        (new Queries\Accounts\CreateAccount('Name', ''))
+            ->getParameters()[':email'] === [
+                'value' => null, 'type' => DataType::NULLABLE,
+            ],
+        'An absent profile email binds SQL null explicitly'
+    );
+    check(
+        (new Queries\Permissions\FindUserRoles('51'))
+            ->getParameters()[':id'] === [
+                'value' => 51, 'type' => DataType::INTEGER,
+            ]
+            && (new Queries\Sessions\ReadSession('51', 100))
+                ->getParameters()[':id'] === [
+                    'value' => '51', 'type' => DataType::STRING,
+                ],
+        'Account identifiers are integers; numeric session IDs remain strings'
     );
     $rejected = false;
     try {
@@ -197,7 +332,7 @@ try {
         !str_contains(
             (string)$query->getSql(),
             $attack
-        ) && in_array($attack, $query->getParameters(), true),
+        ) && ($query->getParameters()[':username']['value'] ?? null) === $attack,
         'Hostile input is bound, not interpolated'
     );
     if (!getenv('PERSISTENCE_TEST_DATABASE')) {
@@ -281,11 +416,11 @@ try {
     $state->save('cleanup', 'Google', time() - 1, $proof);
     $state->clearExpired();
     check(
-        $sql->select(scalarQuery(
+        $sql->read(scalarQuery(
             'oauth2_states',
             ['state' => 'cleanup'],
             'COUNT(*)'
-        ))->getFirstRow()->getScalar('value') === '0',
+        ))->toValue(DataType::INTEGER) === 0,
         'Expired state maintenance'
     );
     $state->save('parallel', 'Google', time() + 60, $proof);
@@ -375,22 +510,22 @@ try {
     );
     $different = $oauth->create(persistenceTestUser('different'), 'Google');
     check($different !== $created, 'Same email must not merge identities');
-    $beforeCount = (int) $sql->select(scalarQuery(
+    $beforeCount = (int) $sql->read(scalarQuery(
         'users',
         [],
         'COUNT(*)'
-    ))->getFirstRow()->getScalar('value');
+    ))->toValue(DataType::INTEGER);
     $parallelIDs = workers('oauth', 'parallel-identity');
     check(
         count(array_unique($parallelIDs)) === 1 && $parallelIDs[0] > 0,
         'Concurrent provisioners return one account'
     );
     check(
-        (int) $sql->select(scalarQuery(
+        (int) $sql->read(scalarQuery(
             'users',
             [],
             'COUNT(*)'
-        ))->getFirstRow()->getScalar('value') === $beforeCount + 1,
+        ))->toValue(DataType::INTEGER) === $beforeCount + 1,
         'Losing provisioners roll back account insertion'
     );
     $approval = new DAO\OAuth2ApprovalProvisioning($sql);
@@ -445,11 +580,11 @@ try {
         '127.0.0.1'
     ))->getKey();
     check(
-        $sql->select(scalarQuery(
+        $sql->read(scalarQuery(
             'authentication_throttles',
             ['bucket' => $bucket],
             'attempts'
-        ))->getFirstRow()->getScalar('value') === '16',
+        ))->toValue(DataType::INTEGER) === 16,
         'Concurrent failures cannot lose increments'
     );
     $sql->write(change(
@@ -459,11 +594,11 @@ try {
     ));
     (new DAO\SQLLoginThrottler($sql))->penalize('parallel', '127.0.0.1');
     check(
-        $sql->select(scalarQuery(
+        $sql->read(scalarQuery(
             'authentication_throttles',
             ['bucket' => $bucket],
             'attempts'
-        ))->getFirstRow()->getScalar('value') === '1',
+        ))->toValue(DataType::INTEGER) === 1,
         'Expired throttle window resets'
     );
     $expiredUser = persistenceTestInsert($sql, 'users', [

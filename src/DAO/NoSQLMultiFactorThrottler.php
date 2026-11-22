@@ -2,8 +2,8 @@
 
 namespace Lucinda\Project\DAO;
 
-use Lucinda\Project\Persistence\NoSqlExecutor;
-use Lucinda\Project\Persistence\NoSqlThrottle;
+use Lucinda\Framework\Persistence\NoSqlExecutor;
+use Lucinda\Framework\Persistence\NoSqlThrottle;
 use Lucinda\WebSecurity\DAO\Throttler\MultiFactorAuthentication as MfaThrottler;
 
 /**
@@ -12,7 +12,8 @@ use Lucinda\WebSecurity\DAO\Throttler\MultiFactorAuthentication as MfaThrottler;
  * The dedicated store owns counter operations for this scope. Each rejected
  * attempt is recorded atomically by subject and canonical client address.
  */
-final class NoSQLMultiFactorThrottler implements MfaThrottler
+final class NoSQLMultiFactorThrottler extends NoSqlBasedDAO implements
+    MfaThrottler
 {
     /** Failure-window store retained for this authentication scope */
     private NoSqlThrottle $throttle;
@@ -30,6 +31,7 @@ final class NoSQLMultiFactorThrottler implements MfaThrottler
         int $limit = 5,
         int $period = 900
     ) {
+        parent::__construct($executor);
         $this->throttle = new NoSqlThrottle($executor, 'mfa', $limit, $period);
     }
 

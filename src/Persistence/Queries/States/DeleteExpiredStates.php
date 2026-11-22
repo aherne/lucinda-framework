@@ -3,6 +3,8 @@
 namespace Lucinda\Project\Persistence\Queries\States;
 
 use Lucinda\Framework\Persistence\Queries\Query;
+use Lucinda\Framework\Persistence\Queries\Parameters;
+use Lucinda\SQL\DataType;
 use Lucinda\Query\Delete;
 use Lucinda\Query\Operator\Comparison as Comparison;
 
@@ -45,10 +47,15 @@ final class DeleteExpiredStates extends Query
         ?string $state,
         ?string $proof
     ): void {
-        $this->parameters = [':now' => $now];
+        $this->parameters = new Parameters();
+        $this->parameters->set(':now', $now, DataType::INTEGER);
         if ($state !== null) {
-            $this->parameters[':state'] = $state;
-            $this->parameters[':proof'] = $proof;
+            $this->parameters->set(':state', $state, DataType::STRING);
+            $this->parameters->set(
+                ':proof',
+                $proof,
+                $proof === null ? DataType::NULLABLE : DataType::STRING
+            );
         }
     }
 
@@ -61,7 +68,7 @@ final class DeleteExpiredStates extends Query
     {
         $where = $this->statement->where();
         $where->set('valid_until', ':now', Comparison::LESSER_EQUALS);
-        if (isset($this->parameters[':state'])) {
+        if (isset($this->parameters->getStorage()[':state'])) {
             $where->set('state', ':state');
             $where->set('browser_proof_hash', ':proof');
         }

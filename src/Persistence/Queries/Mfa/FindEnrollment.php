@@ -3,6 +3,8 @@
 namespace Lucinda\Project\Persistence\Queries\Mfa;
 
 use Lucinda\Framework\Persistence\Queries\Query;
+use Lucinda\Framework\Persistence\Queries\Parameters;
+use Lucinda\SQL\DataType;
 use Lucinda\Query\Select;
 
 /**
@@ -37,7 +39,8 @@ final class FindEnrollment extends Query
     private function setParameters(
         int|string $user
     ): void {
-        $this->parameters = [':user' => $user];
+        $this->parameters = new Parameters();
+        $this->parameters->set(':user', $user, DataType::INTEGER);
     }
 
     /**
@@ -54,7 +57,7 @@ final class FindEnrollment extends Query
             'm.setup_expires',
             'm.last_counter',
         ]);
-        $label = "COALESCE(NULLIF(u.email, ''), CONVERT(u.id, CHAR))";
+        $label = "COALESCE(NULLIF(u.email, ''), TRIM(CAST(u.id AS CHAR(20))))";
         $fields->add($label, 'account_name');
     }
 
@@ -76,6 +79,6 @@ final class FindEnrollment extends Query
      */
     private function setWhere(): void
     {
-        $this->statement->where(['u.id' => ':user', 'u.is_active' => '1']);
+        $this->statement->where(['u.id' => ':user', 'u.is_active' => 'TRUE']);
     }
 }

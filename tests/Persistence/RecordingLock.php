@@ -2,7 +2,7 @@
 
 namespace Test\Lucinda\Project\Persistence;
 
-use Lucinda\Project\Persistence\Locking\Lock;
+use Lucinda\Framework\Persistence\Locking\Lock;
 
 /** Records the ownership requests delegated by a session handler. */
 final class RecordingLock implements Lock

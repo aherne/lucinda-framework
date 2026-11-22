@@ -3,6 +3,8 @@
 namespace Lucinda\Project\Persistence\Queries\Mfa;
 
 use Lucinda\Framework\Persistence\Queries\Query;
+use Lucinda\Framework\Persistence\Queries\Parameters;
+use Lucinda\SQL\DataType;
 use Lucinda\Query\Update;
 
 /**
@@ -36,7 +38,8 @@ final class ClearSetupSecret extends Query
     private function setParameters(
         int|string $user
     ): void {
-        $this->parameters = [':user' => $user];
+        $this->parameters = new Parameters();
+        $this->parameters->set(':user', $user, DataType::INTEGER);
     }
 
     /**

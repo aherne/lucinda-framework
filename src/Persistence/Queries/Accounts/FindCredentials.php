@@ -3,6 +3,8 @@
 namespace Lucinda\Project\Persistence\Queries\Accounts;
 
 use Lucinda\Framework\Persistence\Queries\Query;
+use Lucinda\Framework\Persistence\Queries\Parameters;
+use Lucinda\SQL\DataType;
 use Lucinda\Query\Select;
 
 /**
@@ -37,7 +39,8 @@ final class FindCredentials extends Query
     private function setParameters(
         string $username
     ): void {
-        $this->parameters = [':username' => $username];
+        $this->parameters = new Parameters();
+        $this->parameters->set(':username', $username, DataType::STRING);
     }
 
     /**
@@ -69,7 +72,7 @@ final class FindCredentials extends Query
     {
         $this->statement->where([
             'c.username' => ':username',
-            'u.is_active' => '1',
+            'u.is_active' => 'TRUE',
         ]);
     }
 }

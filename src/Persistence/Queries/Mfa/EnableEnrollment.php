@@ -3,6 +3,8 @@
 namespace Lucinda\Project\Persistence\Queries\Mfa;
 
 use Lucinda\Framework\Persistence\Queries\Query;
+use Lucinda\Framework\Persistence\Queries\Parameters;
+use Lucinda\SQL\DataType;
 use Lucinda\Query\Update;
 use Lucinda\Query\Operator\Comparison as C;
 
@@ -45,12 +47,11 @@ final class EnableEnrollment extends Query
         string $cipher,
         int $now
     ): void {
-        $this->parameters = [
-            ':cipher' => $cipher,
-            ':expected' => $cipher,
-            ':user' => $user,
-            ':now' => $now,
-        ];
+        $this->parameters = new Parameters();
+        $this->parameters->set(':cipher', $cipher, DataType::STRING);
+        $this->parameters->set(':expected', $cipher, DataType::STRING);
+        $this->parameters->set(':user', $user, DataType::INTEGER);
+        $this->parameters->set(':now', $now, DataType::INTEGER);
     }
 
     /**

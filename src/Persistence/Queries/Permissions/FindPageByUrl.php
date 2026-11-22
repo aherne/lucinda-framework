@@ -3,6 +3,8 @@
 namespace Lucinda\Project\Persistence\Queries\Permissions;
 
 use Lucinda\Framework\Persistence\Queries\Query;
+use Lucinda\Framework\Persistence\Queries\Parameters;
+use Lucinda\SQL\DataType;
 use Lucinda\Query\Select;
 
 /**
@@ -36,7 +38,8 @@ final class FindPageByUrl extends Query
     private function setParameters(
         string $url
     ): void {
-        $this->parameters = [':url' => $url];
+        $this->parameters = new Parameters();
+        $this->parameters->set(':url', $url, DataType::STRING);
     }
 
     /**

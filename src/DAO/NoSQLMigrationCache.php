@@ -4,8 +4,8 @@ namespace Lucinda\Project\DAO;
 
 use Lucinda\Migration\Cache;
 use Lucinda\Migration\Status;
-use Lucinda\Project\Persistence\NoSql\MigrationStore;
-use Lucinda\Project\Persistence\NoSqlExecutor;
+use Lucinda\Framework\NoSQL\MigrationStore;
+use Lucinda\Framework\Persistence\NoSqlExecutor;
 
 /**
  * Adapts the NoSQL migration ledger to the migration API cache contract
@@ -13,7 +13,7 @@ use Lucinda\Project\Persistence\NoSqlExecutor;
  * Migration-specific record layout and status validation belong to its store.
  * The NoSQL executor contains no migration policy or record interpretation.
  */
-final class NoSQLMigrationCache implements Cache
+final class NoSQLMigrationCache extends NoSqlBasedDAO implements Cache
 {
     /** Application-scoped migration ledger owned by this cache */
     private MigrationStore $store;
@@ -25,6 +25,7 @@ final class NoSQLMigrationCache implements Cache
      */
     public function __construct(NoSqlExecutor $executor)
     {
+        parent::__construct($executor);
         $this->store = new MigrationStore($executor);
     }
 

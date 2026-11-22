@@ -3,6 +3,8 @@
 namespace Test\Lucinda\Project\Persistence;
 
 use Lucinda\Framework\Persistence\Queries\Query;
+use Lucinda\Framework\Persistence\Queries\Parameters;
+use Lucinda\SQL\DataType;
 use Lucinda\Query\Delete;
 use Lucinda\Query\Insert;
 use Lucinda\Query\Select;
@@ -22,6 +24,15 @@ final class FixtureQuery extends Query
         array $parameters = []
     ) {
         $this->statement = $statement;
-        $this->parameters = $parameters;
+        $this->parameters = new Parameters();
+        foreach ($parameters as $name => $value) {
+            $type = match (true) {
+                $value === null => DataType::NULLABLE,
+                is_int($value) => DataType::INTEGER,
+                is_bool($value) => DataType::BOOLEAN,
+                default => DataType::STRING,
+            };
+            $this->parameters->set($name, $value, $type);
+        }
     }
 }

@@ -2,9 +2,10 @@
 
 namespace Test\Lucinda\Project\Persistence;
 
-use Lucinda\Project\Persistence\Locking\Lock;
-use Lucinda\Project\Persistence\Locking\NoSqlLock;
-use Lucinda\Project\Persistence\NoSqlExecutor;
+use Lucinda\Framework\Persistence\Locking\Lock;
+use Lucinda\Framework\Persistence\Locking\NoSqlLock;
+use Lucinda\Framework\Persistence\NoSqlExecutor;
+use Lucinda\Framework\Persistence\Queries\ValidationException;
 
 /**
  * Exercises lease ownership and protected writes against real NoSQL adapters
@@ -276,8 +277,9 @@ final class NoSqlLockChecks
         $rejected = false;
         try {
             $lock->acquire('malformed');
-        } catch (\UnexpectedValueException) {
-            $rejected = true;
+        } catch (ValidationException $error) {
+            $rejected = $error->getExpectedValueType() === 'string'
+                && $error->getActualValueType() === 'array';
         }
         $this->check(
             $rejected && $before->getVersion()

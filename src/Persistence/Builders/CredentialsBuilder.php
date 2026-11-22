@@ -3,28 +3,31 @@
 namespace Lucinda\Project\Persistence\Builders;
 
 use Lucinda\Framework\Persistence\Builders\Builder;
+use Lucinda\Framework\Persistence\Builders\Row;
 use Lucinda\Project\Persistence\Entities\Credentials;
 
 /**
  * Builds a Credentials entity from its selected database projection
  *
- * The builder owns one row and performs explicit type validation when building.
+ * Each call validates its supplied row and builds an independent entity.
  *
  * @internal
  */
-final class CredentialsBuilder extends Builder
+final class CredentialsBuilder implements Builder
 {
     /**
      * Converts the selected values into the typed persistence entity
      *
+     * @param Row $row Selected projection with typed column access
      * @return Credentials Internal record constructed from this projection
-     * @throws \UnexpectedValueException If required columns are malformed
+     * @throws \Lucinda\Framework\Persistence\Queries\ValidationException
+     *     If required columns are missing or malformed
      */
-    public function build(): Credentials
+    public function build(Row $row): Credentials
     {
         return new Credentials(
-            $this->row->getInteger('user_id'),
-            $this->row->getString('password_hash')
+            $row->getInteger('user_id'),
+            $row->getString('password_hash')
         );
     }
 }

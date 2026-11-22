@@ -3,6 +3,8 @@
 namespace Lucinda\Project\Persistence\Queries\Sessions;
 
 use Lucinda\Framework\Persistence\Queries\Query;
+use Lucinda\Framework\Persistence\Queries\Parameters;
+use Lucinda\SQL\DataType;
 use Lucinda\Query\Select;
 use Lucinda\Query\Operator\Comparison as C;
 
@@ -41,7 +43,9 @@ final class ReadSession extends Query
         string $id,
         int $now
     ): void {
-        $this->parameters = [':id' => $id, ':now' => $now];
+        $this->parameters = new Parameters();
+        $this->parameters->set(':id', $id, DataType::STRING);
+        $this->parameters->set(':now', $now, DataType::INTEGER);
     }
 
     /**

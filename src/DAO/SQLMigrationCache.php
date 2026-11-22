@@ -2,6 +2,7 @@
 
 namespace Lucinda\Project\DAO;
 
+use Lucinda\SQL\DataType;
 use Lucinda\Migration\Cache;
 use Lucinda\Migration\Status;
 use Lucinda\Project\Persistence\Builders\MigrationBuilder;
@@ -9,29 +10,15 @@ use Lucinda\Project\Persistence\Queries\Migrations\DeleteMigration;
 use Lucinda\Project\Persistence\Queries\Migrations\FindMigrationTable;
 use Lucinda\Project\Persistence\Queries\Migrations\ReadMigrations;
 use Lucinda\Project\Persistence\Queries\Migrations\SaveMigration;
-use Lucinda\Project\Persistence\SqlExecutor;
 
 /**
- * Persists migration execution statuses in the application's MySQL schema
+ * Persists migration execution statuses in the configured SQL schema
  *
- * The schema is installed manually from db.sql. Repeated status writes use
+ * The schema must be installed before use. Repeated status writes use
  * an upsert and preserve pending, failed and passed results distinctly.
  */
-final class SQLMigrationCache implements Cache
+final class SQLMigrationCache extends SqlBasedDAO implements Cache
 {
-    /** Executor retained for the application's migration ledger */
-    private SqlExecutor $sql;
-
-    /**
-     * Captures an injected executor or a lazily configured SQL connection
-     *
-     * @param SqlExecutor|null $sql Executor sharing the caller's connection
-     */
-    public function __construct(?SqlExecutor $sql = null)
-    {
-        $this->sql = $sql ?? new SqlExecutor();
-    }
-
     /**
      * Checks whether the application's migration table has been installed
      *
@@ -40,21 +27,23 @@ final class SQLMigrationCache implements Cache
      */
     public function exists(): bool
     {
-        $selection = $this->sql->select(new FindMigrationTable());
-        return !$selection->isEmpty();
+        $selection = $this->sql->read(new FindMigrationTable(
+            $this->sql->getVendor()
+        ));
+        return $selection->toValue(DataType::INTEGER) !== null;
     }
 
     /**
      * Requires manually installed storage before running migrations
      *
-     * @throws \RuntimeException If db.sql has not created migration storage
+     * @throws \RuntimeException If migration storage has not been installed
      * @throws \Throwable If schema metadata cannot be read
      */
     public function create(): void
     {
         if (!$this->exists()) {
             throw new \RuntimeException(
-                'Install the migrations table from db.sql first'
+                'Install the migrations table before running migrations'
             );
         }
     }
@@ -68,7 +57,11 @@ final class SQLMigrationCache implements Cache
      */
     public function add(string $className, Status $statusCode): void
     {
-        $query = new SaveMigration($className, $statusCode->value);
+        $query = new SaveMigration(
+            $this->sql->getVendor(),
+            $className,
+            $statusCode->value
+        );
         $this->sql->write($query);
     }
 
@@ -80,11 +73,11 @@ final class SQLMigrationCache implements Cache
      */
     public function read(): array
     {
-        $selection = $this->sql->select(new ReadMigrations());
+        $selection = $this->sql->read(new ReadMigrations());
         $statuses = [];
-        foreach ($selection->getRows() as $row) {
-            $builder = new MigrationBuilder($row);
-            $migration = $builder->build();
+        $builder = new MigrationBuilder();
+        while (($row = $selection->toRow()) !== null) {
+            $migration = $builder->build($row);
             $statuses[$migration->getClassName()] = $migration->getStatus();
         }
         return $statuses;

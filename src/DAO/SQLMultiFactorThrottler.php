@@ -2,8 +2,8 @@
 
 namespace Lucinda\Project\DAO;
 
-use Lucinda\Project\Persistence\SqlExecutor;
-use Lucinda\Project\Persistence\SqlThrottle;
+use Lucinda\Framework\Persistence\SqlExecutor;
+use Lucinda\Framework\Persistence\SqlThrottle;
 use Lucinda\WebSecurity\DAO\Throttler\MultiFactorAuthentication as MfaThrottler;
 
 /**
@@ -12,7 +12,7 @@ use Lucinda\WebSecurity\DAO\Throttler\MultiFactorAuthentication as MfaThrottler;
  * The dedicated store owns counter operations for this scope. Each rejected
  * attempt is recorded atomically by subject and canonical client address.
  */
-final class SQLMultiFactorThrottler implements MfaThrottler
+final class SQLMultiFactorThrottler extends SqlBasedDAO implements MfaThrottler
 {
     /** Failure-window store retained for this authentication scope */
     private SqlThrottle $store;
@@ -20,19 +20,17 @@ final class SQLMultiFactorThrottler implements MfaThrottler
     /**
      * Captures storage and the failure-window policy
      *
-     * @param SqlExecutor|null $executor Shared persistence executor
+     * @param SqlExecutor $executor Shared persistence executor
      * @param int $limit Failures required to block one active window
      * @param int $period Fixed window lifetime in seconds
      * @throws \InvalidArgumentException If the policy is invalid
      */
     public function __construct(
-        ?SqlExecutor $executor = null,
+        SqlExecutor $executor,
         int $limit = 5,
         int $period = 900
     ) {
-        if ($executor === null) {
-            $executor = new SqlExecutor();
-        }
+        parent::__construct($executor);
         $this->store = new SqlThrottle($executor, 'mfa', $limit, $period);
     }
 

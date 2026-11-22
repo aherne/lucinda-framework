@@ -3,6 +3,8 @@
 namespace Lucinda\Project\Persistence\Queries\Accounts;
 
 use Lucinda\Framework\Persistence\Queries\Query;
+use Lucinda\Framework\Persistence\Queries\Parameters;
+use Lucinda\SQL\DataType;
 use Lucinda\Query\Insert;
 
 /**
@@ -44,11 +46,10 @@ final class LinkIdentity extends Query
         string $vendor,
         string $remote
     ): void {
-        $this->parameters = [
-            ':id' => $id,
-            ':vendor' => $vendor,
-            ':remote' => $remote,
-        ];
+        $this->parameters = new Parameters();
+        $this->parameters->set(':id', $id, DataType::INTEGER);
+        $this->parameters->set(':vendor', $vendor, DataType::STRING);
+        $this->parameters->set(':remote', $remote, DataType::STRING);
     }
 
     /**

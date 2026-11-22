@@ -3,6 +3,8 @@
 namespace Lucinda\Project\Persistence\Queries\Mfa;
 
 use Lucinda\Framework\Persistence\Queries\Query;
+use Lucinda\Framework\Persistence\Queries\Parameters;
+use Lucinda\SQL\DataType;
 use Lucinda\Query\Update;
 use Lucinda\Query\Clause\Condition;
 use Lucinda\Query\Operator\Logical as L;
@@ -47,12 +49,11 @@ final class ConsumeCounter extends Query
         int $counter,
         int $now
     ): void {
-        $this->parameters = [
-            ':counter' => $counter,
-            ':previous' => $counter,
-            ':user' => $user,
-            ':now' => $now,
-        ];
+        $this->parameters = new Parameters();
+        $this->parameters->set(':counter', $counter, DataType::INTEGER);
+        $this->parameters->set(':previous', $counter, DataType::INTEGER);
+        $this->parameters->set(':user', $user, DataType::INTEGER);
+        $this->parameters->set(':now', $now, DataType::INTEGER);
     }
 
     /**

@@ -3,6 +3,8 @@
 namespace Lucinda\Project\Persistence\Queries\Sessions;
 
 use Lucinda\Framework\Persistence\Queries\Query;
+use Lucinda\Framework\Persistence\Queries\Parameters;
+use Lucinda\SQL\DataType;
 use Lucinda\Query\Delete;
 use Lucinda\Query\Operator\Comparison as C;
 
@@ -36,7 +38,8 @@ final class DeleteExpiredSessions extends Query
     private function setParameters(
         int $now
     ): void {
-        $this->parameters = [':now' => $now];
+        $this->parameters = new Parameters();
+        $this->parameters->set(':now', $now, DataType::INTEGER);
     }
 
     /**

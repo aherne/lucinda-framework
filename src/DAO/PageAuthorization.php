@@ -5,7 +5,6 @@ namespace Lucinda\Project\DAO;
 use Lucinda\Project\Persistence\Builders\PageBuilder;
 use Lucinda\Project\Persistence\Queries\Permissions\FindPageById;
 use Lucinda\Project\Persistence\Queries\Permissions\FindPageByUrl;
-use Lucinda\Project\Persistence\SqlExecutor;
 use Lucinda\WebSecurity\DAO\PageAuthorization as PageAuthorizationContract;
 
 /**
@@ -13,21 +12,9 @@ use Lucinda\WebSecurity\DAO\PageAuthorization as PageAuthorizationContract;
  *
  * Unknown pages remain unresolved and cannot become public through a default.
  */
-final class PageAuthorization implements PageAuthorizationContract
+final class PageAuthorization extends SqlBasedDAO implements
+    PageAuthorizationContract
 {
-    /** Executor used for resource lookup and public access policy */
-    private SqlExecutor $sql;
-
-    /**
-     * Captures an injected executor or a lazily configured SQL connection
-     *
-     * @param SqlExecutor|null $sql Executor sharing the caller's connection
-     */
-    public function __construct(?SqlExecutor $sql = null)
-    {
-        $this->sql = $sql ?? new SqlExecutor();
-    }
-
     /**
      * Resolves a validated route to its database resource identifier
      *
@@ -37,13 +24,13 @@ final class PageAuthorization implements PageAuthorizationContract
      */
     public function getID(string $pageURL): ?int
     {
-        $selection = $this->sql->select(new FindPageByUrl($pageURL));
-        $row = $selection->getFirstRow();
+        $selection = $this->sql->read(new FindPageByUrl($pageURL));
+        $row = $selection->toRow();
         if ($row === null) {
             return null;
         }
-        $builder = new PageBuilder($row);
-        $page = $builder->build();
+        $builder = new PageBuilder();
+        $page = $builder->build($row);
         return $page->getID();
     }
 
@@ -56,13 +43,13 @@ final class PageAuthorization implements PageAuthorizationContract
      */
     public function isPublic(int $pageID): bool
     {
-        $selection = $this->sql->select(new FindPageById($pageID));
-        $row = $selection->getFirstRow();
+        $selection = $this->sql->read(new FindPageById($pageID));
+        $row = $selection->toRow();
         if ($row === null) {
             return false;
         }
-        $builder = new PageBuilder($row);
-        $page = $builder->build();
+        $builder = new PageBuilder();
+        $page = $builder->build($row);
         return $page->isPublic();
     }
 }

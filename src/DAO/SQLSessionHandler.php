@@ -7,7 +7,6 @@ use Lucinda\Project\Persistence\Queries\Sessions\DeleteExpiredSessions;
 use Lucinda\Project\Persistence\Queries\Sessions\DeleteSession;
 use Lucinda\Project\Persistence\Queries\Sessions\ReadSession;
 use Lucinda\Project\Persistence\Queries\Sessions\WriteSession;
-use Lucinda\Project\Persistence\SqlExecutor;
 
 /**
  * Persists PHP session payloads in SQL independently of a locking strategy
@@ -15,21 +14,8 @@ use Lucinda\Project\Persistence\SqlExecutor;
  * Serialized bytes are upserted without changing session identifiers. Use
  * LockingSQLSessionHandler for concurrent session read-modify-write lifecycles.
  */
-class SQLSessionHandler implements \SessionHandlerInterface
+class SQLSessionHandler extends SqlBasedDAO implements \SessionHandlerInterface
 {
-    /** Executor used by this session storage implementation */
-    protected SqlExecutor $sql;
-
-    /**
-     * Captures an injected executor or a lazily configured SQL connection
-     *
-     * @param SqlExecutor|null $sql Executor sharing the caller's connection
-     */
-    public function __construct(?SqlExecutor $sql = null)
-    {
-        $this->sql = $sql ?? new SqlExecutor();
-    }
-
     /**
      * Accepts PHP's session storage initialization request
      *
@@ -62,13 +48,13 @@ class SQLSessionHandler implements \SessionHandlerInterface
     public function read(string $sessionID): string|false
     {
         $query = new ReadSession($sessionID, time());
-        $selection = $this->sql->select($query);
-        $row = $selection->getFirstRow();
+        $selection = $this->sql->read($query);
+        $row = $selection->toRow();
         if ($row === null) {
             return '';
         }
-        $builder = new SessionDataBuilder($row);
-        $session = $builder->build();
+        $builder = new SessionDataBuilder();
+        $session = $builder->build($row);
         return $session->getPayload();
     }
 
@@ -84,6 +70,7 @@ class SQLSessionHandler implements \SessionHandlerInterface
     {
         $lifetime = max(1, (int) ini_get('session.gc_maxlifetime'));
         $query = new WriteSession(
+            $this->sql->getVendor(),
             $sessionID,
             $sessionData,
             time() + $lifetime

@@ -1,8 +1,8 @@
 <?php
 namespace Lucinda\Project\Cacheables;
 use Lucinda\Framework\AbstractCacheable;
-use Lucinda\Project\Persistence\NoSqlExecutor;
-use Lucinda\Project\Persistence\NoSql\RepresentationStore;
+use Lucinda\Framework\Persistence\NoSqlExecutor;
+use Lucinda\Framework\NoSQL\RepresentationStore;
 /** Last-Modified time for a rendered representation; requires NoSQL persistence. */
 final class Date extends AbstractCacheable
 {

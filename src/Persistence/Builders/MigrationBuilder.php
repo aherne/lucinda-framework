@@ -3,26 +3,29 @@
 namespace Lucinda\Project\Persistence\Builders;
 
 use Lucinda\Framework\Persistence\Builders\Builder;
+use Lucinda\Framework\Persistence\Builders\Row;
 use Lucinda\Project\Persistence\Entities\Migration;
 
 /**
  * Builds a Migration entity from its selected database projection
  *
- * The builder owns one row and performs explicit type validation when building.
+ * Each call validates its supplied row and builds an independent entity.
  *
  * @internal
  */
-final class MigrationBuilder extends Builder
+final class MigrationBuilder implements Builder
 {
     /**
      * Converts the selected values into the typed persistence entity
      *
+     * @param Row $row Selected projection with typed column access
      * @return Migration Internal record constructed from this projection
-     * @throws \UnexpectedValueException If required columns are malformed
+     * @throws \Lucinda\Framework\Persistence\Queries\ValidationException
+     *     If required columns are missing or malformed
      */
-    public function build(): Migration
+    public function build(Row $row): Migration
     {
-        switch ($this->row->getInteger('status_code')) {
+        switch ($row->getInteger('status_code')) {
             case 1:
                 $status = \Lucinda\Migration\Status::PENDING;
                 break;
@@ -35,6 +38,6 @@ final class MigrationBuilder extends Builder
             default:
                 throw new \UnexpectedValueException('Invalid migration status');
         }
-        return new Migration($this->row->getString('class_name'), $status);
+        return new Migration($row->getString('class_name'), $status);
     }
 }

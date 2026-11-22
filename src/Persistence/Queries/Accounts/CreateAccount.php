@@ -3,6 +3,8 @@
 namespace Lucinda\Project\Persistence\Queries\Accounts;
 
 use Lucinda\Framework\Persistence\Queries\Query;
+use Lucinda\Framework\Persistence\Queries\Parameters;
+use Lucinda\SQL\DataType;
 use Lucinda\Query\Insert;
 
 /**
@@ -43,10 +45,13 @@ final class CreateAccount extends Query
         if ($email === '') {
             $email = null;
         }
-        $this->parameters = [
-            ':name' => $name,
-            ':email' => $email,
-        ];
+        $this->parameters = new Parameters();
+        $this->parameters->set(':name', $name, DataType::STRING);
+        $this->parameters->set(
+            ':email',
+            $email,
+            $email === null ? DataType::NULLABLE : DataType::STRING
+        );
     }
 
     /**

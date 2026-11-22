@@ -3,6 +3,8 @@
 namespace Lucinda\Project\Persistence\Queries\Permissions;
 
 use Lucinda\Framework\Persistence\Queries\Query;
+use Lucinda\Framework\Persistence\Queries\Parameters;
+use Lucinda\SQL\DataType;
 use Lucinda\Query\Select;
 
 /**
@@ -37,7 +39,8 @@ final class FindUserRoles extends Query
     private function setParameters(
         int|string $id
     ): void {
-        $this->parameters = [':id' => $id];
+        $this->parameters = new Parameters();
+        $this->parameters->set(':id', $id, DataType::INTEGER);
     }
 
     /**
@@ -68,6 +71,6 @@ final class FindUserRoles extends Query
      */
     private function setWhere(): void
     {
-        $this->statement->where(['ur.user_id' => ':id', 'u.is_active' => '1']);
+        $this->statement->where(['ur.user_id' => ':id', 'u.is_active' => 'TRUE']);
     }
 }

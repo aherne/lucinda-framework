@@ -3,25 +3,28 @@
 namespace Lucinda\Project\Persistence\Builders;
 
 use Lucinda\Framework\Persistence\Builders\Builder;
+use Lucinda\Framework\Persistence\Builders\Row;
 use Lucinda\Project\Persistence\Entities\Approval;
 
 /**
  * Builds a Approval entity from its selected database projection
  *
- * The builder owns one row and performs explicit type validation when building.
+ * Each call validates its supplied row and builds an independent entity.
  *
  * @internal
  */
-final class ApprovalBuilder extends Builder
+final class ApprovalBuilder implements Builder
 {
     /**
      * Converts the selected values into the typed persistence entity
      *
+     * @param Row $row Selected projection with typed column access
      * @return Approval Internal record constructed from this projection
-     * @throws \UnexpectedValueException If required columns are malformed
+     * @throws \Lucinda\Framework\Persistence\Queries\ValidationException
+     *     If required columns are missing or malformed
      */
-    public function build(): Approval
+    public function build(Row $row): Approval
     {
-        return new Approval($this->row->getString('status'));
+        return new Approval($row->getString('status'));
     }
 }

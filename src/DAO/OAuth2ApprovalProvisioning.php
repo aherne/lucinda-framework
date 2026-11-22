@@ -35,19 +35,20 @@ final class OAuth2ApprovalProvisioning extends OAuth2Login implements
             return OAuth2ApprovalStatus::REJECTED;
         }
         $query = new RequestApproval(
+            $this->sql->getVendor(),
             $vendorName,
             $remote,
             $userInformation->getName(),
             $userInformation->getEmail()
         );
         $this->sql->write($query);
-        $selection = $this->sql->select(new FindApproval($vendorName, $remote));
-        $row = $selection->getFirstRow();
+        $selection = $this->sql->read(new FindApproval($vendorName, $remote));
+        $row = $selection->toRow();
         if ($row === null) {
             return OAuth2ApprovalStatus::REJECTED;
         }
-        $builder = new ApprovalBuilder($row);
-        $request = $builder->build();
+        $builder = new ApprovalBuilder();
+        $request = $builder->build($row);
         if ($request->getStatus() === 'pending') {
             return OAuth2ApprovalStatus::PENDING;
         }

@@ -4,9 +4,9 @@ namespace Test\Lucinda\Project\Persistence;
 
 use Lucinda\Migration\Status;
 use Lucinda\Project\DAO;
-use Lucinda\Project\Persistence\NoSql\RepresentationStore;
-use Lucinda\Project\Persistence\NoSql\SessionStore;
-use Lucinda\Project\Persistence\NoSqlExecutor;
+use Lucinda\Framework\NoSQL\RepresentationStore;
+use Lucinda\Framework\NoSQL\SessionStore;
+use Lucinda\Framework\Persistence\NoSqlExecutor;
 
 /**
  * Verifies the same persistence guarantees against each real NoSQL adapter

@@ -2,8 +2,8 @@
 
 namespace Lucinda\Project\DAO;
 
-use Lucinda\Project\Persistence\NoSql\SessionStore;
-use Lucinda\Project\Persistence\NoSqlExecutor;
+use Lucinda\Framework\NoSQL\SessionStore;
+use Lucinda\Framework\Persistence\NoSqlExecutor;
 
 /**
  * Adapts an owned NoSQL session store to PHP's session handler lifecycle
@@ -11,7 +11,8 @@ use Lucinda\Project\Persistence\NoSqlExecutor;
  * The store owns lease acquisition, payload operations and release. Logical
  * deadlines enforce expiration, and expired leases cannot permit stale writes.
  */
-final class NoSQLSessionHandler implements \SessionHandlerInterface
+final class NoSQLSessionHandler extends NoSqlBasedDAO implements
+    \SessionHandlerInterface
 {
     /** Session state and lease owner retained through the PHP lifecycle */
     private SessionStore $store;
@@ -23,6 +24,7 @@ final class NoSQLSessionHandler implements \SessionHandlerInterface
      */
     public function __construct(NoSqlExecutor $executor)
     {
+        parent::__construct($executor);
         $this->store = new SessionStore($executor);
     }
 

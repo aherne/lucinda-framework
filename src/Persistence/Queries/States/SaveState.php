@@ -3,6 +3,8 @@
 namespace Lucinda\Project\Persistence\Queries\States;
 
 use Lucinda\Framework\Persistence\Queries\Query;
+use Lucinda\Framework\Persistence\Queries\Parameters;
+use Lucinda\SQL\DataType;
 use Lucinda\Query\Insert;
 
 /**
@@ -48,12 +50,11 @@ final class SaveState extends Query
         int $expires,
         string $proof
     ): void {
-        $this->parameters = [
-            ':state' => $state,
-            ':vendor' => $vendor,
-            ':expires' => $expires,
-            ':proof' => $proof,
-        ];
+        $this->parameters = new Parameters();
+        $this->parameters->set(':state', $state, DataType::STRING);
+        $this->parameters->set(':vendor', $vendor, DataType::STRING);
+        $this->parameters->set(':expires', $expires, DataType::INTEGER);
+        $this->parameters->set(':proof', $proof, DataType::STRING);
     }
 
     /**

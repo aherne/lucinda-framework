@@ -1,7 +1,7 @@
 STDERR API front controller should not just ->run() in controllers without checking interfaces
 
-populate XMLs and dists (TBD BY AI)
 implement Bootstrap class in engine API
-add DAOs from old skeleton & configuration API
 add support for FileDB
 add all other libraries to composer.json
+
+Create an API for code verification

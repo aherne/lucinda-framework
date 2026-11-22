@@ -3,25 +3,28 @@
 namespace Lucinda\Project\Persistence\Builders;
 
 use Lucinda\Framework\Persistence\Builders\Builder;
+use Lucinda\Framework\Persistence\Builders\Row;
 use Lucinda\Project\Persistence\Entities\Role;
 
 /**
  * Builds a Role entity from its selected database projection
  *
- * The builder owns one row and performs explicit type validation when building.
+ * Each call validates its supplied row and builds an independent entity.
  *
  * @internal
  */
-final class RoleBuilder extends Builder
+final class RoleBuilder implements Builder
 {
     /**
      * Converts the selected values into the typed persistence entity
      *
+     * @param Row $row Selected projection with typed column access
      * @return Role Internal record constructed from this projection
-     * @throws \UnexpectedValueException If required columns are malformed
+     * @throws \Lucinda\Framework\Persistence\Queries\ValidationException
+     *     If required columns are missing or malformed
      */
-    public function build(): Role
+    public function build(Row $row): Role
     {
-        return new Role($this->row->getString('name'));
+        return new Role($row->getString('name'));
     }
 }

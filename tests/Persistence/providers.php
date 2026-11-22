@@ -5,10 +5,11 @@ require __DIR__ . '/bootstrap.php';
 use Lucinda\Project\DAO\NoSQLLoginThrottler;
 use Lucinda\Project\EventListeners\NoSQLDataSource;
 use Lucinda\Project\EventListeners\SQLDataSource;
-use Lucinda\Project\Persistence\NoSqlExecutor;
-use Lucinda\Project\Persistence\Queries\ConnectionSettings\ReadAutocommit;
-use Lucinda\Project\Persistence\SqlExecutor;
+use Lucinda\Framework\Persistence\NoSqlExecutor;
+use Lucinda\Framework\Persistence\Queries\ConnectionSettings\ReadAutocommit;
+use Lucinda\Framework\Persistence\SqlExecutor;
 use Test\Lucinda\Project\Persistence\FixtureQuery;
+use Lucinda\SQL\DataType;
 
 
 try {
@@ -28,6 +29,7 @@ try {
     $count = 1;
     $attributes = [
         'driver' => 'mysql',
+        'port' => getenv('PERSISTENCE_TEST_PORT') ?: '3306',
         'host' => getenv('PERSISTENCE_TEST_HOST') ?: 'localhost',
         'username' => getenv('PERSISTENCE_TEST_USER') ?: 'root',
         'password' => getenv('PERSISTENCE_TEST_PASSWORD') ?: '',
@@ -50,14 +52,14 @@ try {
     $operation = new FixtureQuery($query, []);
     $first = new SqlExecutor($sqlProvider->getConnection());
     $second = new SqlExecutor($sqlProvider->getConnection());
-    $firstID = $first->select($operation)->getFirstRow()->getScalar('value');
-    $secondID = $second->select($operation)->getFirstRow()->getScalar('value');
+    $firstID = $first->read($operation)->toValue(DataType::INTEGER);
+    $secondID = $second->read($operation)->toValue(DataType::INTEGER);
     if (!($firstID === $secondID)) {
         throw new RuntimeException('Listener connection must be shared');
     }
     $injected = persistenceTestSql();
-    $injectedID = $injected->select($operation)->getFirstRow();
-    if ($injectedID->getScalar('value') === $firstID) {
+    $injectedID = $injected->read($operation)->toRow();
+    if ($injectedID->getInteger('value') === $firstID) {
         throw new RuntimeException('Explicit SQL connection was ignored');
     }
     $named = new SimpleXMLElement('<xml><sql/></xml>');
@@ -73,12 +75,12 @@ try {
     $secondary = new SqlExecutor(
         $namedSqlProvider->getConnection('secondary')
     );
-    $primaryID = $primary->select($operation)->getFirstRow()->getScalar('value');
-    $secondaryID = $secondary->select($operation)->getFirstRow();
-    if ($primaryID === $secondaryID->getScalar('value')) {
+    $primaryID = $primary->read($operation)->toValue(DataType::INTEGER);
+    $secondaryID = $secondary->read($operation)->toRow();
+    if ($primaryID === $secondaryID->getInteger('value')) {
         throw new RuntimeException('Named SQL servers must be independent');
     }
-    $retainedID = $first->select($operation)->getFirstRow()->getScalar('value');
+    $retainedID = $first->read($operation)->toValue(DataType::INTEGER);
     if ($retainedID !== $firstID) {
         throw new RuntimeException('Executor lost its original provider');
     }

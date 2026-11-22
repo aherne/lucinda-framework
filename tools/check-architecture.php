@@ -8,7 +8,12 @@ require dirname(__DIR__) . '/vendor/autoload.php';
 $root = dirname(__DIR__);
 $errors = [];
 $directory = new RecursiveDirectoryIterator($root . '/src');
-$iterator = new RecursiveIteratorIterator($directory);
+$iterator = new AppendIterator();
+$iterator->append(new RecursiveIteratorIterator($directory));
+$atomicDirectory = new RecursiveDirectoryIterator(
+    $root . '/vendor/lucinda/framework-engine/src/NoSQL/AtomicDriver'
+);
+$iterator->append(new RecursiveIteratorIterator($atomicDirectory));
 foreach ($iterator as $file) {
     if (!$file->isFile() || $file->getExtension() !== 'php') {
         continue;
@@ -92,14 +97,23 @@ foreach ($iterator as $file) {
         $references[] = $name;
     }
     $inQueries = str_starts_with($path, 'src/Persistence/Queries/');
+    $inFrameworkAtomic = str_starts_with(
+        $path,
+        'vendor/lucinda/framework-engine/src/NoSQL/'
+    );
     $isExecutor = in_array($path, [
         'src/Persistence/SqlExecutor.php',
-        'src/Persistence/RedisExecutor.php',
+        'src/Persistence/NoSqlExecutor.php',
+        'vendor/lucinda/framework-engine/src/NoSQL/AtomicDriver/AbstractAtomicDriver.php',
+        'vendor/lucinda/framework-engine/src/NoSQL/AtomicDriver/RedisAtomicDriver.php',
+        'vendor/lucinda/framework-engine/src/NoSQL/AtomicDriver/MemcachedAtomicDriver.php',
+        'vendor/lucinda/framework-engine/src/NoSQL/AtomicDriver/APCuAtomicDriver.php',
     ], true);
 
     $inRefactorScope = str_starts_with($path, 'src/DAO/')
         || str_starts_with($path, 'src/Persistence/')
-        || str_starts_with($path, 'src/Presentation/');
+        || str_starts_with($path, 'src/Presentation/')
+        || $inFrameworkAtomic;
     if ($inRefactorScope) {
         foreach (explode("\n", $source) as $lineNumber => $line) {
             $lineWidth = strlen(rtrim($line, "\r"));
@@ -162,9 +176,17 @@ foreach ($iterator as $file) {
                     $after++;
                 }
                 $owner = $tokens[$before][1] ?? '';
+                $approvedRegistryLookup = $name === 'get'
+                    && ($imports[$owner] ?? '')
+                        === 'Lucinda\\Framework\\ServiceRegistry'
+                    && in_array($path, [
+                        'src/Persistence/SqlExecutor.php',
+                        'src/Persistence/NoSqlExecutor.php',
+                    ], true);
                 if (
                     ($tokens[$after] ?? null) === '('
                     && $owner !== 'parent'
+                    && !$approvedRegistryLookup
                 ) {
                     $errors[] = "$path: unapproved static method call";
                 }
@@ -250,6 +272,41 @@ foreach ($iterator as $file) {
     ], true);
     foreach (array_unique($references) as $reference) {
         if (
+            str_starts_with($path, 'src/Persistence/')
+            && (str_starts_with($reference, 'Lucinda\\NoSQL\\Vendor\\')
+                || in_array(ltrim($reference, '\\'), [
+                    'Redis', 'Memcached',
+                ], true))
+        ) {
+            $errors[] = "$path: NoSQL vendors belong to framework adapters";
+        }
+        if (
+            $inFrameworkAtomic
+            && str_starts_with($reference, 'Lucinda\\Project\\')
+        ) {
+            $errors[] = "$path: framework adapter depends on project code";
+        }
+        if (
+            $inRefactorScope && in_array($reference, [
+                'Lucinda\\Framework\\XmlDetector',
+                'SimpleXMLElement',
+            ], true)
+        ) {
+            $errors[] = "$path: XML mapping belongs to data-source listeners";
+        }
+        if (
+            !$isExecutor
+            && preg_match('/(?:^|\\\\)apcu_/i', $reference)
+        ) {
+            $errors[] = "$path: native APCu operation outside executor";
+        }
+        if (
+            str_starts_with($path, 'src/Persistence/')
+            && preg_match('/(?:^|\\\\)apcu_/i', $reference)
+        ) {
+            $errors[] = "$path: APCu belongs to the framework adapter";
+        }
+        if (
             in_array(ltrim($reference, '\\'), [
             'PDO',
             'Redis',
@@ -288,8 +345,14 @@ foreach ($iterator as $file) {
                 || str_starts_with($reference, 'Lucinda\\NoSQL\\')
             ) && !$isExecutor
         ) {
-            // Exception types expose failures, not driver access.
-            if (!str_ends_with($reference, 'Exception')) {
+            // Binding types and exceptions do not expose driver access.
+            if (
+                !str_ends_with($reference, 'Exception')
+                && $reference !== 'Lucinda\\SQL\\DataType'
+                && !($path === 'vendor/lucinda/framework-engine/src/NoSQL/'
+                    . 'AtomicDriver.php'
+                    && $reference === 'Lucinda\\NoSQL\\Driver')
+            ) {
                 $errors[] = "$path: driver dependency outside executor";
             }
         }
@@ -306,10 +369,10 @@ foreach ($iterator as $file) {
             str_starts_with(
                 $path,
                 'src/Persistence/Builders/'
-            ) && (str_contains(
+            ) && ((str_contains(
                 $reference,
                 '\\Queries\\'
-            ) || str_ends_with(
+            ) && $reference !== 'Lucinda\\Framework\\Persistence\\Queries\\ValidationException') || str_ends_with(
                 $reference,
                 'Executor'
             ) || str_starts_with($reference, 'Lucinda\\Project\\DAO\\'))
@@ -337,7 +400,13 @@ foreach ($iterator as $file) {
             ) || str_starts_with(
                 $path,
                 'src/ViewResolvers/'
-            )) && str_starts_with($reference, 'Lucinda\\Project\\Persistence\\')
+            )) && (str_starts_with(
+                $reference,
+                'Lucinda\\Project\\Persistence\\'
+            ) || str_starts_with(
+                $reference,
+                'Lucinda\\Framework\\NoSQL\\'
+            ))
         ) {
             $errors[] = "$path: presentation depends on persistence";
         }
@@ -354,7 +423,12 @@ foreach ($iterator as $file) {
         $errors[] = "$path: direct driver execution";
     }
     foreach ($strings as $string) {
-        if ($inQueries && preg_match('/\bAS\s+[a-z_]/i', $string)) {
+        $aliasSql = preg_replace(
+            '/\bAS\s+(?:CHAR|VARCHAR|TEXT|INTEGER|BIGINT|DECIMAL|NUMERIC|REAL|DOUBLE|BOOLEAN|DATE|TIMESTAMP)\s*(?=\(|\))/i',
+            '',
+            $string
+        );
+        if ($inQueries && preg_match('/\bAS\s+[a-z_]/i', $aliasSql)) {
             $errors[] = "$path: field aliases must use Fields::add";
         }
 
@@ -434,7 +508,10 @@ foreach ($iterator as $file) {
             }
         }
 
-        if (str_starts_with($path, 'src/Persistence/Entities/')) {
+        if (
+            str_starts_with($path, 'src/Persistence/Entities/')
+            && !$reflection->isInterface()
+        ) {
             foreach ($reflection->getProperties() as $property) {
                 if (!$property->isPrivate()) {
                     $errors[] = "$path: entity fields must be private";

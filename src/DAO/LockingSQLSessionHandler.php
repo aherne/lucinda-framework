@@ -2,9 +2,9 @@
 
 namespace Lucinda\Project\DAO;
 
-use Lucinda\Project\Persistence\Locking\Lock;
-use Lucinda\Project\Persistence\Locking\SqlLock;
-use Lucinda\Project\Persistence\SqlExecutor;
+use Lucinda\Framework\Persistence\Locking\Lock;
+use Lucinda\Framework\Persistence\Locking\SqlLock;
+use Lucinda\Framework\Persistence\SqlExecutor;
 
 /**
  * Extends SQL session storage with exclusive ownership through session close
@@ -20,16 +20,13 @@ final class LockingSQLSessionHandler extends SQLSessionHandler implements Lock
     /**
      * Captures session storage and its independent locking strategy
      *
-     * @param SqlExecutor|null $sql Executor shared by storage and the SQL lock
+     * @param SqlExecutor $sql Executor shared by storage and the SQL lock
      * @param Lock|null $lock Explicit strategy or default connection-owned lock
      */
     public function __construct(
-        ?SqlExecutor $sql = null,
+        SqlExecutor $sql,
         ?Lock $lock = null
     ) {
-        if ($sql === null) {
-            $sql = new SqlExecutor();
-        }
         parent::__construct($sql);
         $this->lock = $lock ?? new SqlLock($sql, 'framework-session:');
     }
