@@ -15,7 +15,9 @@ use Lucinda\WebSecurity\DAO\Throttler\MultiFactorAuthentication as MfaThrottler;
 final class NoSQLMultiFactorThrottler extends NoSqlBasedDAO implements
     MfaThrottler
 {
-    /** Failure-window store retained for this authentication scope */
+    /**
+     * Failure-window store retained for this authentication scope
+     */
     private NoSqlThrottle $throttle;
 
     /**

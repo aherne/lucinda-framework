@@ -22,10 +22,14 @@ use Lucinda\WebSecurity\DAO\MultiFactorAuthentication as MfaContract;
  */
 final class MultiFactorAuthentication extends SqlBasedDAO implements MfaContract
 {
-    /** Encryption instance initialized when secret storage is first used */
+    /**
+     * Encryption instance initialized when secret storage is first used
+     */
     private ?SecretBox $box;
 
-    /** Lifetime of an unconfirmed setup secret in seconds */
+    /**
+     * Lifetime of an unconfirmed setup secret in seconds
+     */
     private int $setupLifetime;
 
     /**
@@ -223,7 +227,7 @@ final class MultiFactorAuthentication extends SqlBasedDAO implements MfaContract
      * @param int $counter Verified TOTP time-step counter
      * @return bool True only when this operation consumed the counter
      * @throws \Throwable If immediate persistence or the conditional write
-     *     fails
+     * fails
      */
     public function consumeTotpCounter(int|string $userID, int $counter): bool
     {

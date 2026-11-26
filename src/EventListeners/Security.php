@@ -15,7 +15,7 @@ use Lucinda\Project\DAO\OAuth2States;
 use Lucinda\STDOUT\Cookies;
 use Lucinda\STDOUT\Request;
 use Lucinda\OAuth2\Wrapper as OAuth2Wrapper;
-use Lucinda\STDERR\Service\ValidatedRequest;
+use Lucinda\STDOUT\Validators\ValidatedRequest;
 use Lucinda\WebSecurity\Configuration\RolesDetector;
 use Lucinda\WebSecurity\OAuth2State;
 use Lucinda\WebSecurity\Packets\GuestUser;
@@ -26,7 +26,7 @@ use Lucinda\WebSecurity\Packets\MultiFactor as MultiFactorPacket;
 use Lucinda\WebSecurity\Packets\Security as SecurityPacket;
 use Lucinda\WebSecurity\Packets\Throttling as ThrottlingPacket;
 use Lucinda\WebSecurity\Packets\Packet;
-use Lucinda\WebSecurity\Security\MultiFactorAuthentication\ResultStatus as MultiFactorResultStatus;
+use Lucinda\WebSecurity\Security\MultiFactorAuthentication;
 use Lucinda\WebSecurity\Wrapper as SecurityWrapper;
 
 /**
@@ -38,7 +38,8 @@ use Lucinda\WebSecurity\Wrapper as SecurityWrapper;
  */
 final class Security implements MultiFaceted
 {
-    const XML_PATH = "xml/stdout/security";
+    /** Project-relative configuration path without its XML extension */
+    public const XML_PATH = "xml/stdout/security";
 
     /**
      * Current HTTP request supplying security input and application context
@@ -67,12 +68,19 @@ final class Security implements MultiFaceted
      * Captures the request, resolved route, and browser cookie access
      *
      * @param Request $request Current HTTP request
-     * @param ValidatedRequest $validatedRequest Route selected by request validation
-     * @param Cookies $cookies Incoming cookies used by OAuth2 state verification
-     * @param \Lucinda\STDOUT\Session $session MVC session, already active when session persistence is configured
+     * @param ValidatedRequest $validatedRequest Route selected by request
+     *     validation
+     * @param Cookies $cookies Incoming cookies used by OAuth2 state
+     *     verification
+     * @param \Lucinda\STDOUT\Session $session MVC session, already active when
+     *     session persistence is configured
      */
-    public function __construct(Request $request, ValidatedRequest $validatedRequest, Cookies $cookies, \Lucinda\STDOUT\Session $session)
-    {
+    public function __construct(
+        Request $request,
+        ValidatedRequest $validatedRequest,
+        Cookies $cookies,
+        \Lucinda\STDOUT\Session $session
+    ) {
         $this->request = $request;
         $this->validatedRequest = $validatedRequest;
         $this->cookies = $cookies;
@@ -82,9 +90,11 @@ final class Security implements MultiFaceted
     /**
      * Executes security and publishes general security and MFA context
      *
-     * @return FacetCollection Facets registered under their concrete class names
+     * @return FacetCollection Facets registered under their concrete class
+     *     names
      * @throws TerminationException If the outcome requires a browser redirect
-     * @throws \Throwable If configuration, persistence, or security processing fails
+     * @throws \Throwable If configuration, persistence, or security processing
+     *     fails
      */
     public function run(): FacetCollection
     {
@@ -117,7 +127,11 @@ final class Security implements MultiFaceted
         if ($packet instanceof GuestUser || $packet instanceof LoggedInUser) {
             $securityFacet->setCsrfToken($packet->getCsrfToken());
         }
-        if ($multiFactorPacket = $this->checkMultiFactorAuthentication($packet)) {
+        if (
+            $multiFactorPacket = $this->checkMultiFactorAuthentication(
+                $packet
+            )
+        ) {
             $multiFactorFacet->setPacket($multiFactorPacket);
         } elseif ($callback = $packet->getCallback()) {
             if ($this->isRestful()) {
@@ -132,41 +146,51 @@ final class Security implements MultiFaceted
     /**
      * Gets the application's security configuration
      *
-     * @return \SimpleXMLElement Complete XML document containing security settings
+     * @return \SimpleXMLElement Complete XML document containing security
+     *     settings
      * @throws \Throwable If the configuration cannot be loaded
      */
     private function getXML(): \SimpleXMLElement
     {
-        $detector = new XmlDetector(dirname(__DIR__, 2).DIRECTORY_SEPARATOR.self::XML_PATH);
+        $detector = new XmlDetector(
+            dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . self::XML_PATH
+        );
         return $detector->getXML();
     }
 
     /**
      * Gets the HTTP request adapted for web-security processing
      *
-     * @return WebSecurityRequest Request with the validated route and bearer token
+     * @return WebSecurityRequest Request with the validated route and bearer
+     *     token
      */
     private function getRequest(): WebSecurityRequest
     {
-        $binder = new RequestBinder($this->request, $this->validatedRequest->getRoute());
+        $binder = new RequestBinder(
+            $this->request,
+            $this->validatedRequest->getRoute()
+        );
         return $binder->getResult();
     }
 
     /**
      * Gets configured provider clients adapted to the security API
      *
-     * @return array<string,\Lucinda\WebSecurity\OAuth2Service> Services keyed by provider name
+     * @return array<string,\Lucinda\WebSecurity\OAuth2Service> Services keyed
+     *     by provider name
      * @throws \Throwable If provider configuration cannot be loaded or adapted
      */
     private function getOAuth2Drivers(): array
     {
         $filePath = $this->getOAuth2XMLPath();
         if ($filePath === null) {
-            return []; // project does not use oauth2 or local environment doesn't support it
+            return []; // OAuth2 provider loading is disabled.
         }
 
         // get raw oauth2 drivers
-        $xmlDetector = new XmlDetector(dirname(__DIR__, 2).DIRECTORY_SEPARATOR.$filePath);
+        $xmlDetector = new XmlDetector(
+            dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . $filePath
+        );
         $wrapper = new OAuth2Wrapper($xmlDetector->getXML());
         $oauth2Drivers = $wrapper->getDriver();
 
@@ -181,20 +205,25 @@ final class Security implements MultiFaceted
      * The SQL data-source listener must run before state persistence is used.
      * This implementation does not depend on the session listener.
      *
-     * @return OAuth2State|null Shared implementation for browser and REST apps, or null when disabled
+     * @return OAuth2State|null Shared implementation for browser and REST apps,
+     *     or null when disabled
      */
     private function getOAuth2State(): ?OAuth2State
     {
         if ($this->getOAuth2XMLPath() === null) {
-            return null; // project does not use oauth2 or local environment doesn't support it
+            return null; // OAuth2 state persistence is disabled.
         }
-        return new OAuth2StateImplementation(new OAuth2States(), $this->cookies);
+        return new OAuth2StateImplementation(
+            new OAuth2States(),
+            $this->cookies
+        );
     }
 
     /**
      * Gets the optional provider configuration path relative to the project
      *
-     * @return string|null XML path without its extension, or null to disable OAuth2
+     * @return string|null XML path without its extension, or null to disable
+     *     OAuth2
      */
     private function getOAuth2XMLPath(): ?string
     {
@@ -205,7 +234,8 @@ final class Security implements MultiFaceted
     /**
      * Gets indexed route-role policies when XML authorization is configured
      *
-     * @return RolesDetector|null Route-role detector, or null when not configured
+     * @return RolesDetector|null Route-role detector, or null when not
+     *     configured
      * @throws \Throwable If route-role configuration cannot be loaded
      */
     private function getRolesDetector(): ?RolesDetector
@@ -215,14 +245,22 @@ final class Security implements MultiFaceted
             return null;
         }
 
-        $xmlDetector = new XmlDetector(dirname(__DIR__, 2).DIRECTORY_SEPARATOR.$filePath);
-        return new RolesDetector($xmlDetector->getXML(), "routes", "route", "id");
+        $xmlDetector = new XmlDetector(
+            dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . $filePath
+        );
+        return new RolesDetector(
+            $xmlDetector->getXML(),
+            "routes",
+            "route",
+            "id"
+        );
     }
 
     /**
      * Gets the optional route-role configuration path relative to the project
      *
-     * @return string|null XML path without its extension, or null to disable XML roles
+     * @return string|null XML path without its extension, or null to disable
+     *     XML roles
      */
     private function getRoutesXMLPath(): ?string
     {
@@ -250,11 +288,12 @@ final class Security implements MultiFaceted
     {
         $uri = $packet->getCallback();
         if (
-            $packet instanceof MultiFactorPacket || 
-            $packet instanceof SecurityPacket || 
+            $packet instanceof MultiFactorPacket ||
+            $packet instanceof SecurityPacket ||
             $packet instanceof ThrottlingPacket
         ) {
-           $uri .= (str_contains($uri, "?")?"&":"?")."status=".$packet->getStatus()->name;
+            $uri .= (str_contains($uri, "?") ? "&" : "?")
+                . "status=" . $packet->getStatus()->name;
         }
         $redirect = new Redirect($uri);
         $redirect->setPreventCaching(true);
@@ -264,19 +303,24 @@ final class Security implements MultiFaceted
     /**
      * Selects an MFA form outcome already on its designated rendering route
      *
-     * @param Packet $packet Security outcome whose callback would otherwise be followed
-     * @return MultiFactorPacket|null Setup or challenge data for this route, or null for navigation
+     * @param Packet $packet Security outcome whose callback would otherwise be
+     *     followed
+     * @return MultiFactorPacket|null Setup or challenge data for this route, or
+     *     null for navigation
      */
-    private function checkMultiFactorAuthentication(Packet $packet): ?MultiFactorPacket
-    {
-        $fullValidatedRoute = $this->request->getURI()->getContextPath()."/".$this->validatedRequest->getRoute();
+    private function checkMultiFactorAuthentication(
+        Packet $packet
+    ): ?MultiFactorPacket {
+        $fullValidatedRoute = $this->request->getURI()->getContextPath()
+            . "/" . $this->validatedRequest->getRoute();
         if (
-            $packet instanceof MultiFactorPacket && 
+            $packet instanceof MultiFactorPacket &&
             in_array($packet->getStatus(), [
-            MultiFactorResultStatus::REQUIRED,
-            MultiFactorResultStatus::SETUP_REQUIRED
+            MultiFactorAuthentication\ResultStatus::REQUIRED,
+            MultiFactorAuthentication\ResultStatus::SETUP_REQUIRED
             ]) &&
-            ($fullValidatedRoute === $packet->getCallback())) {
+            ($fullValidatedRoute === $packet->getCallback())
+        ) {
             return $packet;
         }
         return null;

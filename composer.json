@@ -19,7 +19,7 @@
         "lucinda/framework-engine": "~4.0",
         "lucinda/logging": "~5.0",
         "lucinda/nosql-data-access": "~5.0",
-        "lucinda/oauth2-client": "~4.0",
+        "lucinda/oauth2-client": "~5.0",
         "lucinda/security": "~5.0",
         "lucinda/mvc": "~5.0",
         "lucinda/sql-data-access": "~5.0",
@@ -31,22 +31,25 @@
         "lucinda/console-mvc": "~3.0",
         "lucinda/migrations": "^3.0",
         "lucinda/console-view": "~1.0",
-        "lucinda/queries": "^4.0"
+        "lucinda/queries": "^4.0",
+        "lucinda/db": "^4.0"
     },
     "require-dev": {
         "lucinda/unit-testing": "^2.0"
     },
     "autoload": {
-    	"psr-4": {
-          "Lucinda\\Project\\": "src/",
-          "Test\\Lucinda\\Project\\": "tests/"
-    	}
+        "psr-4": {
+            "Lucinda\\Project\\": "src/",
+            "Test\\Lucinda\\Project\\": "tests/"
+        }
     },
     "scripts": {
         "check-architecture": "php tools/check-architecture.php",
         "test-persistence": "php tests/Persistence/run.php",
         "post-create-project-cmd": [
             "php configure.php create-folders"
-        ]
+        ],
+        "test": "@php test.php",
+        "test-schemas": "@php tests/Persistence/schemas.php"
     }
 }

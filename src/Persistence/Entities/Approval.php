@@ -11,16 +11,18 @@ use Lucinda\Framework\Persistence\Entities\Entity;
  *
  * @internal
  */
-final readonly class Approval implements Entity
+final class Approval implements Entity
 {
-    /** Persisted approval decision for the provider identity */
+    /**
+     * Persisted approval decision for the provider identity
+     */
     private string $status;
 
     /**
      * Captures the validated values for this persistence record
      *
      * @param string $status Persisted approval decision for the provider
-     *     identity
+     * identity
      */
     public function __construct(
         string $status

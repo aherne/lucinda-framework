@@ -31,7 +31,6 @@ abstract class AbstractQuery extends Query
 
     /**
      * Stores the runtime values bound by this operation
-     *
      */
     protected function setParameters(): void
     {

@@ -1,6 +1,6 @@
 # XML configuration templates
 
-The project ships 20 `.xml.dist` templates covering the configuration read by `index.php`, `src/EventListeners`, and `src/ViewResolvers`, including the referenced MVC sections. Copy a template to the same path without `.dist` to activate it. Existing runtime `.xml` files are intentionally left in place; compare and merge them rather than overwriting local configuration.
+The project ships 21 `.xml.dist` templates covering the configuration read by `index.php`, `src/EventListeners`, and `src/ViewResolvers`, including the referenced MVC sections. Copy a template to the same path without `.dist` to activate it. Existing runtime `.xml` files are intentionally left in place; compare and merge them rather than overwriting local configuration.
 
 Start with `stdout.xml.dist` and `stderr.xml.dist` in the project root. Materialize their application, routes, resolvers, and templating references, plus both STDERR logger files. Reference paths omit `.xml` and are relative to the root document. The other consumers load fixed paths ending in `.xml`; none falls back to `.xml.dist` automatically.
 
@@ -20,6 +20,7 @@ Start with `stdout.xml.dist` and `stderr.xml.dist` in the project root. Material
 | `stdout/loggers.xml.dist` | Optional HTTP / console logging listeners |
 | `stdout/sql.xml.dist` | SQL data source listener and SQL-backed DAOs |
 | `stdout/nosql.xml.dist` | NoSQL data source listener and cache-backed services |
+| `stdout/file_db.xml.dist` | FileDB listener and file-backed schema replicas |
 | `stdout/headers.xml.dist` | HTTP cache / CORS policies and cacheable implementation |
 | `stdout/internationalization.xml.dist` | Locale detection and translation dictionaries |
 | `stdout/security.xml.dist` | Authentication, authorization, persistence and optional MFA |

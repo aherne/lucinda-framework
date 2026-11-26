@@ -14,7 +14,9 @@ use Lucinda\Framework\Persistence\SqlExecutor;
  */
 final class LockingSQLSessionHandler extends SQLSessionHandler implements Lock
 {
-    /** Exclusive owner retained through the session lifecycle */
+    /**
+     * Exclusive owner retained through the session lifecycle
+     */
     private Lock $lock;
 
     /**

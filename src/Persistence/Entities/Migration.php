@@ -12,19 +12,23 @@ use Lucinda\Migration\Status;
  *
  * @internal
  */
-final readonly class Migration implements Entity
+final class Migration implements Entity
 {
-    /** Fully qualified migration class owning this result */
+    /**
+     * Fully qualified migration class owning this result
+     */
     private string $className;
 
-    /** Recorded pending, failed or passed execution status */
+    /**
+     * Recorded pending, failed or passed execution status
+     */
     private Status $status;
 
     /**
      * Captures the validated values for this persistence record
      *
      * @param string $className Fully qualified migration class owning this
-     *     result
+     * result
      * @param Status $status Recorded pending, failed or passed execution status
      */
     public function __construct(

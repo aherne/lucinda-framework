@@ -15,7 +15,9 @@ use Lucinda\Framework\Persistence\NoSqlExecutor;
  */
 final class NoSQLMigrationCache extends NoSqlBasedDAO implements Cache
 {
-    /** Application-scoped migration ledger owned by this cache */
+    /**
+     * Application-scoped migration ledger owned by this cache
+     */
     private MigrationStore $store;
 
     /**

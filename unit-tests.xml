@@ -7,4 +7,21 @@
       <tests path="tests" namespace="Test\Lucinda\Project\"/>
     </unit_test>
   </unit_tests>
+  
+
+  <servers>
+      <sql>
+          <local>
+              <server
+                  driver="mysql"
+                  host="127.0.0.1"
+                  port="3306"
+                  username="testing"
+                  password="O@ulVlbhm5n&lt;q_Il"
+                  schema="unit_tests"
+                  charset="utf8mb4"
+              />
+          </local>
+      </sql>
+  </servers>
 </xml>

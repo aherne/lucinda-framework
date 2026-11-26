@@ -24,8 +24,9 @@ use Lucinda\STDOUT\Request\Method;
  */
 final class HttpCaching implements EventListener, Body, HeadersTransformer
 {
-    const XML_PATH = "xml/stdout/headers";
-    
+    /** Project-relative configuration path without its XML extension */
+    public const XML_PATH = "xml/stdout/headers";
+
     /**
      * Request whose conditional headers are being evaluated
      */
@@ -60,6 +61,7 @@ final class HttpCaching implements EventListener, Body, HeadersTransformer
      * @param string $source Rendered response body
      * @return string Unchanged body when cache validation permits delivery
      * @throws TerminationException If a conditional response is required
+     * @throws \Throwable If cache configuration or storage access fails
      */
     public function transform(string $source): string
     {
@@ -68,9 +70,10 @@ final class HttpCaching implements EventListener, Body, HeadersTransformer
             return $source;
         }
 
-        $detector = new XmlDetector(dirname(__DIR__, 2).DIRECTORY_SEPARATOR.self::XML_PATH);
+        $detector = new XmlDetector(
+            dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . self::XML_PATH
+        );
 
-        // Proposed signature: XML, request, rendered body.
         $finder = new CacheableFinder(
             $detector->getXML(),
             $this->request,
@@ -87,7 +90,9 @@ final class HttpCaching implements EventListener, Body, HeadersTransformer
         $headers = $wrapper->getResponse()->toArray();
 
         if ($status !== HttpStatus::OK) {
-            throw new TerminationException($this->getTerminationResponse($status, $headers));
+            throw new TerminationException(
+                $this->getTerminationResponse($status, $headers)
+            );
         }
 
         foreach ($headers as $name => $value) {
@@ -108,20 +113,22 @@ final class HttpCaching implements EventListener, Body, HeadersTransformer
     }
 
     /**
-     * Constructs response to terminate with
-     * 
-     * @param HttpStatus $status
-     * @param array $headers
-     * @throws \LogicException
-     * @return Blank|ByStatus
+     * Builds a conditional response retaining all cache validation headers
+     *
+     * @param HttpStatus $status Not-modified or precondition-failed outcome
+     * @param array<string, string> $headers Cache headers to preserve
+     * @throws \LogicException If the validator returns an unsupported status
+     * @return Blank|ByStatus Empty 304 or explanatory 412 response
      */
-    private function getTerminationResponse(HttpStatus $status, array $headers): Blank|ByStatus
-    {
+    private function getTerminationResponse(
+        HttpStatus $status,
+        array $headers
+    ): Blank|ByStatus {
         $response = match ($status) {
             HttpStatus::NOT_MODIFIED => new Blank($status),
             HttpStatus::PRECONDITION_FAILED => new ByStatus($status),
             default => throw new \LogicException(
-                "Unexpected cache validation status: ".$status->value
+                "Unexpected cache validation status: " . $status->value
             ),
         };
 

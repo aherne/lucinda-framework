@@ -12,7 +12,9 @@ use Lucinda\Framework\Persistence\NoSqlExecutor;
  */
 abstract class NoSqlBasedDAO
 {
-    /** Executor retained for this DAO's entire lifecycle */
+    /**
+     * Executor retained for this DAO's entire lifecycle
+     */
     protected NoSqlExecutor $executor;
 
     /**

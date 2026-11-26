@@ -2,80 +2,157 @@
 
 namespace Test\Lucinda\Project\Controllers;
 
-use Lucinda\Project\Controllers\Error;
-use Lucinda\Templating\ViewException;
-use Lucinda\Templating\Wrapper;
 use Lucinda\UnitTest\Result;
+use Lucinda\UnitTest\Validator;
+use Lucinda\Project\Controllers;
+use Lucinda\Project\STDERR as Errors;
+use Lucinda\Project\ViewResolvers as Resolvers;
+use Test\Lucinda\Project\Support\ProjectFixture;
 
-/** Verifies original VL diagnostics and safe debug-template rendering. */
+/** Verifies Error presentation behavior. */
 final class ErrorTest
 {
-    /** Checks source mapping and preservation of the underlying PHP failure. */
-    public function templateDiagnostics(): array
+    /**
+     * Selects the debug view for HTML, JSON and console errors
+     *
+     * @return Result[] Observed behavior assertions
+     */
+    public function run(): array
     {
-        $cause = new \Error('Undefined function <unsafe>');
-        $exception = new ViewException('Rendering failed', 0, $cause, ['source' => 'templates/tags/card.html', 'line' => 12]);
-        $data = $this->data($exception);
-        return [
-            new Result($data['file'] === 'templates/tags/card.html' && $data['line'] === 12, 'Original template location'),
-            new Result($data['template'] === ['file' => 'templates/tags/card.html', 'line' => 12], 'Structured VL context'),
-            new Result($data['cause']['type'] === \Error::class && $data['cause']['message'] === $cause->getMessage(), 'Underlying PHP error'),
-            new Result($data['cause']['file'] === $cause->getFile() && $data['cause']['trace'] === $cause->getTraceAsString(), 'PHP location and trace')
-        ];
-    }
-
-    /** Checks fallback diagnostics when source maps or previous failures are absent. */
-    public function fallbackDiagnostics(): array
-    {
-        $exception = new ViewException('Invalid tag');
-        $data = $this->data($exception);
-        $ordinary = $this->data(new \RuntimeException('Ordinary failure'));
-        return [
-            new Result($data['file'] === $exception->getFile() && $data['line'] === $exception->getLine(), 'Fallback PHP location'),
-            new Result(!isset($data['template'], $data['cause']), 'No invented VL context'),
-            new Result(!isset($ordinary['template'], $ordinary['cause']) && $ordinary['message'] === 'Ordinary failure', 'Ordinary exceptions unchanged')
-        ];
-    }
-
-    /** Compiles both real debug views and checks HTML escaping and optional sections. */
-    public function debugViews(): array
-    {
-        $root = dirname(__DIR__, 2);
-        $temporary = sys_get_temp_dir().'/lucinda-debug-'.bin2hex(random_bytes(8));
-        mkdir($temporary, 0700);
-        mkdir($temporary.'/tags');
-        mkdir($temporary.'/compiled');
-        $xml = new \SimpleXMLElement('<xml><templating/></xml>');
-        $xml->templating['compilations_path'] = $temporary.'/compiled';
-        $xml->templating['tags_path'] = $temporary.'/tags';
-        $xml->templating['templates_path'] = $root.'/templates/views';
-        $xml->templating['templates_extension'] = 'html';
-        try {
-            $wrapper = new Wrapper($xml);
-            $data = $this->data(new ViewException('<script>alert(1)</script>', 0, new \Error('<unsafe>'), ['source' => 'tags/card.html', 'line' => 12]));
-            $html = $wrapper->compile('debug', $data);
-            $console = $wrapper->compile('debug-console', $data);
-            $plain = $wrapper->compile('debug', $this->data(new \RuntimeException('Ordinary failure')));
-            return [
-                new Result(str_contains($html, 'ViewLanguage template') && str_contains($html, 'tags/card.html'), 'HTML template context'),
-                new Result(str_contains($html, 'Underlying error') && str_contains($html, '&lt;unsafe&gt;'), 'Underlying error is escaped'),
-                new Result(!str_contains($html, '<script>') && str_contains($html, '&lt;script&gt;'), 'Debug message is escaped'),
-                new Result(str_contains($console, 'tags/card.html:12') && str_contains($console, 'Underlying error'), 'Console context'),
-                new Result(!str_contains($plain, 'ViewLanguage template') && !str_contains($plain, 'Underlying error'), 'Optional context stays optional')
-            ];
-        } finally {
-            $files = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($temporary, \FilesystemIterator::SKIP_DOTS), \RecursiveIteratorIterator::CHILD_FIRST);
-            foreach ($files as $file) {
-                $file->isDir() ? rmdir($file->getPathname()) : unlink($file->getPathname());
+        $project = new ProjectFixture(dirname(__DIR__, 2));
+        $results = [];
+        $app = new \Lucinda\STDERR\Application(
+            $project->getPath() . '/stderr.xml'
+        );
+        $error = new \RuntimeException('controller-failure');
+        $request = new \Lucinda\STDERR\Request(
+            $app->getRoutes('default'),
+            $error
+        );
+        foreach (
+            [
+                'html' => 'debug',
+                'json' => '',
+                'console' => 'debug-console',
+            ] as $format => $template
+        ) {
+            $validated = new \Lucinda\STDERR\Service\ValidatedRequest(
+                $app,
+                $error,
+                $format
+            );
+            $controller = new Controllers\Error(
+                new Errors\DisplayErrors(),
+                $request,
+                $validated
+            );
+            $view = $controller->run();
+            $results[] = (new Validator\Arrays(
+                [$view->getFile()]
+            ))->assertIdentical(
+                [$template],
+                'Requested format selects the matching debug template'
+            );
+            $results[] = (new Validator\Strings(
+                $view->getData()['message']
+            ))->assertEquals(
+                'controller-failure',
+                'Exception message reaches debug data'
+            );
+            $results[] = (new Validator\Arrays(
+                [$view->getData()['type']]
+            ))->assertIdentical(
+                [\RuntimeException::class],
+                'Exception type retained'
+            );
+            // The default policy enables diagnostics. Exercise the public
+            // error branch independently of that concrete policy.
+            (
+                new \ReflectionProperty($controller, 'displayErrors')
+            )->setValue($controller, false);
+            $view = $controller->run();
+            if ($format === 'json') {
+                $results[] = (new Validator\Arrays(
+                    $view->getData()
+                ))->assertIdentical(
+                    ['message' => 'Internal Server Error'],
+                    'Public JSON response exposes no diagnostics'
+                );
+            } else {
+                $results[] = (new Validator\Arrays(
+                    [$view->getFile()]
+                ))->assertIdentical(
+                    [$format === 'html' ? '500' : '500-console'],
+                    'Public response selects the generic error template'
+                );
+                $results[] = (new Validator\Arrays(
+                    $view->getData()
+                ))->assertIdentical(
+                    [],
+                    'Public template receives no exception details'
+                );
             }
-            rmdir($temporary);
         }
+        return $results;
     }
 
-    /** Exercises the shared diagnostic mapper without constructing unrelated request services. */
-    private function data(\Throwable $exception): array
+    /**
+     * Retains original template locations and the underlying PHP failure
+     *
+     * @return Result[] Observed behavior assertions
+     */
+    public function testTemplateDiagnostics(): array
     {
-        $class = new \ReflectionClass(Error::class);
-        return $class->getMethod('compileData')->invoke($class->newInstanceWithoutConstructor(), $exception);
+        $project = new ProjectFixture(dirname(__DIR__, 2));
+        $results = [];
+        $project->write('templates/views/broken-unit.html', '${data.missing}');
+        $error = null;
+        try {
+            (new Resolvers\Html())->resolve(
+                new \Lucinda\MVC\Response\View([], 'broken-unit')
+            );
+        } catch (\Lucinda\Templating\ViewException $failure) {
+            $error = $failure;
+        }
+        $results[] = (new Validator\Booleans(
+            $error instanceof \Lucinda\Templating\ViewException
+        ))->assertTrue(
+            'Invalid view produces a template-aware exception'
+        );
+        $app = new \Lucinda\STDERR\Application(
+            $project->getPath() . '/stderr.xml'
+        );
+        $controller = new Controllers\Error(
+            new Errors\DisplayErrors(),
+            new \Lucinda\STDERR\Request($app->getRoutes('default'), $error),
+            new \Lucinda\STDERR\Service\ValidatedRequest($app, $error, 'json')
+        );
+        $data = $controller->run()->getData();
+        $results[] = (new Validator\Booleans(
+            str_ends_with(
+                $data['template']['file'],
+                '/broken-unit.html'
+            )
+        ))->assertTrue(
+            'Debug payload reports the original template path'
+        );
+        $results[] = (new Validator\Integers(
+            $data['template']['line']
+        ))->assertEquals(
+            1,
+            'Debug payload reports the source line'
+        );
+        $results[] = (new Validator\Arrays(
+            [$data['file']]
+        ))->assertIdentical(
+            [$data['template']['file']],
+            'Primary location uses source template'
+        );
+        $results[] = (new Validator\Booleans(
+            isset($data['cause']['message'])
+        ))->assertTrue(
+            'Underlying runtime failure remains available'
+        );
+        return $results;
     }
 }

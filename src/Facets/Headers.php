@@ -22,8 +22,9 @@ final class Headers implements Facet
      * Encapsulates the headers wrapper prepared for the current request
      *
      * @param Wrapper $wrapper Initialized HTTP headers wrapper
+     * @return void
      */
-    public function setWrapper(Wrapper $wrapper)
+    public function setWrapper(Wrapper $wrapper): void
     {
         $this->wrapper = $wrapper;
     }

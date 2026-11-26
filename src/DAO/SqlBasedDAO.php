@@ -12,7 +12,9 @@ use Lucinda\Framework\Persistence\SqlExecutor;
  */
 abstract class SqlBasedDAO
 {
-    /** Executor retained for this DAO's entire lifecycle */
+    /**
+     * Executor retained for this DAO's entire lifecycle
+     */
     protected SqlExecutor $sql;
 
     /**

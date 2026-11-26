@@ -14,7 +14,9 @@ use Lucinda\Framework\Persistence\NoSqlExecutor;
 final class NoSQLSessionHandler extends NoSqlBasedDAO implements
     \SessionHandlerInterface
 {
-    /** Session state and lease owner retained through the PHP lifecycle */
+    /**
+     * Session state and lease owner retained through the PHP lifecycle
+     */
     private SessionStore $store;
 
     /**
@@ -109,7 +111,7 @@ final class NoSQLSessionHandler extends NoSqlBasedDAO implements
      * Reports that expired records are rejected without an explicit scan
      *
      * @param int $maxlifetime PHP lifetime argument, superseded by the record's
-     *     stored expiration
+     * stored expiration
      * @return int|false Zero records explicitly deleted by this handler
      */
     public function gc(int $maxlifetime): int|false

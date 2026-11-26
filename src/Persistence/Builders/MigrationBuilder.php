@@ -20,8 +20,9 @@ final class MigrationBuilder implements Builder
      *
      * @param Row $row Selected projection with typed column access
      * @return Migration Internal record constructed from this projection
+     * @throws \UnexpectedValueException If a stored status code is unknown
      * @throws \Lucinda\Framework\Persistence\Queries\ValidationException
-     *     If required columns are missing or malformed
+     * If required columns are missing or malformed
      */
     public function build(Row $row): Migration
     {

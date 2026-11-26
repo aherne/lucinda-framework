@@ -11,12 +11,16 @@ use Lucinda\Framework\Persistence\Entities\Entity;
  *
  * @internal
  */
-final readonly class Credentials implements Entity
+final class Credentials implements Entity
 {
-    /** Local account owning the selected credentials */
+    /**
+     * Local account owning the selected credentials
+     */
     private int $userID;
 
-    /** Stored password verifier retained only inside authentication */
+    /**
+     * Stored password verifier retained only inside authentication
+     */
     private string $passwordHash;
 
     /**
@@ -24,7 +28,7 @@ final readonly class Credentials implements Entity
      *
      * @param int $userID Local account owning the selected credentials
      * @param string $passwordHash Stored password verifier retained only inside
-     *     authentication
+     * authentication
      */
     public function __construct(
         int $userID,

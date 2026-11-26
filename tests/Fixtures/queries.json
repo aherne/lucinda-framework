@@ -1,0 +1,719 @@
+{
+    "Persistence\/Queries\/Migrations\/SaveMigration": {
+        "sql": "INSERT INTO migrations (class_name, status_code, recorded_at) VALUES\r\n(:class, :status, :now)\r\nON DUPLICATE KEY UPDATE status_code = :updated_status, recorded_at = :updated_now",
+        "selection": false,
+        "bindings": {
+            ":class": {
+                "value": "input-'class--",
+                "type": "STRING"
+            },
+            ":status": {
+                "value": 2,
+                "type": "INTEGER"
+            },
+            ":now": {
+                "value": "<current-time>",
+                "type": "INTEGER"
+            },
+            ":updated_status": {
+                "value": 2,
+                "type": "INTEGER"
+            },
+            ":updated_now": {
+                "value": "<current-time>",
+                "type": "INTEGER"
+            }
+        }
+    },
+    "Persistence\/Queries\/Migrations\/DeleteMigration": {
+        "sql": "DELETE FROM migrations\r\nWHERE class_name = :class",
+        "selection": false,
+        "bindings": {
+            ":class": {
+                "value": "input-'class--",
+                "type": "STRING"
+            }
+        }
+    },
+    "Persistence\/Queries\/Migrations\/ReadMigrations": {
+        "sql": "SELECT\r\nclass_name, status_code\r\nFROM migrations",
+        "selection": true,
+        "bindings": []
+    },
+    "Persistence\/Queries\/Migrations\/SaveMigration\/PostgreSQL": {
+        "sql": "INSERT INTO migrations (class_name, status_code, recorded_at) VALUES\r\n(:class, :status, :now)\r\nON CONFLICT (class_name) DO UPDATE SET status_code = :updated_status, recorded_at = :updated_now",
+        "selection": false,
+        "bindings": {
+            ":class": {
+                "value": "input-'class--",
+                "type": "STRING"
+            },
+            ":status": {
+                "value": 2,
+                "type": "INTEGER"
+            },
+            ":now": {
+                "value": "<current-time>",
+                "type": "INTEGER"
+            },
+            ":updated_status": {
+                "value": 2,
+                "type": "INTEGER"
+            },
+            ":updated_now": {
+                "value": "<current-time>",
+                "type": "INTEGER"
+            }
+        }
+    },
+    "Persistence\/Queries\/Migrations\/SaveMigration\/MySQL": {
+        "sql": "INSERT INTO migrations (class_name, status_code, recorded_at) VALUES\r\n(:class, :status, :now)\r\nON DUPLICATE KEY UPDATE status_code = :updated_status, recorded_at = :updated_now",
+        "selection": false,
+        "bindings": {
+            ":class": {
+                "value": "input-'class--",
+                "type": "STRING"
+            },
+            ":status": {
+                "value": 2,
+                "type": "INTEGER"
+            },
+            ":now": {
+                "value": "<current-time>",
+                "type": "INTEGER"
+            },
+            ":updated_status": {
+                "value": 2,
+                "type": "INTEGER"
+            },
+            ":updated_now": {
+                "value": "<current-time>",
+                "type": "INTEGER"
+            }
+        }
+    },
+    "Persistence\/Queries\/Migrations\/SaveMigration\/SQLite": {
+        "sql": "INSERT INTO migrations (class_name, status_code, recorded_at) VALUES\r\n(:class, :status, :now)\r\nON CONFLICT (class_name) DO UPDATE SET status_code = :updated_status, recorded_at = :updated_now",
+        "selection": false,
+        "bindings": {
+            ":class": {
+                "value": "input-'class--",
+                "type": "STRING"
+            },
+            ":status": {
+                "value": 2,
+                "type": "INTEGER"
+            },
+            ":now": {
+                "value": "<current-time>",
+                "type": "INTEGER"
+            },
+            ":updated_status": {
+                "value": 2,
+                "type": "INTEGER"
+            },
+            ":updated_now": {
+                "value": "<current-time>",
+                "type": "INTEGER"
+            }
+        }
+    },
+    "Persistence\/Queries\/Migrations\/FindMigrationTable\/PostgreSQL": {
+        "sql": "SELECT\r\n1 AS value\r\nFROM information_schema.tables\r\nWHERE table_schema = current_schema() AND table_name = :name",
+        "selection": true,
+        "bindings": {
+            ":name": {
+                "value": "migrations",
+                "type": "STRING"
+            }
+        }
+    },
+    "Persistence\/Queries\/Migrations\/FindMigrationTable\/MySQL": {
+        "sql": "SELECT\r\n1 AS value\r\nFROM information_schema.tables\r\nWHERE table_schema = DATABASE() AND table_name = :name",
+        "selection": true,
+        "bindings": {
+            ":name": {
+                "value": "migrations",
+                "type": "STRING"
+            }
+        }
+    },
+    "Persistence\/Queries\/Migrations\/FindMigrationTable\/SQLite": {
+        "sql": "SELECT\r\n1 AS value\r\nFROM sqlite_schema\r\nWHERE type = :type AND name = :name",
+        "selection": true,
+        "bindings": {
+            ":name": {
+                "value": "migrations",
+                "type": "STRING"
+            },
+            ":type": {
+                "value": "table",
+                "type": "STRING"
+            }
+        }
+    },
+    "Persistence\/Queries\/Migrations\/FindMigrationTable": {
+        "sql": "SELECT\r\n1 AS value\r\nFROM information_schema.tables\r\nWHERE table_schema = DATABASE() AND table_name = :name",
+        "selection": true,
+        "bindings": {
+            ":name": {
+                "value": "migrations",
+                "type": "STRING"
+            }
+        }
+    },
+    "Persistence\/Queries\/Mfa\/ConsumeCounter": {
+        "sql": "UPDATE user_mfa\r\nSET last_counter = :counter\r\nWHERE user_id = :user AND (last_counter IS NULL OR last_counter < :previous) AND (secret IS NOT NULL OR (setup_secret IS NOT NULL AND setup_expires > :now))",
+        "selection": false,
+        "bindings": {
+            ":counter": {
+                "value": 123,
+                "type": "INTEGER"
+            },
+            ":previous": {
+                "value": 123,
+                "type": "INTEGER"
+            },
+            ":user": {
+                "value": 17,
+                "type": "INTEGER"
+            },
+            ":now": {
+                "value": 1700000000,
+                "type": "INTEGER"
+            }
+        }
+    },
+    "Persistence\/Queries\/Mfa\/EnsureEnrollment": {
+        "sql": "INSERT INTO user_mfa (user_id) VALUES\r\n(:user)\r\nON DUPLICATE KEY UPDATE user_id = user_id",
+        "selection": false,
+        "bindings": {
+            ":user": {
+                "value": 17,
+                "type": "INTEGER"
+            }
+        }
+    },
+    "Persistence\/Queries\/Mfa\/ClearSetupSecret": {
+        "sql": "UPDATE user_mfa\r\nSET setup_secret = NULL, setup_expires = NULL\r\nWHERE user_id = :user AND secret IS NOT NULL",
+        "selection": false,
+        "bindings": {
+            ":user": {
+                "value": 17,
+                "type": "INTEGER"
+            }
+        }
+    },
+    "Persistence\/Queries\/Mfa\/SaveSetupSecret": {
+        "sql": "UPDATE user_mfa\r\nSET setup_secret = :cipher, setup_expires = :expires, last_counter = NULL\r\nWHERE user_id = :user AND secret IS NULL AND (setup_secret IS NULL OR setup_expires <= :now)",
+        "selection": false,
+        "bindings": {
+            ":cipher": {
+                "value": "input-'cipher--",
+                "type": "STRING"
+            },
+            ":expires": {
+                "value": 1700000060,
+                "type": "INTEGER"
+            },
+            ":user": {
+                "value": 17,
+                "type": "INTEGER"
+            },
+            ":now": {
+                "value": 1700000000,
+                "type": "INTEGER"
+            }
+        }
+    },
+    "Persistence\/Queries\/Mfa\/EnsureEnrollment\/PostgreSQL": {
+        "sql": "INSERT INTO user_mfa (user_id) VALUES\r\n(:user)\r\nON CONFLICT (user_id) DO NOTHING",
+        "selection": false,
+        "bindings": {
+            ":user": {
+                "value": 17,
+                "type": "INTEGER"
+            }
+        }
+    },
+    "Persistence\/Queries\/Mfa\/EnsureEnrollment\/MySQL": {
+        "sql": "INSERT INTO user_mfa (user_id) VALUES\r\n(:user)\r\nON DUPLICATE KEY UPDATE user_id = user_id",
+        "selection": false,
+        "bindings": {
+            ":user": {
+                "value": 17,
+                "type": "INTEGER"
+            }
+        }
+    },
+    "Persistence\/Queries\/Mfa\/EnsureEnrollment\/SQLite": {
+        "sql": "INSERT INTO user_mfa (user_id) VALUES\r\n(:user)\r\nON CONFLICT (user_id) DO NOTHING",
+        "selection": false,
+        "bindings": {
+            ":user": {
+                "value": 17,
+                "type": "INTEGER"
+            }
+        }
+    },
+    "Persistence\/Queries\/Mfa\/FindEnrollment": {
+        "sql": "SELECT\r\nu.mfa_required, m.secret, m.setup_secret, m.setup_expires, m.last_counter, COALESCE(NULLIF(u.email, ''), TRIM(CAST(u.id AS CHAR(20)))) AS account_name\r\nFROM users AS u\r\nLEFT OUTER JOIN user_mfa AS m ON u.id = m.user_id\r\nWHERE u.id = :user AND u.is_active = TRUE",
+        "selection": true,
+        "bindings": {
+            ":user": {
+                "value": 17,
+                "type": "INTEGER"
+            }
+        }
+    },
+    "Persistence\/Queries\/Mfa\/EnableEnrollment": {
+        "sql": "UPDATE user_mfa\r\nSET secret = :cipher\r\nWHERE user_id = :user AND setup_secret = :expected AND secret IS NULL AND last_counter IS NOT NULL AND setup_expires > :now",
+        "selection": false,
+        "bindings": {
+            ":cipher": {
+                "value": "input-'cipher--",
+                "type": "STRING"
+            },
+            ":expected": {
+                "value": "input-'cipher--",
+                "type": "STRING"
+            },
+            ":user": {
+                "value": 17,
+                "type": "INTEGER"
+            },
+            ":now": {
+                "value": 1700000000,
+                "type": "INTEGER"
+            }
+        }
+    },
+    "Persistence\/Queries\/Permissions\/FindPageByUrl": {
+        "sql": "SELECT\r\nid, is_public\r\nFROM resources\r\nWHERE url = :url",
+        "selection": true,
+        "bindings": {
+            ":url": {
+                "value": "input-'url--",
+                "type": "STRING"
+            }
+        }
+    },
+    "Persistence\/Queries\/Permissions\/FindUserRoles": {
+        "sql": "SELECT\r\nr.name\r\nFROM users_roles AS ur\r\nINNER JOIN roles AS r ON ur.role_id = r.id\r\nINNER JOIN users AS u ON ur.user_id = u.id\r\nWHERE ur.user_id = :id AND u.is_active = TRUE",
+        "selection": true,
+        "bindings": {
+            ":id": {
+                "value": 17,
+                "type": "INTEGER"
+            }
+        }
+    },
+    "Persistence\/Queries\/Permissions\/FindPermission": {
+        "sql": "SELECT\r\n1 AS value\r\nFROM roles_resources AS p\r\nINNER JOIN users_roles AS ur ON p.role_id = ur.role_id\r\nINNER JOIN users AS u ON ur.user_id = u.id\r\nWHERE ur.user_id = :user AND p.resource_id = :page AND u.is_active = TRUE AND p.http_method IN (:method, :any)\r\nLIMIT 1 OFFSET 0",
+        "selection": true,
+        "bindings": {
+            ":user": {
+                "value": 17,
+                "type": "INTEGER"
+            },
+            ":page": {
+                "value": 17,
+                "type": "INTEGER"
+            },
+            ":method": {
+                "value": "PATCH",
+                "type": "STRING"
+            },
+            ":any": {
+                "value": "*",
+                "type": "STRING"
+            }
+        }
+    },
+    "Persistence\/Queries\/Permissions\/FindPageById": {
+        "sql": "SELECT\r\nid, is_public\r\nFROM resources\r\nWHERE id = :id",
+        "selection": true,
+        "bindings": {
+            ":id": {
+                "value": 17,
+                "type": "INTEGER"
+            }
+        }
+    },
+    "Persistence\/Queries\/Sessions\/WriteSession\/PostgreSQL": {
+        "sql": "INSERT INTO sessions (id, payload, expires) VALUES\r\n(:id, :payload, :expires)\r\nON CONFLICT (id) DO UPDATE SET payload = :new_payload, expires = :new_expires",
+        "selection": false,
+        "bindings": {
+            ":id": {
+                "value": "0017",
+                "type": "STRING"
+            },
+            ":payload": {
+                "value": "input-'payload--",
+                "type": "STREAMED"
+            },
+            ":expires": {
+                "value": 1700000060,
+                "type": "INTEGER"
+            },
+            ":new_payload": {
+                "value": "input-'payload--",
+                "type": "STREAMED"
+            },
+            ":new_expires": {
+                "value": 1700000060,
+                "type": "INTEGER"
+            }
+        }
+    },
+    "Persistence\/Queries\/Sessions\/WriteSession\/MySQL": {
+        "sql": "INSERT INTO sessions (id, payload, expires) VALUES\r\n(:id, :payload, :expires)\r\nON DUPLICATE KEY UPDATE payload = :new_payload, expires = :new_expires",
+        "selection": false,
+        "bindings": {
+            ":id": {
+                "value": "0017",
+                "type": "STRING"
+            },
+            ":payload": {
+                "value": "input-'payload--",
+                "type": "STRING"
+            },
+            ":expires": {
+                "value": 1700000060,
+                "type": "INTEGER"
+            },
+            ":new_payload": {
+                "value": "input-'payload--",
+                "type": "STRING"
+            },
+            ":new_expires": {
+                "value": 1700000060,
+                "type": "INTEGER"
+            }
+        }
+    },
+    "Persistence\/Queries\/Sessions\/WriteSession\/SQLite": {
+        "sql": "INSERT INTO sessions (id, payload, expires) VALUES\r\n(:id, :payload, :expires)\r\nON CONFLICT (id) DO UPDATE SET payload = :new_payload, expires = :new_expires",
+        "selection": false,
+        "bindings": {
+            ":id": {
+                "value": "0017",
+                "type": "STRING"
+            },
+            ":payload": {
+                "value": "input-'payload--",
+                "type": "STRING"
+            },
+            ":expires": {
+                "value": 1700000060,
+                "type": "INTEGER"
+            },
+            ":new_payload": {
+                "value": "input-'payload--",
+                "type": "STRING"
+            },
+            ":new_expires": {
+                "value": 1700000060,
+                "type": "INTEGER"
+            }
+        }
+    },
+    "Persistence\/Queries\/Sessions\/DeleteSession": {
+        "sql": "DELETE FROM sessions\r\nWHERE id = :id",
+        "selection": false,
+        "bindings": {
+            ":id": {
+                "value": "0017",
+                "type": "STRING"
+            }
+        }
+    },
+    "Persistence\/Queries\/Sessions\/DeleteExpiredSessions": {
+        "sql": "DELETE FROM sessions\r\nWHERE expires <= :now",
+        "selection": false,
+        "bindings": {
+            ":now": {
+                "value": 1700000000,
+                "type": "INTEGER"
+            }
+        }
+    },
+    "Persistence\/Queries\/Sessions\/WriteSession": {
+        "sql": "INSERT INTO sessions (id, payload, expires) VALUES\r\n(:id, :payload, :expires)\r\nON DUPLICATE KEY UPDATE payload = :new_payload, expires = :new_expires",
+        "selection": false,
+        "bindings": {
+            ":id": {
+                "value": "0017",
+                "type": "STRING"
+            },
+            ":payload": {
+                "value": "input-'payload--",
+                "type": "STRING"
+            },
+            ":expires": {
+                "value": 1700000060,
+                "type": "INTEGER"
+            },
+            ":new_payload": {
+                "value": "input-'payload--",
+                "type": "STRING"
+            },
+            ":new_expires": {
+                "value": 1700000060,
+                "type": "INTEGER"
+            }
+        }
+    },
+    "Persistence\/Queries\/Sessions\/ReadSession": {
+        "sql": "SELECT\r\npayload\r\nFROM sessions\r\nWHERE id = :id AND expires > :now",
+        "selection": true,
+        "bindings": {
+            ":id": {
+                "value": "0017",
+                "type": "STRING"
+            },
+            ":now": {
+                "value": 1700000000,
+                "type": "INTEGER"
+            }
+        }
+    },
+    "Persistence\/Queries\/Accounts\/FindIdentity": {
+        "sql": "SELECT\r\ni.user_id\r\nFROM oauth2_identities AS i\r\nINNER JOIN users AS u ON i.user_id = u.id\r\nWHERE i.vendor_name = :vendor AND i.remote_id = :remote AND u.is_active = TRUE",
+        "selection": true,
+        "bindings": {
+            ":vendor": {
+                "value": "input-'vendor--",
+                "type": "STRING"
+            },
+            ":remote": {
+                "value": "input-'remote--",
+                "type": "STRING"
+            }
+        }
+    },
+    "Persistence\/Queries\/Accounts\/UpdatePasswordHash": {
+        "sql": "UPDATE user_credentials\r\nSET password_hash = :new\r\nWHERE user_id = :id AND password_hash = :old",
+        "selection": false,
+        "bindings": {
+            ":new": {
+                "value": "input-'newHash--",
+                "type": "STRING"
+            },
+            ":id": {
+                "value": 17,
+                "type": "INTEGER"
+            },
+            ":old": {
+                "value": "input-'oldHash--",
+                "type": "STRING"
+            }
+        }
+    },
+    "Persistence\/Queries\/Accounts\/LinkIdentity": {
+        "sql": "INSERT INTO oauth2_identities (user_id, vendor_name, remote_id) VALUES\r\n(:id, :vendor, :remote)",
+        "selection": false,
+        "bindings": {
+            ":id": {
+                "value": 17,
+                "type": "INTEGER"
+            },
+            ":vendor": {
+                "value": "input-'vendor--",
+                "type": "STRING"
+            },
+            ":remote": {
+                "value": "input-'remote--",
+                "type": "STRING"
+            }
+        }
+    },
+    "Persistence\/Queries\/Accounts\/CreateAccount": {
+        "sql": "INSERT INTO users (display_name, email) VALUES\r\n(:name, :email)",
+        "selection": false,
+        "bindings": {
+            ":name": {
+                "value": "input-'name--",
+                "type": "STRING"
+            },
+            ":email": {
+                "value": null,
+                "type": "NULLABLE"
+            }
+        }
+    },
+    "Persistence\/Queries\/Accounts\/FindCredentials": {
+        "sql": "SELECT\r\nc.user_id, c.password_hash\r\nFROM user_credentials AS c\r\nINNER JOIN users AS u ON c.user_id = u.id\r\nWHERE c.username = :username AND u.is_active = TRUE",
+        "selection": true,
+        "bindings": {
+            ":username": {
+                "value": "input-'username--",
+                "type": "STRING"
+            }
+        }
+    },
+    "Persistence\/Queries\/States\/SaveState": {
+        "sql": "INSERT INTO oauth2_states (state, vendor_name, valid_until, browser_proof_hash) VALUES\r\n(:state, :vendor, :expires, :proof)",
+        "selection": false,
+        "bindings": {
+            ":state": {
+                "value": "input-'state--",
+                "type": "STRING"
+            },
+            ":vendor": {
+                "value": "input-'vendor--",
+                "type": "STRING"
+            },
+            ":expires": {
+                "value": 1700000060,
+                "type": "INTEGER"
+            },
+            ":proof": {
+                "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "type": "STRING"
+            }
+        }
+    },
+    "Persistence\/Queries\/States\/DeleteExpiredStates": {
+        "sql": "DELETE FROM oauth2_states\r\nWHERE valid_until <= :now AND state = :state AND browser_proof_hash = :proof",
+        "selection": false,
+        "bindings": {
+            ":now": {
+                "value": 1700000000,
+                "type": "INTEGER"
+            },
+            ":state": {
+                "value": "input-'state--",
+                "type": "STRING"
+            },
+            ":proof": {
+                "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "type": "STRING"
+            }
+        }
+    },
+    "Persistence\/Queries\/States\/ConsumeState": {
+        "sql": "DELETE FROM oauth2_states\r\nWHERE state = :state AND vendor_name = :vendor AND browser_proof_hash = :proof AND valid_until > :now",
+        "selection": false,
+        "bindings": {
+            ":state": {
+                "value": "input-'state--",
+                "type": "STRING"
+            },
+            ":vendor": {
+                "value": "input-'vendor--",
+                "type": "STRING"
+            },
+            ":proof": {
+                "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "type": "STRING"
+            },
+            ":now": {
+                "value": 1700000000,
+                "type": "INTEGER"
+            }
+        }
+    },
+    "Persistence\/Queries\/Approvals\/RequestApproval\/PostgreSQL": {
+        "sql": "INSERT INTO oauth2_approvals (vendor_name, remote_id, display_name, email) VALUES\r\n(:vendor, :remote, :name, :email)\r\nON CONFLICT (vendor_name, remote_id) DO NOTHING",
+        "selection": false,
+        "bindings": {
+            ":vendor": {
+                "value": "input-'vendor--",
+                "type": "STRING"
+            },
+            ":remote": {
+                "value": "input-'remote--",
+                "type": "STRING"
+            },
+            ":name": {
+                "value": "input-'name--",
+                "type": "STRING"
+            },
+            ":email": {
+                "value": null,
+                "type": "NULLABLE"
+            }
+        }
+    },
+    "Persistence\/Queries\/Approvals\/RequestApproval\/MySQL": {
+        "sql": "INSERT INTO oauth2_approvals (vendor_name, remote_id, display_name, email) VALUES\r\n(:vendor, :remote, :name, :email)\r\nON DUPLICATE KEY UPDATE remote_id = remote_id",
+        "selection": false,
+        "bindings": {
+            ":vendor": {
+                "value": "input-'vendor--",
+                "type": "STRING"
+            },
+            ":remote": {
+                "value": "input-'remote--",
+                "type": "STRING"
+            },
+            ":name": {
+                "value": "input-'name--",
+                "type": "STRING"
+            },
+            ":email": {
+                "value": null,
+                "type": "NULLABLE"
+            }
+        }
+    },
+    "Persistence\/Queries\/Approvals\/RequestApproval\/SQLite": {
+        "sql": "INSERT INTO oauth2_approvals (vendor_name, remote_id, display_name, email) VALUES\r\n(:vendor, :remote, :name, :email)\r\nON CONFLICT (vendor_name, remote_id) DO NOTHING",
+        "selection": false,
+        "bindings": {
+            ":vendor": {
+                "value": "input-'vendor--",
+                "type": "STRING"
+            },
+            ":remote": {
+                "value": "input-'remote--",
+                "type": "STRING"
+            },
+            ":name": {
+                "value": "input-'name--",
+                "type": "STRING"
+            },
+            ":email": {
+                "value": null,
+                "type": "NULLABLE"
+            }
+        }
+    },
+    "Persistence\/Queries\/Approvals\/RequestApproval": {
+        "sql": "INSERT INTO oauth2_approvals (vendor_name, remote_id, display_name, email) VALUES\r\n(:vendor, :remote, :name, :email)\r\nON DUPLICATE KEY UPDATE remote_id = remote_id",
+        "selection": false,
+        "bindings": {
+            ":vendor": {
+                "value": "input-'vendor--",
+                "type": "STRING"
+            },
+            ":remote": {
+                "value": "input-'remote--",
+                "type": "STRING"
+            },
+            ":name": {
+                "value": "input-'name--",
+                "type": "STRING"
+            },
+            ":email": {
+                "value": null,
+                "type": "NULLABLE"
+            }
+        }
+    },
+    "Persistence\/Queries\/Approvals\/FindApproval": {
+        "sql": "SELECT\r\nstatus\r\nFROM oauth2_approvals\r\nWHERE vendor_name = :vendor AND remote_id = :remote",
+        "selection": true,
+        "bindings": {
+            ":vendor": {
+                "value": "input-'vendor--",
+                "type": "STRING"
+            },
+            ":remote": {
+                "value": "input-'remote--",
+                "type": "STRING"
+            }
+        }
+    }
+}

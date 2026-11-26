@@ -22,7 +22,7 @@ final class SessionDataBuilder implements Builder
      * @param Row $row Selected projection with typed column access
      * @return SessionData Internal record constructed from this projection
      * @throws \Lucinda\Framework\Persistence\Queries\ValidationException
-     *     If required columns are missing or malformed
+     * If required columns are missing or malformed
      */
     public function build(Row $row): SessionData
     {
@@ -32,7 +32,9 @@ final class SessionDataBuilder implements Builder
         }
         if (!is_string($payload)) {
             throw new ValidationException(
-                'string', get_debug_type($payload), 'payload'
+                'string',
+                get_debug_type($payload),
+                'payload'
             );
         }
         return new SessionData($payload);

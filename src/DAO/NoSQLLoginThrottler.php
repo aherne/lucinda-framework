@@ -15,7 +15,9 @@ use Lucinda\WebSecurity\DAO\Throttler\FormLogin as ThrottlerContract;
 final class NoSQLLoginThrottler extends NoSqlBasedDAO implements
     ThrottlerContract
 {
-    /** Failure-window store retained for this authentication scope */
+    /**
+     * Failure-window store retained for this authentication scope
+     */
     private NoSqlThrottle $throttle;
 
     /**

@@ -11,12 +11,16 @@ use Lucinda\Framework\Persistence\Entities\Entity;
  *
  * @internal
  */
-final readonly class Page implements Entity
+final class Page implements Entity
 {
-    /** Persisted resource identifier used for permission checks */
+    /**
+     * Persisted resource identifier used for permission checks
+     */
     private int $id;
 
-    /** Whether the resource permits unauthenticated access */
+    /**
+     * Whether the resource permits unauthenticated access
+     */
     private bool $isPublic;
 
     /**

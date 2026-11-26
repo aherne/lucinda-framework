@@ -71,6 +71,9 @@ final class FindUserRoles extends Query
      */
     private function setWhere(): void
     {
-        $this->statement->where(['ur.user_id' => ':id', 'u.is_active' => 'TRUE']);
+        $this->statement->where([
+            'ur.user_id' => ':id',
+            'u.is_active' => 'TRUE',
+        ]);
     }
 }

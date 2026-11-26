@@ -7,7 +7,7 @@ use Lucinda\Framework\Persistence\Builders\Row;
 use Lucinda\Project\Persistence\Entities\Approval;
 
 /**
- * Builds a Approval entity from its selected database projection
+ * Builds an Approval entity from its selected database projection
  *
  * Each call validates its supplied row and builds an independent entity.
  *
@@ -21,7 +21,7 @@ final class ApprovalBuilder implements Builder
      * @param Row $row Selected projection with typed column access
      * @return Approval Internal record constructed from this projection
      * @throws \Lucinda\Framework\Persistence\Queries\ValidationException
-     *     If required columns are missing or malformed
+     * If required columns are missing or malformed
      */
     public function build(Row $row): Approval
     {

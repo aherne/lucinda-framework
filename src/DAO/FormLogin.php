@@ -15,7 +15,9 @@ use Lucinda\WebSecurity\DAO\FormLogin as FormLoginContract;
  */
 final class FormLogin extends SqlBasedDAO implements FormLoginContract
 {
-    /** Valid bcrypt hash used for timing work when an account does not exist */
+    /**
+     * Valid bcrypt hash used for timing work when an account does not exist
+     */
     private const DUMMY_HASH = '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4o'
         . 'KoEa3Ro9llC/.og/at2uheWG/igi';
 

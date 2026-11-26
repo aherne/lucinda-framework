@@ -96,7 +96,7 @@ class SQLSessionHandler extends SqlBasedDAO implements \SessionHandlerInterface
      * Deletes payloads whose stored expiration time has elapsed
      *
      * @param int $maxlifetime PHP lifetime argument, superseded by stored
-     *     expiry
+     * expiry
      * @return int|false Number of expired records deleted
      * @throws \Throwable If maintenance deletion fails
      */

@@ -21,7 +21,7 @@ final class RoleBuilder implements Builder
      * @param Row $row Selected projection with typed column access
      * @return Role Internal record constructed from this projection
      * @throws \Lucinda\Framework\Persistence\Queries\ValidationException
-     *     If required columns are missing or malformed
+     * If required columns are missing or malformed
      */
     public function build(Row $row): Role
     {

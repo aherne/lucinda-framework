@@ -17,10 +17,14 @@ use Lucinda\Query\Select;
  */
 final class FindPermission extends Query
 {
-    /** Whether permissions are inherited through persisted role membership */
+    /**
+     * Whether permissions are inherited through persisted role membership
+     */
     private bool $roles;
 
-    /** Fixed user column selected by this operation's permission strategy */
+    /**
+     * Fixed user column selected by this operation's permission strategy
+     */
     private string $userColumn = 'p.user_id';
 
     /**

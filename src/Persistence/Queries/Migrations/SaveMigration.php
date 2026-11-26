@@ -14,7 +14,9 @@ use Lucinda\Framework\Persistence\SqlVendor;
  */
 final class SaveMigration extends Query
 {
-    /** Vendor implementation retained for this operation */
+    /**
+     * Vendor implementation retained for this operation
+     */
     private Query $wrapper;
 
     /**

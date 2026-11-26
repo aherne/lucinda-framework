@@ -11,16 +11,18 @@ use Lucinda\Framework\Persistence\Entities\Entity;
  *
  * @internal
  */
-final readonly class SessionData implements Entity
+final class SessionData implements Entity
 {
-    /** Serialized bytes belonging to the unexpired session */
+    /**
+     * Serialized bytes belonging to the unexpired session
+     */
     private string $payload;
 
     /**
      * Captures the validated values for this persistence record
      *
      * @param string $payload Serialized bytes belonging to the unexpired
-     *     session
+     * session
      */
     public function __construct(
         string $payload

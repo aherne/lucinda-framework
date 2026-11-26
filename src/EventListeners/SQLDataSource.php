@@ -8,16 +8,20 @@ use Lucinda\MVC\EventListener\Faceted;
 use Lucinda\MVC\Facet;
 
 /**
- * Owns SQL XML mapping and registers the application's lazy connection provider
+ * Owns SQL XML mapping and publishes a lazy connection provider
  *
  * Run this listener before constructing session or security flows that use
- * SQL DAOs. Executors reuse this provider instead of reopening configuration.
+ * SQL DAOs. Application setup injects a connection from this provider into
+ * its executors instead of reopening configuration.
  */
-class SQLDataSource implements Faceted
+final class SQLDataSource implements Faceted
 {
+    /** Project-relative configuration path without its XML extension */
     public const XML_PATH = 'xml/stdout/sql';
 
-    /** Explicit configuration supplied by application setup, when applicable */
+    /**
+     * Explicit configuration supplied by application setup, when applicable
+     */
     private ?\SimpleXMLElement $xml;
 
     /**
@@ -31,10 +35,11 @@ class SQLDataSource implements Faceted
     }
 
     /**
-     * Maps SQL configuration and registers its connection owner
+     * Maps SQL configuration and publishes its lazy connection owner
      *
      * @throws \Throwable If configuration mapping or registration fails
-     * @return Facet 
+     * @return SqlConnectionProvider Lazy provider for configured SQL
+     *     connections
      */
     public function run(): Facet
     {

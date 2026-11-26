@@ -14,7 +14,9 @@ use Lucinda\WebSecurity\DAO\Throttler\MultiFactorAuthentication as MfaThrottler;
  */
 final class SQLMultiFactorThrottler extends SqlBasedDAO implements MfaThrottler
 {
-    /** Failure-window store retained for this authentication scope */
+    /**
+     * Failure-window store retained for this authentication scope
+     */
     private SqlThrottle $store;
 
     /**

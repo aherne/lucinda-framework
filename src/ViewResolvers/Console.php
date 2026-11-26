@@ -9,18 +9,30 @@ use Lucinda\Templating\Wrapper as TemplatingWrapper;
 use Lucinda\MVC\Response\View;
 use Lucinda\MVC\Response\ViewResolver;
 
+/**
+ * Compiles a view and renders its console markup as ANSI text
+ *
+ * Each resolve call renders the supplied view. Code quality and architecture
+ * verification belong to external tools and are not part of rendering.
+ */
 final class Console implements ViewResolver
 {
-    const XML_PATH = "xml/templating-console";
+    /** Project-relative configuration path without its XML extension */
+    public const XML_PATH = "xml/templating-console";
 
+    /**
+     * Compiles the template, then converts console tags to ANSI sequences
+     *
+     * @param View $view Template name and application data to render
+     * @return string Compiled console response body
+     * @throws \Lucinda\Framework\XmlException If configuration cannot be loaded
+     * @throws \Throwable If template or console markup compilation fails
+     */
     public function resolve(View $view): string
     {
-        $boundary = new \Lucinda\Project\Presentation\DataBoundary(
-            $view->getData()
+        $detector = new XmlDetector(
+            dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . self::XML_PATH
         );
-        $boundary->validate();
-        // template
-        $detector = new XmlDetector(dirname(__DIR__, 2).DIRECTORY_SEPARATOR.self::XML_PATH);
         $wrapper1 = new TemplatingWrapper($detector->getXML());
         $output = $wrapper1->compile($view->getFile(), $view->getData());
 

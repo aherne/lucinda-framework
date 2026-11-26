@@ -14,7 +14,9 @@ use Lucinda\WebSecurity\DAO\Throttler\FormLogin as ThrottlerContract;
  */
 final class SQLLoginThrottler extends SqlBasedDAO implements ThrottlerContract
 {
-    /** Failure-window store retained for this authentication scope */
+    /**
+     * Failure-window store retained for this authentication scope
+     */
     private SqlThrottle $store;
 
     /**

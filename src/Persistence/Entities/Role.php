@@ -11,9 +11,11 @@ use Lucinda\Framework\Persistence\Entities\Entity;
  *
  * @internal
  */
-final readonly class Role implements Entity
+final class Role implements Entity
 {
-    /** Persisted role name compared against route policy */
+    /**
+     * Persisted role name compared against route policy
+     */
     private string $name;
 
     /**

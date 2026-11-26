@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xml>
+    <!-- FileDB reads lucinda_db/schemas/schema directly, without environment
+         nesting or variable interpolation. Copy this file to file_db.xml
+         before running the FileDB listener. Configure private deployment
+         copies separately for each environment. -->
+    <lucinda_db>
+        <!-- At least one schema is required. Each schema is a folder holding
+             JSON entry files. Create the folders and make them writable by
+             the PHP process before using entry operations.
+             Relative paths resolve from the process working directory, not
+             this XML file. Replace these examples with application paths;
+             absolute paths are recommended for consistent access. -->
+        <schemas>
+            <schema>var/file_db/schema1</schema>
+            <!-- Optional additional replica on another folder or disk:
+            <schema>var/file_db/schema2</schema>
+            -->
+        </schemas>
+        <!-- Writes visit all configured schemas. The first schema supplies
+             imports into new replicas and integer counter updates.
+             The listener only constructs the wrapper; it does not create
+             folders. Membership edits use DatabaseMaintenance with the
+             filename of the active file_db.xml configuration. -->
+    </lucinda_db>
+</xml>

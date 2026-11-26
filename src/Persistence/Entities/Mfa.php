@@ -11,24 +11,36 @@ use Lucinda\Framework\Persistence\Entities\Entity;
  *
  * @internal
  */
-final readonly class Mfa implements Entity
+final class Mfa implements Entity
 {
-    /** Whether account policy requires completing MFA */
+    /**
+     * Whether account policy requires completing MFA
+     */
     private bool $required;
 
-    /** Account label used for authenticator provisioning */
+    /**
+     * Account label used for authenticator provisioning
+     */
     private string $accountName;
 
-    /** Encrypted enrolled secret, absent before enrollment */
+    /**
+     * Encrypted enrolled secret, absent before enrollment
+     */
     private ?string $secret;
 
-    /** Encrypted temporary secret awaiting confirmation */
+    /**
+     * Encrypted temporary secret awaiting confirmation
+     */
     private ?string $setupSecret;
 
-    /** Expiration of the temporary secret in Unix seconds */
+    /**
+     * Expiration of the temporary secret in Unix seconds
+     */
     private ?int $setupExpires;
 
-    /** Last verified TOTP counter consumed for this account */
+    /**
+     * Last verified TOTP counter consumed for this account
+     */
     private ?int $counter;
 
     /**
@@ -36,13 +48,13 @@ final readonly class Mfa implements Entity
      *
      * @param bool $required Whether account policy requires completing MFA
      * @param string $accountName Account label used for authenticator
-     *     provisioning
+     * provisioning
      * @param ?string $secret Encrypted enrolled secret, absent before
-     *     enrollment
+     * enrollment
      * @param ?string $setupSecret Encrypted temporary secret awaiting
-     *     confirmation
+     * confirmation
      * @param ?int $setupExpires Expiration of the temporary secret in Unix
-     *     seconds
+     * seconds
      * @param ?int $counter Last verified TOTP counter consumed for this account
      */
     public function __construct(

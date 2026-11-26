@@ -11,9 +11,11 @@ use Lucinda\Framework\Persistence\Entities\Entity;
  *
  * @internal
  */
-final readonly class Identity implements Entity
+final class Identity implements Entity
 {
-    /** Eligible local account linked to the provider identity */
+    /**
+     * Eligible local account linked to the provider identity
+     */
     private int $userID;
 
     /**

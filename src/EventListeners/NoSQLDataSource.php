@@ -4,21 +4,26 @@ namespace Lucinda\Project\EventListeners;
 
 use Lucinda\Framework\NoSqlDriverProvider;
 use Lucinda\Framework\XmlDetector;
+use Lucinda\MVC\EventListener;
 use Lucinda\MVC\EventListener\Faceted;
 use Lucinda\MVC\Facet;
+use Lucinda\Project\Cacheables\Date;
 
 /**
- * Owns NoSQL XML mapping and registers the application's lazy driver provider
+ * Owns NoSQL XML mapping and publishes the application's lazy driver provider
  *
  * Application setup calls getAtomicDriver() on the returned provider and
  * injects that cached adapter into NoSqlExecutor. The provider creates the
  * adapter on first access and retains the configured native connection.
  */
-class NoSQLDataSource implements Faceted
+final class NoSQLDataSource implements EventListener, Faceted
 {
+    /** Project-relative configuration path without its XML extension */
     public const XML_PATH = 'xml/stdout/nosql';
 
-    /** Explicit configuration supplied by application setup, when applicable */
+    /**
+     * Explicit configuration supplied by application setup, when applicable
+     */
     private ?\SimpleXMLElement $xml;
 
     /**
@@ -34,7 +39,7 @@ class NoSQLDataSource implements Faceted
     /**
      * Maps NoSQL configuration and publishes its lazy driver provider
      *
-     * @throws \Throwable If configuration mapping or registration fails
+     * @throws \Throwable If configuration mapping fails
      * @return NoSqlDriverProvider Provider used to select atomic adapters
      */
     public function run(): Facet
@@ -45,7 +50,9 @@ class NoSQLDataSource implements Faceted
             $detector = new XmlDetector($path);
             $xml = $detector->getXML();
         }
-        
-        return new NoSqlDriverProvider($xml);
+
+        $provider = new NoSqlDriverProvider($xml);
+        Date::setDriver($provider->getAtomicDriver());
+        return $provider;
     }
 }

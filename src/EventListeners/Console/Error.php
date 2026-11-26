@@ -7,11 +7,18 @@ use Lucinda\STDERR\PHPException;
 use Lucinda\STDERR\FrontController;
 
 /**
- * Sets up STDERR MVC API to use response format of route requested
+ * Selects console rendering on the active STDERR front controller
+ *
+ * Console request setup invokes this listener before error output is needed.
+ * A missing or different registered error handler is left unchanged.
  */
-class Error implements UnFaceted
+final class Error implements UnFaceted
 {
-
+    /**
+     * Selects console formatting on the active STDERR front controller
+     *
+     * @return void
+     */
     public function run(): void
     {
         $handler = PHPException::getErrorHandler();

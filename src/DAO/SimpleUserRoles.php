@@ -15,8 +15,8 @@ final class SimpleUserRoles implements UserRolesContract
      * Classifies the authenticated account or unauthenticated request
      *
      * @param int|string|null $userID Local account identifier or null for a
-     *     guest
-     * @return list<string> GUESTS for a guest or MEMBERS for an account
+     * guest
+     * @return string[] GUESTS for a guest or MEMBERS for an account
      */
     public function getRoles(int|string|null $userID): array
     {

@@ -18,8 +18,8 @@ final class UserRoles extends SqlBasedDAO implements UserRolesContract
      * Gets outward role names while retaining persistence entities internally
      *
      * @param int|string|null $userID Local account identifier or null for a
-     *     guest
-     * @return list<string> Roles applicable to the current account or guest
+     * guest
+     * @return string[] Roles applicable to the current account or guest
      * @throws \Throwable If role lookup or projection validation fails
      */
     public function getRoles(int|string|null $userID): array
