@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xml>
+    <!-- PERSISTENCE_TEST_REDIS_HOST and PORT may override this endpoint. -->
+    <nosql>
+        <server driver="redis" host="127.0.0.1:6379" timeout="2"
+                persistent="0"/>
+    </nosql>
+</xml>

@@ -38,9 +38,7 @@ final class HttpCachingTest
             'No policy adds no headers'
         );
         $facet->setWrapper(new \Lucinda\Headers\Wrapper(
-            new \SimpleXMLElement(
-                '<xml><headers no_cache="0" cache_expiration="60"/></xml>'
-            ),
+            $project->getXml('headers/cacheable.xml'),
             'catalog',
             []
         ));
@@ -98,9 +96,7 @@ final class HttpCachingTest
         ) {
             $facet = new Facets\Headers();
             $facet->setWrapper(new \Lucinda\Headers\Wrapper(
-                new \SimpleXMLElement(
-                    '<xml><headers no_cache="0"/></xml>'
-                ),
+                $project->getXml('headers/conditional.xml'),
                 'catalog',
                 [$name => $value]
             ));

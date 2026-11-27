@@ -1,7 +1,4 @@
-STDERR API front controller should not just ->run() in controllers without checking interfaces
-
 implement Bootstrap class in engine API
-add support for FileDB
 add all other libraries to composer.json
 
 Create an API for code verification

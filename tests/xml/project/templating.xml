@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xml>
+    <!-- The fixture supplies absolute paths for the current test run. -->
+    <templating compilations_path="" tags_path="" templates_path=""
+                templates_extension="html"/>
+</xml>

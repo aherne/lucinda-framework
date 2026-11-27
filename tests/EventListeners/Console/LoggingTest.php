@@ -27,10 +27,9 @@ final class LoggingTest
         } finally {
             $_SERVER = $server;
         }
-        $project->write('xml/stdout/loggers.xml', '<xml><loggers><logger '
-            . 'class="Lucinda\Logging\Driver\File\Wrapper" path="'
-            . $project->getPath() . '/request-log" format="%u|%i|%a|%m"/>'
-            . '</loggers></xml>');
+        $xml = $project->getXml('logging/request.xml');
+        $xml->loggers->logger['path'] = $project->getPath() . '/request-log';
+        $project->write('xml/stdout/loggers.xml', $xml->asXML());
         $listener = new Listeners\Console\Logging($request);
         $facet = $listener->run();
         $results[] = (new Validator\Booleans(

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xml>
+    <loggers>
+        <!-- The test supplies its normal or fatal log path. -->
+        <logger class="Lucinda\Logging\Driver\File\Wrapper" path=""
+                format="%v|%u|%i|%a|%m"/>
+    </loggers>
+</xml>

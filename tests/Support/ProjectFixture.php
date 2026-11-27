@@ -68,6 +68,39 @@ final class ProjectFixture
     }
 
     /**
+     * Loads a fresh configuration document from the test XML fixtures
+     *
+     * Changes to the returned document belong only to the calling test case.
+     *
+     * @param string $name Path relative to tests/xml
+     * @return \SimpleXMLElement Independent document for this test case
+     * @throws \RuntimeException If the fixture cannot be loaded
+     */
+    public function getXml(string $name): \SimpleXMLElement
+    {
+        $xml = simplexml_load_file(dirname(__DIR__) . '/xml/' . $name);
+        if ($xml === false) {
+            throw new \RuntimeException('Cannot load XML fixture: ' . $name);
+        }
+        return $xml;
+    }
+
+    /**
+     * Installs a stored XML fixture at an adapter's configuration path
+     *
+     * The original application file is restored with this fixture's files.
+     *
+     * @param string $relative Project-relative configuration file to replace
+     * @param string $name Fixture path relative to tests/xml
+     * @return void
+     * @throws \RuntimeException If the fixture cannot be loaded or installed
+     */
+    public function installXml(string $relative, string $name): void
+    {
+        $this->write($relative, $this->getXml($name)->asXML());
+    }
+
+    /**
      * Saves a file before its first fixture-owned modification
      *
      * @param string $file Absolute path to preserve
@@ -117,61 +150,38 @@ final class ProjectFixture
      */
     public function reset(): void
     {
-        $this->write(
-            'stdout.xml',
-            '<xml><application ref="xml/stdout/application"/>'
-            . '<resolvers ref="xml/resolvers"/>'
-            . '<routes ref="xml/stdout/routes"/></xml>'
-        );
-        $this->write(
+        $this->installXml('stdout.xml', 'project/stdout.xml');
+        $this->installXml(
             'xml/stdout/application.xml',
-            '<xml><application default_route="catalog" '
-            . 'default_format="json"/></xml>'
+            'project/stdout-application.xml'
         );
-        $this->write(
-            'xml/stdout/routes.xml',
-            '<xml><routes><route id="catalog" view="index" format="json"/>'
-            . '<route id="private" view="index" format="json"/></routes></xml>'
-        );
-        $this->write(
-            'stderr.xml',
-            '<xml><application ref="xml/stderr/application"/>'
-            . '<resolvers ref="xml/resolvers"/>'
-            . '<routes ref="xml/stderr/routes"/></xml>'
-        );
-        $this->write(
+        $this->installXml('xml/stdout/routes.xml', 'project/routes.xml');
+        $this->installXml('stderr.xml', 'project/stderr.xml');
+        $this->installXml(
             'xml/stderr/application.xml',
-            '<xml><application default_route="default" '
-            . 'default_format="json"/></xml>'
+            'project/stderr-application.xml'
         );
         foreach (
             ['xml/stderr/loggers.xml', 'xml/stderr/loggers-fatal.xml',
             'xml/stdout/loggers.xml'] as $file
         ) {
-            $this->write($file, '<xml><loggers/></xml>');
+            $this->installXml($file, 'logging/empty.xml');
         }
-        $this->write(
-            'xml/stdout/headers.xml',
-            '<xml cacheable="Lucinda\Project\Cacheables\Etag">'
-            . '<headers no_cache="0" cache_expiration="60"/></xml>'
-        );
-        $this->write('xml/stdout/sql.xml', '<xml/>');
-        $redis = new \SimpleXMLElement('<xml><nosql><server/></nosql></xml>');
-        $redis->nosql->server['driver'] = 'redis';
+        $this->installXml('xml/stdout/headers.xml', 'headers/cacheable.xml');
+        $this->installXml('xml/stdout/sql.xml', 'empty.xml');
+        $redis = $this->getXml('nosql/redis.xml');
         $redis->nosql->server['host'] =
             (getenv('PERSISTENCE_TEST_REDIS_HOST') ?: '127.0.0.1') . ':'
             . (getenv('PERSISTENCE_TEST_REDIS_PORT') ?: '6379');
-        $redis->nosql->server['persistent'] = '0';
         $this->write('xml/stdout/nosql.xml', $redis->asXML());
         foreach (['templating', 'templating-console'] as $name) {
-            $xml = new \SimpleXMLElement('<xml><templating/></xml>');
+            $xml = $this->getXml('project/templating.xml');
             $compilations = $this->runtimePath . '/' . $name;
             mkdir($compilations, 0700, true);
             $xml->templating['compilations_path'] = $compilations;
             $xml->templating['tags_path'] = $this->path . '/templates/tags';
             $xml->templating['templates_path'] =
                 $this->path . '/templates/views';
-            $xml->templating['templates_extension'] = 'html';
             $this->write('xml/' . $name . '.xml', $xml->asXML());
         }
     }

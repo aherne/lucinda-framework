@@ -20,7 +20,7 @@ final class SQLDataSourceTest
         $project = new ProjectFixture(dirname(__DIR__, 2));
         $results = [];
         $listener = new Listeners\SQLDataSource(
-            new \SimpleXMLElement('<xml/>')
+            $project->getXml('empty.xml')
         );
         $facet = $listener->run();
         $results[] = (new Validator\Booleans(
@@ -35,9 +35,9 @@ final class SQLDataSourceTest
         );
         $rejected = false;
         try {
-            (new Listeners\SQLDataSource(new \SimpleXMLElement(
-                '<xml><sql><invalid/></sql></xml>'
-            )))->run();
+            (new Listeners\SQLDataSource(
+                $project->getXml('sql/missing-server.xml')
+            ))->run();
         } catch (\Exception) {
             $rejected = true;
         }

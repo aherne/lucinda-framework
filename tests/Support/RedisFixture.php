@@ -55,13 +55,15 @@ final class RedisFixture
      */
     public function getConfiguration(): \SimpleXMLElement
     {
-        $xml = new \SimpleXMLElement('<xml><nosql><server/></nosql></xml>');
-        $xml->nosql->server['driver'] = 'redis';
+        $xml = simplexml_load_file(
+            dirname(__DIR__) . '/xml/nosql/redis.xml'
+        );
+        if ($xml === false) {
+            throw new \RuntimeException('Cannot load the Redis XML fixture');
+        }
         $xml->nosql->server['host'] =
             (getenv('PERSISTENCE_TEST_REDIS_HOST') ?: '127.0.0.1') . ':'
             . (getenv('PERSISTENCE_TEST_REDIS_PORT') ?: '6379');
-        $xml->nosql->server['timeout'] = '2';
-        $xml->nosql->server['persistent'] = '0';
         return $xml;
     }
 

@@ -25,24 +25,10 @@ final class SecurityTest
         $project = new ProjectFixture(dirname(__DIR__, 2));
         $results = [];
 
-        $xml = '<xml><security><persistence><synchronizer_token '
-            . 'secret="unit-persistence-secret"/>'
-            . '</persistence><csrf secret="unit-csrf-secret"/>'
-            . '<authentication><form '
-            . 'dao="Test\Lucinda\Project\Support\SecurityLogin" '
-            . 'throttler="Test\Lucinda\Project\Support\SecurityThrottle" '
-            . 'page="login" '
-            . 'target_success="catalog" target_failure="login" '
-            . 'target_throttled="blocked"/>'
-            . '<logout dao="Lucinda\Project\DAO\Logout" page="logout" '
-            . 'target_success="catalog" '
-            . 'target_failure="login"/></authentication>'
-            . '<authorization><by_dao '
-            . 'page_dao="Test\Lucinda\Project\Support\SecurityPages" '
-            . 'user_dao="Test\Lucinda\Project\Support\SecurityPermissions" '
-            . 'logged_in_callback="forbidden" logged_out_callback="login"/>'
-            . '</authorization></security></xml>';
-        $project->write('xml/stdout/security.xml', $xml);
+        $project->installXml(
+            'xml/stdout/security.xml',
+            'security/workflow.xml'
+        );
         $app = new \Lucinda\STDOUT\Application(
             $project->getPath() . '/stdout.xml'
         );
@@ -99,24 +85,10 @@ final class SecurityTest
         $project = new ProjectFixture(dirname(__DIR__, 2));
         $results = [];
 
-        $xml = '<xml><security><persistence><synchronizer_token '
-            . 'secret="unit-persistence-secret"/>'
-            . '</persistence><csrf secret="unit-csrf-secret"/>'
-            . '<authentication><form '
-            . 'dao="Test\Lucinda\Project\Support\SecurityLogin" '
-            . 'throttler="Test\Lucinda\Project\Support\SecurityThrottle" '
-            . 'page="login" '
-            . 'target_success="catalog" target_failure="login" '
-            . 'target_throttled="blocked"/>'
-            . '<logout dao="Lucinda\Project\DAO\Logout" page="logout" '
-            . 'target_success="catalog" '
-            . 'target_failure="login"/></authentication>'
-            . '<authorization><by_dao '
-            . 'page_dao="Test\Lucinda\Project\Support\SecurityPages" '
-            . 'user_dao="Test\Lucinda\Project\Support\SecurityPermissions" '
-            . 'logged_in_callback="forbidden" logged_out_callback="login"/>'
-            . '</authorization></security></xml>';
-        $project->write('xml/stdout/security.xml', $xml);
+        $project->installXml(
+            'xml/stdout/security.xml',
+            'security/workflow.xml'
+        );
         $app = new \Lucinda\STDOUT\Application(
             $project->getPath() . '/stdout.xml'
         );
@@ -176,24 +148,10 @@ final class SecurityTest
         $project = new ProjectFixture(dirname(__DIR__, 2));
         $results = [];
 
-        $xml = '<xml><security><persistence><synchronizer_token '
-            . 'secret="unit-persistence-secret"/>'
-            . '</persistence><csrf secret="unit-csrf-secret"/>'
-            . '<authentication><form '
-            . 'dao="Test\Lucinda\Project\Support\SecurityLogin" '
-            . 'throttler="Test\Lucinda\Project\Support\SecurityThrottle" '
-            . 'page="login" '
-            . 'target_success="catalog" target_failure="login" '
-            . 'target_throttled="blocked"/>'
-            . '<logout dao="Lucinda\Project\DAO\Logout" page="logout" '
-            . 'target_success="catalog" '
-            . 'target_failure="login"/></authentication>'
-            . '<authorization><by_dao '
-            . 'page_dao="Test\Lucinda\Project\Support\SecurityPages" '
-            . 'user_dao="Test\Lucinda\Project\Support\SecurityPermissions" '
-            . 'logged_in_callback="forbidden" logged_out_callback="login"/>'
-            . '</authorization></security></xml>';
-        $project->write('xml/stdout/security.xml', $xml);
+        $project->installXml(
+            'xml/stdout/security.xml',
+            'security/workflow.xml'
+        );
         $app = new \Lucinda\STDOUT\Application(
             $project->getPath() . '/stdout.xml'
         );

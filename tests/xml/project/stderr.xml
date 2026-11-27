@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xml>
+    <application ref="xml/stderr/application"/>
+    <resolvers ref="xml/resolvers"/>
+    <routes ref="xml/stderr/routes"/>
+</xml>

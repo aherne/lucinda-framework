@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xml>
+    <routes>
+        <route id="catalog" view="index" format="json"/>
+        <route id="private" view="index" format="json"/>
+    </routes>
+</xml>

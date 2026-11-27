@@ -32,12 +32,7 @@ final class HttpCorsTest
             'Requests without header policy continue'
         );
         $wrapper = new \Lucinda\Headers\Wrapper(
-            new \SimpleXMLElement(
-                '<xml><headers allowed_origins="https://app.test" '
-                . 'allowed_methods="GET,OPTIONS" '
-                . 'allowed_request_headers="Authorization" '
-                . 'allow_credentials="1" cors_max_age="60"/></xml>'
-            ),
+            $project->getXml('headers/cors.xml'),
             'catalog',
             [
                 'Origin' => 'https://app.test',

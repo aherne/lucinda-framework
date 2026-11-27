@@ -22,10 +22,9 @@ final class LocalizationTest
         $results = [];
         $project->write('locale/en_US/messages.json', '{"welcome":"Hello %0"}');
         $project->write('locale/ro_RO/messages.json', '{"welcome":"Salut %0"}');
-        $project->write(
+        $project->installXml(
             'xml/stdout/internationalization.xml',
-            '<xml><internationalization '
-            . 'method="header" locale="en_US" folder="locale"/></xml>'
+            'localization/headers.xml'
         );
         $request = (new HttpRequest())->create(
             headers: ['Accept-Language' => 'ro-RO']

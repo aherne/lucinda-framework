@@ -35,9 +35,9 @@ final class NoSQLDataSourceTest
         );
         $rejected = false;
         try {
-            (new Listeners\NoSQLDataSource(new \SimpleXMLElement(
-                '<xml><nosql><invalid/></nosql></xml>'
-            )))->run();
+            (new Listeners\NoSQLDataSource(
+                $project->getXml('nosql/missing-server.xml')
+            ))->run();
         } catch (\Exception) {
             $rejected = true;
         }

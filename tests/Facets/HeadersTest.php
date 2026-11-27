@@ -26,7 +26,7 @@ final class HeadersTest
             'Header policy initially unavailable'
         );
         $wrapper = new \Lucinda\Headers\Wrapper(
-            new \SimpleXMLElement('<xml><headers/></xml>'),
+            $project->getXml('headers/empty.xml'),
             'catalog',
             []
         );

@@ -21,10 +21,9 @@ final class ErrorReporterTest
         $project = new ProjectFixture(dirname(__DIR__, 2));
         $results = [];
         foreach (['normal', 'fatal'] as $name) {
-            $project->write('xml/' . $name . '.xml', '<xml><loggers><logger '
-                . 'class="Lucinda\Logging\Driver\File\Wrapper" path="'
-                . $project->getPath() . '/' . $name
-                . '" format="%v|%u|%i|%a|%m"/></loggers></xml>');
+            $xml = $project->getXml('logging/errors.xml');
+            $xml->loggers->logger['path'] = $project->getPath() . '/' . $name;
+            $project->write('xml/' . $name . '.xml', $xml->asXML());
         }
         $reporter = new Errors\ErrorReporter(
             [

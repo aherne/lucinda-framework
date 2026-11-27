@@ -78,9 +78,9 @@ final class FatalErrorResolverTest
     {
         $project = new ProjectFixture(dirname(__DIR__, 2));
         $results = [];
-        $project->write(
+        $project->installXml(
             'xml/stderr/application.xml',
-            '<xml><application default_format="html"/></xml>'
+            'stderr/html.xml'
         );
         $server = new Support\HttpServer($project, <<<'CODE'
         $resolver = new \Lucinda\Project\STDERR\FatalErrorResolver(

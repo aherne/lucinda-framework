@@ -26,7 +26,7 @@ final class LoggersTest
             'Logger initially unavailable'
         );
         $wrapper = new \Lucinda\Logging\Wrapper(
-            new \SimpleXMLElement('<xml/>'),
+            $project->getXml('empty.xml'),
             new \Lucinda\Logging\RequestInformation()
         );
         $logger = $wrapper->getLogger();

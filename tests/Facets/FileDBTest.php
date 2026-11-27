@@ -20,10 +20,9 @@ final class FileDBTest
         $project = new ProjectFixture(dirname(__DIR__, 2));
         $results = [];
         $facet = new Facets\FileDB();
-        $wrapper = new \Lucinda\DB\Wrapper(new \SimpleXMLElement(
-            '<xml><lucinda_db><schemas><schema>' . $project->getPath()
-            . '/filedb</schema></schemas></lucinda_db></xml>'
-        ));
+        $xml = $project->getXml('filedb/schema.xml');
+        $xml->lucinda_db->schemas->schema = $project->getPath() . '/filedb';
+        $wrapper = new \Lucinda\DB\Wrapper($xml);
         $facet->setWrapper($wrapper);
         $results[] = (new Validator\Arrays(
             [$facet->getWrapper()]

@@ -20,9 +20,8 @@ final class FileDBTest
     {
         $project = new ProjectFixture(dirname(__DIR__, 2));
         $results = [];
-        $xml = new \SimpleXMLElement('<xml><lucinda_db><schemas><schema>'
-            . $project->getPath()
-            . '/filedb</schema></schemas></lucinda_db></xml>');
+        $xml = $project->getXml('filedb/schema.xml');
+        $xml->lucinda_db->schemas->schema = $project->getPath() . '/filedb';
         $listener = new Listeners\FileDB($xml);
         $facet = $listener->run();
         $results[] = (new Validator\Booleans(
@@ -49,7 +48,7 @@ final class FileDBTest
         );
         $rejected = false;
         try {
-            (new Listeners\FileDB(new \SimpleXMLElement('<xml/>')))->run();
+            (new Listeners\FileDB($project->getXml('empty.xml')))->run();
         } catch (\Lucinda\DB\ConfigurationException) {
             $rejected = true;
         }

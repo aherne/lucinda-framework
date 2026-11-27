@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xml>
+    <security>
+        <persistence>
+            <synchronizer_token secret="unit-persistence-secret"/>
+        </persistence>
+        <csrf secret="unit-csrf-secret"/>
+        <authentication>
+            <form dao="Test\Lucinda\Project\Support\SecurityLogin"
+                  throttler="Test\Lucinda\Project\Support\SecurityThrottle"
+                  page="login" target_success="catalog" target_failure="login"
+                  target_throttled="blocked"/>
+            <logout dao="Lucinda\Project\DAO\Logout" page="logout"
+                    target_success="catalog" target_failure="login"/>
+        </authentication>
+        <authorization>
+            <by_dao page_dao="Test\Lucinda\Project\Support\SecurityPages"
+                    user_dao="Test\Lucinda\Project\Support\SecurityPermissions"
+                    logged_in_callback="forbidden" logged_out_callback="login"/>
+        </authorization>
+    </security>
+</xml>
